@@ -20,12 +20,14 @@ TPCFLAGS = -O -DCHECKED
 CC = cc -c
 COPTS = -w
 
-all : bin/txl bin/txldb bin/txlc bin/txlp lib/txlpf.x lib/txlvm.o lib/txlmain.o lib/txlcvt.x lib/txlapr.x
+# Main
 
-bin/txl : objs/txl.o objs/xform.o objs/parse.o ${OBJS} 
+all : bin lib bin/txl bin/txldb bin/txlc bin/txlp lib/txlpf.x lib/txlvm.o lib/txlmain.o lib/txlcvt.x lib/txlapr.x
+
+bin/txl : objs objs/txl.o objs/xform.o objs/parse.o ${OBJS} 
 	tpc ${TPCFLAGS} -o bin/txl objs/txl.o objs/xform.o objs/parse.o ${OBJS}
 	
-bin/txldb : objs/txl.o objs/xformdb.o objs/parse.o ${OBJS} 
+bin/txldb : objs objs/txl.o objs/xformdb.o objs/parse.o ${OBJS} 
 	tpc ${TPCFLAGS} -o bin/txldb objs/txl.o objs/xformdb.o objs/parse.o ${OBJS} 
 	
 bin/txlc : src/scripts/t/txlc
@@ -33,6 +35,8 @@ bin/txlc : src/scripts/t/txlc
 
 bin/txlp : src/scripts/t/txlp
 	cp src/scripts/t/txlp bin/txlp
+
+# Library
 
 lib/txlpf.x : objs/txl.o objs/xformpf.o objs/parsepf.o ${OBJS} 
 	tpc ${TPCFLAGS} -o lib/txlpf.x objs/txl.o objs/xformpf.o objs/parsepf.o ${OBJS} 
@@ -49,9 +53,13 @@ lib/txlcvt.x : objs/txlcvt.o
 lib/txlapr.x : objs/txlapr.o
 	tpc ${TPCFLAGS} -o lib/txlapr.x objs/txlapr.o
 
+# Bootstrap
+
 src/bootgrm.i : src/bootstrap/bootgrm.i
 	pushd src/bootstrap; make; popd 
 	cp src/bootstrap/bootgrm.i src/bootgrm.i
+
+# Modules
 
 objs/txl.o : src/txl.t ${TXLSRCS}
 	/bin/rm -f objs/txl.o
@@ -135,12 +143,26 @@ objs/locale.o : src/locale.c
 
 objs/main.o : src/tpluslib/TL.h src/main.c
 	${CC} $(COPTS) -DBSD src/main.c; mv main.o objs/main.o
-	
+
+# Directories
+
+bin :
+	mkdir bin
+
+lib :	
+	mkdir lib
+
+objs : 
+	mkdir objs
+
 clean :
 	/bin/rm -f bin/* lib/* objs/* 
 	/bin/rm -rf csrc 
 	cd test; make clean; cd ..
 	cd test/regression; make clean; cd ../..
 
+# Production auto-generated C version
+
 C :
 	make -f Makefile-C
+
