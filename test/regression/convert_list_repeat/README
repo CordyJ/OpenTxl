@@ -1,0 +1,22 @@
+TXL Example Specification
+-------------------------
+
+Name:	
+	listseq.Txl
+
+Description:
+	Trivial demonstration of the easy paradigms for conversion
+	between lists and sequences.
+
+Author:
+   	J.R. Cordy
+
+Affiliation:
+	Queen's University, Kingston, Canada
+
+Date:
+	July 1993
+
+Example:
+	txl seq.listseq
+	txl list.listseq

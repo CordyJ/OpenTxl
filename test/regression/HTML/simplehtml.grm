@@ -1,0 +1,101 @@
+% Simple but very general grammar for processing HTML
+% SomeDeveloper & Jim Cordy, Sept 2007
+
+% This grammar makes a best-effort attempt at parsing HTML source
+% and does a good job on all well-formed files and most commonly broken ones.
+% It is robust enough to parse almost every HTML file, but does not
+% attempt to understand structure.  See html.grm for a more structurally
+% sensitive version.
+
+#pragma -raw -case -id "$-" -w 32000 
+
+% Special tokens in HTML
+tokens
+    url     "http://[\a\d.-\?/=\#:]+"
+	    | "ftp://[\a\d.-\?/=\#:]+"
+    fileref "../[\a\d][\a\d./]*"
+	    | "/[\a\d][\a\d.]*/[\a\d][\a\d./]*"
+    number  | "\d+%"
+	    | "\#[\d\a]+"
+	    | "[+-]\d+"
+    x_id    "[Xx]-[\a\d-]+"
+    email   "[\a\d.]+@[\a\d.]+"
+    extchar "&[\a\d]+;"
+    punctuation ".,!\?:;"
+    charlit ""
+end tokens
+
+define program 
+    [repeat element] [!] 
+end define 
+
+define element 
+      [tag]
+    | [text]
+    | [tag_empty] 
+    | [comment_tag]
+    | [tag_beg] 
+    | [not token] [tag_end] 
+end define 
+
+define tag 
+    < [SPOFF] [push id] [repeat attribute] > [SPON]   [NL][IN] 
+	[tag_elements]                  	      [EX]
+    </ [SPOFF] [pop id] > [SPON]                      [NL]
+end define 
+
+define tag_elements
+    [repeat element] [!]
+end define
+
+define tag_empty 
+      < [SPOFF] [id] [repeat attribute] /> [SPON]  [NL] 
+    | < [SPOFF] [singleton_tag_id] [repeat attribute] > [SPON]  [NL] 
+end define 
+
+define singleton_tag_id
+    [x_id] | 'meta | 'base  
+end define
+
+define comment_tag
+    <! [repeat comment_text] > [NL] 
+end define
+
+define comment_text
+      [punctuation] [SP]
+    | [not '>] [token]
+end define
+
+define tag_beg 
+      < [SPOFF] [id] [repeat attribute] > [SPON]    [NL] 
+end define 
+
+define tag_end 
+      </ [SPOFF] [id] > [SPON]            [NL]   
+end define 
+
+define attribute 
+    [SP] [attrbute_id] [opt equals_attribute_value]
+end define
+
+define attrbute_id
+    [id] | [x_id]
+end define
+
+define equals_attribute_value
+    = [attribute_value]
+end define 
+
+define attribute_value
+    [stringlit] | [number] | [id] | [url] | [fileref] 
+end define
+
+define text
+    [repeat text_unit+] [NL] [!] 
+end define
+
+define text_unit
+       [punctuation] [SP]  % Symbols that should have a space after them in output
+    |  [not '<] [token]    
+    |  '< [number]         % Allow for a common malformed text problem
+end define 

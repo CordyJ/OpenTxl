@@ -1,0 +1,21 @@
+TXL Example Specification
+-------------------------
+
+Name:	
+	count.Txl
+
+Description:
+	Demonstration of the paradigm for counting or enumerating
+	items in TXL.
+
+Author:
+   	J.R. Cordy
+
+Affiliation:
+	Queen's University
+
+Date:
+	Sept 1993
+
+Example:
+	txl example.count

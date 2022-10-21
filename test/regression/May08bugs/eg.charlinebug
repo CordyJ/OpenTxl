@@ -1,0 +1,4 @@
+This is the first line.
+This second line has a string in it: "With an embedded
+newline"
+So that buggered it up, since this is really the fourth line.

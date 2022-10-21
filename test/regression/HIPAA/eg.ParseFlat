@@ -1,0 +1,320 @@
+§160.101  Statutory basis and purpose.
+
+§160.101(a)The requirements of this subchapter implement sections 1171 through 1179 of the Social Security Act (the Act), as added by section 262 of Public Law 104-191, and section 264 of Public Law 104-191.
+
+§160.102  Applicability.
+
+§160.102(a) Except as otherwise provided, the standards, requirements, and implementation specifications adopted under this subchapter apply to the following entities:
+
+    §160.102(a)(1) A health plan.
+
+    §160.102(a)(2) A health care clearinghouse.
+
+    §160.102(a)(3) A health care provider who transmits any health information in electronic form in connection with a transaction covered by this subchapter.
+
+§160.102(b) To the extent required under section 201(a)(5) of the Health Insurance Portability Act of 1996, (Pub. L. 104-191), nothing in this subchapter shall be construed to diminish the authority of any Inspector General, including such authority as provided in the Inspector General Act of 1978, as amended (5 U.S.C. App.).
+
+§160.103  Definitions.
+
+§160.103(a)Except as otherwise provided, the following definitions apply to this subchapter:
+    Act means the Social Security Act.
+    ANSI stands for the American National Standards Institute.
+    Business associate: 
+
+    §160.103(a)(1) Except as provided in paragraph (2) of this definition, business associate means, with respect to a covered entity, a person who:
+
+        §160.103(a)(1)(i) On behalf of such covered entity or of an organized health care arrangement (as defined in §164.501 of this subchapter) in which the covered entity participates, but other than in the capacity of a member of the workforce of such covered entity or arrangement, performs, or assists in the performance of:
+
+            §160.103(a)(1)(i)(A) A function or activity involving the use or disclosure of individually identifiable health information, including claims processing or administration, data analysis, processing or administration, utilization review, quality assurance, billing, benefit management, practice management, and repricing; or   (B) Any other function or activity regulated by this subchapter; or 
+
+        §160.103(a)(1)(ii) Provides, other than in the capacity of a member of the workforce of such covered entity, legal, actuarial, accounting, consulting, data aggregation (as defined in §164.501 of this subchapter), management, administrative, accreditation, or financial services to or for such covered entity, or to or for an organized health care arrangement in which the covered entity participates, where the provision of the service involves the disclosure of individually identifiable health information from such covered entity or arrangement, or from another business associate of such covered entity or arrangement, to the person.
+
+    §160.103(a)(2) A covered entity participating in an organized health care arrangement that performs a function or activity as described by paragraph (1)(i) of this definition for or on behalf of such organized health care arrangement, or that provides a service as described in paragraph (1)(ii) of this definition to or for such organized health care arrangement, does not, simply through the performance of such function or activity or the provision of such service, become a business associate of other covered entities participating in such organized health care arrangement.
+
+    §160.103(a)(3) A covered entity may be a business associate of another covered entity.
+        Compliance date means the date by which a covered entity must comply with a standard, implementation specification, requirement, or modification adopted under this subchapter.
+        Covered entity means:
+
+    §160.103(a)(1) A health plan.
+
+    §160.103(a)(2) A health care clearinghouse.
+
+    §160.103(a)(3) A health care provider who transmits any health information in electronic form in connection with a transaction covered by this subchapter.
+        Group health plan (also see definition of health plan in this section) means an employee welfare benefit plan (as defined in section 3(1) of the Employee Retirement Income and Security Act of 1974 (ERISA), 29 U.S.C. 1002(1)), including insured and self-insured plans, to the extent that the plan provides medical care (as defined in section 2791(a)(2) of the Public Health Service Act (PHS Act), 42 U.S.C. 300gg-91(a)(2)), including items and services paid for as medical care, to employees or their dependents directly or through insurance, reimbursement, or otherwise, that:
+
+    §160.103(a)(1) Has 50 or more participants (as defined in section 3(7) of ERISA, 29 U.S.C. 1002(7)); or 
+
+    §160.103(a)(2) Is administered by an entity other than the employer that established and maintains the plan.
+        HCFA stands for Health Care Financing Administration within the Department of Health and Human Services.
+        HHS stands for the Department of Health and Human Services.
+        Health care means care, services, or supplies related to the health of an individual. Health care includes, but is not limited to, the following:
+
+    §160.103(a)(1) Preventive, diagnostic, therapeutic, rehabilitative, maintenance, or palliative care, and counseling, service, assessment, or procedure with respect to the physical or mental condition, or functional status, of an individual or that affects the structure or function of the body; and
+
+    §160.103(a)(2) Sale or dispensing of a drug, device, equipment, or other item in accordance with a prescription.
+        Health care clearinghouse means a public or private entity, including a billing service, repricing company, community health management information system or community health information system, and "value-added" networks and switches, that does either of the following functions:
+
+    §160.103(a)(1) Processes or facilitates the processing of health information received from another entity in a nonstandard format or containing nonstandard data content into standard data elements or a standard transaction.
+
+    §160.103(a)(2) Receives a standard transaction from another entity and processes or facilitates the processing of health information into nonstandard format or nonstandard data content for the receiving entity.
+        Health care provider means a provider of services (as defined in section 1861(u) of the Act, 42 U.S.C. 1395x(u)), a provider of medical or health services (as defined in section 1861(s) of the Act, 42 U.S.C. 1395x(s)), and any other person or organization who furnishes, bills, or is paid for health care in the normal course of business.
+        Health information means any information, whether oral or recorded in any form or medium, that:
+
+    §160.103(a)(1) Is created or received by a health care provider, health plan, public health authority, employer, life insurer, school or university, or health care clearinghouse; and
+
+    §160.103(a)(2) Relates to the past, present, or future physical or mental health or condition of an individual; the provision of health care to an individual; or 
+        the past, present, or future payment for the provision of health care to an individual.
+        Health insurance issuer (as defined in section 2791(b)(2) of the PHS Act, 42 U.S.C. 300gg-91(b)(2) and used in the definition of health plan in this section) means an insurance company, insurance service, or insurance organization (including an HMO) that is licensed to engage in the business of insurance in a State and is subject to State law that regulates insurance. Such term does not include a group health plan.
+        Health maintenance organization (HMO) (as defined in section 2791(b)(3) of the PHS Act, 42 U.S.C. 300gg-91(b)(3) and used in the definition of health plan in this section) means a federally qualified HMO, an organization recognized as an HMO under State law, or a similar organization regulated for solvency under State law in the same manner and to the same extent as such an HMO.
+        Health plan means an individual or group plan that provides, or pays the cost of, medical care (as defined in section 2791(a)(2) of the PHS Act, 42 U.S.C. 300gg-91(a)(2)).
+
+    §160.103(a)(1) Health plan includes the following, singly or in combination:
+
+        §160.103(a)(1)(i) A group health plan, as defined in this section.
+
+        §160.103(a)(1)(ii) A health insurance issuer, as defined in this section.
+
+        §160.103(a)(1)(iii) An HMO, as defined in this section.
+
+        §160.103(a)(1)(iv) Part A or Part B of the Medicare program under title XVIII of the Act.
+
+        §160.103(a)(1)(v) The Medicaid program under title XIX of the Act, 42 U.S.C. 1396, et seq.
+
+        §160.103(a)(1)(vi) An issuer of a Medicare supplemental policy (as defined in section 1882(g)(1) of the Act, 42 U.S.C. 1395ss(g)(1)).
+
+        §160.103(a)(1)(vii) An issuer of a long-term care policy, excluding a nursing home fixed-indemnity policy.
+
+        §160.103(a)(1)(viii) An employee welfare benefit plan or any other arrangement that is established or maintained for the purpose of offering or providing health benefits to the employees of two or more employers.
+
+        §160.103(a)(1)(ix) The health care program for active military personnel under title 10 of the United States Code.
+
+        §160.103(a)(1)(x) The veterans health care program under 38 U.S.C. chapter 17.
+
+        §160.103(a)(1)(xi) The Civilian Health and Medical Program of the Uniformed Services (CHAMPUS) (as defined in 10 U.S.C. 1072(4)).
+
+        §160.103(a)(1)(xii) The Indian Health Service program under the Indian Health Care Improvement Act, 25 U.S.C. 1601, et seq.
+
+        §160.103(a)(1)(xiii) The Federal Employees Health Benefits Program under 5 U.S.C. 8902, et seq.
+
+        §160.103(a)(1)(xiv) An approved State child health plan under title XXI of the Act, providing benefits for child health assistance that meet the requirements of section 2103 of the Act, 42 U.S.C. 1397, et seq.
+
+        §160.103(a)(1)(xv) The Medicare+Choice program under Part C of title XVIII of the Act, 42 U.S.C. 1395w-21 through 1395w-28.
+
+        §160.103(a)(1)(xvi) A high risk pool that is a mechanism established under State law to provide health insurance coverage or comparable coverage to eligible individuals.
+
+        §160.103(a)(1)(xvii) Any other individual or group plan, or combination of individual or group plans, that provides or pays for the cost of medical care (as defined in section 2791(a)(2) of the PHS Act, 42 U.S.C. 300gg-91(a)(2)).
+
+    §160.103(a)(2) Health plan excludes:
+
+        §160.103(a)(2)(i) Any policy, plan, or program to the extent that it provides, or pays for the cost of, excepted benefits that are listed in section 2791(c)(1) of the PHS Act, 42 U.S.C. 300gg-91(c)(1); and
+
+        §160.103(a)(2)(ii) A government-funded program (other than one listed in paragraph (1)(i)-(xvi) of this definition):
+
+            §160.103(a)(2)(ii)(A) Whose principal purpose is other than providing, or paying the cost of, health care; or 
+
+            §160.103(a)(2)(ii)(B) Whose principal activity is:
+
+                §160.103(a)(2)(ii)(B)(1) The direct provision of health care to persons; or
+                §160.103(a)(2)(ii)(B)(2) The making of grants to fund the direct provision of health care to persons.
+                    Implementation specification means specific requirements or instructions for implementing a standard.
+                    Modify or modification refers to a change adopted by the Secretary, through regulation, to a standard or an implementation specification.
+                    Secretary means the Secretary of Health and Human Services or any other officer or employee of HHS to whom the authority involved has been delegated.
+                    Small health plan means a health plan with annual receipts of $5 million or less.
+                    Standard means a rule, condition, or requirement:
+                §160.103(a)(2)(ii)(B)(1) Describing the following information for products, systems, services or practices:
+
+        §160.103(a)(2)(i) Classification of components.
+
+        §160.103(a)(2)(ii) Specification of materials, performance, or operations; or 
+
+        §160.103(a)(2)(iii) Delineation of procedures; or 
+
+    §160.103(a)(2) With respect to the privacy of individually identifiable health information.
+        Standard setting organization (SSO) means an organization accredited by the American National Standards Institute that develops and maintains standards for information transactions or data elements, or any other standard that is necessary for, or will facilitate the implementation of, this part.
+        State refers to one of the following:
+
+    §160.103(a)(1) For a health plan established or regulated by Federal law, State has the meaning set forth in the applicable section of the United States Code for such health plan.
+
+    §160.103(a)(2) For all other purposes, State means any of the several States, the District of Columbia, the Commonwealth of Puerto Rico, the Virgin Islands, and Guam.
+        Trading partner agreement means an agreement related to the exchange of information in electronic transactions, whether the agreement is distinct or part of a larger agreement, between each party to the agreement. (For example, a trading partner agreement may specify, among other things, the duties and responsibilities of each party to the agreement in conducting a standard transaction.)
+        Transaction means the transmission of information between two parties to carry out financial or administrative activities related to health care. It includes the following types of information transmissions:
+
+    §160.103(a)(1) Health care claims or equivalent encounter information.
+
+    §160.103(a)(2) Health care payment and remittance advice.
+
+    §160.103(a)(3) Coordination of benefits.
+
+    §160.103(a)(4) Health care claim status.
+
+    §160.103(a)(5) Enrollment and disenrollment in a health plan.
+
+    §160.103(a)(6) Eligibility for a health plan.
+
+    §160.103(a)(7) Health plan premium payments.
+
+    §160.103(a)(8) Referral certification and authorization.
+
+    §160.103(a)(9) First report of injury.
+
+    §160.103(a)(10) Health claims attachments.
+
+    §160.103(a)(11) Other transactions that the Secretary may prescribe by regulation.
+        Workforce means employees, volunteers, trainees, and other persons whose conduct, in the performance of work for a covered entity, is under the direct control of such entity, whether or not they are paid by the covered entity.
+
+§160.104  Modifications.
+
+§160.104(a) Except as provided in paragraph (b) of this section, the Secretary may adopt a modification to a standard or implementation specification adopted under this subchapter no more frequently than once every 12 months.
+
+§160.104(b) The Secretary may adopt a modification at any time during the first year after the standard or implementation specification is initially adopted, if the Secretary determines that the modification is necessary to permit compliance with the standard or implementation specification.
+
+§160.104(c) The Secretary will establish the compliance date for any standard or implementation specification modified under this section.
+
+    §160.104(c)(1) The compliance date for a modification is no earlier than 180 days after the effective date of the final rule in which the Secretary adopts the modification.
+
+    §160.104(c)(2) The Secretary may consider the extent of the modification and the time needed to comply with the modification in determining the compliance date for the modification.
+
+    §160.104(c)(3) The Secretary may extend the compliance date for small health plans, as the Secretary determines is appropriate.
+
+§160.201 Applicability.
+
+§160.201(a)The provisions of this subpart implement section 1178 of the Act, as added by section 262 of Public Law 104-191.
+
+§160.202 Definitions.
+
+§160.202(a)For purposes of this subpart, the following terms have the following meanings:
+    Contrary, when used to compare a provision of State law to a standard, requirement, or implementation specification adopted under this subchapter, means:
+
+    §160.202(a)(1) A covered entity would find it impossible to comply with both the State and federal requirements; or 
+
+    §160.202(a)(2) The provision of State law stands as an obstacle to the accomplishment and execution of the full purposes and objectives of part C of title XI of the Act or section 264 of Pub. L. 104-191, as applicable.
+        More stringent means, in the context of a comparison of a provision of State law and a standard, requirement, or implementation specification adopted under subpart E of part 164 of this subchapter, a State law that meets one or more of the following criteria:
+
+    §160.202(a)(1) With respect to a use or disclosure, the law prohibits or restricts a use or disclosure in circumstances under which such use or disclosure otherwise would be permitted under this subchapter, except if the disclosure is:
+
+        §160.202(a)(1)(i) Required by the Secretary in connection with determining whether a covered entity is in compliance with this subchapter; or 
+
+        §160.202(a)(1)(ii) To the individual who is the subject of the individually identifiable health information.
+
+    §160.202(a)(2) With respect to the rights of an individual who is the subject of the individually identifiable health information of access to or amendment of individually identifiable health information, permits greater rights of access or amendment, as applicable; provided that, nothing in this subchapter may be construed to preempt any State law to the extent that it authorizes or prohibits disclosure of protected health information about a minor to a parent, guardian, or person acting in loco parentis of such minor.
+
+    §160.202(a)(3) With respect to information to be provided to an individual who is the subject of the individually identifiable health information about a use, a disclosure, rights, and remedies, provides the greater amount of information.
+
+    §160.202(a)(4) With respect to the form or substance of an authorization or consent for use or disclosure of individually identifiable health information, provides requirements that narrow the scope or duration, increase the privacy protections afforded (such as by expanding the criteria for), or reduce the coercive effect of the circumstances surrounding the authorization or consent, as applicable.
+
+    §160.202(a)(5) With respect to recordkeeping or requirements relating to accounting of disclosures, provides for the retention or reporting of more detailed information or for a longer duration.
+
+    §160.202(a)(6) With respect to any other matter, provides greater privacy protection for the individual who is the subject of the individually identifiable health information. 
+        Relates to the privacy of individually identifiable health information means, with respect to a State law, that the State law has the specific purpose of protecting the privacy of health information or affects the privacy of health information in a direct, clear, and substantial way.
+        State law means a constitution, statute, regulation, rule, common law, or other State action having the force and effect of law.
+
+§160.203 General rule and exceptions.
+
+§160.203(a)A standard, requirement, or implementation specification adopted under this subchapter that is contrary to a provision of State law preempts the provision of State law. This general rule applies, except if one or more of the following conditions is met:
+
+§160.203(a) A determination is made by the Secretary under §160.204 that the provision of State law:
+
+    §160.203(a)(1) Is necessary:
+
+        §160.203(a)(1)(i) To prevent fraud and abuse related to the provision of or payment for health care;
+
+        §160.203(a)(1)(ii) To ensure appropriate State regulation of insurance and health plans to the extent expressly authorized by statute or regulation;
+
+        §160.203(a)(1)(iii) For State reporting on health care delivery or costs; or 
+
+        §160.203(a)(1)(iv) For purposes of serving a compelling need related to public health, safety, or welfare, and, if a standard, requirement, or implementation specification under part 164 of this subchapter is at issue, if the Secretary determines that the intrusion into privacy is warranted when balanced against the need to be served; or 
+
+    §160.203(a)(2) Has as its principal purpose the regulation of the manufacture, registration, distribution, dispensing, or other control of any controlled substances (as defined in 21 U.S.C. 802), or that is deemed a controlled substance by State law.
+
+§160.203(b) The provision of State law relates to the privacy of health information and is more stringent than a standard, requirement, or implementation specification adopted under subpart E of part 164 of this subchapter.
+
+§160.203(c) The provision of State law, including State procedures established under such law, as applicable, provides for the reporting of disease or injury, child abuse, birth, or death, or for the conduct of public health surveillance, investigation, or intervention.
+
+§160.203(d) The provision of State law requires a health plan to report, or to provide access to, information for the purpose of management audits, financial audits, program monitoring and evaluation, or the licensure or certification of facilities or individuals.
+
+§160.204 Process for requesting exception determinations.
+
+§160.204(a) A request to except a provision of State law from preemption under §160.203(a) may be submitted to the Secretary. A request by a State must be submitted through its chief elected official, or his or her designee. The request must be in writing and include the following information:
+
+    §160.204(a)(1) The State law for which the exception is requested;
+
+    §160.204(a)(2) The particular standard, requirement, or implementation specification for which the exception is requested;
+
+    §160.204(a)(3) The part of the standard or other provision that will not be implemented based on the exception or the additional data to be collected based on the exception, as appropriate;
+
+    §160.204(a)(4) How health care providers, health plans, and other entities would be affected by the exception;
+
+    §160.204(a)(5) The reasons why the State law should not be preempted by the federal standard, requirement, or implementation specification, including how the State law meets one or more of the criteria at §160.203(a); and
+
+    §160.204(a)(6) Any other information the Secretary may request in order to make the determination.
+
+§160.204(b) Requests for exception under this section must be submitted to the Secretary at an address that will be published in the Federal Register. Until the Secretary's determination is made, the standard, requirement, or implementation specification under this subchapter remains in effect.
+
+§160.204(c) The Secretary's determination under this section will be made on the basis of the extent to which the information provided and other factors demonstrate that one or more of the criteria at §160.203(a) has been met.
+
+§160.205 Duration of effectiveness of exception determinations.
+
+§160.205(a)An exception granted under this subpart remains in effect until:
+
+§160.205(a) Either the State law or the federal standard, requirement, or implementation specification that provided the basis for the exception is materially changed such that the ground for the exception no longer exists; or 
+
+§160.205(b) The Secretary revokes the exception, based on a determination that the ground supporting the need for the exception no longer exists.
+
+§160.300 Applicability.
+
+§160.300(a)This subpart applies to actions by the Secretary, covered entities, and others with respect to ascertaining the compliance by covered entities with and the enforcement of the applicable requirements of this part 160 and the applicable standards, requirements, and implementation specifications of subpart E of part 164 of this subchapter.
+
+§160.302 Definitions.
+
+§160.302(a)As used in this subpart, terms defined in §164.501 of this subchapter have the same meanings given to them in that section.
+
+§160.304 Principles for achieving compliance.
+
+§160.304(a) Cooperation. The Secretary will, to the extent practicable, seek the cooperation of covered entities in obtaining compliance with the applicable requirements of this part 160 and the applicable standards, requirements, and implementation specifications of subpart E of part 164 of this subchapter.
+
+§160.304(b) Assistance. The Secretary may provide technical assistance to covered entities to help them comply voluntarily with the applicable requirements of this part 160 or the applicable standards, requirements, and implementation specifications of subpart E of part 164 of this subchapter.
+
+§160.306 Complaints to the Secretary.
+
+§160.306(a) Right to file a complaint. A person who believes a covered entity is not complying with the applicable requirements of this part 160 or the applicable standards, requirements, and implementation specifications of subpart E of part 164 of this subchapter may file a complaint with the Secretary.
+
+§160.306(b) Requirements for filing complaints. Complaints under this section must meet the following requirements:
+
+    §160.306(b)(1) A complaint must be filed in writing, either on paper or electronically.
+
+    §160.306(b)(2) A complaint must name the entity that is the subject of the complaint and describe the acts or omissions believed to be in violation of the applicable requirements of this part 160 or the applicable standards, requirements, and implementation specifications of subpart E of part 164 of this subchapter.
+
+    §160.306(b)(3) A complaint must be filed within 180 days of when the complainant knew or should have known that the act or omission complained of occurred, unless this time limit is waived by the Secretary for good cause shown.
+
+    §160.306(b)(4) The Secretary may prescribe additional procedures for the filing of complaints, as well as the place and manner of filing, by notice in the Federal Register.
+
+§160.306(c) Investigation. The Secretary may investigate complaints filed under this section. Such investigation may include a review of the pertinent policies, procedures, or practices of the covered entity and of the circumstances regarding any alleged acts or omissions concerning compliance.
+
+§160.308 Compliance reviews.
+
+§160.308(a)The Secretary may conduct compliance reviews to determine whether covered entities are complying with the applicable requirements of this part 160 and the applicable standards, requirements, and implementation specifications of subpart E of part 164 of this subchapter.
+
+§160.310 Responsibilities of covered entities.
+
+§160.310(a) Provide records and compliance reports. A covered entity must keep such records and submit such compliance reports, in such time and manner and containing such information, as the Secretary may determine to be necessary to enable the Secretary to ascertain whether the covered entity has complied or is complying with the applicable requirements of this part 160 and the applicable standards, requirements, and implementation specifications of subpart E of part 164 of this subchapter.
+
+§160.310(b) Cooperate with complaint investigations and compliance reviews.
+    A covered entity must cooperate with the Secretary, if the Secretary undertakes an investigation or compliance review of the policies, procedures, or practices of a covered entity to determine whether it is complying with the applicable requirements of this part 160 and the standards, requirements, and implementation specifications of subpart E of part 164 of this subchapter.
+
+§160.310(c) Permit access to information.
+
+    §160.310(c)(1) A covered entity must permit access by the Secretary during normal business hours to its facilities, books, records, accounts, and other sources of information, including protected health information, that are pertinent to ascertaining compliance with the applicable requirements of this part 160 and the applicable standards, requirements, and implementation specifications of subpart E of part 164 of this subchapter. If the Secretary determines that exigent circumstances exist, such as when documents may be hidden or destroyed, a covered entity must permit access by the Secretary at any time and without notice.
+
+    §160.310(c)(2) If any information required of a covered entity under this section is in the exclusive possession of any other agency, institution, or person and the other agency, institution, or person fails or refuses to furnish the information, the covered entity must so certify and set forth what efforts it has made to obtain the information.
+
+    §160.310(c)(3) Protected health information obtained by the Secretary in connection with an investigation or compliance review under this subpart will not be disclosed by the Secretary, except if necessary for ascertaining or enforcing compliance with the applicable requirements of this part 160 and the applicable standards, requirements, and implementation specifications of subpart E of part 164 of this subchapter, or if otherwise required by law.
+
+§160.312 Secretarial action regarding complaints and compliance reviews.
+
+§160.312(a) Resolution where noncompliance is indicated.
+
+    §160.312(a)(1) If an investigation pursuant to §160.306 or a compliance review pursuant to §160.308 indicates a failure to comply, the Secretary will so inform the covered entity and, if the matter arose from a complaint, the complainant, in writing and attempt to resolve the matter by informal means whenever possible.
+
+    §160.312(a)(2) If the Secretary finds the covered entity is not in compliance and determines that the matter cannot be resolved by informal means, the Secretary may issue to the covered entity and, if the matter arose from a complaint, to the complainant written findings documenting the non-compliance.
+
+§160.312(b) Resolution when no violation is found. If, after an investigation or compliance review, the Secretary determines that further action is not warranted, the Secretary will so inform the covered entity and, if the matter arose from a complaint, the complainant in writing.

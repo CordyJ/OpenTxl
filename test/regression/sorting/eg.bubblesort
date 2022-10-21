@@ -1,0 +1,8 @@
+this is a small set of words for the sorter to sort
+it could take a long time depending on which sort we use
+then again it may be that i am underestimating the speed
+with which this might go but i doubt it
+if the list of words gets long enough then we will begin
+to notice a difference between the two algorithms
+however on these modern fast machines it is difficult to
+demonstrate that without a truly long list of words to sort

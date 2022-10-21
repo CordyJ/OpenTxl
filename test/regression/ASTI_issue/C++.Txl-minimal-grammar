@@ -1,0 +1,211 @@
+%%
+%% A toy grammar which attempts to parse this declaration:
+%%   inline char foo::fill() {}
+%%
+tokens
+     id             + "\#\i+"
+     castintnumber  "\d+[uUlL][lLuU]?"
+     hexnumber      "0[XxZz][\dABCDEFabcdef]+[UulL]?[uUlL]?"
+     floatnumber    + "\d+(.\d+)?([eE][+-]?\d+)([fFUuLl]?[fFUuLl]?)"
+     floatnumber    + "\d+.?([eE][+-]?\d+)([fFUuLl]?[fFUuLl]?)"
+     floatnumber    + ".\d+([eE][+-]?\d+)([fFUuLl]?[fFUuLl]?)"
+     decimalnumber  + "\d+.\d+([fFUuLl]?[fFUuLl]?)"
+     decimalnumber  + "\d+.([fFUuLl]?[fFUuLl]?)"
+     decimalnumber  + ".\d+([fFUuLl]?[fFUuLl]?)"
+end tokens
+
+comments
+	//
+	/*  */
+end comments
+
+compounds
+   !=  '%=  &&  &=  *=  ++  +=  -+  --  -=  
+   ->  ->*  .*  ...  /=  ::  <<  <<=  <=  
+   ==  >=  >>  >>=  ^=  |=  ||  **
+end compounds
+
+keys
+   asm auto break case catch char class const
+   continue default delete do double else enum extern
+   float for friend goto if inline int long
+   new operator private protected public register return short
+   signed sizeof static struct switch template this typedef
+   union unsigned virtual void volatile while declare
+   #define #else #endif #if #ifdef #ifndef #include #line #undef #ident
+   try catch throw #LINK namespace using dynamic_cast static_cast
+   reinterpret_cast const_cast typeid typename mutable wchar_t bool
+end keys
+
+define program
+	[declaration_list]
+end define
+
+define name
+     [id]
+   | [qualified_name]    
+end define
+
+define class_name
+   [id]
+end define
+
+define qualified_name
+     [opt 'typename] [class_name] ':: [opt 'template] [class_component]
+end define
+
+define class_component
+     [opt '~] [class_name]		
+   | [qualified_name]
+end define
+
+define declaration
+     [opt decl_specifiers] [opt declarator_list] ;
+   | [fct_definition]
+end define
+
+define decl_specifier
+     [type_specifier]
+   | 'inline
+end define
+
+define decl_specifiers
+     [repeat decl_specifier+]
+end define
+
+define type_specifier
+% Without this line, or with the two [opt ...]s removed, the parse succeeds.
+    [opt '::] [opt nested_name_spec] [class_name] |
+%
+    'char
+end define
+
+define type_specifiers
+     [repeat type_specifier+]
+end define
+
+define declaration_list
+     [repeat declaration]
+end define
+
+define declarator_list
+     [list init_declarator+]
+end define
+
+define init_declarator
+	[declarator]
+end define
+
+define declarator
+        [repeat ptr_operator] [direct_declarator]
+end define
+
+define declarator_id
+        [name]
+    |   [opt nested_name_spec] [class_name]
+end define
+
+define direct_declarator
+        [declarator_id]
+    |   [direct_declarator] [declarator_extension]
+    |   ( [declarator] )
+end define
+
+define declarator_extension
+     [repeat open_paren+] [parameter_declaration_clause] 
+     [repeat close_paren+]
+end define
+
+define parameter_declaration_clause
+        [opt parameter_declaration_list] [opt '...]
+    |   [parameter_declaration_list] , '...
+end define
+
+define parameter_declaration_list
+        [parameter_declaration]
+    |   [parameter_declaration_list] , [parameter_declaration]
+end define
+
+define parameter_declaration
+      [decl_specifiers] [declarator]
+    | [id] [decl_specifiers]
+    | [decl_specifiers] [opt abstract_declarator]
+end define
+
+define ptr_operator
+     [stars]
+   | & 
+   | [id] ':: [stars]
+   | [opt '::] [nested_name_spec] '*
+end define
+
+define stars
+     * | **
+end define
+
+define type_name
+     [type_specifiers] [opt abstract_declarator]
+end define
+
+define abstract_declarator
+     [repeat abstract_extension+]
+   | ( [abstract_declarator] ) [repeat abstract_extension]
+end define
+
+define abstract_extension
+     (  [argument_declaration_list]  )
+   | [ptr_operator]
+   | (  [abstract_declarator]  )
+end define
+
+define argument_declaration_list
+     [arg_declaration_list]  [opt comma_dotdotdot]
+end define
+
+define comma_dotdotdot
+     [opt ',] '...
+end define
+
+define arg_declaration_list
+      [argument_declaration]
+    | [arg_declaration_list] , [argument_declaration]
+end define
+
+define argument_declaration
+     [decl_specifiers] [declarator]
+   | [decl_specifiers] [opt abstract_declarator]
+end define
+
+define fct_definition
+     [opt decl_specifiers] [declarator] [fct_body]
+end define
+
+define fct_body
+     [NL] [compound_statement] [opt ';] [NL]
+end define
+
+define nested_name_spec
+     [class_name] ':: [opt nested_name_spec]
+end define
+
+define compound_statement
+     {  			[NL] [IN]
+     }				[NL]
+end define
+
+define open_paren
+   (
+end define
+
+define close_paren
+   )
+end define
+
+% Trivial parse rule for testing.
+function main
+	replace [program]
+           P [repeat declaration]
+	by
+	   P
+end function
+

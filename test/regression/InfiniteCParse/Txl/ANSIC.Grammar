@@ -1,0 +1,479 @@
+% TXL 7.0 ANSI C Basis Grammar
+% J.R. Cordy, Queen's University, January 1994
+
+% Partially based on an earlier version by
+% mathew@elroy.Jpl.Nasa.Gov (Mathew Yeates), February 1992,
+% and on the AT&T C++2.0 reference grammar.
+
+comments
+	/* */
+	//
+end comments
+
+keys
+	auto            double          int         	struct
+	break           else            long            switch
+	case            enum            register        typedef
+	char            extern          return          union
+	const           float           short           unsigned
+	continue        for             signed          void
+	default          goto           sizeof          volatile
+	do              if              static          while
+end keys
+
+compounds
+	->	++      --	<<      >>	<=      >=      ==      !=
+	&&      ||	...	*=      /=      '%=	+=      -=
+	<<=     >>=	&=      ^=      |=
+end compounds
+
+
+% An ANSI C program
+define program
+        [translationunit]
+end define 
+
+
+% ANSI C identifiers and literals 		%% Extended to allow VMS JRC 2.4.95
+define identifier		
+	[opt startid] [id] [opt moreid]		%% JRC 2.4.95
+end define		
+		
+define startid					%% JRC 2.4.95
+	'$ [opt startid]			%% JRC 2.4.95
+    |	'_ [opt startid]			%% JRC 2.4.95
+end define					%% JRC 2.4.95
+		
+define moreid					%% JRC 2.4.95
+	'$ [opt identifier]			%% JRC 2.4.95
+end define					%% JRC 2.4.95
+
+define string					
+	[stringlit]				
+    |	[repeat stringlit+]			
+end define					
+
+
+% Constants
+define constant
+    	[number]			% integer or floating point constant
+    |	[charlit]			% character constant
+    |	0 [SPOFF] [id] [SPON]		% hexadecimal constant
+    |	. [SPOFF] [number] [SPON]	% float constant with leading '.'
+end define
+
+
+% Expressions
+define expression
+	[constant]		%% JRC optimization 
+    |	[list assignment_expression+]
+end define
+
+define constant_expression
+        [conditional_expression]
+end define
+
+define assignment_expression
+    	[conditional_expression]
+    |	[unary_expression] [assignment_operator] [assignment_expression]
+end define
+
+define assignment_operator
+	= | *= | /= | '%= | += | -= | >>= | <<= | &= | ^= | '|=
+end define
+
+define conditional_expression
+        [binary_expression] [opt conditional_operation]
+end define
+
+define conditional_operation
+        ? [expression]  :  [conditional_expression]
+end define
+
+define binary_expression
+        [cast_expression] [repeat binary_operation]
+end define
+
+define binary_operation
+        [binary_operator] [cast_expression]
+end define
+
+define binary_operator
+    	 +  | -  | *  | / | '% 
+    |	==  | != | <  | > | <= | >=
+    |	'|| | && | '| | ^ | & 
+    |	<<  | >> 
+    |	 .* | ->*
+end define
+
+define cast_expression
+        [unary_expression]
+    |   (  [type_name]  )  [cast_expression]
+end define
+
+define unary_expression
+        [postfix_expression]
+    |   [unary_operator] [cast_expression]
+    |   ++  [unary_expression]
+    |   --  [unary_expression]
+    |   'sizeof  [unary_expression]
+    |   'sizeof  (  [type_name]  )
+end define
+
+define unary_operator
+        * | & | + | - | ! | ~
+end define
+
+define postfix_expression
+        [primary_expression] [repeat postfix_extension]
+end define
+
+define postfix_extension
+	'[ [expression] ']
+    |	'( [opt expression] ')
+    |	'. [identifier]
+    |	'-> [identifier]
+    |	'++
+    |	'--
+end define
+
+define primary_expression
+        [identifier]  	
+    |	[constant]
+    |	[string]
+    |	'( [expression] ')
+    |	[type_name]		%% handle type parameters to macros -- JRC
+end define
+
+
+% Declarations
+
+define declaration
+    	[linkage_specification]					
+    |	[struct_or_union_definition]				
+    |	[decl_specifiers] [opt declarator_list] ; 	[NL]	
+end define
+
+define struct_or_union_definition
+    	[NL] [repeat sc_specifier] [struct_or_union_specifier] 
+	    [opt declarator_list] ;			[NL] [NL]
+end define
+
+define struct_or_union_specifier
+	[struct_or_union] [opt identifier] {		[IN] [NL]
+	    [repeat member_declaration]			[EX]
+	} [opt ';]					
+    |	'extern [string]  [declaration]
+end define
+
+define member_declaration
+	[decl_specifiers] [list member_declarator] ; 	[NL]
+    |	[comment] [NL] [repeat comment_NL]
+end define
+
+define member_declarator
+	[declarator] [opt bitfieldsize]
+    |	[bitfieldsize]
+end define
+
+define bitfieldsize
+	': [constant_expression]
+end define
+
+define decl_specifier
+	[sc_specifier]
+    |	[type_specifier]
+    |	'typedef
+end define
+
+define decl_specifiers
+	[repeat decl_specifier+]
+end define
+
+define sc_specifier
+	'auto
+    |	'register
+    |	'static
+    |	'extern
+end define
+
+define type_specifier
+	[simple_type_name]
+    |	[enum_specifier]
+    |	[elaborated_type_specifier]
+    |	'const
+    |	'volatile
+end define
+
+define type_specifiers
+	[repeat type_specifier+]
+end define
+
+define simple_type_name
+    	[identifier]
+    |	'char | 'short | 'int | 'long | 'signed | 'unsigned 
+    |	'float | 'double | 'void
+end define
+
+define elaborated_type_specifier
+	[struct_or_union] [identifier]
+    |	'enum [identifier]
+end define
+
+define struct_or_union
+	'struct | 'union
+end define
+
+define enum_specifier
+	'enum [opt identifier]  {  [opt enum_list]  }
+end define
+
+define enum_list
+	[list enumerator+]
+end define
+
+define enumerator
+	[identifier] [opt equal_constant_expression]
+end define
+
+define equal_constant_expression
+	=  [constant_expression]
+end define
+
+define linkage_specification
+	[NL] 'extern [string] { 	[NL] [IN]
+	    [declaration_list] 		[EX]
+	} [opt ';] 			[NL] [NL]
+    |	'extern [string] [declaration]
+end define
+
+define declaration_list
+	[repeat declaration] 
+end define
+
+define declarator_list
+	[list init_declarator+]
+end define
+
+define init_declarator
+	[declarator] [opt initializer]
+end define
+
+define declarator
+    	[repeat ptr_operator] [identifier] [repeat declarator_extension]
+    |	(  [declarator]  ) [repeat declarator_extension]
+end define
+
+define declarator_extension
+    	(  [argument_declaration_list]  )  [opt cv_qualifier_list]
+    |	'[  [opt constant_expression]  ']
+end define
+
+define ptr_operator
+	[stars]  [opt cv_qualifier_list]
+    |	&  [opt cv_qualifier_list]
+    |	[identifier]  :: [stars]  [opt cv_qualifier_list]
+end define
+
+define stars
+	* | **
+end define
+
+define cv_qualifier_list
+	[repeat cv_qualifier+]
+end define
+
+define cv_qualifier
+	'const
+    |	'volatile
+end define
+
+define type_name
+	[type_specifiers] [opt abstract_declarator]
+end define
+
+define abstract_declarator
+	[ptr_operator] [repeat abstract_extension]
+    |	(  [abstract_declarator]  ) [repeat abstract_extension]
+end define
+
+define abstract_extension
+    	(  [argument_declaration_list]  )  [opt cv_qualifier_list]
+    |	'[  [opt constant_expression]  ']
+    |	[ptr_operator]
+    |	(  [abstract_declarator]  )
+end define
+
+define argument_declaration_list
+    	[list argument_declaration] [opt comma_dotdotdot]
+end define
+
+define comma_dotdotdot
+	[opt ',] '...
+end define
+
+define argument_declaration
+	[decl_specifiers] [declarator] [opt equal_expression]
+    |	[decl_specifiers] [opt abstract_declarator] [opt equal_expression]
+end define
+
+define equal_expression
+	=  [expression]
+end define
+
+define initializer
+	= [expression]
+    |   = { [IN] [list expression+] [EX] }
+    |	= { [IN] [initializer_list] [opt ',] [EX] [NL] }
+    |	( [expression] )
+end define
+
+define initializer_list
+	[list initializer_element+]
+end define
+
+define initializer_element
+	[expression]
+    |	[NL] { [IN] [initializer_list] [opt ',] [EX] }
+end define
+
+
+% Statements
+define statement
+        [repeat label] [compound_statement]
+    |	[repeat label] [expression_statement]	
+    |	[repeat label] [selection_statement]	
+    |	[repeat label] [iteration_statement]	
+    |	[repeat label] [jump_statement]	
+    |	[repeat label] [null_statement]	
+end define
+
+define label
+        [identifier] ': 
+    |	[EX][SP][SP] 'case [constant_expression] ': [IN] [NL] 
+    |	[EX][SP][SP] 'default ': [IN] [NL] 
+end define
+
+define null_statement
+	'; [NL]
+end define
+
+define compound_statement
+        { 			[IN] [NL] 
+	    [declarations_and_statements] [EX]			%% JRC 2.4.95 
+	} [opt ';] 		[NL] [KEEP]
+end define
+
+define declarations_and_statements				%% JRC 2.4.95
+        [repeat declaration_or_statement_or_preprocessor]	%% JRC 2.4.95
+end define							%% JRC 2.4.95
+
+define declaration_or_statement_or_preprocessor			%% JRC 2.4.95
+	[declaration]						%% JRC 2.4.95
+    |	[statement]						%% JRC 2.4.95
+    |	[preprocessor]	[NL]					%% JRC 2.4.95
+    |	[comment] [NL] [repeat comment_NL]			%% JRC 2.4.95
+end define							%% JRC 2.4.95
+
+define declarations
+        [repeat declaration_or_preprocessor]
+end define
+
+define declaration_or_preprocessor
+	[declaration]
+    |	[preprocessor]	[NL]
+    |	[comment] [NL] [repeat comment_NL]
+end define
+
+define comment_NL
+	[comment] [NL]
+end define
+
+define statements
+        [repeat statement_or_preprocessor]
+end define
+
+define statement_or_preprocessor
+	[statement]
+    |	[preprocessor]	[NL]
+    |	[comment] [NL] [repeat comment_NL]
+end define
+
+define expression_statement
+        [expression] '; [NL]
+end define
+
+define selection_statement
+        'if '( [expression] ') 
+	    [statement] 
+	[opt ELSEstatement]
+    |	'switch '( [expression] ') 
+	    [statement]
+end define 
+
+define ELSEstatement
+        'else [statement]
+end define
+
+define iteration_statement
+        'while '( [expression] ') 
+	    [statement]
+    |	'do [statement] 
+	'while '( [expression] ') '; [NL]
+    |	'for '( [opt expression] '; [opt expression] '; [opt expression] ') 
+	    [statement]
+end define
+
+define jump_statement
+        'goto [identifier] '; 		[NL]
+    |	'continue '; 			[NL]
+    |	'break '; 			[NL]
+    |	'return [opt expression] '; 	[NL]
+    |	'return ( [opt expression] ) ';	[NL]
+end define
+
+
+% External declarations
+define translationunit
+        [repeat externaldefinition]
+end define
+
+define externaldefinition
+        [declaration]
+    |	[NL] [function_definition] [NL]
+    |	[NL] [preprocessor] [NL] [repeat preprocessor_NL] [NL] 
+    |	[NL] [comment] [NL] [repeat comment_NL] 
+end define
+
+define preprocessor_NL
+	[preprocessor] [NL]
+end define
+
+define function_definition
+	[opt decl_specifiers] [declarator] 
+	    [opt NL_declarations] 		%% allow old-style functions -- JRC
+	    [compound_statement]
+end define
+
+define NL_declarations
+	[NL] [declarations]
+end define
+
+define preprocessor
+	[SPOFF] '# [integernumber] [SP] [stringlit] [SP] [opt integernumber] [SPON]
+    |	[SPOFF] '# 'include [SP] [stringlit] [SPON]
+    |	[SPOFF] '# 'include [SP] '< [filename] '> [SPON]
+    |	[SPOFF] '# 'line [SP] [integernumber] [SP] [opt stringlit] [SPON]
+    |	[SPOFF] '# 'else [SPON]
+    |	[SPOFF] '# 'endif [SPON]
+    |	[SPOFF] '# 'ifndef [identifier] [SPON]
+    |	[SPOFF] '# 'ifdef [identifier] [SPON]
+    |	[SPOFF] '# 'if [SPON] [constant_expression]
+    |	[SPOFF] '# 'undef [SPON] [identifier]
+    |	[SPOFF] '# 'define [SPON] [identifier] [expression]
+end define
+
+define filename
+	[opt '$] [opt '.] [opt '/] [identifier] [opt filename]
+end define
+

@@ -1,0 +1,22 @@
+TXL Example Specification
+-------------------------
+
+Name:	
+	all.Txl
+
+Description:
+	Demonstration of the paradigm for testing if all of
+	several rules succeeded, using the 'where all' form.
+
+Author:
+   	J.R. Cordy
+
+Affiliation:
+	Legasys Corp.
+
+Date:
+	May 1995
+
+Example:
+	txl test1.all
+	txl test2.all

@@ -1,0 +1,51 @@
+MODULE query;
+
+
+FROM XdrM2_query IMPORT TelNo, message;
+FROM InOut   IMPORT Read, ReadCard, 
+		    WriteBf, WriteString, WriteLn, WriteInt;
+
+
+VAR	i : TelNo;
+	m : message;
+	j : CARDINAL;
+	c : CHAR;
+
+BEGIN
+
+  LOOP 
+    WriteLn(); WriteLn();
+    WriteString("Enter telephone number !  ");
+    WriteBf();
+    ReadCard(j); Read(c); i := (ORD(j));
+    CALL(q1,i);
+    WAIT(q1,m);
+    IF i=0 THEN EXIT; END;
+
+    WriteLn(); WriteLn();
+    IF m.tag = 1 THEN
+      WITH m.some DO
+	WriteString("ChName: "); 
+	WriteString(ChName); 
+	WriteLn();
+
+	WriteString("FaName: "); 
+	WriteString(FaName); 
+	WriteLn();
+
+	WriteString("project: "); 
+	WriteString(project); 
+	WriteLn();
+
+	WriteString("tel: "); 
+	WriteInt(tel,0); 
+	WriteLn();
+      END;
+    ELSE
+      WriteString("No entry for telephone number "); 
+      WriteInt(i,0); 
+      WriteLn();
+    END;
+  END;
+
+END query.

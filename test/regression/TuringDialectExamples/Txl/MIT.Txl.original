@@ -1,0 +1,234 @@
+% Module Inheritance Turing dialect
+% Allows transitive multiple simple inheritance of module attributes.
+% Jim Cordy
+% Queen's University, October 1988 (Revised May 1989)
+% 
+% Revised March 1990, Ian Carmichael, Queen's University 
+% - New TXL syntax
+% - New turing basis syntax
+% - Now splices import/export lists and module bodies without fiddling syntax
+% - Fixed bug which caused spec to brake under new run-time model
+
+include "Turing.Grammar"
+
+% Syntactic forms
+
+define moduleDeclaration
+						[NL]
+	'module [id] 				[NL][IN]
+	    [repeat refinementClause]	
+	    [opt importList]
+	    [opt exportList]
+	    [subScope]				[EX]
+	'end [id]				[NL]
+end define
+
+define refinementClause
+	'refines [id] 	[NL]
+end define
+
+% Semantic transforms
+
+function mainRule
+    replace [program]
+	P [repeat declarationOrStatement]
+    by
+	P [fixInheritedModules]
+end function
+
+function fixInheritedModules
+    replace [repeat declarationOrStatement]
+	P [repeat declarationOrStatement]
+    by
+	P [fixInheritedModulesWithImports] 
+	    [fixInheritedModulesWithoutImports] 
+end function
+
+rule fixInheritedModulesWithImports
+    replace [repeat declarationOrStatement]
+	'module MCname [id] 
+	    MCimp [importList]
+	    MCexp [exportList]
+	    MCbody [repeat declarationOrStatement]
+	'end MCname
+	RestOfScope [repeat declarationOrStatement]
+    where
+	RestOfScope [hasRefines MCname]
+    by
+	'module MCname 
+	    MCimp 
+	    MCexp 
+	    MCbody 
+	'end MCname
+	RestOfScope 
+	    [fixInheritedModuleWithImportsRefinements MCname MCimp MCexp MCbody]
+end rule
+
+function hasRefines M [id]
+    match * [refinementClause]
+	'refines M
+end function
+
+function fixInheritedModuleWithImportsRefinements 
+	MCname [id] MCimp [importList] MCexp [exportList] 
+	MCbody [repeat declarationOrStatement]
+    replace [repeat declarationOrStatement]
+	InheritedModuleScope [repeat declarationOrStatement]
+    by
+	InheritedModuleScope 
+	    [fixInheritedModuleWithImportsRefinementsWithImportsAndExports 
+		MCname MCimp MCexp MCbody]
+	    [fixInheritedModuleWithImportsRefinementsWithImportsOnly 
+		MCname MCimp MCexp MCbody]
+	    [fixInheritedModuleWithImportsRefinementsWithExportsOnly 
+		MCname MCimp MCexp MCbody]
+	    [fixInheritedModuleWithImportsRefinementsWithNoImportsOrExports 
+		MCname MCimp MCexp MCbody]
+end function
+
+rule fixInheritedModuleWithImportsRefinementsWithImportsAndExports 
+	MCname [id] MCimp [importList] MCexp [exportList] 
+	MCbody [repeat declarationOrStatement]
+    replace [repeat declarationOrStatement]
+	'module MRname [id] 
+	    'refines MCname MoreRefines [repeat refinementClause] 
+	    'import ( MRimp [list optVarOrForwardId] )
+	    'export ( MRexp [list optOpaqueId] )
+	    MRbody [repeat declarationOrStatement]
+	'end MRname
+	RestOfScope [repeat declarationOrStatement]
+    by
+	'module MRname 
+	    MoreRefines
+	    MCimp [addNewImports MRimp]
+	    MCexp [addNewExports MRexp]
+	    MCbody [. MRbody]
+	'end MRname
+	RestOfScope
+end rule
+
+rule fixInheritedModuleWithImportsRefinementsWithImportsOnly
+	MCname [id] MCimp [importList] MCexp [exportList] 
+	MCbody [repeat declarationOrStatement]
+    replace [moduleDeclaration]
+	'module MRname [id]
+	    'refines MCname MoreRefines [repeat refinementClause]
+	    'import ( MRimp [list optVarOrForwardId] )
+	    MRbody [repeat declarationOrStatement]
+	'end MRname
+    by
+	'module MRname MoreRefines
+	    MCimp [addNewImports MRimp]
+	    MCexp
+	    MCbody [. MRbody]
+	'end MRname
+end rule
+
+rule fixInheritedModuleWithImportsRefinementsWithExportsOnly 
+	MCname [id] MCimp [importList] MCexp [exportList] 
+	MCbody [repeat declarationOrStatement]
+    replace [moduleDeclaration]
+	'module MRname [id] 
+	    'refines MCname MoreRefines [repeat refinementClause]
+	    'export ( MRexp [list optOpaqueId] )
+	    MRbody [repeat declarationOrStatement]
+	'end MRname
+    by
+	'module MRname MoreRefines
+	    MCimp 
+	    MCexp [addNewExports MRexp]
+	    MCbody [. MRbody]
+	'end MRname
+end rule
+
+rule fixInheritedModuleWithImportsRefinementsWithNoImportsOrExports 
+	MCname [id] MCimp [importList] MCexp [exportList] 
+	MCbody [repeat declarationOrStatement]
+    replace [moduleDeclaration]
+	'module MRname [id] 
+	    'refines MCname MoreRefines [repeat refinementClause]
+	    MRbody [repeat declarationOrStatement]
+	'end MRname
+    by
+	'module MRname MoreRefines
+	    MCimp 
+	    MCexp 
+	    MCbody [. MRbody]
+	'end MRname
+end rule
+
+rule fixInheritedModulesWithoutImports
+    replace [repeat declarationOrStatement]
+	'module MCname [id] 
+	    MCexp [exportList]
+	    MCbody [repeat declarationOrStatement]
+	'end MCname
+	RestOfScope [repeat declarationOrStatement]
+    by
+	'module MCname 
+	    MCexp 
+	    MCbody 
+	'end MCname
+	RestOfScope 
+	    [fixInheritedModuleWithoutImportsRefinements MCname MCexp MCbody]
+	    [fixInheritedModules] 
+end rule
+
+rule fixInheritedModuleWithoutImportsRefinements 
+	MCname [id] MCexp [exportList] MCbody [repeat declarationOrStatement]
+    replace [repeat declarationOrStatement]
+	InheritedModuleScope [repeat declarationOrStatement]
+    by
+	InheritedModuleScope 
+	    [fixInheritedModuleWithoutImportsRefinementsWithExports 
+		MCname MCexp MCbody]
+	    [fixInheritedModuleWithoutImportsRefinementsWithoutExports 
+		MCname MCexp MCbody]
+end rule
+
+rule fixInheritedModuleWithoutImportsRefinementsWithExports 
+	MCname [id] MCexp [exportList] MCbody [repeat declarationOrStatement]
+    replace [moduleDeclaration]
+	'module MRname [id] 
+	    'refines MCname MoreRefines [repeat refinementClause]
+	    MRimp [opt importList]
+	    'export ( MRexp [list optOpaqueId] )
+	    MRbody [repeat declarationOrStatement]
+	'end MRname
+    by
+	'module MRname MoreRefines
+	    MRimp
+	    MCexp [addNewExports MRexp]
+	    MCbody [. MRbody]
+	'end MRname
+end rule
+
+rule fixInheritedModuleWithoutImportsRefinementsWithoutExports
+	MCname [id] MCexp [exportList] MCbody [repeat declarationOrStatement]
+    replace [moduleDeclaration]
+	'module MRname [id] 
+	    'refines MCname MoreRefines [repeat refinementClause]
+	    MRimp [opt importList]
+	    MRbody [repeat declarationOrStatement]
+	'end MRname
+    by
+	'module MRname MoreRefines
+	    MRimp
+	    MCexp
+	    MCbody [. MRbody]
+	'end MRname
+end rule
+
+function addNewImports NewImports [list optVarOrForwardId] 
+    replace [importList]
+	'import ( OldImports [list optVarOrForwardId] )
+    by
+	'import ( OldImports [, NewImports] )
+end function
+
+function addNewExports NewExports [list optOpaqueId]
+    replace [exportList]
+	'export ( OldExports [list optOpaqueId] )
+    by
+	'export ( OldExports [, NewExports] )
+end function

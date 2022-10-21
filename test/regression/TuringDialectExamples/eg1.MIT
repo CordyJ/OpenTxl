@@ -1,0 +1,49 @@
+% Demonstration Example of Simple Multiple Inheritance Turing dialect 
+
+const stacksize := 10
+type stacktype : string
+
+module stack 
+    import (stacksize, stacktype)
+    export (push, pop)
+
+    var top : 0 .. stacksize := 0
+    var contents : array 1 .. stacksize of stacktype
+
+    procedure push (item : stacktype)
+	top := top + 1
+	contents (top) := item
+    end push
+
+    procedure pop (var item : stacktype)
+	item := contents (top)
+	top := top - 1
+    end pop
+end stack
+
+const qsize := 10
+type qtype : int
+
+module queue 
+    import (qsize, qtype)
+    export (enq, deq)
+
+    var head : 0 .. qsize := 1
+    var tail : 0 .. qsize := 0
+    var qcontents : array 0 .. qsize-1 of qtype
+
+    procedure enq (item : qtype)
+	tail := (tail + 1) mod qsize
+	qcontents (tail) := item
+    end enq
+
+    procedure deq (var item : qtype)
+	item := qcontents (head)
+	head := (head + 1) mod qsize
+    end deq
+end queue
+
+module stackandqueue 
+    refines stack 
+    refines queue
+end stackandqueue

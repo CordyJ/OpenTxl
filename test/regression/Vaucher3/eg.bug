@@ -1,0 +1,4 @@
+fred ::=
+   red
+ | blue
+;

@@ -1,0 +1,5 @@
+This parse goes on forever.  I don't know why.
+It is the "JRC Optimization" for [assignment_expression] that causes it.
+Remove that line and the problem goes away!
+
+Jim

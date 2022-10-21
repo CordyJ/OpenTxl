@@ -1,0 +1,52 @@
+TXL Pro-LS 2.2r1 (14.10.97) Copyright 1995-1997 Legasys Corp.
+Bootstrapping TXL ... 
+  ... used 347 trees and 229 kids.
+Scanning the TXL program :Txl:Compound.Txl
+Parsing the TXL program
+  ... used 1445 trees and 2270 kids.
+Making the object language grammar tree
+TXL ERROR : (Warning) Declaration of define 'choice' overrides previous declaration
+  ... used 72 trees and 49 kids.
+Making the rule table
+  ... used 252 trees and 261 kids.
+Scanning the input file eg.Compound
+Parsing the input file
+  ... used 158 trees and 266 kids.
+Applying the transformation rules
+Entering rule mainRule
+Entering rule fixCascadedFirstChoices
+Entering rule !
+Exiting rule ! (succeeded) - 2 trees, 0 kids, 0.000 seconds
+Entering rule !
+Exiting rule ! (succeeded) - 2 trees, 0 kids, 0.000 seconds
+Exiting rule fixCascadedFirstChoices (failed) - 44 trees, 76 kids, 0.083 seconds
+Entering rule fixCascadedAlternateChoices
+Entering rule !
+Exiting rule ! (succeeded) - 2 trees, 0 kids, 0.000 seconds
+Entering rule .
+Exiting rule . (succeeded) - 2 trees, 4 kids, 0.000 seconds
+Exiting rule fixCascadedAlternateChoices (failed) - 25 trees, 44 kids, 0.033 seconds
+Entering rule fixCompoundFirstChoices
+Exiting rule fixCompoundFirstChoices (failed) - 0 trees, 0 kids, 0.016 seconds
+Entering rule fixCompoundAlternateChoices
+Entering rule !
+Exiting rule ! (succeeded) - 2 trees, 0 kids, 0.016 seconds
+Entering rule .
+Exiting rule . (succeeded) - 2 trees, 4 kids, 0.000 seconds
+Exiting rule fixCompoundAlternateChoices (failed) - 20 trees, 35 kids, 0.033 seconds
+Exiting rule mainRule (succeeded) - 90 trees, 156 kids, 0.200 seconds
+Forced to copy 16 local vars (27%)
+  ... used 93 trees and 158 kids.
+Generating transformed output
+Used a total of 2367 trees (0%) and 3233 kids (0%).
+True = true ! True + setFalse ? False + setTrue ? True
+False = false ! False + setTrue ? True + setFalse ? False
+Negate = false ? Negate1
+Negate1 = true ? Negate2 + setTrue ! nil
+Negate2 = setFalse ! nil
+And = false ? And1
+And1 = true ? And2 + setFalse ! nil
+And2 = true ? setTrue ! nil + false ? setFalse ! nil
+[True & Negate]
+[False & Negate]
+

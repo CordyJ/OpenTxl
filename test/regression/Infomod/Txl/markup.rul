@@ -1,0 +1,640 @@
+rule markup
+            pattern [informationModelStatement_48]
+
+    deconstruct pattern
+        'CollPatt_ 
+        oSI [opt statementIdentifier_3]
+        oDC [opt domainsClause_216]
+        pW [patternWords_666]
+        ': 
+        pEV [primeEntityVariable_79]
+        aV [attributeVector_76]
+        sT [statementTerminator_22]
+
+    deconstruct pEV
+        eV [entityVariableName_80]
+
+    replace [program]
+        P [program]
+    by
+        P [processModelName]
+            [processPrimeEV eV]
+            [processEV]
+            [mark_denotationOp_510]
+            [mark_transitionOp_511]
+            [markConditionalOp_516]
+            [markCorrespondingOp_518]
+            [mark_dependingOp_519]
+            [mark_implicationOp_520]
+            [mark_reverseImplicationOp_521]
+            [mark_alternativeOrOp_522]
+            [mark_orOp_524]
+            [mark_andOp_525]
+            [mark_notOp_526]
+            [mark_classSentenceOp_527]
+            [mark_classSpecificationOp_527]
+            [mark_cartesianOp_532]
+            [mark_unionOp_534]
+            [mark_intersectionOp_535]
+            [mark_complementOp_536]
+            [mark_membershipOp_537]
+            [mark_reverseMembershipOp_540]
+            [mark_classSelectionOp_540]
+            [mark_relationalOp_541]
+            [mark_nextHigherOp_552]
+            [mark_nextLowerOp_553]
+            [mark_orderingIndication_563]
+            [mark_ordinal_583]
+            [mark_percentSign_569]
+            [mark_knownIndicator_640]
+            [mark_unknownIndicator_641]
+            [mark_assumeIndicator_642]
+            [mark_ignoreIndicator_643]
+            [mark_typeIndicator_644]
+            [mark_universalQuantifier_647]
+            [mark_existentialQuantifier_650]
+            [mark_uniquenessQuantifier_652]
+            [mark_specificIndicator_653]
+            [mark_specificExistenceQuantifier_654]
+            [mark_enumeratedQuantifier_655]
+            [mark_approximatelyIndicator_657]
+            [mark_approximatelyIndicator_657]
+            [mark_lowLimit_660]
+            [mark_highLimit_661]
+            [mark_criterionIndicator_662]
+            [mark_pronounCriterionIndicator_662]
+            [mark_entityIndicator_663]
+            [mark_viewIndicator_664]
+            [mark_patternWords_666]
+            [mark_possibleIndicator_667]
+            [mark_desiredIndicator_668]
+            [mark_entityIdentifierIndicator_669]
+            [mark_uniqueIndicator_670]
+            [mark_requiredIndicator_671]
+            [mark_informationModelIndicator_673]
+            [mark_endIndicator_674]
+            [mark_subModelWords_676]
+            [mark_commentWord_677]
+            [mark_defaultIndicator_678]
+            [mark_exportWords_680]
+            [mark_importWords_681]
+end rule
+
+%===================================================
+
+rule processModelName
+
+    % marks model name by '<MN_> ... '<mn_>
+
+    replace [informationModelName_51]
+        iMN [entityId]
+    by
+        '< MN_ > iMN '< mn > 
+end rule
+
+%===================================================
+
+rule processPrimeEV
+            eV [entityVariableName_80]
+
+    % marks all prime entity variables by '<PEV_> ... '<pev_>
+
+    replace [entityVariableName_80]
+        eV 
+
+    deconstruct eV
+        eId [entityId]
+        rhash [repeat '#]
+    by
+        '< PEV_ > eId rhash '< pev_ > 
+end rule
+
+%===================================================
+
+rule processEV
+
+    % marks all remaining entity variables by '<EV_> ... '<ev_>
+
+    replace [entityVariableName_80]
+        eId [entityId]
+        rhash [repeat '#]
+    by
+        '< EV_ > eId rhash '< ev_ > 
+end rule
+
+%===================================================
+
+rule mark_denotationOp_510
+    replace [denotationOp_510]
+        X [denotationOp_510a]
+    by
+        '<K_> X '<k_> 
+end rule
+
+%===================================================
+
+rule mark_transitionOp_511
+    replace [transitionOp_511]
+        tO [transitionOp_511a]
+    by
+        '<K_> tO '<k_> 
+end rule
+
+%===================================================
+
+rule markConditionalOp_516
+    replace [conditionalOp_516]
+        X [conditionalOp_516a]
+    by
+        '<K_> X '<k_> 
+end rule
+
+%===================================================
+
+rule markCorrespondingOp_518
+    replace [correspondingOp_518]
+        X [correspondingOp_518a]
+    by
+        '<K_> X '<k_> 
+end rule
+
+%===================================================
+
+rule mark_dependingOp_519
+    replace [dependingOp_519]
+        X [dependingOp_519a]
+    by
+        '<K_> X '<k_> 
+end rule
+
+%===================================================
+
+rule mark_implicationOp_520
+    replace [implicationOp_520]
+        X [implicationOp_520a]
+    by
+        '<K_> X '<k_> 
+end rule
+
+%===================================================
+
+rule mark_reverseImplicationOp_521
+    replace [reverseImplicationOp_521]
+        X [reverseImplicationOp_521a]
+    by
+        '<K_> X '<k_> 
+end rule
+
+%===================================================
+
+rule mark_alternativeOrOp_522
+    replace [alternativeOrOp_522]
+        X [alternativeOrOp_522a]
+    by
+        '<K_> X '<k_> 
+end rule
+
+%===================================================
+
+rule mark_orOp_524
+    replace [orOp_524]
+        X [orOp_524a]
+    by
+        '<K_> X '<k_> 
+end rule
+
+%===================================================
+
+rule mark_andOp_525
+    replace [andOp_525]
+        X [andOp_525a]
+    by
+        '<K_> X '<k_> 
+end rule
+
+%===================================================
+
+rule mark_notOp_526
+    replace [notOp_526]
+        X [notOp_526a]
+    by
+        '<K_> X '<k_> 
+end rule
+
+%===================================================
+
+rule mark_classSentenceOp_527
+    replace [classSentenceOp_527]
+        X [classSentenceOp_527a]
+    by
+        '<K_> X '<k_> 
+end rule
+
+%===================================================
+
+rule mark_classSpecificationOp_527
+    replace [classSpecificationOp_527]
+        X [classSpecificationOp_527a]
+    by
+        '<K_> X '<k_> 
+end rule
+
+%===================================================
+
+rule mark_cartesianOp_532
+    replace [cartesianOp_532]
+        X [cartesianOp_532a]
+    by
+        '<K_> X '<k_> 
+end rule
+
+%===================================================
+
+rule mark_unionOp_534
+    replace [unionOp_534]
+        X [unionOp_534a]
+    by
+        '<K_> X '<k_> 
+end rule
+
+%===================================================
+
+rule mark_intersectionOp_535
+    replace [intersectionOp_535]
+        X [intersectionOp_535a]
+    by
+        '<K_> X '<k_> 
+end rule
+
+%===================================================
+
+rule mark_complementOp_536
+    replace [complementOp_536]
+        X [complementOp_536a]
+    by
+        '<K_> X '<k_> 
+end rule
+
+%===================================================
+
+rule mark_membershipOp_537
+    replace [membershipOp_537]
+        X [membershipOp_537a]
+    by
+        '<K_> X '<k_> 
+end rule
+
+%===================================================
+
+rule mark_reverseMembershipOp_540
+    replace [reverseMembershipOp_540]
+        X [reverseMembershipOp_540a]
+    by
+        '<K_> X '<k_> 
+end rule
+
+%===================================================
+
+rule mark_classSelectionOp_540
+    replace [classSelectionOp_540]
+        X [classSelectionOp_540a]
+    by
+        '<K_> X '<k_> 
+end rule
+
+%===================================================
+
+rule mark_relationalOp_541
+    replace [relationalOp_541]
+        X [relationalOp_541a]
+    by
+        '<K_> X '<k_> 
+end rule
+
+%===================================================
+
+rule mark_nextHigherOp_552
+    replace [nextHigherOp_552]
+        X [nextHigherOp_552a]
+    by
+        '<K_> X '<k_> 
+end rule
+
+%===================================================
+
+rule mark_nextLowerOp_553
+    replace [nextLowerOp_553]
+        X [nextLowerOp_553a]
+    by
+        '<K_> X '<k_> 
+end rule
+
+%===================================================
+
+rule mark_orderingIndication_563
+    replace [orderingIndication_563]
+        X [orderingIndication_563a]
+    by
+        '<K_> X '<k_> 
+end rule
+
+%===================================================
+
+rule mark_percentSign_569
+    replace [percentSign_569]
+        X [percentSign_569a]
+    by
+        '<K_> X '<k_> 
+end rule
+
+%===================================================
+
+rule mark_ordinal_583
+    replace [ordinal_583]
+        X [ordinal_583a]
+    by
+        '<K_> X '<k_> 
+end rule
+
+%===================================================
+
+rule mark_knownIndicator_640
+    replace [knownIndicator_640]
+        X [knownIndicator_640a]
+    by
+        '<K_> X '<k_> 
+end rule
+
+%===================================================
+
+rule mark_unknownIndicator_641
+    replace [unknownIndicator_641]
+        X [unknownIndicator_641a]
+    by
+        '<K_> X '<k_> 
+end rule
+
+%===================================================
+
+rule mark_assumeIndicator_642
+    replace [assumeIndicator_642]
+        X [assumeIndicator_642a]
+    by
+        '<K_> X '<k_> 
+end rule
+
+%===================================================
+
+rule mark_ignoreIndicator_643
+    replace [ignoreIndicator_643]
+        X [ignoreIndicator_643a]
+    by
+        '<K_> X '<k_> 
+end rule
+
+%===================================================
+
+rule mark_typeIndicator_644
+    replace [typeIndicator_644]
+        X [typeIndicator_644a]
+    by
+        '<K_> X '<k_> 
+end rule
+
+%===================================================
+
+rule mark_universalQuantifier_647
+    replace [universalQuantifier_647]
+        X [universalQuantifier_647a]
+    by
+        '<K_> X '<k_> 
+end rule
+
+%===================================================
+
+rule mark_existentialQuantifier_650
+    replace [existentialQuantifier_650]
+        X [existentialQuantifier_650a]
+    by
+        '<K_> X '<k_> 
+end rule
+
+%===================================================
+
+rule mark_uniquenessQuantifier_652
+    replace [uniquenessQuantifier_652]
+        X [uniquenessQuantifier_652a]
+    by
+        '<K_> X '<k_> 
+end rule
+
+%===================================================
+
+rule mark_specificIndicator_653
+    replace [specificIndicator_653]
+        X [specificIndicator_653a]
+    by
+        '<K_> X '<k_> 
+end rule
+
+%===================================================
+
+rule mark_specificExistenceQuantifier_654
+    replace [specificExistenceQuantifier_654]
+        X [specificExistenceQuantifier_654a]
+    by
+        '<K_> X '<k_> 
+end rule
+
+%===================================================
+
+rule mark_enumeratedQuantifier_655
+    replace [enumeratedQuantifier_655]
+        X [enumeratedQuantifier_655a]
+    by
+        '<K_> X '<k_> 
+end rule
+
+%===================================================
+
+rule mark_approximatelyIndicator_657
+    replace [approximatelyIndicator_657]
+        X [approximatelyIndicator_657a]
+    by
+        '<K_> X '<k_> 
+end rule
+
+%===================================================
+
+rule mark_lowLimit_660
+    replace [lowLimit_660]
+        X [lowLimit_660a]
+    by
+        '<K_> X '<k_> 
+end rule
+
+%===================================================
+
+rule mark_highLimit_661
+    replace [highLimit_661]
+        X [highLimit_661a]
+    by
+        '<K_> X '<k_> 
+end rule
+
+%===================================================
+
+rule mark_criterionIndicator_662
+    replace [criterionIndicator_662]
+        X [criterionIndicator_662a]
+    by
+        '<K_> X '<k_> 
+end rule
+
+%===================================================
+
+rule mark_pronounCriterionIndicator_662
+    replace [pronounCriterionIndicator_662]
+        X [pronounCriterionIndicator_662a]
+    by
+        '<K_> X '<k_> 
+end rule
+
+%===================================================
+
+rule mark_entityIndicator_663
+    replace [entityIndicator_663]
+        X [entityIndicator_663a]
+    by
+        '<K_> X '<k_> 
+end rule
+
+%===================================================
+
+rule mark_viewIndicator_664
+    replace [viewIndicator_664]
+        X [viewIndicator_664a]
+    by
+        '<K_> X '<k_> 
+end rule
+
+%===================================================
+
+rule mark_patternWords_666
+    replace [patternWords_666]
+        pW [patternWords_666a]
+    by
+        '<K_> pW '<k_> 
+end rule
+
+%===================================================
+
+rule mark_possibleIndicator_667
+    replace [possibleIndicator_667]
+        X [possibleIndicator_667a]
+    by
+        '<K_> X '<k_> 
+end rule
+
+%===================================================
+
+rule mark_desiredIndicator_668
+    replace [desiredIndicator_668]
+        X [desiredIndicator_668a]
+    by
+        '<K_> X '<k_> 
+end rule
+
+%===================================================
+
+rule mark_entityIdentifierIndicator_669
+    replace [entityIdentifierIndicator_669]
+        X [entityIdentifierIndicator_669a]
+    by
+        '<K_> X '<k_> 
+end rule
+
+%===================================================
+
+rule mark_uniqueIndicator_670
+    replace [uniqueIndicator_670]
+        X [uniqueIndicator_670a]
+    by
+        '<K_> X '<k_> 
+end rule
+
+%===================================================
+
+rule mark_requiredIndicator_671
+    replace [requiredIndicator_671]
+        X [requiredIndicator_671a]
+    by
+        '<K_> X '<k_> 
+end rule
+
+%===================================================
+
+rule mark_informationModelIndicator_673
+    replace [informationModelIndicator_673]
+        X [informationModelIndicator_673a]
+    by
+        '<K_> X '<k_> 
+end rule
+
+%===================================================
+
+rule mark_endIndicator_674
+    replace [endIndicator_674]
+        X [endIndicator_674a]
+    by
+        '<K_> X '<k_> 
+end rule
+
+%===================================================
+
+rule mark_subModelWords_676
+    replace [subModelWords_676]
+        X [subModelWords_676a]
+    by
+        '<K_> X '<k_> 
+end rule
+
+%===================================================
+
+rule mark_commentWord_677
+    replace [commentWord_677]
+        X [commentWord_677a]
+    by
+        '<K_> X '<k_> 
+end rule
+
+%===================================================
+
+rule mark_defaultIndicator_678
+    replace [defaultIndicator_678]
+        X [defaultIndicator_678a]
+    by
+        '<K_> X '<k_> 
+end rule
+
+%===================================================
+
+rule mark_exportWords_680
+    replace [exportWords_680]
+        X [exportWords_680a]
+    by
+        '<K_> X '<k_> 
+end rule
+
+%===================================================
+
+rule mark_importWords_681
+    replace [importWords_681]
+        X [importWords_681a]
+    by
+        '<K_> X '<k_> 
+end rule
+
+%===================================================
+
+

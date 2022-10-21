@@ -1,0 +1,97 @@
+% Example generic object-oriented Turing dialect program.
+% Implementation of queue-structured spoolers using an object class.
+
+% An object class representing a simple spooler.
+% Note that it has an embedded polymorphic queue object class inside!
+
+type spooler : 
+    object
+	export (getdata, putdata)
+
+	var count : int := 0	
+
+	% A polymorphic object class representing a queue of any size and type.
+	% Note that the generic and object facilities are two completely 
+	% separate features which we combine in an orthogonal fashion to 
+	% produce the polymorphic object result.
+
+	generic queueof (itemtype, queuesize)
+	    type queueof :
+		object
+		    export (empty, enqueue, dequeue)
+
+		    var qend : 0 .. queuesize - 1 := 0
+		    var qstart : 0 .. queuesize - 1 := 1
+		    var qlength : 0 .. queuesize := 0
+		    var contents : array 0 .. queuesize - 1 of itemtype
+
+		    procedure enqueue (item : itemtype)
+			pre qlength < queuesize
+			qlength := qlength + 1
+			qend := (qend + 1) mod queuesize
+			contents (qend) := item
+		    end enqueue
+
+		    procedure dequeue (var item : itemtype)
+			pre qlength > 0
+			item := contents (qstart)
+			qstart := (qstart + 1) mod queuesize
+			qlength := qlength - 1
+		    end dequeue
+
+		    function empty : boolean
+			result qlength = 0
+		    end empty
+
+		end queueof
+
+	% An instance type of the polymorphic class "queueof"
+	instance stringqueue : queueof (string, 50)
+
+	% A variable of the instance type
+	var sq : stringqueue
+	var s : string
+
+	procedure getdata
+	    loop
+		get skip
+		exit when eof
+		get s
+		exit when s = "."
+		sq.enqueue (s)
+	    end loop
+	end getdata
+
+	procedure putdata
+	    loop
+		exit when sq.empty
+		sq.dequeue (s)
+		put s, " " ..
+	    end loop
+	    put ""
+	end putdata
+
+    end spooler
+
+% Two instances of the object class "spooler"
+var spool1 : spooler
+var spool2 : spooler
+
+% Stupid little program to test the two spoolers
+put "Type a few words followed by a '.' each time", 
+    " you're asked to spool.", skip, 
+    "When you get bored, use ^D to stop", 
+    " spooling and watch the result.", skip
+loop
+    put "Spool to spool 1 : "
+    spool1.getdata
+    exit when eof
+    put "Spool to spool 2 : " 
+    spool2.getdata
+    exit when eof
+end loop
+
+put skip, skip, "Spooled from spool 1 : "
+spool1.putdata
+put skip, "Spooled from spool 2 : "
+spool2.putdata

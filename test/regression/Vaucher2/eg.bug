@@ -1,0 +1,22 @@
+BLOCK Tester_X25;
+
+SYNTYPE byte = Integer
+        constants 0 : 255
+ENDSYNTYPE byte;
+
+SYNTYPE word = Integer
+        constants 0 : 65535
+ENDSYNTYPE byte;
+
+SYNTYPE long = Integer
+        constants 0 : 4294967295
+ENDSYNTYPE byte;
+
+SYNTYPE short = Integer
+        constants 0 : 65535
+ENDSYNTYPE byte;
+
+SYNTYPE id_type = word ENDSYNTYPE id_type;
+SYNTYPE ref_type = word ENDSYNTYPE ref_type;
+
+ENDBLOCK Tester_X25;

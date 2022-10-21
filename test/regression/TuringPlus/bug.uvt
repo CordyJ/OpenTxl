@@ -1,0 +1,146 @@
+% SCED - A Simple Example Screen Editor
+% Copyright (c) 1984   James R. Cordy
+
+% This program must be compiled with the curses(3) library using pttcurses(1)
+
+%
+% SCED is a very simple screen editor that demonstrates
+% some of the convenient string handling facilities of Turing.
+%
+% The editor itself is a single-mode editor, which means that
+% what you see on the screen is what you get, and typing most characters
+% will simply replace the ones that were there before.
+%
+% Navigation in the file is by use of direction movement keys,
+% using either ANSI standard arrow keys or the UNIX standard
+% control keys (LEFT=^H, DOWN=^J, UP=^K, RIGHT=^L).
+%
+% Editor commands are of the following form :
+%
+%       ESC <letter> <direction>
+%
+% where ESC is the ASCII escape character,
+%       <letter> is a one-letter mnemonic command code, and
+%       <direction> is a direction key.
+%
+% The command corresponding to the command code is applied in
+% the direction given.  For example, "ESC i LEFT" means insert 
+% characters to the left of the current character, "ESC i RIGHT" means
+% insert characters to the right of the current character,
+% "ESC i UP" means insert a line above the current line, and
+% "ESC i DOWN" means insert a line below the current line.
+%
+% Commands which require extra information such as line numbers,
+% file names and search strings will expect them input before the
+% direction.  Directionless commands such as "go to line" will accept a
+% CR in place of the direction.
+%
+% The following is a list of command mnemonics recognized by the editor.
+%
+%       i       insert
+%       d       delete
+%       /       find            <text>
+%       p       page up/down
+%       g       go to line      <line number>
+%       f       set file to     <file name>
+%       r       read file
+%       w       write file
+%       q       quit
+%       z       write and quit
+%	h	help
+%	t	run (as Turing program)
+%
+
+% UNIX utility modules
+include "%curses" % UNIX standard terminal screen interface
+include "%system" % UNIX command interface
+include "%termchars" % UNIX keyboard character map
+
+% ANSI arrow keys  (alternates for standard arrow keys)
+const Aup := "\e[A"
+const Adown := "\e[B"
+const Aleft := "\e[D"
+const Aright := "\e[C"
+
+% ANSI function keys  (alternates for standard commands)
+const Ainsert := "\eOP"
+const Adelete := "\eOQ"
+const Afind := "\eOR"
+const Apage := "\eOS"
+
+% standard arrow keys
+const Sup := chr (11) % ctrl K
+const Sdown := "\n" % ctrl J (linefeed)
+const Sleft := "\b" % ctrl H (backspace)
+const Sright := chr (12) % ctrl L
+
+% standard command sequences
+const Sinsert := "\ei"
+const Sdelete := "\ed"
+const Sfind := "\e/"
+const Sgoto := "\eg"
+const Spage := "\ep"
+const Sfile := "\ef"
+const Sread := "\er"
+const Swrite := "\ew"
+const Squit := "\eq"
+const Swritequit := "\ez"
+const Shelp := "\eh"
+const Srun := "\et"
+const Sbad := "\e*"
+
+% special characters
+const bel := chr (7)
+const del := chr (127)
+const esc := "\e"
+const ins := "^"
+const red := chr (18)
+const cr := "\r"
+
+% limits
+const maxlines := 1000
+const linesize := 79
+const screensize := 22
+
+% lines in the file
+var lines : array 1 .. maxlines of string (linesize)
+var numlines : int
+
+const nullline := "~"
+
+% lines on the screen
+var firstline : int
+var currentline : int
+var currentchar : int
+
+% file being edited
+var file : int
+var filename : string
+
+% current command, pattern and message text
+var command := ""
+var pattern := ""
+var msgtext := ""
+
+procedure putinfo
+    var infoline : string
+    infoline := filename (1 .. min (14, length (filename)))
+    infoline += repeat (" ", 16 - length (infoline))
+    const npages := min (20, numlines div (screensize + 1) + 1)
+    const page := min (20, firstline div (screensize + 1) + 1)
+    infoline += "["
+    infoline += repeat (" ", page - 1)
+    infoline += "*"
+    infoline += repeat (" ", npages - page)
+    infoline += "]"
+    infoline += repeat (" ", 40 - length (infoline))
+    if msgtext not= "" then
+	infoline += msgtext
+	infoline := infoline (1 .. min (linesize, length (infoline)))
+    end if
+    infoline += repeat (" ", linesize - length (infoline))
+    curses.move (0, 0)
+    curses.standout
+    curses.addstr (infoline)
+    curses.standend
+end putinfo

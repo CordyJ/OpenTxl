@@ -1,0 +1,20 @@
+main ()
+
+{
+  var A^1 <2> int;
+  var B^1 <4> int;
+  var C^3 <2 3 4> int;
+  var D^3 <5 3 4> int;
+  var RA^2 <3 4> int;
+  var R int;
+
+  R = 1 psi (A cat 5);
+  R = 2 psi (5 cat B);
+  R = 1 psi (A cat B);
+  R = 2 psi (A cat B);
+  R = 3 psi (A cat <2 3>);
+  R = 3 psi (<2 3 4> cat A);
+  R = 3 psi (RA cat ^2 <2 4> <9 8 7 6 5 4 3 2>);
+  RA = 2 psi (C cat D);
+  RA = 0 psi (C cat D);
+}

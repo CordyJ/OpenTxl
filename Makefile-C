@@ -1,0 +1,143 @@
+# OpenTxl Version 11 auto-generated C build process
+# J.R. Cordy, July 2022
+
+# Copyright 2022, James R. Cordy and others
+
+# This process builds the auto-translated C source version of the Txl-11 compiler/interpreter 
+# using the Turing+ compiler to auto-translate the Turing+ source files to C.
+
+# Usage:
+#	make -f Makefile-C		
+
+TPCFLAGS = -O 
+
+TXLSRCS = src/globals.i src/ident.i src/locale.i src/limits.i src/options.i src/unparse.i src/rules.i \
+	  src/symbols.i src/errors.i src/trees.i src/treeops.i src/tokens.i src/charset.i src/shared.i \
+	  src/errormsg.i src/scan.i src/boot.i src/bootgrm.i
+
+COMPILEOBJS = csrc/comprul.c csrc/compdef.c csrc/loadstor.c 
+
+GENERALOBJS = csrc/locale.c 
+
+OBJS = ${COMPILEOBJS} ${GENERALOBJS}
+
+INHERITEDOBJS = csrc/locale.c csrc/main.c csrc/tpluslib
+	
+OBJS = ${COMPILEOBJS} ${GENERALOBJS} ${INHERITEDOBJS}
+
+all : 
+	/bin/rm -rf csrc
+	$(MAKE) -f Makefile-C clean
+	$(MAKE) -f Makefile-C C TPCFLAGS="-w -O -DUNICODE -mUNIX64" 
+	cp src/makefiles/c/Makefile csrc/Makefile
+	cp src/readmes/c/README.txt csrc/README.txt
+	cp LICENSE.txt csrc/LICENSE.txt
+	mkdir csrc/bin
+	cp src/scripts/c/* csrc/bin
+	cp -r -P test csrc/test
+
+C : csrc csrc/txl.c csrc/parse.c csrc/xform.c ${OBJS} csrc/xformdb.c csrc/txlsa.c csrc/loadsa.c csrc/parsa.c \
+	csrc/txlcvt.c csrc/xformpf.c csrc/parsepf.c csrc/txlapr.c
+	
+csrc :
+	mkdir csrc
+
+csrc/txl.c : src/txl.t ${TXLSRCS}
+	/bin/rm -f csrc/txl.c
+	tpc ${TPCFLAGS} -A -q4 src/txl.t 
+	mv txl.c csrc/txl.c
+	
+csrc/txlsa.c : src/txl.t ${TXLSRCS}
+	/bin/rm -f csrc/txlsa.c
+	tpc ${TPCFLAGS} -DNOCOMPILE -DSTANDALONE -A -q4 src/txl.t 
+	mv txl.c csrc/txlsa.c
+	
+csrc/compdef.c : src/compdef.ch src/limits.i src/trees.i src/treeops.i src/ident.i src/txltree.i \
+	    src/compdef-analyze.i 
+	/bin/rm -f csrc/compdef.c
+	tpc ${TPCFLAGS} -A -q4 src/compdef.ch  
+	mv compdef.c csrc/compdef.c
+
+csrc/comprul.c : src/comprul.ch src/limits.i src/tokens.i src/trees.i src/ident.i src/txltree.i \
+	    src/rules.i src/symbols.i 
+	/bin/rm -f csrc/comprul.c
+	tpc ${TPCFLAGS} -A -q4 src/comprul.ch  
+	mv comprul.c csrc/comprul.c
+
+csrc/boot.c : src/boot.ch src/boot.i src/limits.i src/tokens.i src/trees.i src/ident.i
+	/bin/rm -f csrc/boot.c
+	tpc ${TPCFLAGS} -A -q4 src/boot.ch  
+	mv boot.c csrc/boot.c
+
+csrc/xform.c : src/xform.ch src/limits.i src/rules.i src/charset.i src/trees.i src/ident.i \
+	    src/xform-predef.i src/xform-garbage.i 
+	/bin/rm -f csrc/xform.c
+	tpc ${TPCFLAGS} -w -A -q4 src/xform.ch  
+	mv xform.c csrc/xform.c
+
+csrc/xformpf.c : src/xform.ch src/limits.i src/rules.i src/charset.i src/trees.i src/ident.i \
+	    src/xform-predef.i src/xform-garbage.i 
+	/bin/rm -f csrc/xformpf.c
+	tpc ${TPCFLAGS} -w -DPROFILER -A -q4 src/xform.ch  
+	mv xform.c csrc/xformpf.c
+
+csrc/xformdb.c : src/xform.ch src/limits.i src/rules.i src/charset.i src/trees.i src/ident.i \
+	    src/xform-predef.i src/xform-garbage.i src/xform-debug.i 
+	/bin/rm -f csrc/xformdb.c
+	tpc ${TPCFLAGS} -w -DDEBUGGER -DTIMING -A -q4 src/xform.ch  
+	mv xform.c csrc/xformdb.c
+
+csrc/parse.c : src/parse.ch src/limits.i src/tokens.i src/trees.i src/ident.i
+	/bin/rm -f csrc/parse.c
+	tpc ${TPCFLAGS} -A -q4 src/parse.ch  
+	mv parse.c csrc/parse.c
+
+csrc/parsepf.c : src/parse.ch src/limits.i src/tokens.i src/trees.i src/ident.i
+	/bin/rm -f csrc/parsepf.c
+	tpc ${TPCFLAGS} -DPROFILER -A -q4 src/parse.ch  
+	mv parse.c csrc/parsepf.c
+	
+csrc/parsa.c : src/parse.ch src/limits.i src/tokens.i src/trees.i src/ident.i
+	/bin/rm -f csrc/parsa.c
+	tpc ${TPCFLAGS} -DNOCOMPILE -DSTANDALONE -A -q4 src/parse.ch  
+	mv parse.c csrc/parsa.c
+	
+csrc/loadstor.c : src/loadstor.ch src/limits.i src/trees.i src/ident.i src/symbols.i src/rules.i src/options.i
+	/bin/rm -f csrc/loadstor.c
+	tpc ${TPCFLAGS} -A -q4 src/loadstor.ch  
+	mv loadstor.c csrc/loadstor.c
+
+csrc/loadsa.c : src/loadstor.ch src/limits.i src/trees.i src/ident.i src/symbols.i src/rules.i src/options.i
+	/bin/rm -f csrc/loadsa.c
+	tpc ${TPCFLAGS} -DNOCOMPILE -DSTANDALONE -A -q4 src/loadstor.ch  
+	mv loadstor.c csrc/loadsa.c
+
+csrc/txlcvt.c : src/txlcvt.t
+	/bin/rm -f csrc/txlcvt.c
+	tpc ${TPCFLAGS} -A -q4 src/txlcvt.t 
+	mv txlcvt.c csrc/txlcvt.c
+
+csrc/txlapr.c : src/txlapr.t
+	/bin/rm -f csrc/txlapr.c
+	tpc ${TPCFLAGS} -A -q4 src/txlapr.t 
+	mv txlapr.c csrc/txlapr.c
+
+# Direct inheritances
+
+csrc/locale.c : src/locale.c
+	/bin/rm -f csrc/locale.c
+	cp src/locale.c csrc/locale.c
+
+csrc/main.c : src/main.c
+	/bin/rm -f csrc/main.c
+	cp src/main.c csrc/main.c
+
+csrc/tpluslib : src/tpluslib
+	/bin/rm -rf csrc/tpluslib
+	cp -r src/tpluslib csrc/tpluslib
+
+# Clean
+
+clean :
+	/bin/rm -rf csrc 
+

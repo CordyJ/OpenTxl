@@ -1,0 +1,562 @@
+% TXL Simulink Grammar
+% Thomas Dean, Andrew Stevenson
+% February 2012
+
+% Revision log
+%
+% Version 1.3	AS	18 May 2012
+%	Modified blocktype_value to [id] | [stringlit] instead of many constants
+%	Added [repeat annotation_list] to [system_list] definition
+%
+% Version 1.2	JC	16 May 2012
+% 	Modified to accept negative numbers as values
+% 	Added -w pragma to avoid line wraps 
+%
+% Version 1.1	JC	7 March 2012
+% 	Modified to accept but ignore Stateflow
+%
+% Version 1.0	TD&AS	Feb 2012
+%	Original revision
+%
+
+#pragma -idchars '$' -w 32000
+
+tokens
+    id  | "\a[\a\d-_$]*"
+    %number | "-\d+"
+end tokens
+
+comments
+    '#
+end comments
+
+define program
+    [model_or_library]
+    [opt matdata_list]
+    [opt stateflow_list]
+end define
+
+define stateflow_list
+    'Stateflow '{  	[IN][NL]
+	[repeat water]	[EX]
+    '}			[NL]
+end define
+
+define water
+	'{ [repeat water] '}
+    |   [not '{] [not '}] [token]
+end define
+
+define model_or_library
+	[model_list]
+    |   [library_list]
+end define
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Top level elements
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+define model_list
+    'Model '{				[IN][NL]
+	[repeat default_element]	[EX]
+    '}					[NL]
+end define
+
+define library_list
+    'Library '{				[IN][NL]
+	[repeat default_element]	[EX]
+    '}					[NL]
+end define 
+
+define defined_list_element
+	[graphicalinterface_list]
+    |   [array_list]
+    |   [blockdefaults_list]
+    |   [annotationdefaults_list]
+    |   [linedefaults_list]
+    |   [blockparameterdefaults_element]
+    |   [system_list]
+    |   [block_list]
+end define
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Array subgrammar
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+define array_list
+    'Array '{			[IN][NL]
+	[type_element]
+	[dimension_element]
+	[repeat array_element]
+	[propname_element]	[EX]
+    '}				[NL]
+end define
+
+define type_element
+    'Type [stringlit]		[NL]
+end define
+
+define dimension_element
+    'Dimension [number]		[NL]
+end define
+
+define propname_element
+    'PropName [stringlit]	[NL]
+end define
+
+define array_element
+	[cell_element]
+    |   [defined_list_element]
+end define
+
+define cell_element
+    'CELL  [stringlit]		[NL]
+end define
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Graphical Interface subgrammar
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+define graphicalinterface_list
+    'GraphicalInterface '{			[IN][NL]
+	[repeat graphicalinterface_element]	[EX]
+    '}						[NL]
+end define
+
+define graphicalinterface_element
+	[numrootinports_element]
+    |   [numrootoutports_element]
+    |   [parameterargumentnames_element]
+    |   [computedmodelversion_element]
+    |   [nummodelreferences_element]
+    |   [numtestpointedsignals_element]
+end define
+
+define numrootinports_element
+    'NumRootInports [number]	[NL]
+end define
+
+define numrootoutports_element
+    'NumRootOutports [number]	[NL]
+end define
+
+define parameterargumentnames_element
+    'ParameterArgumentNames [stringlit]	[NL]
+end define
+
+define computedmodelversion_element
+    'ComputedModelVersion [stringlit]	[NL]
+end define
+
+define nummodelreferences_element
+    'NumModelReferences [number]	[NL]
+end define
+
+define numtestpointedsignals_element
+    'NumTestPointedSignals [number]	[NL]
+end define
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% System subgrammar
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+define system_list
+    'System '{				[NL][IN]
+	[repeat default_single_element]
+	[repeat block_list]
+	[repeat line_list]
+	[repeat annotation_list]		[EX]
+    '}					[NL]
+end define
+
+define annotation_list
+	Annotation {			[NL][IN]
+		[repeat default_single_element]	[EX]
+	}						[NL]
+end define
+
+define modelbrowservisibility_element
+    'ModelBrowserVisibility [on_or_off]	[NL]
+end define
+
+define modelbrowserwidth_element
+    'ModelBrowserWidth [number]	[NL]
+end define
+
+define screencolor_element
+    'ScreenColor [stringlit]	[NL]
+end define
+
+define paperorientation_element
+    'PaperOrientation [id]	[NL]
+end define
+
+define paperpositionmode_element
+    'PaperPositionMode [stringlit]	[NL]
+end define
+
+define papertype_element
+    'PaperType [stringlit]	[NL]
+end define
+
+define paperunits_element
+    'PaperUnits [stringlit]	[NL]
+end define
+
+% 4 real numbers
+define tiledpapermargins_element
+    'TiledPaperMargins [number_list_value]	[NL]
+end define
+
+define tiledpagescale_element
+    'TiledPageScale [number]	[NL]
+end define
+
+define showpageboundaries_element
+    'ShowPageBoundaries [on_or_off]	[NL]
+end define
+
+define zoomfactor_element
+    'ZoomFactor [stringlit]	[NL]
+end define
+
+define reportname_element
+    'ReportName [stringlit]	[NL]
+end define
+
+define sidhighwatermark_element
+    'SIDHighWatermark [number]	[NL]
+end define
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Block subgrammar
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+define block_list
+    'Block '{				[NL][IN]
+	[blocktype_element]
+	[repeat default_element]	[EX]
+    '}					[NL]
+end define
+
+define blocktype_element
+    'BlockType [blocktype_value]	[NL]
+end define
+
+define blocktype_value
+	[id] | [stringlit]
+%	% sources
+%	'Clock | 'Constant | 'FromFile | 'FromWorkspace 
+%    |   'SignalGenerator | 'Sin | 'StepFcn | 'WhiteNoise | 'DiscretePulseGenerator
+%	% sinks
+%    |   'Scope | 'ToFile | 'ToWorkspace | 'Terminator
+%	% discrete
+%    |   'DiscSateSpace | 'DiscTransferFcn | 'DiscZeroPole
+%    |   'Filter | 'UnitDelay | 'Logic
+%	% linear
+%    |   'Derivative | 'Gain | 'Integrator | 'StateSpace
+%    |   'Sum | 'TransferFcn | 'ZeroPole
+%	% nonlinear
+%    |   'Abs | 'Backslash | 'DeadZone | 'Fcn | 'LookUpTable
+%    |   'MATLABFcn | 'Product | 'RateLimiter | 'Relay
+%    |   'Saturation | 'Saturate | 'S '- 'Function | 'Switch | 'TransportDelay
+%	% connections
+%    |   'Demux | 'Inport | 'Mux | 'Outport
+%	% extras
+%    |   'SubSystem 
+%    |   'Lookup_n '- 'D
+%    |	'From
+%    |	'Goto
+end define
+
+define blocklist_list
+    'List '{				[NL][IN]
+	[listtype_element]
+	[repeat default_element]	[EX]
+    '}					[NL] 
+end define
+
+define listtype_element
+    'ListType [id]	[NL]
+end define
+
+define port_list
+    'Port '{				[NL][IN]
+	[portnumber_element]
+	[name_element]
+	[rtwstorageclass_element]
+	[dataloggingnamemode_element]	[EX]
+    '}					[NL]
+end define
+
+define portnumber_element
+    'PortNumber [number]	[NL]
+end define
+
+define name_element
+    'Name [stringlit]	[NL]
+end define
+
+define rtwstorageclass_element
+    'RTWStorageClass [stringlit]	[NL]
+end define
+
+define dataloggingnamemode_element
+    'DataLoggingNameMode [stringlit]	[NL]
+end define
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% MatData subgrammar
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+define matdata_list
+    'MatData '{				[IN][NL]
+	[numrecords_element]
+	[repeat datarecord_list]	[EX]
+    '}					[NL]
+end define
+
+define numrecords_element
+    'NumRecords [number]	[NL]
+end define
+
+define datarecord_list
+    'DataRecord '{			[IN][NL]
+	[tag_element]
+	[data_element]			[EX]
+    '}					[NL]
+end define
+
+define tag_element
+    'Tag [id]	[NL]
+end define
+
+define data_element
+    'Data [repeat stringlit+]	[NL]
+end define
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Line subgrammar
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+define line_list
+    'Line '{				[NL][IN]
+	[repeat default_element]	[EX]
+    '}					[NL]
+end define
+
+define branch_list
+    'Branch '{				[NL][IN]
+	[repeat default_element]
+	[end_or_branch]			[EX]
+    '}					[NL]
+end define
+
+define end_or_branch
+	[end_line_elements]
+    |   [repeat branch_list]
+end define
+
+define end_line_elements
+    [dstblock_element]
+    [dstport_element]
+end define
+
+define dstblock_element
+    'DstBlock [default_value]	[NL]
+end define
+
+define dstport_element
+    'DstPort [default_value]	[NL]
+end define
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% common elements
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+define on_or_off
+    'on | 'off
+end define
+
+% 4 integers
+define rectangle_value
+    [number_list_value]
+end define
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% default element subgrammar
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+define default_element
+	[default_single_element]
+    |   [defined_list_element]
+    |   [default_list_element]
+end define
+
+define default_single_element
+    [id] [default_value]	[NL]
+end define
+
+define default_value
+	[mnumber]			% T.D. allow negative number
+    |   [repeat stringlit+]
+    |   [on_or_off]
+    |   [id]
+    |   [number_list_value]
+    |   [point_list_value]
+end define
+
+define default_list_element
+    [id] [repeat dot_id] '{		[NL][IN]
+	[repeat default_element]	[EX]
+    '}					[NL]
+end define
+
+define dot_id
+    '. [id]
+end define
+
+define number_list_value
+    '[ [list mnumber] ']
+end define
+
+define mnumber
+    [opt '-] [number]
+end define
+
+define point_list_value
+    '[ [point_semi_list] ']
+end define
+
+define point_semi_list
+    [point] [repeat semi_point]
+end define
+
+define semi_point
+    '; [point]
+end define
+
+define point
+    [mnumber] ', [mnumber]
+end define
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% misc elements for parsing, but not interesting (yet)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Defaults lists... seem to specify default
+%   values for blocks. Most observed examples
+%   are related to graphical presentation
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+define blockdefaults_list
+    'BlockDefaults '{			[NL][IN]
+	[repeat default_element]	[EX]
+    '}					[NL]
+end define
+
+define annotationdefaults_list
+    'AnnotationDefaults '{			[NL][IN]
+	 [repeat graphics_presentation_element]	[EX]
+    '}						[NL]
+end define
+
+define linedefaults_list
+    'LineDefaults '{				[NL][IN]
+	 [repeat graphics_presentation_element]	[EX]
+    '}						[NL]
+end define
+
+define blockparameterdefaults_element
+    'BlockParameterDefaults '{		[NL][IN]
+	[repeat block_list]		[EX]
+    '}					[NL]
+end define
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Graphics presentation??
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+define graphics_presentation_element
+	[foregroundcolor_element]
+    |   [backgroundcolor_element]
+    |   [dropshadow_element]
+    |   [nameplacement_element]
+    |   [fontname_element]
+    |   [fontsize_element]
+    |   [fontweight_element]
+    |   [fontangle_element]
+    |   [showname_element]
+    |   [blockrotation_element]
+    |   [blockmirror_element]
+    |   [horizontalalignment_element]
+    |   [verticalalignment_element]
+    |   [usedisplaytextasclickcallback_element]
+end define
+
+define foregroundcolor_element
+    'ForegroundColor [stringlit]	[NL]
+end define
+
+define backgroundcolor_element
+    'BackgroundColor [stringlit]	[NL]
+end define
+
+define dropshadow_element
+    'DropShadow [on_or_off]	[NL]
+end define
+
+define nameplacement_element
+    'NamePlacement [stringlit]	[NL]
+end define
+
+define fontname_element
+    'FontName [stringlit]	[NL]
+end define
+
+define fontsize_element
+    'FontSize [number]	[NL]
+end define
+
+define fontweight_element
+    'FontWeight [stringlit]	[NL]
+end define
+
+define fontangle_element
+    'FontAngle [stringlit]	[NL]
+end define
+
+define showname_element
+    'ShowName [on_or_off]	[NL]
+end define
+
+define blockrotation_element
+    'BlockRotation [number]	[NL]
+end define
+
+define blockmirror_element
+    'BlockMirror [on_or_off]	[NL]
+end define
+
+%% annotations only??
+
+define horizontalalignment_element
+    'HorizontalAlignment [stringlit]	[NL]
+end define
+
+define verticalalignment_element
+    'VerticalAlignment [stringlit]	[NL]
+end define
+
+define usedisplaytextasclickcallback_element
+    'UseDisplayTextAsClickCallback [on_or_off]	[NL]
+end define
+
+define showportlabels_element
+    'ShowPortLabels [stringlit]	[NL]
+end define
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% End
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -1,0 +1,126 @@
+From Vaucher@IRO.UMontreal.CA Mon Nov 14 14:23 EST 1994
+From: "Jean Vaucher" <Vaucher@IRO.UMontreal.CA>
+Subject: New version MAC-Txl 
+To: "James R. Cordy" <cordy@qucis.queensu.ca>
+
+Hi Jim,
+
+The new Mac-txl7.7 that you put in /controlled/vaucher turns out to be very
+brittle and unforgiving.  The following grammar and data caused my IIci sys
+7.1 to FREEZE 4 times and I've gone back to the older (TXL v7.7a3 (3.11/94))
+txldb which gave error messages that I could interpret.  I now have a
+corrected version which parses the input without problem.  I can function
+quite well 
+with this old version and the one on UNIX and will wait a while for the MAC
+version to settle. 
+
+For BNF, I solved the ambiguity problem by terminating all my BNF rules with
+"///" as a terminating symbol. 
+
+ Thanks
+
+V.
+
+--------data--------
+BLOCK Tester_X25;
+
+SYNTYPE byte = Integer
+        constants 0 : 255
+ENDSYNTYPE byte;
+
+SYNTYPE word = Integer
+        constants 0 : 65535
+ENDSYNTYPE byte;
+
+SYNTYPE long = Integer
+        constants 0 : 4294967295
+ENDSYNTYPE byte;
+
+SYNTYPE short = Integer
+        constants 0 : 65535
+ENDSYNTYPE byte;
+
+SYNTYPE id_type = word ENDSYNTYPE id_type;
+SYNTYPE ref_type = word ENDSYNTYPE ref_type;
+
+ENDBLOCK Tester_X25;
+------grammar -------------
+ % 
+% BUGGY SDL grammar in TXL
+%
+% J.Vaucher 14 nov. 1994
+% NOTE: This grammar caused the MAC TXLdb7.7a3-68k program to 
+%  freeze up
+% - with the missing mainRule, TXL went farther and again froze
+%  (note there are NON-terminals without [ & ] and some
+%   undefined not-terminals )
+
+
+comments
+  /*  */
+end comments
+
+keys
+ AND BLOCK BOOLEAN CALL CHANNEL CHAR CHARACTER CHARSTRING CONSTANTS
+ CREATE DCL DECISION ELSE ENDBLOCK ENDCHANNEL ENDDECISION ENDMACRO
+ ENDNEWTYPE ENDPROCEDURE ENDPROCESS ENDSYNTYPE ENDSYSTEM ENV FALSE
+ FIRST FIX FLOAT FPAR FROM IN 'IN/OUT' INPUT INTEGER JOIN LAST
+ LENGTH LITERALS MACRO MACRODEFINITION MKSTRING MOD NATURAL NEWTYPE
+ NEXTSTATE NOT NOW OR OUTPUT PID PROCEDURE PROCESS REAL REM RESET
+ RETURN SENDER SELF SET SIGNAL SUBSTRING START STATE STOP STRUCT
+ SYNONYM SYNTYPE SYSTEM TASK TIMER TO TRUE XOR VERDICT VIA WITH
+end keys
+
+compounds
+  '::=  '///
+end compounds
+
+
+define program
+    [blockdef]
+end define
+
+define blockdef
+   BLOCK [blockname] ;      [NL][IN]
+      [repeat data_def]    [EX]
+   ENDBLOCK [opt id] ;      [NL][NL]
+end define
+
+define data_def
+  newtype_def
+ | syntype_def
+end define
+
+define syntype_def
+ SYNTYPE syntype_name '=' typeSpec
+  [syntype_range]
+ ENDSYNTYPE [opt syntype_name]
+end define
+
+define syntype_range
+   CONSTANTS [range_condition]
+end define
+
+define range_condition
+ [number] : [number]
+end define
+
+% -----Names ---------
+
+define typeSpec
+   [id]
+end define
+
+define syntype_name
+   [id]
+end define
+
+define blockname
+   [id]
+end define
+Jean Vaucher
+Professeur Titulaire, 
+Dep. d'informatique et RO
+Universite de Montreal
+Tel: (514) 343-7092       FAX: (514) 353-5834
+

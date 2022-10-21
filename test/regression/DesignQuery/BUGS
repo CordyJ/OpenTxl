@@ -1,0 +1,7 @@
+1. 'contains' facts are not generated for parameters!
+	Fixed -- JRC
+2. need program(MAIN) and library(LIBRARY) facts.
+	Fixed -- JRC
+3. need reference facts for modules.
+4. need facts for argument uses in a similar form to write_ref.
+	Fixed, and added const arguments -- JRC

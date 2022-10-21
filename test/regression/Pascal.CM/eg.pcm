@@ -1,0 +1,14 @@
+program P (output);
+var 
+    x,a,b,z : real;
+    y : int;
+begin
+    repeat
+       x:=a+b;
+       y := x;
+       a:= y + 3;
+       x:=b+c;
+       y := x-2;
+       z := x+a*y
+    until z < 0
+end.

@@ -1,0 +1,4 @@
+The problem is that we nest a handler when calling parse.
+It seems that this nesting of handlers is not working correctly.
+
+Jim

@@ -1,0 +1,144 @@
+% TXL grammar for Tiny Imperative Language
+% Jim Cordy, April 2005
+
+% Note that all quoting, as in 'if, is not required,
+% rather an optional coding convention used by TXL programmers
+
+% Formatting cues, such as [NL] on the right, are optional output formatting
+% suggestions and have no input parse meaning
+
+% From the spec, it is not clear if TIL should be priority expression parsed or not,
+% so this grammar provides both, controlled by this switch
+% #define PRIORITY
+
+% Keywords of TIL, assuming TIL is a reserved-word language
+% If not, remove this section
+keys
+    var if then else while do for read write
+end keys
+
+% Compound tokens to be recognized as a single lexical unit
+compounds
+    :=  !=
+end compounds
+
+% Commenting convention for TIL, assuming it has one
+comments
+    //
+end comments
+
+% Direct TXL encoding of the TIL specification grammar -
+% I don't think any explantions are needed from here on
+% [NL], [IN] and [EX] on the right are optional pretty-printing cues
+
+define program
+    [statement*]
+end define
+
+define statement
+	[declaration]
+    |   [assignment_statement]
+    |   [if_statement]
+    |   [while_statement]
+    |   [for_statement]
+    |   [read_statement]
+    |   [write_statement]
+end define
+
+% Untyped variables
+define declaration
+    'var [id] ;                   [NL]
+end define
+
+define assignment_statement
+    [id] := [expression] ;        [NL]
+end define
+
+define if_statement
+    'if [expression] 'then        [IN][NL]
+	[statement*]              [EX]
+    [opt else_statement]
+    'end                          [NL]
+end define
+
+define else_statement
+    'else                        [IN][NL]
+	[statement*]             [EX]
+end define
+
+% While loop 
+define while_statement
+    'while [expression] 'do      [IN][NL]
+	[statement*]             [EX]
+    'end                         [NL]
+end define
+
+% Declaring for
+define for_statement
+    'for [id] := [expression] 'to [expression] 'do      [IN][NL]
+	[statement*]                                    [EX]
+    'end                                                [NL]
+end define
+
+define read_statement
+    'read [id] ;                 [NL]
+end define
+
+define write_statement
+    'write [expression] ;        [NL]
+end define
+
+#if not PRIORITY then
+% Simple nonpriority expression grammar, as specified
+define expression
+	[primary]
+    |   [expression] [op] [expression]
+end define
+
+define op 
+	= | !=       
+    |   + | -
+    |   * | /        
+end define
+
+#else PRIORITY
+% Alternative traditional priority expression grammar
+define expression
+	[term]
+    |   [expression] [eqop] [term]
+end define
+
+define eqop
+        = | !=
+end define
+
+define term
+	[factor]
+    |   [term] [addop] [factor]
+end define
+
+define addop
+	+ | -
+end define
+
+define factor
+	[primary]
+    |   [factor] [mulop] [primary]
+end define
+
+define mulop
+	* | /
+end define
+#end if PRIORITY
+
+define primary
+	[id]
+    |	[literal]
+    |   ( [expression] )
+end define
+
+define literal
+        [integernumber]
+    |	[stringlit]
+end define
+

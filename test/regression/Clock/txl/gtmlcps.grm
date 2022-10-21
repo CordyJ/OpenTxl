@@ -1,0 +1,167 @@
+%%
+%%	Version of GTML supporting CPS form.
+%%
+%%	N. Graham, 21 August 1992
+%%	GMD Karlsruhe
+%%
+%%
+
+
+include "clock.grm"
+
+define variable
+    ^ [id]
+end define
+
+define functionName
+    @ [id]
+end define
+
+define predefinedFunctionName
+    ~ [id]
+end define
+
+define constructorSymbol
+    $ [id] [opt directiveSymbol]
+end define
+
+define typeName
+    & [id]
+end define
+
+define typeVariable
+    ^ [id]
+end define
+
+define typeDefinition
+    'type [typeName] [opt typeVariableList] == [typeSpec] .
+end define
+
+define typeVariableList
+    ( [list typeVariable+] )
+end define
+
+define typeSpec
+    [simpleType]
+  | 'void -> [typeSpec]			% gtml function type
+  | [simpleType] => [typeSpec]		% gtml lambda-abstraction
+  | [typeName] ( [list simpleType+] )	% gtml Specialization
+end define
+
+define dataDefinition
+    'type [typeName] [opt typeVariableList] ::= [dataTypes] .
+end define
+
+define dataType
+    [constructorSymbol] [opt simpleTypeList]
+end define
+
+define simpleTypeList
+    ( [list simpleType+] )
+end define
+
+define funDefinition
+    'type [functionName] :: [functionTypeSpec] .
+end define
+
+define functionTypeSpec
+    'void -> [typeSpec]
+  | [typeSpec]
+end define
+
+define equation
+    [gtmlHead] ->                       [NL][IN]
+        [expression] .                  [NL][EX]
+end define
+
+define gtmlHead
+    'fun [functionName]
+end define
+
+define pattern
+    [simplePattern]
+  | [constructorSymbol] [opt simplePatternList]
+end define
+
+define simplePatternList
+    ( [list simplePattern+] )
+end define
+
+define binarySubExpression
+    [unaryOpExpression]
+  | [constructorTerm]
+  | [predefinedApplication]
+  | [application]
+end define
+
+
+define constructorTerm
+    [constructorSymbol] [opt expressionList]
+end define
+
+define application
+    [simpleExpression] [simpleExpression]
+end define
+
+define expressionList
+    ( [list expression] )
+end define
+
+define simpleExpression
+    'updt ( [simpleExpression] , [simpleExpression] )
+  | 'rqst ( [simpleExpression] , [simpleExpression] )
+  | 'callcc ( [simpleExpression] )
+  | 'setcc ( [simpleExpression] , [simpleExpression] )
+  | 'cntn ( [simpleExpression] , [simpleExpression] )
+  | [constant]
+  | [functionName]
+  | [predefinedFunctionName]
+  | [variable]
+  | [listConstant]
+  | [listLiteral]
+  | [constructorSymbol]
+  | [ifExpression]
+  | [letExpression]
+  | [caseExpression]
+  | [lambdaAbstraction]
+  | ( [list expression] )              % Tupling or grouping
+end define
+
+define expression
+    [binarySubExpression] [opt binaryTail]
+end define
+
+define predefinedApplication
+    [predefinedFunctionName] ( [list expression+] )
+end define
+
+define lambdaAbstraction
+    ( 'fn [variable] =>			[NL][IN]
+	[expression]			[NL][EX]
+    )
+end define
+
+define ifExpression
+    ( 'if [ifCondition] 'then		[NL][IN]
+	[expression]			[NL][EX]
+    [elseClause]
+    )
+end define
+
+define caseExpression
+    ( 'case [expression] 'of		[NL][IN]
+	[alternative]
+	[repeat alternatives]		[EX]
+    )
+end define
+
+define alternative
+    [pattern] ->                        [NL][IN]
+        [expression]                    [NL][EX]
+end define
+
+define letExpression
+    ( 'let [list binding+] 'in		[NL][IN]
+	[expression]			[NL][EX]
+    )
+end define

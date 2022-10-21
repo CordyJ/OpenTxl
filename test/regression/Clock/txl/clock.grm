@@ -1,0 +1,322 @@
+%%
+%%	Grammar for the Clock language
+%%
+%%	N. Graham, 23 September 1991
+%%	GMD Karlsruhe
+%%
+%%	Revised:
+%%		20.08.92:	Revised to Haskell-style grammar for
+%%				simpler parsing.
+%%
+%%		02.09.92	Removed left-recursion from grammar.
+%%
+
+keys
+    'and 'callcc 'case 'cntn
+    'data 'else 'elsif 'end 'eval
+    'fn 'from 'fun 'hd 'if 'importFun 'importType 'import
+    'in 'let 'not 'of 'or 'rqst 'setcc
+    'then 'tl 'to 'type 'updt 'void
+end keys
+
+compounds
+    ->  ==  >=  =<  =\=  ++ :: ::= =>
+end compounds
+
+define variable
+    [lowerupperid]
+end define
+
+define functionName
+    [lowerupperid]
+end define
+
+define predefinedFunctionName
+    [lowerupperid]
+end define
+
+define constructorSymbol
+    [upperlowerid] [opt directiveSymbol]
+end define
+
+define directiveSymbol
+    '?
+  | '!
+end define
+
+define typeName
+    [upperlowerid]
+end define
+
+define typeVariable
+    [lowerupperid]
+end define
+
+define program
+    [repeat definition]
+end define
+
+define definition
+    [typeDefinition]				[NL] [KEEP]
+  | [dataDefinition]				[NL] [KEEP]
+  | [funDefinition]				[NL] [KEEP]
+  | [equation]					[NL] [KEEP]
+  | [importClause]				[NL] [KEEP]
+  | [evalClause]				[NL] [KEEP]
+end define
+
+define evalClause
+    'eval [expression] .
+end define
+
+define importClause
+    'importType [typeName] 'from [id] .
+  | 'importFun [functionName] 'from [id] .
+  | 'from [id] 'import [functionName] .
+  | 'from [id] 'import [typeName] .
+end define
+
+define typeDefinition
+    'type [typeName] [repeat typeVariable] = [typeSpec] .
+end define
+
+define simpleType
+    [typeName]				% Type synonym
+  | [typeVariable]			% Parametric polymorphism
+  | ( [list typeSpec+] )		% Grouping and tupling
+  | '[ [typeSpec] ']			% List type
+end define
+
+define typeSpec
+    [simpleType]
+  | [simpleType] -> [typeSpec]		% Function type
+  | [typeName] [repeat simpleType]	% Specialization of parametric type
+end define
+
+define dataDefinition
+    'data [typeName] [repeat typeVariable] = [dataTypes] .
+end define
+
+define dataTypes
+    [dataType] [repeat or_dataType]
+end define
+
+define or_dataType
+    '| [dataType]
+end define
+
+define dataType
+    [constructorSymbol] [repeat simpleType]
+end define
+
+define funDefinition
+    [functionName] :: [typeSpec] .
+end define
+
+define equation
+    [simpleEquation]
+  | [parameterEquation]
+end define
+
+define simpleEquation
+    [functionName] =			[NL][IN]
+	[expression] .			[NL][EX]
+end define
+
+define parameterEquation
+    [head] =				[NL][IN]
+	[expression] .			[NL][EX]
+end define
+
+define head
+    [functionName] [headPattern]
+end define
+
+define headPattern
+    [repeat simplePattern+]
+end define
+
+define fnHeadPattern
+    [pattern]
+  | [headPattern]
+end define
+
+define simplePattern
+    _
+  | [variable]
+  | [constructorSymbol]		% A single constructor
+  | ( [list pattern+] )		% Grouping or tuple
+  | [listConstructorPattern]	% Lists
+  | [constant]
+end define
+
+define pattern
+    [simplePattern]
+  | [constructorSymbol] [repeat simplePattern]
+end define
+
+define listConstructorPattern
+    '[ [opt listConstructorContents] ']
+end define
+
+define listConstructorContents
+    [list pattern] [opt listTail]
+end define
+
+define listTail
+    '| [pattern]
+end define
+
+% Note there is an ambiguity between functionName and
+% variable; they are parsed as functionName, and supposedly
+% fixed-up later.
+define simpleExpression
+    [constant]
+  | [functionName]
+  | [predefinedFunctionName]
+  | [variable]
+  | [listConstant]			[KEEP]	% try this first!
+  | [listLiteral]			[KEEP]
+  | [constructorSymbol]
+  | ( [list expression+] ) 	% Tupling or grouping
+  | [ifExpression]			[KEEP]
+  | [letExpression]			[KEEP]
+  | [caseExpression]			[KEEP]
+  | [lambdaAbstraction]			[KEEP]
+end define
+
+define expression
+    [binarySubExpression] [repeat binaryTail]
+end define
+
+define unaryOpExpression
+    [opt unaryOp] [simpleExpression]
+end define
+
+define binarySubExpression
+    [unaryOpExpression]
+  | [constructorTerm]
+  | [application]
+  | [predefinedApplication]
+end define
+
+define binaryTail
+    [binaryOp] [binarySubExpression]
+end define
+
+define constructorTerm
+    [constructorSymbol] [repeat simpleExpression+]
+end define
+
+define application
+    [simpleExpression] [repeat simpleExpression+]
+end define
+
+define predefinedApplication
+    [predefinedFunctionName] [repeat simpleExpression+]
+end define
+
+
+define lambdaAbstraction
+    [simpleLambdaAbstraction]
+  | [patternLambdaAbstraction]
+  | [onePatternLambdaAbstraction]
+end define
+
+define simpleLambdaAbstraction
+    'fn [variable] ->			[NL][IN]
+	[expression]			[NL][EX]
+    'end 'fn
+end define
+
+define onePatternLambdaAbstraction
+    'fn [pattern] ->			[NL][IN]
+	[expression]			[NL][EX]
+    'end 'fn
+end define
+
+define patternLambdaAbstraction
+    'fn [headPattern] ->		[NL][IN]
+	[expression]			[NL][EX]
+    'end 'fn
+end define
+
+define constant
+    [stringlit]
+  | [number]
+  | [charlit]
+end define
+
+define listLiteral
+    '[ [list expression] [opt appendListLiteral] ']
+end define
+
+define listConstant
+	'[ [list constant] ']
+    |	'[ [list constantSequence] '] 
+end define
+
+define constantSequence
+    ( [list constant] )
+end define
+
+define appendListLiteral
+    '| [expression]
+end define
+
+define binaryOp
+    'and | 'or | == | =\= | >= | =< | < | > | + | - | ++ | * | /
+end define
+
+define unaryOp
+    'hd | 'tl | # | 'not | -
+end define
+
+define ifCondition
+    [expression]
+  | [binding]
+end define
+
+define ifExpression
+    'if [ifCondition] 'then		[NL][IN]
+	[expression]			[NL][EX]
+    [repeat elsifClause]
+    [elseClause]
+    'end 'if
+end define
+
+define elsifClause
+    'elsif [ifCondition] 'then		[NL][IN]
+	[expression]			[NL][EX]
+end define
+
+define elseClause
+    'else				[NL][IN]
+	[expression]			[NL][EX]
+end define
+
+define caseExpression
+    'case [expression] 'of		[NL][IN]
+	[alternative]
+	[repeat alternatives]		[EX]
+    'end 'case
+end define
+
+define alternative
+    [pattern] ->			[NL][IN]
+	[expression]			[NL][EX]
+end define
+
+define alternatives
+    '| [alternative]
+end define
+
+define letExpression
+    'let [list binding+] 'in		[NL][IN]
+	[expression]			[NL][EX]
+    'end 'let
+end define
+
+define binding
+    [pattern] = [expression]
+end define

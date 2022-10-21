@@ -1,0 +1,24 @@
+%define informationModelStatement_48                         % 105
+%[informationRule_105]
+%[assertionStatement_106]
+%[statementTerminator_22]
+%end define
+
+
+ 
+
+
+
+
+
+function mainRule
+replace [program]
+            infModel [program]
+ by     
+  infModel [print]
+end function
+
+
+
+
+

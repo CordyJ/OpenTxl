@@ -1,0 +1,21 @@
+TXL Example Specification
+-------------------------
+
+Name:	
+	reparse.Txl
+
+Description:
+	Demonstration of use of the [reparse] external function
+	to allow structural changes to aid in transformation.
+
+Author:
+   	J.R. Cordy
+
+Affiliation:
+	Queen's University
+
+Date:
+	April 1995
+
+Example:
+	txl example.reparse

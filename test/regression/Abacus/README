@@ -1,0 +1,35 @@
+TXL Example Specification
+-------------------------
+
+Name:	
+	Cascade.Txl
+	Compound.Txl
+
+Description:
+	Two prototype extensions to the concurrent language 
+	Abacus, to allow cascaded and compounded concurrent 
+	behaviour expressions.
+
+	Abacus is an executable notation for describing concurrent 
+	behaviours, based loosely on ideas from CSP and CCS.  
+	The notation is suggestive of CSP.  The cascade dialect 
+	extends Abacus to allow sequences consisting of several 
+	guards, and the compound dialect extends to allow both
+	cascaded and compound parenthesized behaviours.  
+
+	The TXL specifications for each dialect transform the
+	new forms to equivalent basic Abacus by introducing new
+	intermediate named behaviours.
+
+Author:
+   	Oscar Neierstrasz
+
+Affiliation:
+	Centre D'Informatique, Universite de Geneve, Switzerland
+
+Date:
+	September 1989
+
+Example:
+	txl Example.Cascade
+	txl Example.Compound

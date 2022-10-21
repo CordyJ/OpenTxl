@@ -1,0 +1,43 @@
+% Convert Mates formulas to disjunctive normal form
+
+rule normalize
+    replace [formula]
+	S [formula]
+    construct NewS [formula]
+	S [convertands]
+	  [convertimplies]
+	  [convertiffs]
+	  [convertexists]
+    where not
+	NewS [= S]
+    by
+	NewS
+end rule
+
+rule convertands
+    replace [formula]
+	( U [formula] & V [formula] )
+    by
+	- ( - U '| - V )
+end rule
+
+rule convertimplies
+    replace [formula]
+	( U [formula] -> V [formula] )
+    by
+	( - U '| V )
+end rule
+
+rule convertiffs
+    replace [formula]
+	( U [formula] <-> V [formula] )
+    by
+	( ( U -> V ) & ( V -> U ) )
+end rule
+
+rule convertexists
+    replace [formula]
+	(E X [variable]) U [formula]
+    by
+	- (A X) - U
+end rule

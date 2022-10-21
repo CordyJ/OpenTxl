@@ -1,0 +1,32 @@
+procedure error (msg : string)
+    put "## Error : ", msg
+end error
+
+type class  stack (maxdepth, elementType) :
+    object
+	import (error)
+	export (push, pop)
+	var storage : array 1 .. maxdepth of elementType
+	var depth : 0 .. maxdepth
+	procedure push (e : elementType)
+	    pre depth < maxdepth
+	    depth += 1
+	    storage (depth) := e
+	end push
+	procedure pop (var e : elementType)
+	    pre depth > 0
+	    e := storage (depth)
+	    depth -= 1
+	end pop
+	depth := 0
+    end stack
+
+type smallStackOfString : instance stack (10, string)
+type bigStackOfInt : instance stack (100, int)
+
+var stringStack :  smallStackOfString
+var intStack :  bigStackOfInt
+
+stringStack.push ("Hi there")	
+stringStack.push ("Hello yourself")
+

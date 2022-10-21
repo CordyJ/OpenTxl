@@ -1,0 +1,22 @@
+% Grammar overrides to allow for disciplined TIL comments in the C++ style.
+% (Handling more general undisciplined comments is more complicated, 
+%  see the TXL C grammar.)
+
+#pragma -comment
+
+comments
+    //
+end comments
+
+redefine statement
+        ...
+    |  [comment_statement]
+end redefine
+
+define comment_statement
+    [repeat comment_NL+]
+end define
+
+define comment_NL
+    [comment] [NL]
+end define

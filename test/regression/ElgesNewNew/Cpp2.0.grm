@@ -1,0 +1,852 @@
+%% ------------------------START OF FILE C++2.0.Grammer----------------------
+% C++ 2.0 TXL Basis Grammar
+% J.R. Cordy, 24 Feb 1992
+
+% Loosely adapted from:	
+% 	Unix System V, AT&T C++ Language System, Release 2.0
+% 	Appendix A: Grammar Summary
+% but with the (as usual) many bugs in the C++ grammar fixed, and the 
+% forms tuned for TXL performance.  As noted in the reference above, 
+% this grammar is actually a slight superset of C++ 2.0.
+% Lexical conventions of C++
+comments
+	//
+	/*  */
+end comments
+
+compounds
+	!=  '%=  &&  &=  *=  ++  +=  -+  --  -=  
+	->  ->*  .*  ...  /=  ::  <<  <<=  <=  
+	==  >=  >>  >>=  ^=  |=  ||  **
+end compounds
+
+keys
+	asm auto break case catch char class const
+	continue default delete do double else enum extern
+	float for friend goto if inline int long
+	new operator private protected public register return short
+	signed sizeof static struct switch template this typedef
+	union unsigned virtual void volatile while
+end keys
+
+%%
+%%  Adde [SPOFF] and [SPON] For formatting reasons alone.
+%%
+define identifier
+    [SP] [repeat '_] [SPOFF] [id] [SPON]
+end define
+
+define string
+	[repeat stringlit+]
+end define
+
+define character_constant
+	[charlit]
+end define
+
+define floating_constant
+	[opt '-] [number]
+      | [opt '-] [integernumber] '.
+end define
+
+define integer_constant
+    	[opt '-] 0 [SPOFF] [id] [SPON]
+    |	[opt '-] [integernumber]
+end define
+
+% Txl grammar goal symbol - a C++ compilation file
+define program
+	[declaration_list]
+end define
+
+% Syntax of C++ 2.0
+define expression
+	[list assignment_expression+]
+end define
+
+define assignment_expression
+    	[conditional_expression]
+    |	[unary_expression] [assignment_operator] [assignment_expression]
+end define
+
+define assignment_operator
+	= | *= | /= | '%= | += | -= | >>= | <<= | &= | ^= | '|=
+end define
+
+define conditional_expression
+	[binary_expression] [opt conditional_operation]
+end define
+
+define conditional_operation
+	? [expression]  :  [conditional_expression]
+end define
+
+define binary_expression
+	[cast_expression] [repeat binary_operation]
+end define
+
+define binary_operation
+	[binary_operator] [cast_expression]
+end define
+
+define binary_operator
+	'|| | && | '| | ^ | & | == | != | < | > | <= | >=  
+   | 	<< | >> | + | - | * | / | '% | .* | ->*  
+end define
+
+define cast_expression
+	[unary_expression]
+    |	(  [type_name]  )  [cast_expression]
+end define
+
+define unary_expression
+	[postfix_expression]
+    |	++  [unary_expression]
+    |	--  [unary_expression]
+    |	[unary_operator]  [cast_expression]
+    |	'sizeof  [unary_expression]
+    |	'sizeof  (  [type_name]  )
+    |	[allocation_expression]
+    |	[deallocation_expression]
+end define
+
+define unary_operator
+	* | & | + | - | ! | ~
+end define
+
+define array_extension
+     '[ [opt constant_expression] ']
+end define
+
+%%
+%%  Added [opt (] 'new [simple_type_name] [opt array_extension] [opt )] to
+%%  handle creation of predefined types (char, int, float, etc);  The 
+%%  allocation expression does not follow the BNF in the book.
+%%
+define allocation_expression
+	[opt '::] 'new [opt placement] [restricted_type_name] [opt initializer]
+     |  [opt (] 'new [simple_type_name] [opt array_extension] [opt )]
+end define
+
+define placement
+	(  [expression_list]  )
+end define
+
+define restricted_type_name
+	[type_specifiers] [opt restricted_declarator]
+    |	( [type_name] )
+end define
+
+define restricted_declarator
+	[ptr_operator] [opt restricted_declarator]
+    |	[restricted_declarator]  '[  [opt expression]  ']
+end define
+
+define deallocation_expression
+	[opt '::]  'delete [cast_expression]
+    |	[opt '::]  'delete  '[  [expression]  ']  [cast_expression]
+end define
+
+define postfix_expression
+	[primary_expression] [repeat postfix_extension]
+    |	[simple_type_name]  (  [opt expression_list]  ) [repeat postfix_extension]
+end define
+
+define postfix_extension
+    	'[  [expression]  ']
+    |	(  [opt expression_list]  )
+    |	.  [name]
+    |	->  [name]
+    |	++
+    |	--
+end define
+
+define expression_list
+	[list assignment_expression+]
+end define
+
+define primary_expression
+	[literal]
+    |	'this
+    |	::  [identifier]
+    |	::  [operator_function_name]
+    |	(  [expression]  )
+    |	[name]
+end define
+
+define name
+	[identifier] 
+    |	[qualified_name]    
+    |	[operator_function_name]
+    |	[conversion_function_name]
+end define
+
+define qualified_name
+	[identifier]  ::  [class_component]
+end define
+
+define class_component
+    	[opt '~] [identifier]		
+    |	[operator_function_name]
+    |	[conversion_function_name]
+end define
+
+define literal
+	[integer_constant]
+    |	[character_constant]
+    |	[floating_constant]
+    |	[string]
+end define
+
+%%
+%%  Added [inline_fct_definition] to help in rule translation.
+%%
+define declaration
+    	[linkage_specification]					[KEEP]
+    |	[class_definition]					[KEEP]
+    |	[opt decl_specifiers] [opt declarator_list] ; 	[NL]	[KEEP]
+    |   [inline_fct_definition]                                 [KEEP]
+    |	[fct_definition] 					[KEEP]
+    |	[asm_declaration]					[KEEP]
+    |	[preprocessor] 		[NL]				[KEEP]
+    |	[comment] [NL] [repeat comment_NL]			[KEEP]
+end define
+
+define comment_NL
+	[comment] [NL] 
+end define
+
+define class_definition
+    	[NL] [repeat sc_specifier] [class_specifier] 
+	    [opt declarator_list] ; [NL] [NL]
+    |  [NL] (CreateSymbol Class SymbolID [opt identifier]) 
+       [NL] [repeat member_list]
+end define
+
+define asm_declaration
+	'asm ( [string] ) ;	[NL]
+end define
+
+define decl_specifier
+	[sc_specifier]
+    |	[type_specifier]
+    |	[fct_specifier]
+    |	'friend
+    |	'typedef
+end define
+
+define decl_specifiers
+	[repeat decl_specifier+]
+end define
+%%
+%%  Test Code For My Stuff.
+%%
+define persistance
+    'const
+ |  'volatile
+ |  'NONE
+end define
+
+define the_type
+        [simple_type_name]
+    |	[elaborated_type_specifier]
+end define
+
+define my_decl_specifier
+	[sc_specifier]
+    |   [persistance]
+    |	'friend
+    |	'typedef
+    |   [the_type]
+%%    |   [simple_type_name]
+%%    |	[elaborated_type_specifier]
+%%    |	[type_specifier]
+    |	[fct_specifier]
+end define
+%%
+%%  Test Code For my stuff.
+%%  Took off + operator to allow the GetType rule to function correctly.  With
+%%  the + the GetType Rule does not look at the first entry!!!!
+%%
+define my_decl_specifiers
+	[repeat my_decl_specifier]%%+]
+end define
+
+define sc_specifier
+	'auto
+    |	'register
+    |	'static
+    |	'extern
+    |   'NONE
+end define
+
+define fct_specifier
+	'inline
+    |	'virtual
+end define
+
+define type_specifier
+        [simple_type_name]
+    |	[class_specifier]
+    |	[enum_specifier]
+    |	[elaborated_type_specifier]
+    |	'const
+    |	'volatile
+end define
+
+define type_specifiers
+	[repeat type_specifier+]
+end define
+%%
+%%  Changing simple type name to allow to extract all the basic
+%%  variables at on time.
+%%
+define sign
+    'signed
+  | 'unsigned
+end define
+%%
+%%  Changing simple type name to allow to extract all the basic
+%%  variables at on time.
+%%
+define len
+    'short
+  | 'long
+end define
+%%
+%%  Changing simple type name to allow to extract all the basic
+%%  variables at on time.
+%%
+define pre_defined_type
+     'char
+   | 'short
+   | 'int
+   | 'float
+   | 'double
+   | 'void
+end define 
+%%  
+%%  Changed From:
+%%    |	'char | 'short | 'int | 'long | 'signed | 'unsigned 
+%%    |	'float | 'double | 'void
+%%  so I can correctly collect simple_type_name's used.
+%%
+define builtin_type
+     [len] [sign] [pre_defined_type]
+   | [len] [pre_defined_type] [sign]
+   | [sign] [len] [pre_defined_type]
+   | [sign] [pre_defined_type] [len]
+   | [pre_defined_type] [len] [sign]
+   | [pre_defined_type] [sign] [len]
+   | [sign] [pre_defined_type]
+   | [pre_defined_type] [sign]
+   | [len] [pre_defined_type]
+   | [pre_defined_type] [len]
+   | [len] [sign]
+   | [sign] [len]
+   | [sign]
+   | [len]
+   | [pre_defined_type]
+end define
+
+define simple_type_name
+     [builtin_type]
+   | [identifier]
+end define
+
+define elaborated_type_specifier
+	[class_key] [identifier]
+    |	'enum [identifier]
+end define
+
+define class_key
+	'class | 'struct | 'union
+end define
+
+define enum_specifier
+	'enum [opt identifier]  {  [opt enum_list]  }
+end define
+
+define my_enum_specifier
+	'enum [opt identifier]  {  [opt enum_list]  }
+end define
+
+define enum_list
+	[list enumerator+]
+end define
+
+define enumerator
+	[identifier] [opt equal_constant_expression]
+end define
+
+define equal_constant_expression
+	=  [constant_expression]
+end define
+
+define constant_expression
+	[conditional_expression]
+end define
+
+define linkage_specification
+	[NL] 'extern [string] { 	[NL] [IN]
+	    [declaration_list] 		[EX]
+	} [opt ';] 			[NL] [NL]
+    |	'extern [string]  [declaration]
+end define
+
+define declaration_list
+	[repeat declaration] 
+end define
+
+define declarator_list
+	[list init_declarator+]
+end define
+
+define init_declarator
+	[declarator] [opt initializer]
+end define
+
+define declarator
+    	[repeat ptr_operator] [dname] [repeat declarator_extension]
+    |	(  [declarator]  ) [repeat declarator_extension]
+end define
+%%
+%% Add [repeat ')] around argument_declaration_list because of validity of
+%% example of:
+%%      extern "C" {
+%%      int strcasecmp _G_ARGS((const char*, const char*));
+%%      }
+%%
+define declarator_extension
+    	( [repeat '(] [argument_declaration_list] 
+          [repeat ')] )  [opt cv_qualifier_list]
+    |	'[  [opt constant_expression]  ']
+end define
+
+define ptr_operator
+	[stars]  [opt cv_qualifier_list]
+    |	&  [opt cv_qualifier_list]
+    |	[identifier]  :: [stars]  [opt cv_qualifier_list]
+end define
+
+define stars
+	* | **
+end define
+
+define cv_qualifier_list
+	[repeat cv_qualifier+]
+end define
+
+define cv_qualifier
+	'const
+    |	'volatile
+end define
+
+define dname
+	[name]
+    |	~ [identifier]
+end define
+
+define type_name
+	[type_specifiers] [opt abstract_declarator]
+end define
+
+define abstract_declarator
+	[ptr_operator] [repeat abstract_extension]
+    |	( [abstract_declarator] ) [repeat abstract_extension]
+end define
+
+define abstract_extension
+    	(  [argument_declaration_list]  )  [opt cv_qualifier_list]
+    |	'[  [opt constant_expression]  ']
+    |	[ptr_operator]
+    |	(  [abstract_declarator]  )
+end define
+
+define argument_declaration_list
+    	[opt arg_declaration_list]  [opt comma_dotdotdot]
+end define
+
+define comma_dotdotdot
+	[opt ',] '...
+end define
+
+define arg_declaration_list
+	[list argument_declaration+]
+end define
+
+define argument_declaration
+	[decl_specifiers] [declarator] [opt equal_expression]
+    |	[opt "FOO*"] [decl_specifiers] [opt abstract_declarator] 
+        [opt equal_expression]
+end define
+
+define equal_expression
+	=  [expression]
+end define
+
+define fct_definition
+	[NL]
+	[opt my_decl_specifiers] [declarator] [opt ctor_initializer] [fct_body]
+end define
+
+define inline_fct_definition
+	[NL]
+	'inline [opt decl_specifiers] [declarator] [opt ctor_initializer] 
+	        [fct_body]
+end define
+
+define fct_body
+	[NL] [compound_statement] [opt ';] [NL]
+end define
+
+define initializer
+	= [expression]
+    |   = { [IN] [list expression] [EX] }
+    |	= { [IN] [initializer_list] [opt ',] [EX] [NL] }
+    |	( [expression_list] )
+end define
+
+define initializer_list
+	[list initializer_element+]
+end define
+
+define initializer_element
+	[expression]
+    |	[NL] { [IN] [initializer_list] [opt ',] [EX] }
+end define
+
+define class_specifier
+	[class_head] {			[NL] [IN]
+	    [repeat member_list]  	[EX]
+	}
+end define
+
+define my_class_specifier
+	[class_head] {			[NL] [IN]
+	    [repeat my_member_list]  	[EX]
+	}
+end define
+
+define class_head
+	[class_key] [opt identifier] [opt base_spec]
+end define
+
+%%
+%%  This has been added to allow translation.
+%%
+define member_decl2
+    	[EX] [access_specifier_colon] [NL] [IN]
+	    [repeat member_declaration] 
+end define
+
+define member_decl1
+   [repeat member_declaration] 
+end define
+
+define my_member_decl2
+    	[EX] [access_specifier_colon] [NL] [IN]
+	    [repeat my_member_declaration] 
+end define
+
+define my_member_decl1
+   [repeat my_member_declaration] 
+end define
+
+%%
+%%  Experimental change to allow me to get at the access_specifier.
+%%  Old way:
+%%    	[EX] [repeat access_specifier_colon] [IN]
+define member_list
+      [member_decl1]
+   |  [member_decl2]
+end define
+
+define my_member_list
+      [my_member_decl1]
+   |  [my_member_decl2]
+end define
+
+define access_specifier_colon
+	[access_specifier]  :	[NL]
+end define
+
+define values
+    ^F [dname] ^U
+  | ^F [my_decl_specifiers] [repeat ptr_operator] ^U
+  | ^F [argument_declaration_list] ^U
+  | ^F [access_specifier] ^U
+  | ^F [opt ctor_initializer] [fct_body] ^U
+  | ^F [id] ^U
+end define
+
+define Trans
+     (CreateAttribute [stringlit] AttributeID [id] For 
+      SymbolID [opt identifier]) [NL]
+  |  (AddAttribute Name [stringlit] Value [values] AttributeID [id]
+      SymbolID [opt identifier]) [NL]
+end define
+
+define Translation
+   (AddAttribute Type [stringlit] Value  [access_specifier]
+    To [opt identifier]) [NL]
+   (AddAttribute Type [stringlit] Value  ^G [my_class_specifier] ^G
+    To [opt identifier]) [NL]
+ | (Found a Function Decl[SPOFF]:[SPON] [opt my_decl_specifiers] [NL] [IN][IN]
+                                                                 [IN] [IN]
+                     Name[SPOFF]:[SPON] [opt member_declarator_list] [NL]
+                     Type[SPOFF]:[SPON] [access_specifier] [NL]
+                     Persistance[SPOFF]: [SPON] [persistance] [NL]
+                     Friend[SPOFF]:[SPON] [id] [NL]
+                     SC Specifier[SPOFF]:[SPON] [sc_specifier] [NL]
+                     Return Type[SPOFF]:[SPON] [my_decl_specifiers] 
+                                        [repeat ptr_operator][NL]
+                     isInline[SPOFF]:[SPON] [id] [NL]
+                     isVirtual[SPOFF]:[SPON] [id] [NL]
+                     Function Name[SPOFF]:[SPON] [dname] [NL]
+                     Function Args[SPOFF]:[SPON] [argument_declaration_list])
+                     [NL] [EX] [EX] [EX] [EX]
+   [repeat Trans]
+ | (Found a Data Decl[SPOFF]:[SPON] [opt my_decl_specifiers] [NL] [IN] [IN] 
+                                                                  [IN] [IN]
+                 Name[SPOFF]:[SPON] [opt member_declarator_list] [NL]
+                 Type[SPOFF]:[SPON] [access_specifier] [NL]
+                 Persistance[SPOFF]:[SPON] [persistance] [NL]
+                 Friend[SPOFF]:[SPON] [id] [NL]
+                 SC Specifier[SPOFF]:[SPON] [sc_specifier] [NL]
+                 Variable Type[SPOFF]:[SPON] [my_decl_specifiers] 
+                                      [repeat ptr_operator] [NL]
+                 isInline[SPOFF]:[SPON] [SP]  [SPOFF]N/A[SPON] [NL]
+                 isVirtual[SPOFF]:[SPON] [SP] [SPOFF]N/A[SPON] [NL]
+                 Variable Name[SPOFF]:[SPON] [dname]
+                                             [repeat declarator_extension]) 
+                 [NL] [EX] [EX] [EX] [EX]
+ | (Found a Data Decl[SPOFF]:[SPON] [opt my_decl_specifiers] [NL] [IN] [IN] 
+                                                                  [IN] [IN]
+                 Name[SPOFF]:[SPON] [opt member_declarator_list] [NL]
+                 Type[SPOFF]:[SPON] [access_specifier] [NL]
+                 Persistance[SPOFF]:[SPON] [persistance] [NL]
+                 Friend[SPOFF]:[SPON] [id] [NL]
+                 SC Specifier[SPOFF]:[SPON] [sc_specifier] [NL]
+                 Variable Type[SPOFF]:[SPON] [my_decl_specifiers] 
+                                      [repeat ptr_operator] [NL]
+                 isInline[SPOFF]:[SPON] [SP]  [SPOFF]N/A[SPON] [NL]
+                 isVirtual[SPOFF]:[SPON] [SP] [SPOFF]N/A[SPON] [NL]
+                 BAD DATA) [NL] [EX] [EX] 
+                                                                     [EX] [EX]
+end define
+
+%%
+%%  Test to see if I can only get the Top Level In Class Or Structer.
+%%  Added [class_specifier], [enum_specifier] change [decl_specifiers]
+%%  to [my_decl_specifiers]
+%%
+define member_declaration
+        [opt my_decl_specifiers] [opt member_declarator_list] ;	[NL]
+    |   [my_class_specifier] ;
+    |   [my_enum_specifier] ;
+    |	[fct_definition]  
+    |	[qualified_name] ;	[NL]
+    |	[preprocessor] 		[NL]
+    |	[comment] [NL] [repeat comment_NL]
+    |   [repeat Translation+]
+end define
+
+define my_member_declaration
+        [opt my_decl_specifiers] [opt member_declarator_list] ; 	[NL]
+    |   [my_class_specifier] ;
+    |   [my_enum_specifier] ;
+    |	[fct_definition]  
+    |	[qualified_name] ;	[NL]
+    |	[preprocessor] 		[NL]
+    |	[comment] [NL] [repeat comment_NL]
+    |   [Translation]
+end define
+%%
+%%  New routine to go with changes to member_declarator_list.  This was done
+%%  to remove Multiple declarations on a line.
+%%
+define followingID
+   , [member_declarator]
+end define
+%%
+%%  Changes made to resolve multiple declarations on a Line.
+%%  Old way had [list member_declarator+]  
+define member_declarator_list
+        [member_declarator] [repeat followingID]
+%%	[list member_declarator+]
+end define
+
+%%
+%%  Added extensions to member_declarator to fix parse problems due to
+%%  typedefs....
+%%
+define member_declarator
+	[opt "DATA*"] [declarator] [opt pure_specifier]
+    |	[opt identifier]  :  [constant_expression]
+%%    |   "DATA*" [identifier]
+%%    |   "FUNCTION*" [dname] '( [declarator]  ')
+end define
+
+define pure_specifier
+	=  0
+end define
+
+define base_spec
+	:  [base_list]
+end define
+
+define base_list
+	[list base_specifier+]
+end define
+
+define base_specifier
+	[identifier]
+    |	'virtual [opt access_specifier] [identifier]
+    |	[access_specifier] [opt 'virtual] [identifier]
+end define
+
+define access_specifier
+	'private
+    |	'protected
+    |	'public
+end define
+
+define conversion_function_name
+	'operator [conversion_type_name]
+end define
+
+define conversion_type_name
+	[type_specifiers] [opt ptr_operator]
+end define
+
+define ctor_initializer
+	:  [mem_initializer_list]
+end define
+
+define mem_initializer_list
+	[list mem_initializer+]
+end define
+
+define mem_initializer
+	[identifier]  (  [opt expression_list]  )
+end define
+
+define operator_function_name
+	'operator [operator]
+end define
+
+%%
+%%  Added -= to operator list. 
+define operator
+	'new | 'delete
+    |	+ | - | * | / | '% | ^ | & | '| | ~
+    |	! | = | < | > | += | -= | -+ | *= | /= | '%=
+    |	^= | &= | '|= | << | >> | >>= | <<= | == | !=
+    |	<= | >= | && | '|| | ++ | -- | , | ->* | ->
+    |	() | '[ ']
+end define
+
+define statement
+	[labeled_statement]	[KEEP]
+    |	[null_statement]	[KEEP]
+    |	[expression_statement]  [KEEP]
+    |	[compound_statement]	[KEEP]
+    |	[selection_statement]	[KEEP]
+    |	[iteration_statement]	[KEEP]
+    |	[jump_statement]	[KEEP]
+    |	[declaration_statement]	[KEEP]
+end define
+
+define labeled_statement
+	[identifier] : [dstatement]
+    |	[EX] 'case [constant_expression] :	[NL] [IN]
+	    [statement]
+    |	[EX] 'default : 			[NL] [IN]
+	    [statement]
+end define
+
+define dstatement
+	[statement]
+    |	[declaration_statement]
+end define
+
+define expression_statement
+	[expression] ;		[NL]
+end define
+
+define null_statement
+	;			[NL]
+end define
+
+define compound_statement
+	{  				[NL] [IN]
+	    [opt statement_list]  	[EX]
+	}				[NL]
+end define
+
+define statement_list
+	[repeat dstatement+]
+end define
+
+define selection_statement
+    	'if ( [expression] ) [statement] [opt else_statement]
+    |	'switch  ( [expression] ) [compound_statement]
+end define
+
+define else_statement
+	'else [statement]
+end define
+
+define iteration_statement
+	'while ( [expression] ) [statement]
+    |	'do [statement] 'while ( [expression] ) ;	[NL]
+    |	'for ( [for_init_statement] [opt expression] ;  [opt expression] ) 
+	     [for_body]
+end define
+
+define for_init_statement
+	[expression] ;		
+    |	[opt decl_specifiers] [opt declarator_list] ;
+end define
+
+define for_body
+	[compound_statement]
+    |	[IN] [NL] [statement] [EX]
+end define
+
+define jump_statement
+	'break ;			[NL]
+    |	'continue ;			[NL]
+    |	'return  [opt expression] ;	[NL]
+    |	'goto [identifier] ;		[NL]
+end define
+
+define declaration_statement
+	[declaration]
+end define
+
+define preprocessor
+    	[SPOFF] # 'define  [SPON] [identifier] ( [list identifier+] )  [expression]
+    |	[SPOFF] # 'define  [SPON] [identifier]  [expression]
+    |	[SPOFF] # 'else [SPON]
+    |	[SPOFF] # 'endif [SPON]
+    |	[SPOFF] # 'if [SPON] [expression]
+    |	[SPOFF] # 'ifdef [SPON] [identifier]
+    |	[SPOFF] # 'ifndef [SPON] [identifier]
+    |   [SPOFF] # 'ident [SP] [stringlit]
+    |	[SPOFF] # 'include [SPON]  [stringlit]
+    |	[SPOFF] # 'include [SPON] < [SPOFF] [filename] > [SPON]
+    |	[SPOFF] # 'line [SPON] [integernumber] [opt stringlit]
+    |	[SPOFF] # 'undef [SPON] [identifier]
+end define
+
+define filename
+	[identifier] [repeat dot_slash_identifier]
+end define
+
+define dot_slash_identifier
+	[opt '.] [opt '/] [identifier]
+end define
+
+%% -------------------------------END OF C++2.0.Grammer--------------------

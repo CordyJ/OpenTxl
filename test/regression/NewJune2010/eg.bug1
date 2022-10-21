@@ -1,0 +1,21 @@
+/* 
+This function will check the ownership of receive buffers and descriptors. It will indicate to kernel up to half the number of maximum receive buffers in the descriptor ring, in a single receive interrupt. It will also replenish the descriptors with new skbs.
+*/
+static int amd8111e_rx(struct net_device *dev)
+{
+	struct amd8111e_priv *lp = dev->priv;
+	struct sk_buff *skb,*new_skb;
+	int rx_index = lp->rx_idx & RX_RING_DR_MOD_MASK;
+	int min_pkt_len, status;
+	int num_rx_pkt = 0;
+	int max_rx_pkt = NUM_RX_BUFFERS/2;
+	short pkt_len;
+#if AMD8111E_VLAN_TAG_USED		
+	short vtag;
+#endif
+	
+	/* If we own the next entry, it's a new packet. Send it up. */
+	while(++num_rx_pkt <= max_rx_pkt)
+
+	return 0;
+}

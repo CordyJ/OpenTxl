@@ -1,0 +1,167 @@
+function createCollectedPatterns
+            Statement [informationModelStatement_48]
+
+    % called from typcheckRules in typrules.rul
+    % Construct a Txl variable containing all the 
+    % entityVectorPatternSpecifications
+    % in the original program.
+    % check to see if it is a eVPS 
+
+    deconstruct Statement
+        oSI [opt statementIdentifier_3]
+        eVPS [entityVectorPatternSpecification_75]
+
+    replace [repeat informationModelStatement_48]
+        consolidated [repeat informationModelStatement_48]
+    by
+        consolidated [. Statement]
+end function
+
+%=======================================================
+
+rule consolidatePatterns
+
+    % This rule is called from typcheckRules in typrules.rul
+    % The scope of this rule is the value of Txl variable 'consolidated' 
+    % produced by the  function createCollectedPatterns above. 
+    % 'consolidated' contains all the original patterns in the program.
+    % This rule takes all the Pattern statements in the program
+    % and collects all the attributes for a given primeEntityVariable into one 
+    % pattern. Watch the quantification clause, which also must be
+    % the same.
+    % First, find the next unconsolidated pattern so that all 
+    % related patterns can be found.
+
+    replace [repeat informationModelStatement_48]
+        oSI [opt statementIdentifier_3]
+        oDC_C [opt domainsClause_216]
+        pW [patternWords_666]
+        ': 
+        pEV [primeEntityVariable_79]
+        aV [attributeVector_76]
+        sT [statementTerminator_22]
+        rest [repeat informationModelStatement_48]
+
+    % build the new contents of attributeVector_76
+
+    construct nul_aPD [list attributePhraseDeclaration_81]
+        % ( empty ) 
+
+    %nul 
+
+    construct consol_aPD [list attributePhraseDeclaration_81]
+        nul_aPD [addSingle_aPD aV]
+            [addList_aPD aV]
+            [findMatchingPattern oDC_C pEV each rest]
+
+    % replace the original Pattern statement with the consolidated
+    % Pattern, mark it with 'CollPatt_ so we don't find it again,
+    % and delete the other Pattern
+    % statements that participated in the consolidation..
+
+    construct new_rest [repeat informationModelStatement_48]
+        rest 
+%[message '"rest before delete"][debug]
+        [delete_matches oDC_C pEV]
+
+    %construct debug1  [ repeat informationModelStatement_48]
+    %	new_rest[message '"rest after delete"][debug]
+
+    by
+        'CollPatt_ oDC_C pW ': pEV '( consol_aPD ') 
+        sT new_rest 
+end rule
+
+%=================================================================
+
+function findMatchingPattern
+            oDC [opt domainsClause_216]
+            pEV [primeEntityVariable_79]
+            Statement [informationModelStatement_48]
+
+    % Checks each remaining statement one at a time.  First, see if
+    % it matches.
+
+    deconstruct Statement
+        oSI [opt statementIdentifier_3]
+        oDC_1 [opt domainsClause_216]
+        pW_1 [patternWords_666]
+        ': 
+        pEV_1 [primeEntityVariable_79]
+        aV_1 [attributeVector_76]
+        sT_1 [statementTerminator_22]
+
+    deconstruct pEV_1
+        pEV 
+
+    %make sure it matches oDC and pEV
+
+    deconstruct oDC_1
+        oDC 
+
+    replace [list attributePhraseDeclaration_81]
+        consol_aPD [list attributePhraseDeclaration_81]
+    by
+        consol_aPD [addList_aPD aV_1]
+            % one of these will succeed
+            [addSingle_aPD aV_1]
+end function
+
+%=====================================================
+
+function addList_aPD
+            aV [attributeVector_76]
+
+    % Look for ( aPD ) and add the aPD
+
+    deconstruct aV
+        '( 
+        laPD [list attributePhraseDeclaration_81]
+        ') 
+
+    replace [list attributePhraseDeclaration_81]
+        consol_aPD [list attributePhraseDeclaration_81]
+    by
+        consol_aPD [, laPD]
+end function
+
+%=====================================================
+
+function addSingle_aPD
+            aV [attributeVector_76]
+
+    % Look for unparenthesized aPD and add it to the list
+
+    deconstruct aV
+        aPD [attributePhraseDeclaration_81]
+
+    replace [list attributePhraseDeclaration_81]
+        consol_aPD [list attributePhraseDeclaration_81]
+    by
+        consol_aPD [, aPD]
+end function
+
+%=====================================================
+
+rule delete_matches
+            oDC [opt domainsClause_216]
+            pEV [primeEntityVariable_79]
+
+    % Gets rid of exactly the same statements that were matched by 
+    % rule findMatchingPattern, i.e. those that have been consolidated.
+
+    replace [repeat informationModelStatement_48]
+        oSI [opt statementIdentifier_3]
+        oDC 
+        pW [patternWords_666]
+        ': pEV 
+        aV [attributeVector_76]
+        sT [statementTerminator_22]
+        rest [repeat informationModelStatement_48]
+    by
+        rest 
+end rule
+
+%=====================================================
+
+

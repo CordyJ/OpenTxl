@@ -1,0 +1,14 @@
+Pattern: Date().
+Date = <<Year,Month,Day>>.
+Pattern: Time().
+Time member {"00:00:00" .. "23:59:59"}.
+Pattern: Day().
+Pattern: Week().
+Pattern: Year().
+Pattern: Currency().
+Pattern: String().
+Pattern: Number().
+Integer is a Number.
+Integer member {-999999999999 .. 999999999999}.
+Pattern: Boolean().
+Boolean = {True,False,Unknown}.

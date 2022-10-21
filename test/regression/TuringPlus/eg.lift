@@ -1,0 +1,6 @@
+var x,y,z:int
+loop
+    x := y + z
+    a := 3
+    b := a + y
+end loop

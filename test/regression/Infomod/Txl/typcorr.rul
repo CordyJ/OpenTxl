@@ -1,0 +1,178 @@
+function typeCorresRule
+            Statement [informationModelStatement_48]
+
+    % This function searches for Correspondence Rule statements 
+    % and takes them apart
+    % into their syntactic components.
+    % First, insist that the statement is a Correspondence Rule, otherwise
+    % there's nothing to do
+
+    deconstruct Statement
+        SId [opt statementIdentifier_3]
+        uDC [opt universalDomainsClause_216]
+        rOC [ruleOfCorrespondence_191]
+        sT [statementTerminator_22]
+
+    % If we got this far then it's a Correspondence Rule specification.
+
+    construct nul_CAPs [repeat correspondingAttributePhrase_192]
+        % ( empty ) 
+
+    construct cAPs [repeat correspondingAttributePhrase_192]
+        nul_CAPs [^ rOC]
+
+    % First, take care of the domains clause, which can have complex 
+    % selection clauses in it, just as in assertion rules.
+
+    construct Statement_1 [informationModelStatement_48]
+        Statement % check for shared quant variable
+        [checkSharedQuantVar Statement]
+
+    construct NulStatements [repeat informationModelStatement_48]
+        % ( empty ) 
+
+    construct Statements [repeat informationModelStatement_48]
+        NulStatements [. Statement_1]
+
+    construct atomicSentences [repeat informationModelStatement_48]
+        Statements [promoteThatClauses]
+            [promoteFinalThatClauses]
+            [promoteOneCommaEntityThatClauses]
+            [promoteTwoCommaEntityThatClauses]
+            [extractAtomicSentences]
+
+    construct nul_patterns [repeat informationModelStatement_48]
+        % ( empty ) 
+
+    construct mentioned_patterns [repeat informationModelStatement_48]
+        nul_patterns [decomposeALE each atomicSentences]
+            [getCAVN each cAPs]
+
+    construct debug [repeat informationModelStatement_48]
+        mentioned_patterns 
+
+    %[message '"***** Corr Mentioned Patterns ******* "][print]
+    %[message '"***** End Corr Mentioned Patterns ******* "]
+
+    replace [repeat informationModelStatement_48]
+        patterns [repeat informationModelStatement_48]
+    by
+        patterns [checkIfCorrDeclared Statement each mentioned_patterns]
+            [markIfUsedByCorr Statement each mentioned_patterns]
+        %[message '"***** marked ident patterns"][print]
+        %[message '"***** end marked ident patterns"]
+end function
+
+% ========================================================
+
+function getCAVN
+            cAP [correspondingAttributePhrase_192]
+
+    deconstruct cAP
+        pEV [primeEntityVariable_79]
+        cAE [corrAttrExpr_193]
+
+    construct nullSAPs [repeat simpleAttributePhrase_129]
+        % ( empty ) 
+
+    construct sAPs [repeat simpleAttributePhrase_129]
+        nullSAPs [^ cAE]
+
+    %      [message '" atomic Corr Att Spec "][print]
+
+    replace [repeat informationModelStatement_48]
+        mentioned_patterns [repeat informationModelStatement_48]
+    by
+        mentioned_patterns [buildCorrAtomicPattern pEV each sAPs]
+end function
+
+%==================================================================
+
+function buildCorrAtomicPattern
+            pEV [primeEntityVariable_79]
+            sAP [simpleAttributePhrase_129]
+
+    % Now build new atomic patterns from the original
+
+    construct sAPD_nul [singleAttributePhraseDeclaration_82]
+        'Nul 
+
+    % nul
+
+    construct sAPD [singleAttributePhraseDeclaration_82]
+        sAPD_nul [convertSAP1_to_SAPD sAP]
+            %type 1 sAP
+            [convertSAP2_to_SAPD sAP]
+
+    %type_2 sAP
+
+    construct new_mentioned_pattern [informationModelStatement_48]
+        'Pattern ': pEV '( sAPD ') '. 
+
+    replace [repeat informationModelStatement_48]
+        mentioned_patterns [repeat informationModelStatement_48]
+    by
+        mentioned_patterns [. new_mentioned_pattern]
+end function
+
+% =============================================================
+
+function checkIfCorrDeclared
+            Statement [informationModelStatement_48]
+            mentioned_pattern [informationModelStatement_48]
+    match [repeat informationModelStatement_48]
+        patterns [repeat informationModelStatement_48]
+
+    where not
+        patterns [contains mentioned_pattern] 
+
+    deconstruct mentioned_pattern
+        'Pattern ': 
+        pEV [primeEntityVariable_79]
+        '( 
+        sAPD [singleAttributePhraseDeclaration_82]
+        ') '. 
+
+    construct errorFunctionStatement [entityVectorPattern_76]
+        pEV '( sAPD ') 
+
+    construct dummy [entityVectorPattern_76]
+        errorFunctionStatement [message'" *** No pattern defined for Corresponding Attribute"]
+            [print]
+
+    construct dummy1 [informationModelStatement_48]
+        Statement [message'"in the statement"]
+            [print]
+end function
+
+% ============================================================
+
+rule markIfUsedByCorr
+            Statement [informationModelStatement_48]
+            mentioned_pattern [informationModelStatement_48]
+
+    deconstruct mentioned_pattern
+        pW [patternWords_666]
+        ': 
+        eVP [entityVectorPattern_76]
+        sT [statementTerminator_22]
+
+    construct search_pattern [informationModelStatement_48]
+        'Unment_ pW ': eVP sT 
+
+    construct replace_pattern [informationModelStatement_48]
+        'Corr_ pW ': eVP sT 
+
+    replace [repeat informationModelStatement_48]
+        search_pattern 
+        rest [repeat informationModelStatement_48]
+
+    % exit if not found. Else, mark the pattern as having been mentioned.
+
+    by
+        replace_pattern rest 
+end rule
+
+%==============================================================
+
+

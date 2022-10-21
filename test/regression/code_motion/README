@@ -1,0 +1,33 @@
+TXL Example Specification
+-------------------------
+
+Name:	
+	liftexpn.Txl
+	liftassign.Txl
+
+Description:
+	Two code motion optimizations for Turing Plus programs
+	demonstrating how to get the effect of dataflow analysis
+	in TXL.  Liftexpn.Txl moves the computation of all 
+	loop-independent nontrivial expressions outside of loops 
+	and for loops.  Liftassign.Txl moves all loop-independent 
+	assignment statements outside of loops.  
+
+Author:
+	J.R. Cordy
+
+Affiliation:
+	Software Technology Laboratory, Queen's University
+
+Date:
+	May 1993
+
+Examples:
+	txl test1.liftexpn
+	txl test1.liftassign
+
+    (Cascaded optimization - first lift expressions, then assignments)
+	txl test2.liftexpn > test2.liftassign
+	    - then -
+	txl test2.liftassign
+

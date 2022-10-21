@@ -1,0 +1,15 @@
+import java.util.*;
+class BlockVars
+{
+	int b[];
+	public static void main(String[] args) {
+		boolean flag=true;
+		final int y=6;
+		final double X = Math.random();
+		final int DAYS_IN_YEAR;
+		if (flag)
+		DAYS_IN_YEAR = 366;
+		else
+		DAYS_IN_YEAR = 365;
+	}
+}

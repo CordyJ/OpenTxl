@@ -1,0 +1,6 @@
+The original implementation of [select] has a serious bug
+that would build invalid [repeat] trees.  To see the bug,
+run test.bug and look at the last [repeat] node, which
+has an empty [repeat_1] node on it!
+
+Jim

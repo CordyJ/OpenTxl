@@ -1,0 +1,307 @@
+% Type and Module Class with Inheritance Turing dialect
+% Jim Cordy
+% Queen's University, October 1988
+
+% Revised to new TXL syntax May 1990 JRC
+
+include "Turing.Grammar"
+
+% Syntactic forms
+
+define declaration
+	[moduleClassDeclaration]
+    |	[moduleDeclaration]
+    |  	[constantDeclaration]
+    |   [typeClassDeclaration]
+    | 	[typeDeclaration]
+    | 	[variableDeclaration]
+    |  	[variableBinding]
+    |  	[subprogramDeclaration]
+end define
+
+define typeClassDeclaration
+    type class [opt Pervasive] [id] ( [list id] ) : [typeSpec]
+end define
+
+define typeSpec
+	[typeClassInstance]
+    |	[standardType]			
+    |	[arrayType]			
+    |	[recordType]
+    |	[enumeratedType]
+    |	[setType]
+    |	[unionType]
+    |	[collectionType]
+    |	[pointerType]
+    |	[subrangeType]
+    |	[namedType]
+end define
+
+define typeClassInstance
+    [id] ( [list expnOrTypeSpec] )
+end define
+
+define expnOrTypeSpec
+	[id]	% the ambiguous case
+    |	[typeSpec]
+    |	[expn]	% includes named and standard types since they are idents
+end define
+
+define moduleClassDeclaration
+					[NL]
+    module class [id] ( [list id] )	[NL][IN]
+	[moduleBody]			[EX]
+    'end [id]				[NL]
+end define
+
+define moduleDeclaration
+					[NL]
+    module [id] [opt refinementClause]	[NL][IN]
+	[moduleBody]			[EX]
+    'end [id]				[NL]
+end define
+
+define refinementClause
+    refines [id] ( [list expnOrTypeSpec] )	[NL]
+end define
+
+
+% Semantic transforms
+
+function main
+    replace [program]
+	P [repeat declarationOrStatement]
+    by
+	P [fixTypeClasses] 
+	    [fixModuleClassesWithImports] 
+	    [fixModuleClassesWithoutImports] 
+end function
+
+rule fixTypeClasses
+    replace [repeat declarationOrStatement]
+	type class OP [opt Pervasive] TCname [id] ( Formals [list id] ) : 
+	    TCBody [typeSpec]
+	RestOfScope [repeat declarationOrStatement]
+    by
+	RestOfScope [fixTypeClassInstances TCname Formals TCBody]
+end rule
+
+rule fixTypeClassInstances TCname [id] Formals [list id] TCBody [typeSpec]
+    replace [typeSpec]
+	TCname ( Actuals [list expnOrTypeSpec] )
+    by
+	TCBody  [subAmbiguousArgs each Formals Actuals]
+		[subTypeArgs each Formals Actuals]
+		[subExpnArgs each Formals Actuals]
+end rule
+
+rule subAmbiguousArgs Old [id] New [expnOrTypeSpec]
+    deconstruct New
+	NewId [id]
+    replace [id] 
+	Old 
+    by
+	NewId
+end rule
+
+rule subExpnArgs Old [id] New [expnOrTypeSpec]
+    deconstruct New
+	NewExpn [expn]
+    replace [primary] 
+	Old 
+    by
+	(NewExpn)
+end rule
+
+rule subTypeArgs Old [id] New [expnOrTypeSpec]
+    deconstruct New
+	NewType [typeSpec]
+    replace [typeSpec] 
+	Old 
+    by 
+	NewType
+end rule
+
+rule fixModuleClassesWithImports
+    replace [repeat declarationOrStatement]
+	module class MCname [id] ( MCformals [list id] )
+	    MCimp [importList]
+	    MCexp [exportList]
+	    MCbody [repeat declarationOrStatement]
+	'end MCname
+	RestOfScope [repeat declarationOrStatement]
+    by
+	RestOfScope 
+	    [fixModuleClassWithImportsRefinements MCname MCformals MCimp MCexp MCbody]
+end rule
+
+function fixModuleClassWithImportsRefinements 
+	MCname [id] MCformals [list id] MCimp [importList] 
+	MCexp [exportList] MCbody [repeat declarationOrStatement]
+    replace [repeat declarationOrStatement]
+	ModuleClassScope [repeat declarationOrStatement]
+    by
+	ModuleClassScope 
+	    [fixModuleClassWithImportsRefinementsWithImportsAndExports MCname MCformals
+		MCimp MCexp MCbody]
+	    [fixModuleClassWithImportsRefinementsWithImportsOnly MCname MCformals
+		MCimp MCexp MCbody]
+	    [fixModuleClassWithImportsRefinementsWithExportsOnly MCname MCformals
+		MCimp MCexp MCbody]
+	    [fixModuleClassWithImportsRefinementsWithNoImportsOrExports MCname MCformals
+		MCimp MCexp MCbody]
+end function
+
+rule fixModuleClassWithImportsRefinementsWithImportsAndExports 
+	MCname [id] Formals [list id] MCimp [importList] 
+	MCexp [exportList] MCbody [repeat declarationOrStatement]
+    replace [moduleDeclaration]
+	module MRname [id] refines MCname ( Actuals [list expnOrTypeSpec] )
+	    'import ( MRimp [list optVarOrForwardId] )
+	    'export ( MRexp [list optOpaqueId] )
+	    MRbody [repeat declarationOrStatement]
+	'end MRname
+    by
+	module MRname 
+	    MCimp [addNewImports MRimp]
+	    MCexp [addNewExports MRexp]
+	    MCbody [subAmbiguousArgs each Formals Actuals]
+		   [subTypeArgs each Formals Actuals]
+		   [subExpnArgs each Formals Actuals] 
+		   [. MRbody]
+	'end MRname
+end rule
+
+rule fixModuleClassWithImportsRefinementsWithImportsOnly
+	MCname [id] Formals [list id] MCimp [importList] 
+	MCexp [exportList] MCbody [repeat declarationOrStatement]
+    replace [moduleDeclaration]
+	module MRname [id] refines MCname ( Actuals [list expnOrTypeSpec] )
+	    'import ( MRimp [list optVarOrForwardId] )
+	    MRbody [repeat declarationOrStatement]
+	'end MRname
+    by
+	module MRname 
+	    MCimp [addNewImports MRimp]
+	    MCexp
+	    MCbody [subAmbiguousArgs each Formals Actuals]
+		   [subTypeArgs each Formals Actuals]
+		   [subExpnArgs each Formals Actuals] 
+	    	   [. MRbody]
+	'end MRname
+end rule
+
+rule fixModuleClassWithImportsRefinementsWithExportsOnly 
+	MCname [id] Formals [list id] MCimp [importList] 
+	MCexp [exportList] MCbody [repeat declarationOrStatement]
+    replace [moduleDeclaration]
+	module MRname [id] refines MCname ( Actuals [list expnOrTypeSpec] )
+	    'export ( MRexp [list optOpaqueId] )
+	    MRbody [repeat declarationOrStatement]
+	'end MRname
+    by
+	module MRname 
+	    MCimp 
+	    MCexp [addNewExports MRexp]
+	    MCbody [subAmbiguousArgs each Formals Actuals]
+		   [subTypeArgs each Formals Actuals]
+		   [subExpnArgs each Formals Actuals] 
+	    	   [. MRbody]
+	'end MRname
+end rule
+
+rule fixModuleClassWithImportsRefinementsWithNoImportsOrExports 
+	MCname [id] Formals [list id] MCimp [importList] 
+	MCexp [exportList] MCbody [repeat declarationOrStatement]
+    replace [moduleDeclaration]
+	module MRname [id] refines MCname ( Actuals [list expnOrTypeSpec] )
+	    MRbody [repeat declarationOrStatement]
+	'end MRname
+    by
+	module MRname 
+	    MCimp 
+	    MCexp 
+	    MCbody [subAmbiguousArgs each Formals Actuals]
+		   [subTypeArgs each Formals Actuals]
+		   [subExpnArgs each Formals Actuals] 
+	    	   [. MRbody]
+	'end MRname
+end rule
+
+rule fixModuleClassesWithoutImports
+    replace [repeat declarationOrStatement]
+	module class MCname [id] ( MCformals [list id] )
+	    MCexp [exportList]
+	    MCbody [repeat declarationOrStatement]
+	'end MCname
+	RestOfScope [repeat declarationOrStatement]
+    by
+	RestOfScope 
+	    [fixModuleClassWithoutImportsRefinements MCname MCformals MCexp MCbody]
+end rule
+
+function fixModuleClassWithoutImportsRefinements 
+	MCname [id] MCformals [list id] 
+	MCexp [exportList] MCbody [repeat declarationOrStatement]
+    replace [repeat declarationOrStatement]
+	ModuleClassScope [repeat declarationOrStatement]
+    by
+	ModuleClassScope 
+	    [fixModuleClassWithoutImportsRefinementsWithExports MCname MCformals
+		MCexp MCbody]
+	    [fixModuleClassWithoutImportsRefinementsWithoutExports MCname 
+		MCformals MCexp MCbody]
+end function
+
+rule fixModuleClassWithoutImportsRefinementsWithExports 
+	MCname [id] Formals [list id] 
+	MCexp [exportList] MCbody [repeat declarationOrStatement]
+    replace [moduleDeclaration]
+	module MRname [id] refines MCname ( Actuals [list expnOrTypeSpec] )
+	    MRimp [opt importList]
+	    'export ( MRexp [list optOpaqueId] )
+	    MRbody [repeat declarationOrStatement]
+	'end MRname
+    by
+	module MRname 
+	    MRimp
+	    MCexp [addNewExports MRexp]
+	    MCbody [subAmbiguousArgs each Formals Actuals]
+		   [subTypeArgs each Formals Actuals]
+		   [subExpnArgs each Formals Actuals] 
+	    	   [. MRbody]
+	'end MRname
+end rule
+
+rule fixModuleClassWithoutImportsRefinementsWithoutExports
+	MCname [id] Formals [list id] 
+	MCexp [exportList] MCbody [repeat declarationOrStatement]
+    replace [moduleDeclaration]
+	module MRname [id] refines MCname ( Actuals [list expnOrTypeSpec] )
+	    MRimp [opt importList]
+	    MRbody [repeat declarationOrStatement]
+	'end MRname
+    by
+	module MRname 
+	    MRimp
+	    MCexp
+	    MCbody [subAmbiguousArgs each Formals Actuals]
+		   [subTypeArgs each Formals Actuals]
+		   [subExpnArgs each Formals Actuals]
+	    	   [. MRbody]
+	'end MRname
+end rule
+
+function addNewImports NewImports [list optVarOrForwardId]
+    replace [importList]
+	'import ( OldImports [list optVarOrForwardId] )
+    by
+	'import ( OldImports [, NewImports] )
+end function
+
+function addNewExports NewExports [list optOpaqueId]
+    replace [exportList]
+	'export ( OldExports [list optOpaqueId] )
+    by
+	'export ( OldExports [, NewExports] )
+end function

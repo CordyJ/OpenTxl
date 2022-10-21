@@ -1,0 +1,193 @@
+function typeIdentifierRule
+            Statement [informationModelStatement_48]
+
+    % This function searches for IdentifierRule statements
+    %  and takes them apart
+    % into their syntactic components.
+    % First, insist that the statement is a IdentifierRule, otherwise
+    % there's nothing to do
+
+    deconstruct Statement
+        SId [opt statementIdentifier_3]
+        oDC [opt domainsClause_216]
+        eII [entityIdentifierIndicator_669]
+        ': 
+        eAPlist [list entityAttributePhrase_125+]
+        sT [statementTerminator_22]
+
+    % First, take care of the domains clause, which can have complex 
+    % selection clauses in it, just as in assertion rules.
+
+    construct Statement_1 [informationModelStatement_48]
+        Statement % check for shared quant variable
+        [checkSharedQuantVar Statement]
+
+    construct NulStatements [repeat informationModelStatement_48]
+        % ( empty ) 
+
+    construct Statements [repeat informationModelStatement_48]
+        NulStatements [. Statement_1]
+
+    construct atomicSentences [repeat informationModelStatement_48]
+        Statements [promoteThatClauses]
+            [promoteFinalThatClauses]
+            [promoteOneCommaEntityThatClauses]
+            [promoteTwoCommaEntityThatClauses]
+            [extractAtomicSentences]
+
+    construct nul_patterns [repeat informationModelStatement_48]
+        % ( empty ) 
+
+    construct mentioned_patterns [repeat informationModelStatement_48]
+        nul_patterns [decomposeALE each atomicSentences]
+            [getEVP Statement oDC eII each eAPlist]
+
+    construct debug [repeat informationModelStatement_48]
+        mentioned_patterns 
+
+    %[message '"***** IDENT Mentioned Patterns ******* "][print]
+    %[message '"***** End IDENT Mentioned Patterns ******* "]
+
+    replace [repeat informationModelStatement_48]
+        patterns [repeat informationModelStatement_48]
+    by
+        patterns [checkIfIdentDeclared Statement each mentioned_patterns]
+            [markIfUsedByIdent Statement each mentioned_patterns]
+        %[message '"***** marked ident patterns"][print]
+        %[message '"***** end marked ident patterns"]
+end function
+
+%=============================================================
+
+function getEVP
+            Statement [informationModelStatement_48]
+            oDC [opt domainsClause_216]
+            eII [entityIdentifierIndicator_669]
+            eAPlist [entityAttributePhrase_125]
+
+    deconstruct eAPlist
+        pEV [primeEntityVariable_79]
+        '( 
+        lsAP [list simpleAttributePhrase_129+]
+        ') 
+
+    construct nullSAPs [repeat simpleAttributePhrase_129]
+        % ( empty ) 
+
+    construct sAPs [repeat simpleAttributePhrase_129]
+        nullSAPs [^ eAPlist]
+
+    %      [message '" atomic ident Att Spec "][print]
+
+    replace [repeat informationModelStatement_48]
+        mentioned_patterns [repeat informationModelStatement_48]
+    by
+        mentioned_patterns [buildIdentAtomicPattern pEV each sAPs]
+end function
+
+%=======================================================
+
+function buildIdentAtomicPattern
+            pEV [primeEntityVariable_79]
+            sAP [simpleAttributePhrase_129]
+
+    % From the parameters, construct an atomicPattern statement
+
+    construct sAPD_nul [singleAttributePhraseDeclaration_82]
+        'Nul 
+
+    % nul
+
+    construct sAPD [singleAttributePhraseDeclaration_82]
+        sAPD_nul [convertSAP1_to_SAPD sAP]
+            %type 1 sAP
+            [convertSAP2_to_SAPD sAP]
+
+    %type_2 sAP
+
+    construct new_mentioned_pattern [informationModelStatement_48]
+        'Pattern ': pEV '( sAPD ') '. 
+
+    replace [repeat informationModelStatement_48]
+        mentioned_patterns [repeat informationModelStatement_48]
+    by
+        mentioned_patterns [. new_mentioned_pattern]
+end function
+
+% =============================================================
+
+function checkIfIdentDeclared
+            Statement [informationModelStatement_48]
+            mentioned_pattern [informationModelStatement_48]
+    match [repeat informationModelStatement_48]
+        patterns [repeat informationModelStatement_48]
+
+    where not
+        patterns [contains mentioned_pattern] 
+
+    deconstruct mentioned_pattern
+        'Pattern ': 
+        pEV [primeEntityVariable_79]
+        '( 
+        sAPD [singleAttributePhraseDeclaration_82]
+        ') '. 
+
+    construct undeclaredIdent [entityVectorPattern_76]
+        pEV '( sAPD ') 
+
+    construct string1 [repeat tokenOrKey]
+        '** ERROR ** 'No 'pattern 'defined 'for 
+
+    construct string2 [repeat tokenOrKey]
+        'in 'the 'statement 
+
+    construct eM [errorMessage_P02]
+        string1 undeclaredIdent string2 Statement 
+
+    construct dummy1 [errorMessage_P02]
+        eM [print]
+end function
+
+% ============================================================
+
+rule markIfUsedByIdent
+            Statement [informationModelStatement_48]
+            mentioned_pattern [informationModelStatement_48]
+
+    deconstruct mentioned_pattern
+        pW [patternWords_666]
+        ': 
+        eVP [entityVectorPattern_76]
+        sT [statementTerminator_22]
+
+    construct search_pattern [informationModelStatement_48]
+        'Unment_ pW ': eVP sT 
+
+    construct replace_pattern [informationModelStatement_48]
+        'Ment_ pW ': eVP sT 
+
+    construct added_pattern [informationModelStatement_48]
+        'Ident_ pW ': eVP sT 
+
+    replace [repeat informationModelStatement_48]
+        search_pattern 
+        rest [repeat informationModelStatement_48]
+
+    % exit if not found. Else, mark the pattern as having been mentioned, and 
+    % as the subject of an Identifiers statement.
+
+    by
+        replace_pattern 
+        rest [. added_pattern]
+end rule
+
+%==============================================================
+
+define errorMessage_P02
+        [repeat tokenOrKey] [NL] [IN] 
+        [entityVectorPattern_76] [EX] [NL] 
+        [repeat tokenOrKey] [NL] [IN] 
+        [informationModelStatement_48] [EX] 
+end define
+
+

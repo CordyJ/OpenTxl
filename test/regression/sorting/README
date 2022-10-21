@@ -1,0 +1,33 @@
+TXL Example Specification
+-------------------------
+
+Name:	
+	bubblesort.Txl
+	treesort.Txl
+
+Description:
+	Two paradigms for sorting sequences of items in TXL.
+
+	'bubblesort.Txl' is a simple and elegant direct
+	encoding of the Bubblesort specification in TXL.
+	It is also slow, O(n**3).
+
+	'treesort.Txl' is a still relatively simple but 
+	very fast implementation of a Quicksort in TXL,
+	exploiying grammatical tree structure to do the work.
+	O(n*log n).
+
+Author:
+   	J.R. Cordy
+	A. Malton
+
+Affiliation:
+	Queen's University
+
+Date:
+	Sept 1993
+	August 1995
+
+Example:
+	txl example.sort bubblesort.Txl
+	txl example.sort treesort.Txl

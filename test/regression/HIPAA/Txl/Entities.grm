@@ -1,0 +1,129 @@
+% HIPAA entity forms
+% Nadia Kiyavitskaya & Jim Cordy
+% Feb 2007
+
+% This file should be automatically generated from a category file
+% although this one was done by hand
+
+define entity
+	[actor] | [date] | [event] | [information] | [policy] 
+end define
+
+define actor
+	'ANSI
+    | 	'business [space] [associate]
+    |	'covered [space] [entity_]
+    |	'HCFA
+    |	'HHS
+    |	'health [space] 'care [space] [clearinghouse_or_provider]
+    |	'health [space] 'insurance [space] [issuer]
+    |	'HMO
+    |	'small [space] 'health [space] [plan]
+    |	'health [space] [plan]
+    |	'secretary | 'secretaries
+    |	'SSO
+    |	'state | 'states
+    |	'workforce
+    |	'correctional [space] [institution]
+    |	'health [space] 'oversight [space] [agency]
+    |	'individual | 'individuals
+    |	'inmate | 'inmates
+    |	'law [space] 'enforcement [space] [official]
+    |	'plan [space] [sponsor]
+    |	'public [space] 'health [space] [authority]
+end define
+
+define associate
+    'associate | 'associates
+end define
+
+define entity_
+    'entity | 'entities
+end define
+
+define clearinghouse_or_provider
+    'clearinghouse | 'clearinghouses | 'provider | 'providers
+end define
+
+define issuer
+    'issuer | 'issuers
+end define
+
+define plan
+    'plan | 'plans
+end define
+
+define institution
+    'institution | 'institutions
+end define
+
+define agency
+    'agency | 'agencies
+end define
+
+define official
+    'official | 'officials
+end define
+
+define sponsor
+    'sponsor | 'sponsors
+end define
+
+define authority
+    'authority | 'authorities
+end define
+
+define date
+	'compliance [space] [date_]
+end define
+
+define date_
+	'date | 'dates
+end define
+
+define event
+	'modification | 'modifications
+    |	'transaction | 'transactions
+    |	'data [space] 'aggregation
+    |	'disclosure | 'disclosures
+    |	'health [space] 'care [space] 'operations
+    |	'marketing
+    |	'payment | 'payments
+    |	'research
+    |	'treatment | 'treatments
+    |	'use
+end define
+
+define information
+     	'individually [space] 'identifiable [space] 'health [space] 'information
+    |	'protected [space] 'health [space] 'information
+    |	'health [space] 'information
+    |	'designated [space] 'record [space] [set]
+    |	'psychotherapy [space] 'notes
+end define
+
+define set
+    'set | 'sets
+end define
+
+define policy
+    	'act | 'acts
+    |	'group [space] 'health [space] [plan] 
+    |	'implementation [space] [specification]
+    |	'standard | 'standards
+    |	'trading [space] 'partner [space] [agreement]
+    |	'covered [space] 'functions
+    | 	'organized [space] 'health [space] 'care [space] [arrangement]
+end define
+
+define specification
+    'specification | 'specifications
+end define
+
+define agreement
+    'agreement | 'agreements
+end define
+
+define arrangement
+    'arrangement | 'arrangements
+end define

@@ -1,0 +1,443 @@
+% TXL 7.0 language grammar
+% J.R. Cordy, Queen's University, August 1992
+
+% Customized for use with txlpara -- JRC 25.8.93
+% Updated to handle TXL 8.0 -- JRC 5.9.95
+
+% Copyright 1995 Legasys Corp.
+
+comments
+    '%
+end comments
+
+keys
+    '[ '] '| 
+    'end 'keys 'tokens 'compounds 'comments 
+    'define 'repeat 'list 'opt 'attr
+    'rule 'function 'external 'replace 'by 'match
+    'skipping 'construct 'deconstruct 'where 
+    'NL 'EX 'IN 'not 'all 'include
+end keys
+
+define program
+	[statements]
+end define
+
+define statements
+	[repeat statement]
+end define
+
+define statement
+	[defineStatement]		[NL] [KEEP]
+    |	[ruleStatement]			[NL] [KEEP]
+    |	[functionStatement]		[NL] [KEEP]
+    |	[externalStatement]		[NL] [KEEP]
+    |	[keysStatement]			[NL] [KEEP]
+    |	[tokensStatement]		[NL] [KEEP]
+    |	[compoundsStatement]		[NL] [KEEP]
+    |	[commentsStatement]		[NL] [KEEP]
+    |	[includeStatement]		[NL] [KEEP]
+    |	[repeat commentline+]		[NL] [KEEP]
+end define
+
+define commentline
+	[comment]			[NL]
+end define
+
+define includeStatement
+					[NL]
+	[repeat includeFile+] 		
+end define
+
+define includeFile
+	'include [SP] [stringlit]	[NL]
+end define
+
+define keysStatement
+	'keys 				[NL][IN]
+	    [literals]			[EX]
+	'end 'keys			[NL]
+end define
+
+define literals
+	[SPOFF] [repeat eight_literals] [SPON]
+end define
+
+define eight_literals
+ 	[literal_SP] [opt literal_SP] [opt literal_SP] [opt literal_SP] 
+	[opt literal_SP] [opt literal_SP] [opt literal_SP] [opt literal_SP] 
+	[literalcommentOrNL]
+end define
+
+define literal_SP
+	[opt literalcomment]
+	[literal] [SP]
+end define
+
+define literalcomment
+	[NL] [repeat commentline+]
+end define
+
+define literalcommentOrNL
+	[NL] [repeat commentline+]
+    |	[NL]
+end define
+
+define compoundsStatement
+	'compounds 			[NL][IN]
+	    [literals] 			[EX]
+	'end 'compounds			[NL]
+end define
+
+define commentsStatement
+	'comments 			[NL][IN]
+	    [commentBrackets] 		[EX]
+	'end 'comments			[NL]
+end define
+
+define commentBrackets
+	[repeat commentBracket]
+end define
+
+define commentBracket
+	[SPOFF] '/* [SP] '*/ [SPON]	[NL]
+    |	[SPOFF] '{* [SP] '*} [SPON]	[NL]
+    |	'{ '}				[NL]
+    |	[token]				[NL]
+end define
+
+define tokensStatement
+	'tokens 			[NL][IN]
+	    [tokenDefinitions]		[EX]
+	'end 'tokens			[NL]
+end define
+
+define tokenDefinitions
+	[repeat tokenDefinition]
+end define
+
+define tokenDefinition
+	[opt id] [opt dotDotDot] [opt barOrPlus] [SP] [stringlit]	[NL]
+    |	[commentline]
+end define
+
+define dotDotDot
+	[SP] '...
+end define
+
+define barOrPlus
+	[SP] '|
+    |	[SP] '+
+end define
+
+define literalNoBar
+	[quotedLiteralNoBar] 
+    |	[repeat special+]
+    |	[token]
+end define
+
+define literal
+	[quotedLiteral] 
+    |	[repeat special+]
+    |	[token]
+end define
+
+define quotedLiteralNoBar
+	' ' [quotedTokenOrKeyNoBar] 
+end define
+
+define quotedLiteral
+	' ' [quotedTokenOrKey] 
+end define
+
+define quotedTokenOrKeyNoBar
+    	[key]
+    |	[id]
+    |	[repeat special+]
+    |	[token] 
+end define
+
+define quotedTokenOrKey
+    	[key]
+    |	[id]
+    |	[repeat quotedSpecial+]
+    |	[token] 
+end define
+
+define special
+	'! | '@ | '# | '$ | '^ | '& | '* | '( | ') 
+    |	'_ | '+ | '{ | '} | ': | '< | '> | '? | '~ 
+    |	'\ | '= | '- | '; | ', | '. | '/ | '%
+end define
+
+define quotedSpecial
+	[special]
+    |	'| | '[ | '] 
+end define
+
+define defineStatement
+	'define [id]						[NL][IN][IN]
+	    [opt dotDotDotBar]
+	    [literalsAndBracketedDescriptionsNoBar]		
+	    [repeat barLiteralsAndBracketedDescriptions]	[EX][EX]
+	'end 'define						[NL]
+    |
+	'define [id]						[NL][IN][IN]
+	    [opt dotDotDotBar]
+	    [literalsAndBracketedDescriptions]		
+	    [repeat barLiteralsAndBracketedDescriptions]	[EX][EX]
+	'end 'define						[NL]
+end define
+
+define dotDotDotBar
+	[dotDotDot]	[NL] 
+	[opt bar]
+end define
+	    
+define bar
+	[EX] '| [SP] [SP] [SP] [IN]
+end define
+
+define barLiteralsAndBracketedDescriptions
+	[EX] '| [SP][SP][SP] [IN] [literalsAndBracketedDescriptionsNoBar] 
+    |	[EX] '| [SP][SP][SP] [IN] [literalsAndBracketedDescriptions] 
+end define
+
+define literalsAndBracketedDescriptionsNoBar
+	[repeat literalOrBracketedDescriptionNoBar] 
+end define
+
+define literalsAndBracketedDescriptions
+	[repeat literalOrBracketedDescription] 
+end define
+
+define literalOrBracketedDescriptionNoBar
+    	[repeat five_bracketedDescription_or_literalsNoBar+] 
+    |	[NL_IN_EX] [optNL]
+    |	[commentline]
+end define
+
+define literalOrBracketedDescription
+    	[repeat five_bracketedDescription_or_literals+] 
+    |	[NL_IN_EX] [optNL]
+    |	[commentline]
+end define
+
+define five_bracketedDescription_or_literalsNoBar
+ 	[bracketedDescription_or_literalNoBar_SP] 
+	[opt bracketedDescription_or_literalNoBar_SP]
+	[opt bracketedDescription_or_literalNoBar_SP]
+	[opt bracketedDescription_or_literalNoBar_SP]
+	[opt bracketedDescription_or_literalNoBar_SP]
+	[optNL]
+end define
+
+define five_bracketedDescription_or_literals
+ 	[bracketedDescription_or_literal_SP] 
+	[opt bracketedDescription_or_literal_SP]
+	[opt bracketedDescription_or_literal_SP]
+	[opt bracketedDescription_or_literal_SP]
+	[opt bracketedDescription_or_literal_SP]
+	[optNL]
+end define
+
+define bracketedDescription_or_literalNoBar_SP
+	[bracketedDescription] [SP]
+    | 	[literalNoBar] [SP]
+end define
+
+define bracketedDescription_or_literal_SP
+	[bracketedDescription] [SP]
+    | 	[literal] [SP]
+end define
+
+define optNL
+	[NL_IN_EX] [repeat NL_IN_EX] [NL]
+    |	[NL]
+end define
+
+define NL_IN_EX
+	'[ 'NL '] [SP]
+    |	'[ 'IN '] [SP]
+    |	'[ 'EX '] [SP]
+end define
+
+define externalStatement
+							[NL]
+	[repeat externalRule+]
+end define
+
+define externalRule
+	'external 'rule [id] [opt arguments]		[NL]
+    |	'external 'function [id] [opt arguments]	[NL]
+end define
+
+define ruleStatement
+	'rule [id] [opt arguments]			[NL][IN]
+	    [preparts]
+	    [opt skippingBracketedDescription] 
+	    [replaceOrMatch] [SP] [bracketedDescription]	[NL][IN]
+		[pattern]				[EX]
+	    [parts]
+	    [opt byReplacement]				[EX]
+	'end 'rule					[NL]
+end define
+
+define functionStatement
+	'function [id] [opt arguments]			[NL][IN]
+	    [preparts]
+	    [opt skippingBracketedDescription] 
+	    [replaceOrMatch] [SP] [bracketedDescription]	[NL][IN]
+		[pattern]				[EX]
+	    [parts]
+	    [opt byReplacement]				[EX]
+	'end 'function					[NL]
+end define
+
+define replaceOrMatch
+    	'replace [opt star] | 'match [opt star]
+end define
+
+define star
+	[SP] *
+end define
+
+define byReplacement
+	'by				[NL][IN]
+	    [replacement]		[EX]
+end define
+
+define skippingBracketedDescription
+	'skipping [SP] [bracketedDescription]	[NL]
+	[repeat commentline]
+end define
+
+define preparts
+	[repeat part+] 			[NL]
+    |	[empty]
+end define
+
+define parts
+	[repeat part]
+end define
+
+define part
+    	[constructPart]
+    |	[deconstructPart]
+    |	[conditionPart]
+    |	[NL] [repeat commentline+] [NL]
+end define
+
+define constructPart
+	[NL]
+	'construct [id]	[SP] [bracketedDescription]	[NL][IN]
+	    [replacement]				[EX]
+end define
+
+define deconstructPart
+	[NL]
+	'deconstruct [opt starBracketedDescription] [id]  [NL][IN]
+	    [pattern]					[EX]
+end define
+
+define starBracketedDescription
+	[star] [SP]
+    |	[star] [SP] [bracketedDescription] [SP]
+end define
+
+define conditionPart
+	[NL]
+	'where [opt 'not] [opt 'all]			[NL][IN]
+	    [expression]				[EX]
+end define
+
+define arguments
+	[opt simpleArgument]
+    	[IN][IN][IN][IN] [repeat argument] [EX][EX][EX][EX]
+end define
+
+define simpleArgument
+	[id] [SP] [bracketedDescription]	
+end define
+
+define argument
+						[NL]
+	[EX][EX] [repeat commentline] [IN][IN] 
+	[id] [SP] [bracketedDescription]	
+end define
+
+define firstTime
+	[id] [SP] '[ [description] '] 
+end define
+
+define pattern
+	[firstsAndLits]
+end define
+
+define replacement
+    	[expsAndLits]
+end define
+
+define bracketedDescription
+	'[ [description] ']
+end define
+
+define description
+	[opt listRepeatOptOrAttr] [idOrLiteral] [opt plusStarOrComma]
+end define
+
+define listRepeatOptOrAttr
+	'list | 'repeat | 'opt | 'attr
+end define
+
+define plusStarOrComma
+	'+  |  '*  |  ',  |  ',+  |  '?
+end define
+
+define idOrLiteral
+    	[id]
+    |	[SP] [quotedLiteral]
+end define
+
+define firstsAndLits
+    	[repeat firstOrLit]
+end define
+
+define firstOrLit
+	[repeat commentline]
+    	[firstTime] [NL]	
+    |	[literals]
+end define
+
+define expsAndLits
+    	[repeat expOrLit]
+end define
+
+define expOrLit
+	[commentline]
+    |	[expression]
+    |	[literals]
+end define
+
+define expression
+	[repeat commentline]
+	[id] [SP] [ruleCalls]
+end define
+
+define ruleCalls
+	[ruleCall] [IN] [repeat NL_ruleCall] [EX][NL] 
+end define
+
+define ruleCall
+	[repeat commentline]
+	'[ [rulename] [repeat literal] '] 
+end define
+
+define rulename
+	[id]
+    |	[token] [SP]
+end define
+
+define NL_ruleCall
+	[NL] [ruleCall]
+end define

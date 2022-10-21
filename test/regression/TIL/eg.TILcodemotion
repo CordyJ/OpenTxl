@@ -1,0 +1,23 @@
+var x; var y; var z; var a; var b; var c;
+var d; var e; var j; var k; var m; var n; var r;
+y := 1;
+z := 2;
+while 1 do
+    x := y + z;
+    a := 3;
+    z := 5;
+    j := 0;
+    while j != 100 do
+        r := 99;
+        d := 7;
+        k := a + z;
+        b := j * z;
+        d := (y + z) * d;
+        e := (x + z) * r;
+        j := j + 1;
+    end 
+    c := a + y;
+    m := y * b;
+    n := r * y;
+end 
+

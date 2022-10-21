@@ -1,0 +1,577 @@
+% Added -nomultiline to get around TXL 10.4d bug, -w 4096 to get rid of oversize line errors - JRC 6.3.07
+#pragma -case -nomultiline -w 4096
+
+keys
+  'and 'arg 'assign 'atb 'backspace 'break 'catalog 
+  'cfile 'chain 'clear 'close 'continue 'data 'dcl 'default 'delete 
+  'dfile 'else 'endf 'endif 'error 'field 'for 
+  'function 'go 'gosub 'goto 'home 'if 'insert 'io 'ldgo 'load 'modif 
+  'of 'on 'or 'ox 'page 'paint 'pause 'program 'rename 'repeat
+  'restore 'resume 'search 'seg 'segment 'select 'step 'tab
+  'then 'to 'until 'wait 'wend 'while 'write
+  'tabv 'up 'op 'mask 'down 'open  'ret 'read 'endsel 'abort 'ask 'end 'stop 'fm
+  'const 'case 'return
+% Added some missing keywords - JRC 6.3.07
+  'end 'eseg
+end keys
+
+
+compounds
+	':: '<> '<= '>= 
+end compounds
+
+tokens 
+	hexnumber   "0x[\dabcdefABCDEF]+"
+	label_id    "&\u\i+"
+end tokens
+
+define new_line
+     '::
+end define
+
+
+define string_or_id
+	  [stringlit]
+	| [id]
+end define
+
+define program
+	[bal_program_header]
+	[repeat bal_segment]
+	'END [new_line] [NL]
+end define
+
+define bal_program_header
+	'PROGRAM [list string_or_id] [new_line] [NL]
+	[IN]
+		[repeat bal_declaration]
+	[EX]
+end define
+
+define bal_segment
+	'SEGMENT [number] [new_line] [NL]
+	[IN]
+		[repeat bal_declaration]
+		[repeat bal_instruction]
+	[EX]
+	[opt label]	'ESEG [number] [new_line] [NL]
+end define
+
+define bal_declaration
+	[ dcl_list ]
+      | [ field_stm ]
+      | [ const_list ]
+      | 'ARG [id]  [new_line] [NL]
+      | [ function_dcl ]
+end define
+
+define dcl_list
+	'DCL [list var_decl] [new_line] [NL]
+end define
+
+define field_stm
+	'FIELD '= 'M [opt comma_varref] [new_line] [NL]
+end define
+
+define comma_varref
+	', [id] [opt subscript]
+end define
+
+define function_dcl
+	'FUNCTION [id] [opt typespec] '( [repeat param_list] ')  [new_line] [NL]
+	[IN]
+		[repeat bal_declaration]
+		[repeat bal_instruction]
+	[EX]
+	[opt label]	'ENDF [new_line] [NL]
+end define
+
+define param_list
+	'VAR [list var_decl]
+      | [opt 'DCL] [list var_decl]
+end define
+
+define const_list
+	'CONST [list var_decl] [new_line] [NL]
+end define
+
+define var_decl
+	[id] [opt typespec] [opt dimension] [opt initialization]
+end define
+
+define typespec
+	'#
+      | '%
+      | '$ [opt eq_id_or_number]
+      | [opt '&] [opt eq_id_or_number]
+end define
+
+define id_or_number
+	[id] | [number]
+end define
+
+define eq_id_or_number
+	'= [id_or_number]
+end define
+
+define dimension
+	'( [list id_or_number] ')
+end define
+
+% da sostituire con espressione
+define initialization
+	'= [expression]
+end define
+
+define bal_instruction
+	[opt label] [opt bal_statement] [new_line] [NL]
+end define
+
+define label
+	[number]
+      | [label_id]
+    %  | '& [number] %deprecated
+end define
+
+define bal_statement
+    % Reordered statements by frequency of use to speed up parsing - JRC 6.3.07
+      [assign_stm]
+    | [control_stm]
+    | [file_stm]
+    | [function_call]
+    | [basic_stm]
+%    | [unrecognized_statement]
+end define
+
+define control_stm
+    % Reordered statements by frequency of use to speed up parsing - JRC 6.3.07
+        [if_stm]
+      | [for_stm]
+      | [while_stm]
+      | [Repeat_stm]
+      | [select_stm]
+      | 'GOTO [label]
+      | 'GOSUB [label]
+      | 'BREAK
+      | 'CONTINUE
+      | 'LDGO '. 'SEG [expression]
+      | 'OF [expression] 'GOTO [list label]
+      | 'OF [expression] 'GOSUB [list label]
+      | 'ON [expression] 'GOTO [list label]
+      | 'ON [expression] 'GOSUB [list label]
+      | 'OP [err_spec]
+      | 'RESUME [opt label]
+      | 'RET '. 'SEG
+      | 'RETURN
+      | 'STOP
+      | 'WAIT [expression]
+end define
+
+define select_stm
+	'SELECT [expression] [new_line] [NL]
+	[repeat case_stm]
+	[opt default_stm]
+[opt label]	'ENDSEL
+end define
+
+define case_stm
+	'CASE [list expression] [opt new_line] [NL]
+	[IN]
+	   [repeat bal_instruction]
+	[EX]
+end define
+
+define default_stm
+	'DEFAULT [new_line] [NL]
+	[IN]
+	   [repeat bal_instruction]
+	[EX]
+end define
+
+define if_stm
+	'IF [expression] ': [bal_statement]
+      | 'IF [expression] 'GOTO [label]
+      | 'IF [expression] 'GOSUB [label]
+      | 'IF [expression] 'THEN [bal_statement]
+      | 'IF [expression] 'THEN [bal_statement] ELSE [bal_statement]
+      | [if_control]
+end define
+
+define if_control
+	'IF [expression]  [opt lost_then] [new_line] [NL]
+	[IN]
+	   [repeat bal_instruction]
+	[EX]
+	[repeat elsif_stm]
+	[opt else_stm]
+	[opt label] 'ENDIF %non standard label usage
+end define
+
+define lost_then % to remove from the source
+	'THEN
+end define
+
+define elsif_stm
+	'ELSE '. 'IF [expression] [new_line] [NL]
+	[IN]
+	   [repeat bal_instruction]
+	[EX]
+end define
+
+define else_stm
+	'ELSE [new_line] [NL]
+	[IN]
+	   [repeat bal_instruction]
+	[EX]
+end define
+
+define for_stm
+	'FOR [id] '= [expression] 'TO [expression] [opt step_expr] [new_line] [NL]
+	[IN]
+	   [repeat bal_instruction]
+	[EX]
+    [opt label]	'NEXT [id]   %non-standard label usage
+end define
+
+define step_expr
+	'STEP [expression]
+end define
+
+define while_stm
+	'WHILE [conditional_expression] [new_line] [NL]
+	[IN]
+	   [repeat bal_instruction]
+	[EX]
+	[opt label]	'WEND 
+end define
+
+define Repeat_stm
+	'REPEAT [new_line] [NL]
+	[IN]
+	   [repeat bal_instruction]
+	[EX]
+	[opt label]	'UNTIL [conditional_expression]
+end define
+
+define basic_stm
+	'ON 'ERROR 'GOTO [label] ', [id]
+      | 'ON 'ERROR 'ABORT
+      | 'DATA [list expression]
+      | 'MASK [expression]
+      | 'RESTORE [opt expression]
+end define
+
+% ----------------------------------
+% FILE Statement
+% non implementati/usati: CLINK, COUNT, FKEY, KEY, LINK, LKEY, LLINK, NKEY,
+%       POSIT,
+
+define file_stm
+    % Reordered statements by frequency of use to speed up parsing - JRC 6.3.07
+        [print_stm]
+      | [ask_stm]
+      | 'ASSIGN     '= [expression] ', [expression] [opt comma_id] [opt comma_id] [opt comma_id] [opt err_buf]
+      | 'BACKSPACE  '= [expression] [opt err_buf]
+      | 'CATALOG    '= [list expression] [err_buf]
+      | 'CFILE      '= [expression] [repeat cfile_attr] [opt err_buf]
+      | 'CHAIN      '= [expression] [opt comma_expr] [opt err_buf]
+      | 'CLOSE      '= [expression] [opt err_buf]
+      | 'DELETE     '= [expression] ', [expression] [opt marker] [opt err_buf]
+      | 'DFILE      '= [expression] [opt err_buf]
+      | 'DOWN [opt dot_id] '= [expression] [opt marker] [opt err_buf]
+      | 'INSERT     '= [expression] ', [expression] [opt marker] [opt err_buf]
+      | 'IO         '= [expression] ', [list expression] [opt err_buf]
+      | 'LOAD '. 'GO '= [expression] ', [expression] [opt err_buf]
+      | 'MODIF      '= [expression] ', [expression] [opt marker] [opt err_buf]
+      | 'OPEN       '= [expression] [opt err_buf]
+      | 'READ       '= '0 ': [list id]
+      | 'READ       '= [expression] [opt err_buf]
+      | 'READ       '= [expression] ', [list expression] [opt err_buf]
+      | 'RENAME     '= [expression] ', [expression] [opt err_buf]
+      | 'SEARCH [opt dot_id] '= [expression] ', [expression] [opt marker] [opt err_buf]
+      | 'UP [opt dot_id] '= [expression] [opt marker] [opt err_buf]
+      | 'WRITE      '= [expression] [opt err_buf]
+      | 'WRITE      '= [expression] ', [list expression] [opt err_buf]
+      | 'PAUSE [expression]
+end define
+
+define cfile_attr
+	', [id] '= [expression]
+end define
+
+define marker
+	[expression]
+end define
+
+define dot_id
+	'. [id]
+end define
+
+% ----------------------------------
+% ASK & PRINT
+
+define ask_stm
+	'ASK '= '1 [opt comma_jump] ': [list printdir] [opt lost_comma] '= [opt printdir_comma] [opt inputform_comma] [id] [opt subscript]
+end define
+
+define comma_jump
+	', [list ask_jump]
+end define
+
+define ask_jump
+	'( [expression] ') '= [ask_label]
+	| [stringlit] '= [ask_label]
+	| [id] '= [ask_label]
+	| [numeric_literal] '= [ask_label]
+end define
+
+define ask_label
+	[label]
+	| '( [label] ')
+end define
+
+define printdir_comma
+	[list printdir] ',
+end define
+
+define inputform_comma
+	inputform ',
+end define
+
+define inputform
+	'( [list format] ')
+end define
+
+define format
+	[repeat format_element]
+end define
+
+define format_element
+	[id] 
+    | [stringlit]
+    | '.
+    | '+
+    | '-
+    | '*
+    | '/ [number]
+    | [number]
+end define
+
+define print_stm
+	'PRINT '= [expression] ': [list printdir]
+end define
+
+define printdir
+	'CLEAR
+	| 'PAGE
+	| 'HOME
+	| 'TAB '( [expression] ')
+	| 'TAB '( [expression] ', [expression] ')
+	| 'TABV '( [expression] ')
+	| 'PAINT '( [expression] ')
+	| 'PAINT '( [expression] ', [expression] ')
+	| 'ATB '( [expression] ')
+	| '( [list format] ')
+	| '( '( [expression] ') ')
+	| [expression]
+end define
+
+%--------------------------------------
+
+
+define comma_id
+	', [id]
+end define
+
+
+define err_buf
+	': [err_spec] [opt lost_comma] 
+      | ': [buf_spec]
+      | ': [err_spec] ', [buf_spec]
+end define
+
+define lost_comma %TODO to remove from the source
+	',
+end define
+
+define err_spec
+	[label] ', [id]
+    | 'NEXT ', [id]
+    | [label]
+end define
+
+define buf_spec
+%	[id] [opt comma_expr]
+      [expression] [opt comma_expr]
+end define
+
+define comma_expr
+	', [expression]
+end define
+
+define function_call
+    % Reordered cases by frequency of use to speed up parsing - JRC 6.3.07
+	[id] [opt '$] '( [list expression_or_label] ')
+    | 	'PRINT '( [inputform] ', [list expression] ')
+    |	'FM  [inputform] 
+    %  | [id]   %function call without arguments
+end define
+
+define expression_or_label
+	  [expression] %precedence is given to expression to resolve number as expression an not as label
+	| [label]
+end define
+
+
+define assign_stm
+	[opt 'LET ] [id] [opt subscript] '= [expression]
+end define
+
+define expression
+	[conditional_expression]
+    % Removed redundant [unary_expression].  Everything parsed by it is already parsed by
+    % [conditional_expression] above, so it can never match anything.  All it does is slow
+    % down parsing a lot when backtracking - JRC 6.3.07
+    % |   [unary_expression]
+end define
+
+define conditional_expression
+    [conditional_or_expression]
+end define
+
+define conditional_or_expression
+    [conditional_and_expression] [repeat or_conditional_and_expression]
+end define
+
+define or_conditional_and_expression
+    'OR [conditional_and_expression]
+end define
+
+define conditional_and_expression
+    [inclusive_or_expression] [repeat and_inclusive_or_expression]
+end define
+
+define and_inclusive_or_expression
+    'AND [inclusive_or_expression]
+end define
+
+define inclusive_or_expression
+    [exclusive_or_expression] [repeat or_exclusive_or_expression]
+end define
+
+define or_exclusive_or_expression
+    'OR [exclusive_or_expression]
+end define
+
+define exclusive_or_expression
+    [and_expression] [repeat or_and_expression]
+end define
+
+define or_and_expression
+    'OX [and_expression]
+end define
+
+define and_expression
+    [equality_expression] [repeat and_equality_expression]
+end define
+
+define and_equality_expression
+    'AND [equality_expression]
+end define
+
+define equality_expression
+    [relational_expression] [repeat equality_op_relational_expression]
+end define
+
+define equality_op_relational_expression
+    [equality_op] [relational_expression]
+end define
+
+define equality_op
+    '= | '<>
+end define
+
+define relational_expression
+    [additive_expression] [repeat relational_op_additive]
+end define
+
+define relational_op_additive
+	[relational_op] [additive_expression]
+end define
+
+define relational_op
+    '<  | '> | '<= | '>=
+end define
+
+define additive_expression
+    [multiplicative_expression] [repeat add_op_multiplicative_expression]
+end define
+
+define add_op_multiplicative_expression
+    [add_op] [multiplicative_expression]
+end define
+
+define add_op
+    '+ | '-
+end define
+
+define multiplicative_expression
+    [unary_expression] [repeat mult_op_unary_expression]
+end define
+
+define mult_op_unary_expression
+    [mult_op] [unary_expression]
+end define
+
+define mult_op
+    '* | '/
+end define
+
+define unary_expression
+    % Optimized slightly - JRC 6.3.07
+    %     [unary_op] [unary_expression]
+    % |   [primary]
+    [repeat unary_op] [primary]
+end define
+
+define unary_op
+    '+ | '-
+end define
+
+define subscript
+	'( [expression] [opt comma_expr] ')
+end define
+
+define primary
+    % Reordered cases by frequency of use to speed up parsing - JRC 6.3.07
+	[id] [opt subscript]
+    |	[literal]
+    |   [function_call]
+    |   '( [expression] ')
+end define
+
+define literal
+	[numeric_literal]
+    |   [string_literal]
+end define
+
+define numeric_literal
+        [hexnumber]
+    |   [number]
+end define
+
+define string_literal
+    [stringlit]
+end define
+
+
+
+%define unrecognized_statement
+%    [repeat anything] ':: [NL]
+%end define
+
+%define anything
+%     [not '::] [token]
+%%   | [not '::] [key]
+%end define
+

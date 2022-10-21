@@ -1,0 +1,51 @@
+% The language L, from "Elementary Logic", Mates, Oxford 1965.
+compounds
+    -> <->
+end compounds
+
+keys
+    E A					% exists, forall
+    true false				% truth values
+end keys
+
+define program
+    [formula]
+end define
+
+define formula
+    [atomicformula]
+    | - [formula]
+    | ( [formula] [logicalconnective] [formula] )
+    | ( A [variable] ) [formula]
+    | ( E [variable] ) [formula]
+end define
+
+define atomicformula
+    [truthvalue]
+    | [predicate] [repeat variableOrConstant] 
+end define
+
+define truthvalue
+    true | false
+end define
+
+define logicalconnective
+    '| | & | -> | <->
+end define
+
+define predicate
+    B | C | D | F | G | H | I | J | K | L | M | N | O |
+    P | Q | R | S | T | U | V | W | X | Y | Z	
+end define
+
+define variable
+    o | p | q | r | s | t | u | v | w | x | y | z	
+end define
+
+define constant
+    a | b | c | d | e | f | g | h | i | j | k | l | m | n
+end define
+
+define variableOrConstant
+    [variable] | [constant]
+end define

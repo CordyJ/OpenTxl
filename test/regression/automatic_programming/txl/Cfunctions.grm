@@ -1,0 +1,28 @@
+% C function header syntax
+
+compounds
+    /* */
+end compounds
+
+define program
+	[repeat functionSpec_or_CfunctionHeader]
+end define
+
+define functionSpec_or_CfunctionHeader
+	[functionSpec]
+    |	[CfunctionHeader]
+end define
+
+define CfunctionHeader
+	'extern [typeSpec_or_void] [functionName] 
+	    ( /* [list typeSpecParameterName] */ ) ; [NL]
+end define
+
+define typeSpecParameterName
+    	[typeSpec] [parameterName] 
+end define
+
+define typeSpec_or_void
+	[typeSpec]  |  'void
+end define
+

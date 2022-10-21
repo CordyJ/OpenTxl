@@ -1,0 +1,77 @@
+
+
+
+ Information-model Hotel.
+
+Pattern: Guest (has Name, lives at Address, 
+reserves Room in Hotel from Date to Date).
+
+
+Identifiers: Hotel(has Name).
+Hotels = {Hotel ,such that Hotel has Guests}.
+Inhabitants = Guests union Cats.
+
+
+[34] Pattern: Guest (owes Hotel).
+[35] Pattern: Guest (stays at Hotel).
+[36] Pattern: Guest ( has Name, lives at Address ).
+[37] Pattern: Guest (owes Hotel).
+[As1] Guest (owes Hotel) corresponds to Hotel (bills Guest).
+
+Required: Guest (owes Hotel,stays at Hotel, 
+                    rents Room from Date to Date).
+
+
+
+
+
+Hotels = {Hotel = "Grand Hotel"}.
+
+Guests = Persons union Dogs.
+
+[Req] Required: Guest ((owns Hotel or rents Hotel) 
+		and stays at Hotel or burns Hotel).
+Pattern: Guest (stays at Hotel,rents Hotel, 
+               	holds Reservation for Room from Date to Date).
+
+there is a Car: Guest (reserves Room in Hotel = "Grand Hotel"
+from Date = "Jan 3 1991 " until Date = "Jan 10 1991" and 
+Name = "Jim Cordy" ) or Guest holds Credit_card = "MCV2367" 
+
+implies (there is a Rider: Room (Room_rate = "$100.00")) and Guest (lives at Addres = 
+"123 Regent St.") xor Guest complains. 
+
+Guest (rents Room ,such that Room has Roomrate = "$100").
+
+Pattern: Car (has Rental).
+Pattern: Rider (drives Car).
+Rider (rents Car and drives Car ,such that Car (has Rental = "$100"
+ or has Age > 3 )).
+
+
+Pattern: Car (has Rental).
+Pattern: Rider (owns Car,drives Car).
+there exists a Dog, that eats Kibble = "TopNotch", for every Cat ,such that
+Mouse likes Cheese: 
+(Rider (rents Car ,such that Horse (likes Oats)) implies( Mouse drives Carriage ,such that for every Moon:
+ Sun (has Rental = "$100" or has Age > 3 ))).
+
+for every Cat ,such that Mouse likes Cheese: Rider (rents Car).
+
+Pattern: Street (has Name).
+
+there is a Car,  that has License ,such that House has Street ,
+that has Name, that has Sign =  "XYZ123": 
+Hotel and Guest reserves Room , that has Rental ,such that Rental has Value = "$300.".
+
+
+Hotels = {Hotel ,such that Hotel has Guests}.
+Inhabitants = Guests union Cats.
+[34] Pattern: Guest (owes Hotel).
+[As1] Guest (owes Hotel) corresponds to Hotel (bills Guest).
+
+Required: Guest (owes Hotel,stays at Hotel, 
+                    rents Room from Date to Date).
+
+
+ end Information-model.

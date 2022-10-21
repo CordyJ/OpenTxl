@@ -1,0 +1,81 @@
+% Simple variant of Turing Plus - T+ with trivial one-line inline functions 
+% J.R. Cordy, GMD Karlsruhe, 18.03.91
+
+% Based on Tplus basis grammar
+include "Tplus.Grammar"
+
+% Extend syntax to allow inline keyword
+keys
+	inline
+end keys
+
+define fcnSpec
+	[opt 'inline] [fcnOrFunction]
+end define
+
+define fcnOrFunction
+    	fcn | 'function
+end define
+
+% Simplify parameter syntax to use full lists 
+% (superset syntax which simplifies the transform)
+define parameterDeclarationList
+	[list parameterDeclaration] [opt commaVaryingParameterDeclaration]
+    |	[id] : ..	% (only) varying parameter
+end define
+
+define componentSelector
+	( [list expn] ) 
+    |	. [id] 
+end define
+
+
+% Transform trivial one-line inline functions to standard Tplus
+
+function mainRule
+    replace [program]
+	C [compilation]
+    by
+	C [transformTrivialInlineFunctions]
+end function
+
+rule transformTrivialInlineFunctions
+    replace [repeat declarationOrStatement]
+	inline Fcn [fcnOrFunction] Fname [id] ( Fformals [list parameterDeclaration] ) 
+		Fresultname [opt id] : Ftype [typeSpec]
+	    Fimports [opt importList]
+	    result Fresultexpn [expn]
+	'end Fname
+	Fscope [repeat declarationOrStatement]
+    by
+	Fscope [fixTrivialCalls Fname Fformals Fresultexpn]
+end rule
+
+rule fixTrivialCalls Fname [id] Fformals [list parameterDeclaration] Fresultexpn [expn]
+    replace [subExpn]
+	Fname ( Factuals [list expn] )
+    by
+	( Fresultexpn [replaceReferenceFormalWithActual each Fformals Factuals] 
+		          [replaceValueFormalWithActual each Fformals Factuals] )
+end rule
+
+rule replaceReferenceFormalWithActual Formal [parameterDeclaration] Actual [expn]
+    deconstruct Actual
+	Aref [reference]
+    deconstruct Formal
+	Fid [id] : Ftype [parameterType]
+    replace [reference]
+	Fid
+    by
+	Aref
+end rule
+
+rule replaceValueFormalWithActual Formal [parameterDeclaration] Actual [expn]
+    deconstruct Formal
+	Fid [id] : Ftype [parameterType]
+    replace [subExpn]
+	Fid
+    by
+	( Actual )
+end rule
+

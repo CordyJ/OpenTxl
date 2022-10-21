@@ -1,0 +1,57 @@
+Clock -> Continuation-passing style GTML Translator
+T.C.N. Graham
+York University
+
+INTRODUCTION:
+------------
+
+This is an unofficial version of this translator for the use of the TXL
+implementors.
+
+The cps translation is a two phase TXL specification.  The first phase
+translates the Clock language, a Haskell-like functional language,
+to Chakravarty and Lock's Guarded Term ML.  The second phase performs
+a continuation passing style transform on the GTML code.  This second
+phase is extremely memory and cpu intensive.
+
+In order to transfer identifer kind information from the first phase
+to the second, identifiers are tagged with symbols -- eg, ^id for a variable,
+@id for a function name, etc.  The filter 'filter.x' is run over the final code
+to remove these tags.  (GTML uses a different capitalization convention on
+identifiers from other functional languages.  The filter also makes these
+changes, since I was unaware of any means of changing the case of identifiers
+in TXL.)  The filter program may be created using the Makefile in the 'filter'
+subdirectory.
+
+
+INSTALLATION:
+------------
+
+To compile everything, run the shell script 'install'.  This script
+doesn't create any files outside of this directory subtree.
+To get everything to go, the commands 'txlc', 'ctxl' and 'tpc' must
+all be in your path.
+
+
+RUNNING CPS:
+-----------
+
+The basic command is 'cps' run on a '.clock' file.  All intermediate files in
+the transformation process are left in the directory.  That is:
+
+	'cps prog.clock' creates:
+
+	- prog.gtml	- the basic gtml from the first phase
+	- prog.tmp	- the cps form with the identifier tags
+	- prog.cps	- the cps form suitable for compilation with the
+				gtml compiler
+
+
+EXAMPLES:
+--------
+
+The examples I have given you are card.clock, slider.clock, viewDefs.clock
+and map.clock.  The last of these is rather large.
+
+I have given you the intermediate files for slider.clock and viewDefs.clock
+so you can test you're getting the right output.

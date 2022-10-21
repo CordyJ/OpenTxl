@@ -1,0 +1,29 @@
+TXL Example Specification
+-------------------------
+
+Name:	
+	FB.Txl
+
+Description:
+	A transformation to a dialect of the Occam parallel
+	processing language.  The aim of the transformation is
+	to detect conditional expressions of IF statements and 
+	replace them with a variable "BranchTest[i]",  where i is
+	incremented for each conditional expression found in a procedure.
+	The BranchTest variable is added to the formal parameters of
+	the procedure and the procedure name is changed to a special
+	default name.  This will allow the procedure to be called by
+	a special timing harness program that calls the procedure and 
+	manipulates the conditional branches to tune performance. 
+
+Author:
+	Mitch Webster
+
+Affiliation:
+	Electrical Engineering,  University of Natal,  South Africa
+
+Date:
+	February 1993
+
+Example:
+	txl FBI.FB

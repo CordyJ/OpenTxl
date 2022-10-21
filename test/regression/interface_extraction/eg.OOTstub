@@ -1,0 +1,309 @@
+/* FAMILY
+This is the monitor in charge of creating and maintaining the parent-child-
+sibling relationships between user processes.
+*/
+unit
+monitor Family
+    import State
+    export( Genesis, NewUser, ChangeUser, InformMeOfDeath,
+            PrintStatus, RegisterProgram,
+            ProcessIDs, nullProcess )
+
+
+    % Process ID's
+    const nullProcess := 0
+    const maxProcessID := 16#FFFF
+    type ProcessIDs: nullProcess..maxProcessID
+
+
+    % The family tree: this data structure records the parent-child-sibling
+    % relationships between user processes.
+    var user: collection of forward nodes
+    type nodes:
+        record
+            envelope: State.EnvelopeIDs
+            pID: ProcessIDs
+            programName: string
+            father, son, brother: pointer to user
+            alive: boolean
+            zombies: nat
+            causeOfDeath: nat
+        end record
+    var userPointer: array State.EnvelopeIDs of pointer to user
+        {+envelope: State.EnvelopeIDs   userPointer(envelope) := nil(user)}
+
+    % Signaled when user.zombies > 0
+    var death: array State.EnvelopeIDs of condition
+
+    % Number of envelopes waiting for a new user process.
+    var expecting: nat := 0
+
+    % Signaled when expecting > 0.
+    var birth: condition                
+
+    % Signaled when expecting = maxEnvelopes-1.
+    var allAreExpecting: deferred condition
+
+    % Buffers used for transfering state information between processes.
+    var theState: State.UserProcessState
+    var theSon: pointer to user
+
+    % Keeps track of the first unused process ID.
+    var nextPID: ProcessIDs
+
+    /* IN USE?
+    TRUE iff "pID" is already being used.
+    */
+    fcn inUse(pID: ProcessIDs, root: pointer to user): boolean
+        [ root = nil(user)     : >>>:false
+        | pID  = user(root).pID: >>>:true
+        |: >>>:inUse(pID, user(root).brother) or inUse(pID, user(root).son)
+        ]
+    end inUse
+
+    /* GET PID
+    Return an unused process ID.
+    */
+    proc getPID(var pID: ProcessIDs)
+        { pID := nextPID 
+            [ nextPID=maxProcessID: nextPID:=2 
+            |: nextPID += 1
+            ]
+            >>:~inUse(pID, userPointer(State.initEnvelope))
+        }
+    end getPID
+
+
+    /* NEW USER
+    Create a son process of the user process running in envelope "envelope"
+    and supply it with the initial process state contained in "initialState".
+    Return in "sonPID" the process ID of the son. If a new process cannot be
+    created then "sonPID" will be "nullProcess".
+    */
+    procedure NewUser( envelope     : State.EnvelopeIDs,
+                       initialState : State.UserProcessState,
+                       var sonPID   : ProcessIDs              )
+        % The calling process' family tree entry
+        const me := userPointer(envelope)
+
+        % Check that there is a waiting envelope.
+        if expecting = 0 then
+            sonPID := nullProcess
+            return
+        end if
+
+        % Get a new node
+        new user, theSon
+        if theSon=nil(user) then
+            % No more memory can be allocated.
+            sonPID := nullProcess
+            return
+        end if
+
+        % Assign a new process ID to the son.
+        getPID(sonPID)
+
+        % Create and initialize a new node in the family tree
+        user(theSon).pID := sonPID 
+        user(theSon).son := nil(user)
+        user(theSon).alive := true
+        user(theSon).zombies := 0
+        user(theSon).programName := user(me).programName
+
+        % Enter the son in the family tree
+        user(theSon).brother := user(me).son
+        user(me).son := theSon
+        user(theSon).father := me
+
+        % Copy the state into the transfer buffer.
+        theState := initialState
+
+        % Tell an envelope process about the birth.
+        signal birth
+    end NewUser
+
+
+    /* CHANGE USER
+    Kill the old user process associated with envelope "envelope" if any
+    (its fatal status is in "fatalStatus".  Return in "newState" the state 
+    of a user process that is not yet associated with an envelope and make 
+    that new process' controlling envelope "envelope".  This procedure blocks 
+    if there are no new user processes.
+    */
+    procedure ChangeUser( envelope: State.EnvelopeIDs, fatalStatus: nat,
+                          var newState: State.UserProcessState )
+        pre envelope ~= State.initEnvelope
+
+        % The family tree entry of the user currently using this envelope.
+        const oldUser := userPointer(envelope)
+
+        if oldUser=nil(user) /*if it's the first time*/ then
+            if expecting = State.maxEnvelopes-2 then
+                signal allAreExpecting
+                % This is a deferred condition, therefore by the time this
+                % process leaves the monitor "expecting" will be maxEnvelopes-1
+            end if
+
+        else  % The old user must be killed before a new user can be assigned
+            const father := user(oldUser).father 
+            assert father ~= nil(user)
+
+            % Kill the old user
+            user(oldUser).alive := false
+            user(oldUser).causeOfDeath := fatalStatus
+
+            % Any children become the property of the init process
+            if user(oldUser).son ~= nil(user) then
+                const initUser := userPointer(State.initEnvelope)
+
+                % Change the parentage of all children and find the last son.
+                var lastSon := user(oldUser).son
+                loop
+                    user(lastSon).father := initUser
+                    exit when user(lastSon).brother = nil(user)
+                    lastSon := user(lastSon).brother
+                end loop
+
+                % Insert the new children at the start of init's son list
+                user(lastSon).brother := user(initUser).son
+                user(initUser).son := user(oldUser).son
+                user(oldUser).son := nil(user)
+
+                % Adjust "zombies" for the init process.
+                user(initUser).zombies += user(oldUser).zombies
+                user(oldUser).zombies := 0
+                if user(initUser).zombies > 0 then
+                    signal death(State.initEnvelope)
+                end if
+            end if
+
+            % Inform the father of the death
+            user(father).zombies += 1
+            signal death( user(father).envelope )
+        end if
+
+        % Wait for a new user
+        expecting += 1
+        wait birth
+        expecting -= 1
+
+        % Copy the new user process' state
+        newState := theState
+        newState.envelope := envelope
+
+        userPointer(envelope) := theSon
+        user(theSon).envelope := envelope
+    end ChangeUser
+
+
+    /* INFORM ME OF DEATH
+    Return in "deadChild" the process ID of a dead child of the process
+    controlled by envelope "envelope", and in "causeOfDeath" the fatal status 
+    of that dead child.  If the process has no children then "deadChild" will 
+    be "nullProcess."  If there are children but none dead then this procedure 
+    will block until one dies.
+    */
+    procedure InformMeOfDeath( envelope: State.EnvelopeIDs, 
+                               var deadChild: ProcessIDs,
+                               var causeOfDeath: nat )
+        % The family tree entry of the user currently using this envelope.
+        const me := userPointer(envelope)
+
+        % Return if the parent has no children to acknowledge.
+        if user(me).son = nil(user) then
+            % This process has no children
+            deadChild := nullProcess
+            return
+        end if
+
+        % Wait for a death.
+        if user(me).zombies = 0 then
+            wait death(envelope)
+        end if
+        assert user(me).zombies > 0
+
+        % Find the dead child
+        var previous := me
+        var deceased := user(me).son
+        loop
+            exit when ~user(deceased).alive
+            previous := deceased
+            deceased := user(previous).brother
+        end loop
+
+        deadChild := user(deceased).pID
+        causeOfDeath := user(deceased).causeOfDeath
+
+        % Dispose of the son's body
+        if previous = me then
+            % Special case: number one son
+            user(me).son := user(deceased).brother
+        else
+            user(previous).brother := user(deceased).brother
+        end if
+        free user, deceased
+        user(me).zombies -= 1
+    end InformMeOfDeath
+
+
+    /* GENESIS
+    Used to initialize the Family monitor.  Blocks until all envelopes are
+    waiting for a user to be born.
+    */
+    procedure Genesis
+        % the "init" process is born.
+        new user, userPointer(State.initEnvelope)
+        begin bind var ip to user(userPointer(State.initEnvelope))
+            ip.envelope := State.initEnvelope
+            ip.pID := 1 ; nextPID := 2
+            ip.father := nil(user)
+            ip.son := nil(user)
+            ip.brother := nil(user)
+            ip.alive := true
+            ip.zombies := 0
+            ip.programName := "no name"
+        end
+
+        % Wait until all other processes are waiting for a birth.
+        if expecting < State.maxEnvelopes-1 then
+            wait allAreExpecting
+        end if
+    end Genesis
+
+
+    /* PRINT TREE
+    Print out the status of process "p" and all its descendants.
+    */
+    procedure printTree(p: pointer to user, depth: int)
+        put repeat(" ", depth*2)..
+        put "pid ", user(p).pID, " ", user(p).programName ..
+        if user(p).alive then
+            put ""
+        else
+            put "(zombie)"
+        end if
+
+        var next := user(p).son
+        loop
+            exit when next = nil(user)
+            printTree(next,depth+1)
+            next := user(next).brother
+        end loop
+    end printTree
+
+
+    /* PRINT STATUS
+    Print out a report of the status of all processes.
+    */
+    procedure PrintStatus
+        printTree(userPointer(State.initEnvelope),0)
+    end PrintStatus
+
+
+    /* REGISTER PROGRAM
+    Register then name of the program being executed by "envelope".
+    */
+    procedure RegisterProgram(envelope: State.EnvelopeIDs, programName: string)
+        user( userPointer(envelope) ).programName := programName ;
+    end RegisterProgram
+end Family

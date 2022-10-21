@@ -1,0 +1,49 @@
+
+We'd like to parse the code in test.C++ using C++.Txl-full-grammar
+with TXL Pro 1.3r4e.
+
+This parse is successful under 1.2r3, but fails under 1.3r4e.
+The error reads:
+
+TXL ERROR : (Fatal) Empty repeat in define 'repeat__decl_specifier'
+  could not be resolved with lookahead '('
+TXL ERROR : Syntax error on line 1 of test.C++, at or near:
+        char foo :: fill ( >>> ) <<< { } 
+
+The documentation indicates that this problem might be fixed by
+adding a + to the [repeat decl_specifier] line.  Unfortunately,
+the line already reads [repeat decl_specifier+].
+
+The description of the error message indicates that
+[decl_specifier] in this case can derive the empty string.  This does not
+appear to be the case with either of these grammars, however.
+
+I've scanned the grammar a couple of times, and I can only find these
+two defines which can derive the empty string:
+
+argument_declaration_list
+  - surrounded by required parentheses in abstract_extension
+  - not used otherwise
+
+parameter_declaration_clause
+  - surrounded by required parentheses in declarator_extension
+  - not used otherwise
+
+The only thing I've found that allows the parse to succeed under 1.3r4e
+is to remove this line in the definition of type_specifier:
+
+(in the full grammar)
+   | [opt '::] [opt nested_name_spec] [type_id]       
+
+(in the minimal grammar)
+     [opt '::] [opt nested_name_spec] [class_name] |
+
+For the minimal grammar, I've stripped the full grammar down to mostly
+just the pieces needed to parse the code in test.C++.  In my tests,
+the minimal grammar behaves the same as the full grammar, so you may
+want to start with it.
+
+Thanks much!
+
+  -James Powell
+   (james@advancedsw.com)

@@ -1,0 +1,7 @@
+This demonstrates a bug present in all the left-optimized parsers
+from 7.5 to 7.6u.  The symptom is that input tokens are lost
+since backtracking is invorrectly implemented in the optimization.
+
+Fixed in 7.7.
+
+JRC

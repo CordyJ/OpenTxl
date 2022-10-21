@@ -1,0 +1,101 @@
+#!/bin/sh 
+# FreeTXL Application Compiler
+
+# Rev 9.5.20 JRC - added clean exit code
+# Rev 8.2.15 JRC - new .ctxl naming convention
+# Rev 7.8.15 JRC - added -lm to CC
+
+# Where's FreeTXL?
+if [ "unset$TXLLIB" = "unset" ]
+then
+    TXLLIB=/usr/local/lib/txl
+fi
+
+# Check we have arguments
+if [ "$1" = "" ]
+then
+    echo "Usage:  txlc [txloptions] txlprog.txl" 1>&2
+    exit 99
+fi
+
+# Localization
+CC="gcc -m64"
+
+if [[ "`uname -s`" =~ MINGW.* ]] || [[ "`uname -s`" =~ CYGWIN.* ]]
+then
+    CC="$CC -Wl,--stack,0x20000000"
+fi
+
+# Decode TXL program name and options
+TXLPROG=""
+TXLOPTIONS=""
+while [ "$1" != "" ]
+do
+    case "$1" in
+	*.[Tt]xl)
+		TXLPROG="$1"
+		;;
+	-help)
+		echo "Usage:  txlc [txloptions] txlprog.txl" 1>&2
+		echo "('txl -help' for TXL options)" 1>&2
+		exit 99
+		;;
+	*) 
+		TXLOPTIONS="$TXLOPTIONS $1"
+		;;
+    esac
+    shift
+done
+
+# Find our source file
+if [ "$TXLPROG" = "" ]
+then
+    echo "Usage:  txlc [txloptions] txlprog.txl" 1>&2
+    exit 99
+fi
+
+# Check that we can read the TXL source file
+if [ ! -r $TXLPROG -a ! -r Txl/$TXLPROG -a ! -r txl/$TXLPROG ]
+then 
+    echo "Unable to open $TXLPROG" 1>&2
+    exit 99
+fi
+
+# Handle both naming conventions
+TXLNAME=`basename $TXLPROG .Txl`
+TXLNAME=`basename $TXLNAME .txl`
+
+# Compile to TXLVM byte code using TXL 
+/bin/rm -f $TXLNAME.ctxl Txl/$TXLNAME.ctxl txl/$TXLNAME.ctxl ${TXLNAME}_TXL.* 2> /dev/null
+./txl -q -c $TXLPROG $TXLOPTIONS
+
+# Check that we got a result
+if [ ! -r $TXLNAME.ctxl ]
+then
+    if [ -r Txl/$TXLNAME.ctxl ]
+    then
+	/bin/mv Txl/$TXLNAME.ctxl $TXLNAME.ctxl
+    else 
+	if [ -r txl/$TXLNAME.ctxl ]
+	then
+	    /bin/mv txl/$TXLNAME.ctxl $TXLNAME.ctxl
+	else
+	    echo "TXL compile failed" 1>&2
+	    exit 99
+	fi
+    fi
+fi
+
+# Convert TXLVM byte code to initialized C byte array
+$TXLLIB/txlcvt.x $TXLNAME.ctxl
+
+# Compile and link with TXLVM
+$CC -O -o $TXLNAME.x $TXLLIB/txlmain.o $TXLLIB/txlvm.o  ${TXLNAME}_TXL.c -lm
+
+# Clean up
+/bin/rm -f $TXLNAME.ctxl Txl/$TXLNAME.ctxl txl/$TXLNAME.ctxl ${TXLNAME}_TXL.* 2> /dev/null
+
+# Finish clean
+exit 0
+
+# Revised 22.7.22

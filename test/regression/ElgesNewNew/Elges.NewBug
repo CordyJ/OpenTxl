@@ -1,0 +1,5642 @@
+From melges%athena@[199.117.41.108] Thu Jun 15 11:28 EDT 1995
+From: melges@advancedsw.com (Mike Elges)
+Subject: Re: Possible Bug
+To: cordy@qucis.queensu.ca (James R. Cordy)
+In-Reply-To: <9506151456.AA03187@forelle.qucis.queensu.ca> from "James R. Cordy" at Jun 15, 95 10:56:41 am
+
+Dr Cordy,
+> 
+> Just send me your entire ruleset and input if you can.
+> I'll see if we still have the bug.  If we do, I will fix it
+Thank you
+> before you (if ever) get TXL Pro. 
+I hope you where just kidding or you know something I do not???
+
+I have "%%MARKER to mark the spot for the " where not" statement.  
+My test was to run it with the "where not" not commented and then
+commented the two lines and ran it again.  You can then diff the
+two output files and you will see 
+
+<                 isInline: FALSE
+<                 isVirtual: FALSE
+---
+>                 isInline: TRUE
+>                 isVirtual: TRUE
+
+which indicates that the a0 parse tree was modified when the 
+"when not" is commented out.
+
+--------------------START of C++.TXL---------------------------
+include "C++2.0.Grammar"
+
+external function message M [any]
+external function quote X [any]
+external function unquote X [stringlit]
+external function print
+external function debug
+
+function mainRule
+	replace [program]
+	   P [repeat declaration]
+	by
+	   P [message "Breaking out Typedefs Structs and Classes"]
+             [BreakUpTypedef]
+             [BreakUpTypedef1]
+             [message "Extracting Class and Inline Functions"]
+             [ExtractClassDefAndInlineFunctionDef]
+             [message "DoneClass and Inline Functions"]
+             [message "Processing Classes"]
+             [ProcClass]
+             [message "Done Processing Classes"]
+end function
+
+rule BreakUpTypedef
+   replace [repeat declaration]
+      b0 [declaration] b1 [repeat declaration]
+   deconstruct b0
+      a0 [opt decl_specifiers] a1 [opt declarator_list] ;
+   deconstruct * a0
+     'typedef a2 [class_specifier] a3 [identifier]
+   deconstruct a2
+     a4 [class_head] {
+          a5 [repeat member_list]
+     }
+   deconstruct a4
+     a6 [class_key] a7 [identifier] a8 [opt base_spec]
+   by
+     a2 ;
+     typedef a6 a7 a3 a1;
+     b1
+end rule
+
+rule BreakUpTypedef1
+   replace [repeat declaration]
+      b0 [declaration] b1 [repeat declaration]
+   deconstruct b0
+      a0 [opt decl_specifiers] a1 [opt declarator_list] ;
+   deconstruct * a0
+     'typedef a2 [class_specifier] a3 [identifier]
+   deconstruct a2
+     a4 [class_head] {
+          a5 [repeat member_list]
+     }
+   deconstruct a4
+     a6 [class_key]  a8 [opt base_spec]
+   deconstruct a3
+     uns [repeat _] nme [id]
+   construct tmp [id]
+    nme [_ 'XXYY]    [!] 
+   construct tmp1 [identifier]
+     uns tmp
+   construct classSpec [class_specifier]
+     a6 tmp1 a8 { a5 }
+   by
+     classSpec;
+     typedef a6 tmp1 a3 a1;
+     b1
+end rule
+
+rule ProcClass
+   replace [class_definition]
+        x1 [repeat sc_specifier]
+        a [class_key] a1 [opt identifier] a2 [opt base_spec] {
+         a3 [repeat member_list] 
+        }
+        x2 [opt declarator_list] ;
+   by
+     (CreateSymbol Class SymbolID a1) 
+       a3 [RemoveMultipleDeclaration]
+          [GetClassAttributes a1]
+          [GetClassAttributes1 a1]
+          [DecomposeFctDefinitions a1 a]
+          [DecomposeFctDefinitions1 a1 a]
+          [DecomposeFctDefinitions2 a1]
+          [GetDataAttributes a1 a]
+          [GetDataAttributes0 a1 a]
+          [GetDataAttributes1 a1]
+	  [RemoveAccessSpecifier]
+%%
+%%  After the last function all should be translated from within a class.
+%%  if Not we have a problem and will loose data needed to forward.
+%%
+end rule
+
+rule RemoveAccessSpecifier
+  replace [member_list]
+    a0 [member_decl2]
+  deconstruct a0
+    Type [access_specifier] : b1 [repeat member_declaration]
+  by
+   b1 
+end rule
+
+rule RemoveMultipleDeclaration
+   replace [repeat member_declaration]
+     a0 [member_declaration] d0 [repeat member_declaration]
+   deconstruct a0
+     a1 [opt my_decl_specifiers]
+     a2 [opt member_declarator_list] ;
+   deconstruct a2 
+     a3 [member_declarator] , a4 [member_declarator] a5 [repeat followingID] 
+   by      
+     a1  a3; a1 a4 a5; d0
+end rule
+
+%%
+%%
+%%                START OF FUNCTION DEFINITION SECTION.
+%%
+%%
+rule DecomposeFctDefinitions ClassName [opt identifier] ClassKey [class_key]
+  replace [member_list]
+    a0 [member_decl1]	
+  deconstruct * [fct_definition] a0
+    a1 [opt my_decl_specifiers] a2 [declarator] 
+    a3 [opt ctor_initializer] a4 [fct_body]
+  where 
+    ClassKey [isClassKeyP]
+  construct Type [access_specifier]
+    'private
+  by
+    a0 [DecomposeFctDefinition ClassName Type] 
+end rule
+
+rule DecomposeFctDefinitions1 ClassName [opt identifier] ClassKey [class_key]
+  replace [member_list]
+    a0 [member_decl1]
+  deconstruct * [member_declaration] a0
+    a1 [opt my_decl_specifiers] a2 [declarator] 
+    a3 [opt ctor_initializer] a4 [fct_body]
+  where 
+    ClassKey [isStructKeyP]
+  construct Type [access_specifier]
+    'public
+  by
+    a0 [DecomposeFctDefinition ClassName Type] 
+end rule
+
+rule DecomposeFctDefinitions2 ClassName [opt identifier]
+  replace [member_list]
+    a0 [member_decl2]
+  deconstruct a0
+    Type [access_specifier] : b1 [repeat member_declaration]
+  deconstruct * [member_declaration] a0
+    a1 [opt my_decl_specifiers] a2 [declarator] 
+    a3 [opt ctor_initializer] a4 [fct_body]
+  by
+    Type : b1 [DecomposeFctDefinition ClassName Type]
+end rule
+%%
+%%  Above two function collapse here.  This routine first fixes the
+%%  missparsed functions and data.
+%%
+rule DecomposeFctDefinition ClassName [opt identifier] Type [access_specifier]
+   replace [member_declaration]
+     a0 [member_declaration] 
+   deconstruct * [member_declaration] a0
+     a1 [opt my_decl_specifiers] a2 [declarator] 
+     a3 [opt ctor_initializer] a4 [fct_body]
+   where not
+     a0 [AllDone]
+   by
+     a0 [DFDCommon ClassName Type]
+end rule
+%%
+%%  Create a Common Point of Passage.
+%%
+function DFDCommon ClassName [opt identifier] Type [access_specifier]
+   replace [member_declaration]
+      a0 [member_declaration]
+   deconstruct a0
+      a1 [opt my_decl_specifiers] a2 [declarator] 
+      a3 [opt ctor_initializer] a4 [fct_body]
+   where not
+      a0 [AllDone]
+   by
+      a0 [DFDGetPersistance ClassName Type]
+         [DFDGetPersistance1 ClassName Type]
+end function
+
+function DFDGetPersistance ClassName [opt identifier] Type [access_specifier]
+   replace [member_declaration]
+      a0 [member_declaration]
+   deconstruct a0
+      a1 [opt my_decl_specifiers] a2 [declarator] 
+      a3 [opt ctor_initializer] a4 [fct_body]
+   deconstruct * [my_decl_specifier] a1
+      b0 [persistance]
+   by
+      a0 [DFDCommon1 ClassName Type b0]
+end function
+
+function DFDGetPersistance1 ClassName [opt identifier] Type [access_specifier]
+   replace [member_declaration]
+      a0 [member_declaration]
+   deconstruct a0
+      a1 [opt my_decl_specifiers] a2 [declarator] 
+      a3 [opt ctor_initializer] a4 [fct_body]
+   where not
+      a1 [isPersistance]
+   construct b0 [persistance]
+      'NONE
+   by
+      a0 [DFDCommon1 ClassName Type b0]
+end function
+
+function DFDCommon1 ClassName [opt identifier] Type [access_specifier]
+                 Persistance [persistance]
+   replace [member_declaration]
+      a0 [member_declaration]
+   where not
+     a0 [AllDone]
+   by
+      a0 [DFDGetFreind ClassName Type Persistance]
+         [DFDGetFreind1 ClassName Type Persistance]
+end function
+%%
+%%  Determine if this function is a freind or not.  In this function
+%% friend is true.
+%%
+function DFDGetFreind ClassName [opt identifier] Type [access_specifier]
+                      Persistance [persistance]
+   replace [member_declaration]
+      a0 [member_declaration]
+   deconstruct a0
+      a1 [opt my_decl_specifiers] a2 [declarator] 
+      a3 [opt ctor_initializer] a4 [fct_body]
+   deconstruct * [my_decl_specifier] a1
+      'friend
+   construct b0 [id]
+      'TRUE
+   by
+      a0 [DFDCommon2 ClassName Type Persistance b0]
+end function
+%%
+%%  Determine if this function is a freind or not.  In this function
+%% friend is false.
+%%
+function DFDGetFreind1 ClassName [opt identifier] Type [access_specifier]
+                       Persistance [persistance]
+   replace [member_declaration]
+      a0 [member_declaration]
+   deconstruct a0
+      a1 [opt my_decl_specifiers] a2 [declarator] 
+      a3 [opt ctor_initializer] a4 [fct_body]
+   where not
+      a1 [isFreind]
+   construct b0 [id]
+      'FALSE
+   by
+      a0 [DFDCommon2 ClassName Type Persistance b0]
+end function
+
+%%
+%%  Next Collection point, Continues the decomposition of the 
+%%  member funtion/data.
+%%
+function DFDCommon2 ClassName [opt identifier] Type [access_specifier]
+                 Persistance [persistance] Friend [id]
+   replace [member_declaration]
+      a0 [member_declaration]
+   where not
+     a0 [AllDone]
+   by
+      a0 [DFDGetSCSpec ClassName Type Persistance Friend]
+         [DFDGetSCSpec1 ClassName Type Persistance Friend]
+end function
+%%
+%%  determine the scope specifier for the data or function the value can
+%%  be none.  This function gets the sc_Specifier when one exists.
+%%
+function DFDGetSCSpec ClassName [opt identifier] Type [access_specifier]
+                      Persistance [persistance] Friend [id]
+   replace [member_declaration]
+      a0 [member_declaration]
+   deconstruct a0
+      a1 [opt my_decl_specifiers] a2 [declarator] 
+      a3 [opt ctor_initializer] a4 [fct_body]
+   deconstruct * [my_decl_specifier] a1
+      b0 [sc_specifier]
+   by
+      a0 [DFDCommon3 ClassName Type Persistance Friend b0]
+end function
+%%
+%%  determine the scope specifier for the data or function the value can
+%%  be none.  This function gets the sc_Specifier ehrn it does not exist.
+%%
+function DFDGetSCSpec1 ClassName [opt identifier] Type [access_specifier]
+                       Persistance [persistance] Friend [id]
+   replace [member_declaration]
+      a0 [member_declaration]
+   deconstruct a0
+      a1 [opt my_decl_specifiers] a2 [declarator] 
+      a3 [opt ctor_initializer] a4 [fct_body]
+   where not
+      a1 [isSCSpec]
+   construct b0 [sc_specifier]
+      'NONE
+   by
+      a0 [DFDCommon3 ClassName Type Persistance Friend b0]
+end function
+
+%%
+%%  Next Collection point, Continues the decomposition of the 
+%%  member funtion/data.
+%%
+function DFDCommon3 ClassName [opt identifier] Type [access_specifier]
+                    Persistance [persistance] Friend [id] SCSpec [sc_specifier]
+   replace [member_declaration]
+      a0 [member_declaration]
+   where not
+     a0 [AllDone]
+   by
+      a0 [DFDGetType ClassName Type Persistance Friend SCSpec]
+         [DFDGetType3 ClassName Type Persistance Friend SCSpec]
+end function
+%%
+%%  The next four function determin the Type of the variable
+%%
+function DFDGetType ClassName [opt identifier] Type [access_specifier]
+                    Persistance [persistance] Friend [id] SCSpec [sc_specifier]
+   replace [member_declaration]
+      a0 [member_declaration]
+   deconstruct a0
+      a1 [my_decl_specifiers] a2 [declarator] 
+      a3 [opt ctor_initializer] a4 [fct_body]
+   construct b1 [my_decl_specifiers]
+      a1 [RemoveExtra]
+   where not
+      a0 [AllDone]
+   by
+      a0 [DFDCommon4 ClassName Type Persistance Friend SCSpec b1]
+end function
+
+function DFDGetType3 ClassName [opt identifier] Type [access_specifier]
+                     Persistance [persistance] Friend [id] 
+                     SCSpec [sc_specifier]
+   replace [member_declaration]
+      a0 [member_declaration]
+   deconstruct a0
+      a1 [opt my_decl_specifiers] a2 [declarator] 
+      a3 [opt ctor_initializer] a4 [fct_body]
+   where not
+      a1 [isTheType]
+   construct b0 [my_decl_specifiers]
+      'int
+   by
+      a0 [DFDCommon4 ClassName Type Persistance Friend SCSpec b0]
+end function
+
+function DFDCommon4 ClassName [opt identifier] Type [access_specifier]
+                    Persistance [persistance] Friend [id] SCSpec [sc_specifier]
+                    VarFuncType [my_decl_specifiers]
+   replace [member_declaration]
+      a0 [member_declaration]
+   where not
+     a0 [AllDone]
+   by
+      a0 [DFDGetInline ClassName Type Persistance Friend SCSpec VarFuncType]
+         [DFDGetInline1 ClassName Type Persistance Friend SCSpec VarFuncType]
+end function
+
+function DFDGetInline ClassName [opt identifier] Type [access_specifier]
+                      Persistance [persistance] Friend [id] 
+                      SCSpec [sc_specifier] VarFuncType [my_decl_specifiers]
+   replace [member_declaration]
+      a0 [member_declaration]
+   deconstruct a0
+      a1 [opt my_decl_specifiers] a2 [declarator] 
+      a3 [opt ctor_initializer] a4 [fct_body]
+   deconstruct * [fct_specifier] a1
+      'inline
+   construct b1 [id]
+      'TRUE
+   by
+      a0 [DFDCommon5 ClassName Type Persistance Friend SCSpec VarFuncType b1]
+         [DFDCommon5 ClassName Type Persistance Friend SCSpec VarFuncType b1]
+end function
+
+function DFDGetInline1 ClassName [opt identifier] Type [access_specifier]
+                       Persistance [persistance] Friend [id] 
+                       SCSpec [sc_specifier] VarFuncType [my_decl_specifiers]
+   replace [member_declaration]
+      a0 [member_declaration]
+   deconstruct a0
+      a1 [opt my_decl_specifiers] a2 [declarator] 
+      a3 [opt ctor_initializer] a4 [fct_body]
+   where not
+      a1 [isInline]
+   construct b1 [id]
+      'FALSE
+   by
+      a0 [DFDCommon5 ClassName Type Persistance Friend SCSpec VarFuncType b1]
+         [DFDCommon5 ClassName Type Persistance Friend SCSpec VarFuncType b1]
+end function
+
+function DFDCommon5 ClassName [opt identifier] Type [access_specifier]
+                    Persistance [persistance] Friend [id] SCSpec [sc_specifier]
+                    VarFuncType [my_decl_specifiers] isInline [id]
+   replace [member_declaration]
+      a0 [member_declaration]
+   where not
+     a0 [AllDone]
+   by
+      a0 [DFDGetVirtual ClassName Type Persistance Friend SCSpec VarFuncType
+                        isInline]
+         [DFDGetVirtual1 ClassName Type Persistance Friend SCSpec VarFuncType
+                         isInline]
+end function
+
+function DFDGetVirtual ClassName [opt identifier] Type1 [access_specifier]
+                       Per [persistance] Frnd [id] 
+                       SCSpec [sc_specifier] VarFuncType [my_decl_specifiers] 
+                       BoolInline [id]
+   replace [member_declaration]
+      a0 [member_declaration]
+   deconstruct a0
+      a1 [opt my_decl_specifiers] a2 [declarator] 
+      a3 [opt ctor_initializer] a4 [fct_body]
+   deconstruct a2
+      a5 [repeat ptr_operator] a6 [dname] '( a7 [repeat '(]
+      a8 [argument_declaration_list] a9 [repeat ')] ') 
+      a10 [opt cv_qualifier_list]
+   deconstruct * [my_decl_specifier] a1
+      'virtual
+   construct b2 [id]
+      'FUNCTION_ATT
+   construct b3 [id]
+      b2 [!]
+   by
+      (Found a Function Decl: a1 Name: a2 Type: Type1 Persistance: Per
+       Friend: Frnd SC Specifier: SCSpec Return Type: VarFuncType a5
+       isInline: BoolInline isVirtual: 'TRUE
+       Function Name: a6
+       Function Args: a8)
+     (CreateAttribute "Class.Operation" AttributeID b3 For SymbolID ClassName)
+     (AddAttribute Name "Class.Operation.Name" Value ^F a6 ^U AttributeID b3
+      SymbolID ClassName)
+     (AddAttribute Name "Class.Operation.ReturnType" Value ^F VarFuncType a5 ^U
+      AttributeID b3 SymbolID ClassName)
+     (AddAttribute Name "Class.Operation.Args" Value ^F a8 ^U
+      AttributeID b3 SymbolID ClassName)
+     (AddAttribute Name "Class.Operation.Visibility" Value ^F Type1 ^U
+      AttributeID b3 SymbolID ClassName)
+     (AddAttribute Name "Class.Operation.FunctionDef" Value ^F a3 a4 ^U 
+      AttributeID b3 SymbolID ClassName)
+     (AddAttribute Name "Class.Operation.Virtual" Value ^F 'TRUE ^U
+      AttributeID b3 SymbolID ClassName)
+     (AddAttribute Name "Class.Operation.Inline" Value ^F BoolInline ^U
+      AttributeID b3 SymbolID ClassName)
+end function
+
+function DFDGetVirtual1 ClassName [opt identifier] Type1 [access_specifier]
+                        Per [persistance] Frnd [id] 
+                        SCSpec [sc_specifier] VarFuncType [my_decl_specifiers] 
+                        BoolInline [id]
+   replace [member_declaration]
+      a0 [member_declaration]
+   deconstruct * [fct_definition] a0
+      a1 [opt my_decl_specifiers] a2 [declarator] 
+      a3 [opt ctor_initializer] a4 [fct_body]
+   deconstruct a2
+      a5 [repeat ptr_operator] a6 [dname] '( a7 [repeat '(]
+      a8 [argument_declaration_list] a9 [repeat ')] ') 
+      a10 [opt cv_qualifier_list]
+   where not
+      a1 [isVirtual]
+   construct b2 [id]
+      'FUNCTION_ATT
+   construct b3 [id]
+      b2 [!]
+   by
+      (Found a Function Decl: a1 Name: a2 Type: Type1 Persistance: Per
+       Friend: Frnd SC Specifier: SCSpec Return Type: VarFuncType a5
+       isInline: BoolInline isVirtual: 'FALSE
+       Function Name: a6
+       Function Args: a8)
+     (CreateAttribute "Class.Operation" AttributeID b3 For SymbolID ClassName)
+     (AddAttribute Name "Class.Operation.Name" Value ^F a6 ^U AttributeID b3
+      SymbolID ClassName)
+     (AddAttribute Name "Class.Operation.ReturnType" Value ^F VarFuncType a5 ^U
+      AttributeID b3 SymbolID ClassName)
+     (AddAttribute Name "Class.Operation.Args" Value ^F a8 ^U
+      AttributeID b3 SymbolID ClassName)
+     (AddAttribute Name "Class.Operation.Visibility" Value ^F Type1 ^U
+      AttributeID b3 SymbolID ClassName)
+     (AddAttribute Name "Class.Operation.FunctionDef" Value ^F a3 a4 ^U
+      AttributeID b3 SymbolID ClassName)
+     (AddAttribute Name "Class.Operation.Virtual" Value ^F 'FALSE ^U
+      AttributeID b3 SymbolID ClassName)
+     (AddAttribute Name "Class.Operation.Inline" Value ^F BoolInline ^U
+      AttributeID b3 SymbolID ClassName)
+end function
+%%
+%%
+%%                END OF FUNCTION DEFINITION SECTION.
+%%
+%%
+
+%%
+%%
+%%                START OF DATA ATTRIBUTES SECTION.
+%%
+%%
+
+%%
+%%  Lets start collecting the Data Attrubutes.
+%%  First detrmine the Scope of the Attribute or Operation.
+%%  In this case no scope is defined do defualt to private in
+%%  class definitions.
+%%
+rule GetDataAttributes ClassName [opt identifier] ClassKey [class_key]
+  replace [member_list]
+    a0 [member_decl1]
+  deconstruct * [member_declaration] a0
+    a1 [opt my_decl_specifiers] a2 [opt member_declarator_list] ;
+  where 
+    ClassKey [isClassKeyP]
+  construct Type [access_specifier]
+    'private
+  by
+    a0 [GetDataAttribute ClassName Type] 
+end rule
+
+function isClassKeyP
+   match [class_key]
+     'class
+end function
+
+rule GetDataAttributes0 ClassName [opt identifier] ClassKey [class_key]
+  replace [member_list]
+    a0 [member_decl1]
+  deconstruct * [member_declaration] a0
+    a1 [opt my_decl_specifiers] a2 [opt member_declarator_list] ;
+  where 
+    ClassKey [isStructKeyP]
+  construct Type [access_specifier]
+    'public
+  by
+    a0 [GetDataAttribute ClassName Type] 
+end rule
+
+function isStructKeyP
+   match [class_key]
+     'struct
+end function
+
+%%
+%%  Lets start collecting the Data Attrubutes.
+%%  First detrmine the Scope of the Attribute or Operation.
+%%  In this case scope is defined so grabe it and continue.
+%%
+rule GetDataAttributes1 ClassName [opt identifier]
+  replace [member_list]
+    a0 [member_decl2]
+  deconstruct a0
+    Type [access_specifier] : b1 [repeat member_declaration]
+  deconstruct * [member_declaration] a0
+    a1 [opt my_decl_specifiers] a2 [opt member_declarator_list] ;
+  by
+    Type : b1 [GetDataAttribute ClassName Type]
+end rule
+%%
+%%  Above two function collapse here.  This routine first fixes the
+%%  missparsed functions and data.
+%%
+rule GetDataAttribute ClassName [opt identifier] Type [access_specifier]
+   replace [member_declaration]
+     a0 [member_declaration] 
+   deconstruct * [member_declaration] a0
+     a1 [opt my_decl_specifiers] a2 [opt member_declarator_list] ;
+   where not
+     a0 [AllDone]
+   by
+     a0 [FixMisparsedFunction]
+        [FixMisparsedFunction1]
+        [FixMisparsedData]
+        [Common ClassName Type]
+end rule
+%%
+%%  Continues the decomposition of the member funtion/data.
+%%
+function Common ClassName [opt identifier] Type [access_specifier]
+   replace [member_declaration]
+      a0 [member_declaration]
+   where not
+     a0 [AllDone]
+   by
+      a0 [GetPersistance ClassName Type]
+         [GetPersistance1 ClassName Type]
+end function
+%%
+%%  This function determine the persistance of the data item.  There are
+%%  three types CONST, VOLITALE and NONE.  This function cover the first two.
+%%
+function GetPersistance ClassName [opt identifier] Type [access_specifier]
+   replace [member_declaration]
+      a0 [member_declaration]
+   deconstruct a0
+      a1 [opt my_decl_specifiers] a2 [opt member_declarator_list] ;
+   deconstruct * [my_decl_specifier] a1
+      b0 [persistance]
+   by
+      a0 [Common1 ClassName Type b0]
+end function
+%%
+%%  This function determine the persistance of the data item.  There are
+%%  three types CONST, VOLITALE and NONE.  This function covers the NONE
+%%  case.
+%%
+function GetPersistance1 ClassName [opt identifier] Type [access_specifier]
+   replace [member_declaration]
+      a0 [member_declaration]
+   deconstruct a0
+      a1 [opt my_decl_specifiers] a2 [opt member_declarator_list] ;
+   where not
+      a1 [isPersistance]
+   construct b0 [persistance]
+     'NONE
+   by
+      a0 [Common1 ClassName Type b0]
+end function
+     
+function isPersistance
+   match [opt my_decl_specifiers]
+      a0 [persistance]
+end function
+%%
+%%  Next Collection point, Continues the decomposition of the 
+%%  member funtion/data.
+%%
+function Common1 ClassName [opt identifier] Type [access_specifier]
+                 Persistance [persistance]
+   replace [member_declaration]
+      a0 [member_declaration]
+   where not
+     a0 [AllDone]
+   by
+      a0 [GetFreind ClassName Type Persistance]
+         [GetFreind1 ClassName Type Persistance]
+end function
+%%
+%%  Determine if this function is a freind or not.  In this function
+%% friend is true.
+%%
+function GetFreind ClassName [opt identifier] Type [access_specifier]
+                   Persistance [persistance]
+   replace [member_declaration]
+      a0 [member_declaration]
+   deconstruct a0
+      a1 [opt my_decl_specifiers] a2 [opt member_declarator_list] ;
+   deconstruct * [my_decl_specifier] a1
+      'friend
+   construct b0 [id]
+      'TRUE
+   by
+      a0 [Common2 ClassName Type Persistance b0]
+end function
+%%
+%%  Determine if this function is a freind or not.  In this function
+%% friend is false.
+%%
+function GetFreind1 ClassName [opt identifier] Type [access_specifier]
+                    Persistance [persistance]
+   replace [member_declaration]
+      a0 [member_declaration]
+   deconstruct a0
+      a1 [opt my_decl_specifiers] a2 [opt member_declarator_list] ;
+   where not
+      a1 [isFreind]
+   construct b0 [id]
+      'FALSE
+   by
+      a0 [Common2 ClassName Type Persistance b0]
+end function
+     
+function isFreind
+   match [opt my_decl_specifiers]
+      'friend
+end function
+%%
+%%  Next Collection point, Continues the decomposition of the 
+%%  member funtion/data.
+%%
+function Common2 ClassName [opt identifier] Type [access_specifier]
+                 Persistance [persistance] Friend [id]
+   replace [member_declaration]
+      a0 [member_declaration]
+   where not
+     a0 [AllDone]
+   by
+      a0 [GetSCSpec ClassName Type Persistance Friend]
+         [GetSCSpec1 ClassName Type Persistance Friend]
+end function
+%%
+%%  determine the scope specifier for the data or function the value can
+%%  be none.  This function gets the sc_Specifier when one exists.
+%%
+function GetSCSpec ClassName [opt identifier] Type [access_specifier]
+                   Persistance [persistance] Friend [id]
+   replace [member_declaration]
+      a0 [member_declaration]
+   deconstruct a0
+      a1 [opt my_decl_specifiers] a2 [opt member_declarator_list] ;
+   deconstruct * [my_decl_specifier] a1
+      b0 [sc_specifier]
+   by
+      a0 [Common3 ClassName Type Persistance Friend b0]
+end function
+%%
+%%  determine the scope specifier for the data or function the value can
+%%  be none.  This function gets the sc_Specifier ehrn it does not exist.
+%%
+function GetSCSpec1 ClassName [opt identifier] Type [access_specifier]
+                    Persistance [persistance] Friend [id]
+   replace [member_declaration]
+      a0 [member_declaration]
+   deconstruct a0
+      a1 [opt my_decl_specifiers] a2 [opt member_declarator_list] ;
+   where not
+      a1 [isSCSpec]
+   construct b0 [sc_specifier]
+      'NONE
+   by
+      a0 [Common3 ClassName Type Persistance Friend b0]
+end function
+     
+function isSCSpec
+   match [opt my_decl_specifiers]
+      a0 [sc_specifier]
+end function
+%%
+%%  Next Collection point, Continues the decomposition of the 
+%%  member funtion/data.
+%%
+function Common3 ClassName [opt identifier] Type [access_specifier]
+                 Persistance [persistance] Friend [id] SCSpec [sc_specifier]
+   replace [member_declaration]
+      a0 [member_declaration]
+   where not
+     a0 [AllDone]
+   by
+      a0 [GetType ClassName Type Persistance Friend SCSpec]
+         [GetType3 ClassName Type Persistance Friend SCSpec]
+end function
+%%
+%%  The next two function determin the Type of the variable
+%%
+function GetType ClassName [opt identifier] Type [access_specifier]
+                 Persistance [persistance] Friend [id] SCSpec [sc_specifier]
+   replace [member_declaration]
+      a0 [member_declaration]
+   deconstruct a0
+      a1 [my_decl_specifiers] a2 [opt member_declarator_list] ;
+   construct b1 [my_decl_specifiers]
+      a1 [RemoveExtra]
+%%MARKER Comment out the next two line to generate the problem
+   where not
+      a0 [AllDone]
+   by
+      a0 [Common4 ClassName Type Persistance Friend SCSpec b1]
+end function
+
+rule RemoveExtra
+   replace [repeat my_decl_specifier]
+     a0 [my_decl_specifier] Rest [repeat my_decl_specifier]
+   where 
+     a0 [isVirtual1]
+        [isInline1]
+        [isFriend1]
+        [isSCSpecifier1]
+   by
+     Rest
+end rule
+
+function isVirtual1
+   match [my_decl_specifier]
+      'virtual
+end function
+
+function isInline1
+   match [my_decl_specifier]
+      'inline
+end function
+
+function isFriend1
+   match [my_decl_specifier]
+      'friend
+end function
+
+function isSCSpecifier1
+   match [my_decl_specifier]
+      a0 [sc_specifier]
+end function
+
+function GetType3 ClassName [opt identifier] Type [access_specifier]
+                  Persistance [persistance] Friend [id] SCSpec [sc_specifier]
+   replace [member_declaration]
+      a0 [member_declaration]
+   deconstruct a0
+      a1 [opt my_decl_specifiers] a2 [opt member_declarator_list] ;
+   where not
+      a1 [isTheType]
+   construct b0 [my_decl_specifiers]
+      'int
+   by
+      a0 [Common4 ClassName Type Persistance Friend SCSpec b0]
+end function
+     
+function isTheType
+   match [opt my_decl_specifiers]
+      a0 [the_type]
+end function
+
+function Common4 ClassName [opt identifier] Type [access_specifier]
+                 Persistance [persistance] Friend [id] SCSpec [sc_specifier]
+                 VarFuncType [my_decl_specifiers]
+   replace [member_declaration]
+      a0 [member_declaration]
+   where not
+     a0 [AllDone]
+   by
+      a0 [GetInline ClassName Type Persistance Friend SCSpec VarFuncType]
+         [GetInline1 ClassName Type Persistance Friend SCSpec VarFuncType]
+end function
+
+function GetInline ClassName [opt identifier] Type [access_specifier]
+                   Persistance [persistance] Friend [id] SCSpec [sc_specifier]
+                   VarFuncType [my_decl_specifiers]
+   replace [member_declaration]
+      a0 [member_declaration]
+   deconstruct a0
+      a1 [opt my_decl_specifiers] a2 [opt member_declarator_list] ;
+   deconstruct * [my_decl_specifier] a1
+      'inline
+   construct b1 [id]
+      'TRUE
+   by
+      a0 [Common5 ClassName Type Persistance Friend SCSpec VarFuncType b1]
+         [Common5 ClassName Type Persistance Friend SCSpec VarFuncType b1]
+end function
+
+function GetInline1 ClassName [opt identifier] Type [access_specifier]
+                   Persistance [persistance] Friend [id] SCSpec [sc_specifier]
+                   VarFuncType [my_decl_specifiers]
+   replace [member_declaration]
+      a0 [member_declaration]
+   deconstruct a0
+      a1 [opt my_decl_specifiers] a2 [opt member_declarator_list] ;
+   where not
+      a1 [isInline]
+   construct b1 [id]
+      'FALSE
+   by
+      a0 [Common5 ClassName Type Persistance Friend SCSpec VarFuncType b1]
+         [Common5 ClassName Type Persistance Friend SCSpec VarFuncType b1]
+end function
+
+function isInline
+   match [opt my_decl_specifiers]
+      'inline
+end function
+
+function Common5 ClassName [opt identifier] Type [access_specifier]
+                 Persistance [persistance] Friend [id] SCSpec [sc_specifier]
+                 VarFuncType [my_decl_specifiers] isInline [id]
+   replace [member_declaration]
+      a0 [member_declaration]
+   where not
+     a0 [AllDone]
+   by
+      a0 [GetVirtual ClassName Type Persistance Friend SCSpec VarFuncType
+                     isInline]
+         [GetVirtual1 ClassName Type Persistance Friend SCSpec VarFuncType
+                      isInline]
+end function
+
+function GetVirtual ClassName [opt identifier] Type [access_specifier]
+                   Persistance [persistance] Friend [id] SCSpec [sc_specifier]
+                   VarFuncType [my_decl_specifiers] isInline [id]
+   replace [member_declaration]
+      a0 [member_declaration]
+   deconstruct a0
+      a1 [opt my_decl_specifiers] a2 [opt member_declarator_list] ;
+   deconstruct * [my_decl_specifier] a1
+      'virtual
+   construct b1 [id]
+      'TRUE
+   by
+      a0 
+         [ProcFct0 ClassName Type Persistance Friend SCSpec 
+          VarFuncType isInline b1]
+         [ProcFct1 ClassName Type Persistance Friend SCSpec VarFuncType
+          isInline b1]
+         [ProcFct2 ClassName Type Persistance Friend SCSpec VarFuncType
+          isInline b1]
+         [FindTheData1 ClassName Type Persistance Friend SCSpec VarFuncType 
+         isInline b1]
+         [FindTheData ClassName Type Persistance Friend SCSpec VarFuncType 
+          isInline b1]
+end function
+
+function GetVirtual1 ClassName [opt identifier] Type [access_specifier]
+                     Persistance [persistance] Friend [id] 
+                     SCSpec [sc_specifier] VarFuncType [my_decl_specifiers] 
+                     isInline [id]
+   replace [member_declaration]
+      a0 [member_declaration]
+   deconstruct a0
+      a1 [opt my_decl_specifiers] a2 [opt member_declarator_list] ;
+   where not
+      a1 [isVirtual]
+   construct b1 [id]
+      'FALSE
+   by
+      a0 
+         [ProcFct0 ClassName Type Persistance Friend SCSpec VarFuncType 
+          isInline b1]
+         [ProcFct1 ClassName Type Persistance Friend SCSpec VarFuncType
+          isInline b1]
+         [ProcFct2 ClassName Type Persistance Friend SCSpec VarFuncType
+          isInline b1]
+         [FindTheData1 ClassName Type Persistance Friend SCSpec VarFuncType 
+         isInline b1]
+         [FindTheData ClassName Type Persistance Friend SCSpec VarFuncType 
+         isInline b1]
+end function
+
+function isVirtual
+   match [opt my_decl_specifiers]
+      'virtual
+end function
+
+function ProcFct0 ClassName [opt identifier] Type1 [access_specifier]
+                  Per [persistance] Frnd [id] SCSpec [sc_specifier] 
+                  VarFuncType [my_decl_specifiers] BoolInline [id] 
+                  BoolVirtual [id]
+   replace [member_declaration]
+      a0 [member_declaration]
+   deconstruct a0
+      a1 [opt my_decl_specifiers] a2 [opt member_declarator_list] ;
+   deconstruct * [member_declarator_list] a2
+     a4 [repeat ptr_operator] a5 [dname] '( a6 [repeat '(] 
+     a7 [argument_declaration_list] a8 [repeat ')] ') 
+     a9 [opt cv_qualifier_list] a11 [opt pure_specifier]
+   deconstruct * a7
+     q1 [argument_declaration]
+   deconstruct a7
+     "FOO*" a12 [decl_specifiers] a13 [opt abstract_declarator]
+   where not
+      a0 [AllDone]
+   construct a14 [argument_declaration_list] 
+      a12 a13
+   construct b2 [id]
+      'FUNCTION_ATT
+   construct b3 [id]
+      b2 [!]
+   by
+      (Found a Function Decl: a1 Name: a2 Type: Type1 Persistance: Per
+       Friend: Frnd SC Specifier: SCSpec Return Type: VarFuncType a4
+       isInline: BoolInline isVirtual: BoolVirtual
+       Function Name: a5
+       Function Args: a14)
+     (CreateAttribute "Class.Operation" AttributeID b3 For SymbolID ClassName)
+     (AddAttribute Name "Class.Operation.Name" Value ^F a5 ^U AttributeID b3
+      SymbolID ClassName)
+     (AddAttribute Name "Class.Operation.ReturnType" Value ^F VarFuncType a4 ^U
+      AttributeID b3 SymbolID ClassName)
+     (AddAttribute Name "Class.Operation.Args" Value ^F a14 ^U
+      AttributeID b3 SymbolID ClassName)
+     (AddAttribute Name "Class.Operation.Visibility" Value ^F Type1 ^U
+      AttributeID b3 SymbolID ClassName)
+     (AddAttribute Name "Class.Operation.Virtual" Value ^F BoolVitual ^U
+      AttributeID b3 SymbolID ClassName)
+     (AddAttribute Name "Class.Operation.Inline" Value ^F BoolInline ^U
+      AttributeID b3 SymbolID ClassName)
+end function
+
+function ProcFct1 ClassName [opt identifier] Type1 [access_specifier]
+                  Per [persistance] Frnd [id] SCSpec [sc_specifier]
+                  VarFuncType [my_decl_specifiers] BoolInline [id] 
+                  BoolVirtual [id]
+   replace [member_declaration]
+      a0 [member_declaration]
+   deconstruct a0
+      a1 [opt my_decl_specifiers] a2 [opt member_declarator_list] ;
+   deconstruct * [member_declarator] a2
+     a4 [repeat ptr_operator] a5 [dname] '( a6 [repeat '(] 
+     a7 [argument_declaration_list] a8 [repeat ')] ') 
+     a9 [opt cv_qualifier_list] a11 [opt pure_specifier]
+   where not
+      a0 [AllDone]
+   construct b2 [id]
+      'FUNCTION_ATT
+   construct b3 [id]
+      b2 [!]
+   by
+      (Found a Function Decl: a1 Name: a2 Type: Type1 Persistance: Per
+       Friend: Frnd SC Specifier: SCSpec Return Type: VarFuncType a4
+       isInline: BoolInline isVirtual: BoolVirtual
+       Function Name: a5
+       Function Args: a7)
+     (CreateAttribute "Class.Operation" AttributeID b3 For SymbolID ClassName)
+     (AddAttribute Name "Class.Operation.Name" Value ^F a5 ^U AttributeID b3
+      SymbolID ClassName)
+     (AddAttribute Name "Class.Operation.ReturnType" Value ^F VarFuncType a4 ^U
+      AttributeID b3 SymbolID ClassName)
+     (AddAttribute Name "Class.Operation.Args" Value ^F a7 ^U
+      AttributeID b3 SymbolID ClassName)
+     (AddAttribute Name "Class.Operation.Visibility" Value ^F Type1 ^U
+      AttributeID b3 SymbolID ClassName)
+     (AddAttribute Name "Class.Operation.Virtual" Value ^F BoolVitual ^U
+      AttributeID b3 SymbolID ClassName)
+     (AddAttribute Name "Class.Operation.Inline" Value ^F BoolInline ^U
+      AttributeID b3 SymbolID ClassName)
+end function
+
+%%
+%%  This case is needed to catch the case of extra parens around the function
+%%  name and/or the declarations.
+%%
+function ProcFct2 ClassName [opt identifier] Type1 [access_specifier]
+                  Per [persistance] Frnd [id] SCSpec [sc_specifier]
+                  VarFuncType [my_decl_specifiers] BoolInline [id] 
+                  BoolVirtual [id]
+   replace [member_declaration]
+      a0 [member_declaration]
+   deconstruct a0
+      a1 [opt my_decl_specifiers] a2 [opt member_declarator_list] ;
+   deconstruct * [member_declarator] a2
+     q1 [declarator] a11 [opt pure_specifier]
+   deconstruct * [declarator] a2
+     a4 [repeat ptr_operator] a5 [dname] 
+   deconstruct * [declarator_extension] a2 
+     '( a6 [repeat '(] a7 [argument_declaration_list] a8 [repeat ')] ') 
+     a9 [opt cv_qualifier_list] 
+   where not
+      a0 [AllDone]
+   construct b2 [id]
+     'FUNCTION_ATT 
+   construct b3 [id]
+      b2 [!]
+   by
+      (Found a Function Decl: a1 Name: a2 Type: Type1 Persistance: Per
+       Friend: Frnd SC Specifier: SCSpec Return Type: VarFuncType a4
+       isInline: BoolInline isVirtual: BoolVirtual
+       Function Name: a5
+       Function Args: a7)
+     (CreateAttribute "Class.Operation" AttributeID b3 For SymbolID ClassName)
+     (AddAttribute Name "Class.Operation.Name" Value ^F a5 ^U AttributeID b3
+      SymbolID ClassName)
+     (AddAttribute Name "Class.Operation.ReturnType" Value ^F VarFuncType a4 ^U
+      AttributeID b3 SymbolID ClassName)
+     (AddAttribute Name "Class.Operation.Args" Value ^F a7 ^U
+      AttributeID b3 SymbolID ClassName)
+     (AddAttribute Name "Class.Operation.Visibility" Value ^F Type1 ^U
+      AttributeID b3 SymbolID ClassName)
+     (AddAttribute Name "Class.Operation.Virtual" Value ^F BoolVitual ^U
+      AttributeID b3 SymbolID ClassName)
+     (AddAttribute Name "Class.Operation.Inline" Value ^F BoolInline ^U
+      AttributeID b3 SymbolID ClassName)
+end function
+
+function FindTheData1 ClassName [opt identifier] Type1 [access_specifier]
+                      Per [persistance] Frnd [id] SCSpec [sc_specifier]
+                      VarFuncType [my_decl_specifiers] BoolInline [id]
+                      BoolVirtual [id]
+   replace [member_declaration]
+      a0 [member_declaration]
+   deconstruct a0
+      a1 [opt my_decl_specifiers] a2 [opt member_declarator_list] ;
+   deconstruct a2 
+      b1 [repeat ptr_operator] b2 [dname] b3 [repeat declarator_extension]
+   where not
+      a0 [AllDone]
+   by
+      (Found a Data Decl: a1 Name: a2 Type: Type1 Persistance: Per
+       Friend: Frnd SC Specifier: SCSpec Variable Type: VarFuncType b1
+       isInline: N/A isVirtual: N/A
+       Variable Name: b2 b3)
+end function
+
+%% 
+%%  This is the catch all for the: 
+%%    [opt my_decl_specifiers] [opt member_declarator_list]
+%%  case.
+%%
+function FindTheData ClassName [opt identifier] Type1 [access_specifier]
+                     Per [persistance] Frnd [id] SCSpec [sc_specifier]
+                     VarFuncType [my_decl_specifiers] BoolInline [id]
+                     BoolVirtual [id]
+   replace [member_declaration]
+      a0 [member_declaration]
+   deconstruct a0
+      a1 [opt my_decl_specifiers] a2 [opt member_declarator_list] ;
+   where not
+      a0 [AllDone]
+   by
+      (Found a Data Decl: a1 Name: a2 Type: Type1 Persistance: Per
+       Friend: Frnd SC Specifier: SCSpec Variable Type: VarFuncType
+       isInline: N/A isVirtual: N/A
+       BAD DATA)
+end function
+%%
+%%
+%%                END OF DATA ATTRIBUTES SECTION.
+%%
+%%
+
+function FixMisparsedData
+   replace [member_declaration]
+      a0 [opt my_decl_specifiers] ;
+   deconstruct * [repeat my_decl_specifier] a0
+      d0 [my_decl_specifier]
+   deconstruct * [my_decl_specifier] d0
+      b0 [identifier]
+   construct c0 [member_declarator]
+      "DATA*" b0
+   by 
+      a0 [remove_last1 d0] c0 ;
+end function
+
+function FixMisparsedFunction 
+   replace [member_declaration]
+      a0 [opt my_decl_specifiers] a1 [opt member_declarator_list] ;
+   deconstruct * [repeat my_decl_specifier] a0
+      d0 [my_decl_specifier]
+   deconstruct * [my_decl_specifier] d0
+      b0 [identifier] 
+   deconstruct * [member_declarator] a1
+     '( b1 [identifier] ')
+   construct b2 [decl_specifiers]
+       b1
+   construct q1 [argument_declaration]
+      "FOO*" b2
+   construct q0 [dname]
+      b0
+   construct c0 [opt member_declarator_list] 
+     q0  '( q1 ') %%'( b1 ')
+   by
+     a0 [remove_last1 d0] c0 ;
+end function
+
+function FixMisparsedFunction1
+   replace [member_declaration] 
+      a0 [opt my_decl_specifiers] a1 [opt member_declarator_list] ;
+   deconstruct * a0
+      a2 [identifier] 
+   deconstruct * [declarator] a1
+      '( a3 [identifier] ')
+   construct b2 [decl_specifiers]
+       a3
+   construct q1 [argument_declaration]
+      "FOO*" b2
+   construct q0 [dname]
+      a2
+   construct c0 [opt member_declarator_list] 
+     q0  '( q1 ') %%'( b1 ')
+   by
+     c0 ;
+end function
+
+%%
+%% This rule is suppose to remove the last entry in a 
+%% [repeat my_decl_specifier] but it leaves the first and last and
+%% deletes the middle.  (WHO KNOWS WHY!!!!!!!!!!!!!!!!)
+%%
+rule remove_last
+   replace [repeat my_decl_specifier]
+       Last [my_decl_specifier]
+   by 
+     % nada
+end rule
+%%
+%%  This rule removes a user supplied element from the list.
+%%
+rule remove_last1 d0 [my_decl_specifier]
+   replace [repeat my_decl_specifier]
+       Value [my_decl_specifier] Rest [repeat my_decl_specifier]
+   where
+       Value [isDO d0]
+   by 
+       Rest
+end rule
+
+function isDO d0 [my_decl_specifier]
+   match [my_decl_specifier]
+      d0
+end function
+
+
+
+rule GetClassAttributes ClassName [opt identifier]
+  replace [member_decl1]
+    a0 [member_decl1]
+  deconstruct * [member_declaration] a0
+    a4 [my_class_specifier] ;
+  construct Type [access_specifier]
+    'private
+  by
+    a0 [GetClassAttribute ClassName Type]
+end rule
+
+rule GetClassAttributes1 ClassName [opt identifier]
+  replace [member_list]
+    a0 [member_decl2]
+  deconstruct a0
+    Type [access_specifier] : b1 [repeat member_declaration]
+  deconstruct * [member_declaration] a0
+    a1 [my_class_specifier] ;
+  by
+    Type : b1 [GetClassAttribute ClassName Type]
+end rule
+
+
+rule GetClassAttribute ClassName [opt identifier] Type [access_specifier]
+   replace [member_declaration]
+     a0 [member_declaration] 
+   deconstruct a0 
+     a1 [my_class_specifier] ;
+   where not
+     a0 [AllDone]
+   by
+     a0 [FindStructerClass ClassName Type] 
+end rule 
+
+function FindStructerClass ClassName [opt identifier] 
+                           Type1 [access_specifier]
+   replace [member_declaration]
+      b0 [member_declaration] 
+   deconstruct b0 
+      a0 [my_class_specifier] ;
+   where 
+      a0 [isClassP] [isStructerP] 
+   where not
+      b0 [AllDone]
+   by
+      b0 [CreateStructerAttribute ClassName Type1 a0]
+end function
+
+
+function CreateStructerAttribute ClassName1 [opt identifier] 
+                                 Type1 [access_specifier]
+                                 CS [my_class_specifier]
+   replace [member_declaration]
+      b0 [member_declaration]
+   construct type [stringlit]
+     _ [+ "CLASS.SUBSUMED.TYPE"]
+   construct data [stringlit]
+     _ [+ "CLASS.SUBSUMED.DATA"]
+   deconstruct b0
+      a0 [my_class_specifier] ;
+   by
+      (AddAttribute Type type Value Type1 To ClassName1)
+      (AddAttribute Type data Value ^G CS ^G To ClassName1) 
+end function
+
+function isClassP
+   match [my_class_specifier]
+     'class a1 [opt identifier] a2 [opt base_spec] 
+         { a3 [repeat my_member_list] }
+end function
+
+function isStructerP
+   match [my_class_specifier]
+     'struct a1 [opt identifier] a2 [opt base_spec] 
+          { a3 [repeat my_member_list] }
+end function
+
+function AllDone
+   match [member_declaration]
+     a1 [Translation]
+end function
+
+rule ExtractClassDefAndInlineFunctionDef
+	replace [repeat declaration]
+	    a [declaration]
+	    Rest [repeat declaration]
+	where not
+	    a [isClassDefinition] %% [isInlineFunction]
+	by
+	  Rest
+end rule
+
+function isClassDefinition
+	match [declaration]
+	  Class [class_definition]
+end function
+
+function isInlineFunction
+	match [declaration]
+	  InlineFunction [inline_fct_definition]
+end function
+
+function isOrigClassSpec
+        match [class_specifier]
+            CH [class_head] { ML [repeat member_list] }
+end function
+
+------------------------END OF FILE C++.Txl-------------------------------
+
+------------------------START OF FILE C++2.0.Grammer----------------------
+% C++ 2.0 TXL Basis Grammar
+% J.R. Cordy, 24 Feb 1992
+
+% Loosely adapted from:	
+% 	Unix System V, AT&T C++ Language System, Release 2.0
+% 	Appendix A: Grammar Summary
+% but with the (as usual) many bugs in the C++ grammar fixed, and the 
+% forms tuned for TXL performance.  As noted in the reference above, 
+% this grammar is actually a slight superset of C++ 2.0.
+% Lexical conventions of C++
+comments
+	//
+	/*  */
+end comments
+
+compounds
+	!=  '%=  &&  &=  *=  ++  +=  -+  --  -=  
+	->  ->*  .*  ...  /=  ::  <<  <<=  <=  
+	==  >=  >>  >>=  ^=  |=  ||  **
+end compounds
+
+keys
+	asm auto break case catch char class const
+	continue default delete do double else enum extern
+	float for friend goto if inline int long
+	new operator private protected public register return short
+	signed sizeof static struct switch template this typedef
+	union unsigned virtual void volatile while
+end keys
+
+%%
+%%  Adde [SPOFF] and [SPON] For formatting reasons alone.
+%%
+define identifier
+    [SP] [repeat '_] [SPOFF] [id] [SPON]
+end define
+
+define string
+	[repeat stringlit+]
+end define
+
+define character_constant
+	[charlit]
+end define
+
+define floating_constant
+	[opt '-] [number]
+      | [opt '-] [integernumber] '.
+end define
+
+define integer_constant
+    	[opt '-] 0 [SPOFF] [id] [SPON]
+    |	[opt '-] [integernumber]
+end define
+
+% Txl grammar goal symbol - a C++ compilation file
+define program
+	[declaration_list]
+end define
+
+% Syntax of C++ 2.0
+define expression
+	[list assignment_expression+]
+end define
+
+define assignment_expression
+    	[conditional_expression]
+    |	[unary_expression] [assignment_operator] [assignment_expression]
+end define
+
+define assignment_operator
+	= | *= | /= | '%= | += | -= | >>= | <<= | &= | ^= | '|=
+end define
+
+define conditional_expression
+	[binary_expression] [opt conditional_operation]
+end define
+
+define conditional_operation
+	? [expression]  :  [conditional_expression]
+end define
+
+define binary_expression
+	[cast_expression] [repeat binary_operation]
+end define
+
+define binary_operation
+	[binary_operator] [cast_expression]
+end define
+
+define binary_operator
+	'|| | && | '| | ^ | & | == | != | < | > | <= | >=  
+   | 	<< | >> | + | - | * | / | '% | .* | ->*  
+end define
+
+define cast_expression
+	[unary_expression]
+    |	(  [type_name]  )  [cast_expression]
+end define
+
+define unary_expression
+	[postfix_expression]
+    |	++  [unary_expression]
+    |	--  [unary_expression]
+    |	[unary_operator]  [cast_expression]
+    |	'sizeof  [unary_expression]
+    |	'sizeof  (  [type_name]  )
+    |	[allocation_expression]
+    |	[deallocation_expression]
+end define
+
+define unary_operator
+	* | & | + | - | ! | ~
+end define
+
+define array_extension
+     '[ [opt constant_expression] ']
+end define
+
+%%
+%%  Added [opt (] 'new [simple_type_name] [opt array_extension] [opt )] to
+%%  handle creation of predefined types (char, int, float, etc);  The 
+%%  allocation expression does not follow the BNF in the book.
+%%
+define allocation_expression
+	[opt '::] 'new [opt placement] [restricted_type_name] [opt initializer]
+     |  [opt (] 'new [simple_type_name] [opt array_extension] [opt )]
+end define
+
+define placement
+	(  [expression_list]  )
+end define
+
+define restricted_type_name
+	[type_specifiers] [opt restricted_declarator]
+    |	( [type_name] )
+end define
+
+define restricted_declarator
+	[ptr_operator] [opt restricted_declarator]
+    |	[restricted_declarator]  '[  [opt expression]  ']
+end define
+
+define deallocation_expression
+	[opt '::]  'delete [cast_expression]
+    |	[opt '::]  'delete  '[  [expression]  ']  [cast_expression]
+end define
+
+define postfix_expression
+	[primary_expression] [repeat postfix_extension]
+    |	[simple_type_name]  (  [opt expression_list]  ) [repeat postfix_extension]
+end define
+
+define postfix_extension
+    	'[  [expression]  ']
+    |	(  [opt expression_list]  )
+    |	.  [name]
+    |	->  [name]
+    |	++
+    |	--
+end define
+
+define expression_list
+	[list assignment_expression+]
+end define
+
+define primary_expression
+	[literal]
+    |	'this
+    |	::  [identifier]
+    |	::  [operator_function_name]
+    |	(  [expression]  )
+    |	[name]
+end define
+
+define name
+	[identifier] 
+    |	[qualified_name]    
+    |	[operator_function_name]
+    |	[conversion_function_name]
+end define
+
+define qualified_name
+	[identifier]  ::  [class_component]
+end define
+
+define class_component
+    	[opt '~] [identifier]		
+    |	[operator_function_name]
+    |	[conversion_function_name]
+end define
+
+define literal
+	[integer_constant]
+    |	[character_constant]
+    |	[floating_constant]
+    |	[string]
+end define
+
+%%
+%%  Added [inline_fct_definition] to help in rule translation.
+%%
+define declaration
+    	[linkage_specification]					[KEEP]
+    |	[class_definition]					[KEEP]
+    |	[opt decl_specifiers] [opt declarator_list] ; 	[NL]	[KEEP]
+    |   [inline_fct_definition]                                 [KEEP]
+    |	[fct_definition] 					[KEEP]
+    |	[asm_declaration]					[KEEP]
+    |	[preprocessor] 		[NL]				[KEEP]
+    |	[comment] [NL] [repeat comment_NL]			[KEEP]
+end define
+
+define comment_NL
+	[comment] [NL] 
+end define
+
+define class_definition
+    	[NL] [repeat sc_specifier] [class_specifier] 
+	    [opt declarator_list] ; [NL] [NL]
+    |  [NL] (CreateSymbol Class SymbolID [opt identifier]) 
+       [NL] [repeat member_list]
+end define
+
+define asm_declaration
+	'asm ( [string] ) ;	[NL]
+end define
+
+define decl_specifier
+	[sc_specifier]
+    |	[type_specifier]
+    |	[fct_specifier]
+    |	'friend
+    |	'typedef
+end define
+
+define decl_specifiers
+	[repeat decl_specifier+]
+end define
+%%
+%%  Test Code For My Stuff.
+%%
+define persistance
+    'const
+ |  'volatile
+ |  'NONE
+end define
+
+define the_type
+        [simple_type_name]
+    |	[elaborated_type_specifier]
+end define
+
+define my_decl_specifier
+	[sc_specifier]
+    |   [persistance]
+    |	'friend
+    |	'typedef
+    |   [the_type]
+%%    |   [simple_type_name]
+%%    |	[elaborated_type_specifier]
+%%    |	[type_specifier]
+    |	[fct_specifier]
+end define
+%%
+%%  Test Code For my stuff.
+%%  Took off + operator to allow the GetType rule to function correctly.  With
+%%  the + the GetType Rule does not look at the first entry!!!!
+%%
+define my_decl_specifiers
+	[repeat my_decl_specifier]%%+]
+end define
+
+define sc_specifier
+	'auto
+    |	'register
+    |	'static
+    |	'extern
+    |   'NONE
+end define
+
+define fct_specifier
+	'inline
+    |	'virtual
+end define
+
+define type_specifier
+        [simple_type_name]
+    |	[class_specifier]
+    |	[enum_specifier]
+    |	[elaborated_type_specifier]
+    |	'const
+    |	'volatile
+end define
+
+define type_specifiers
+	[repeat type_specifier+]
+end define
+%%
+%%  Changing simple type name to allow to extract all the basic
+%%  variables at on time.
+%%
+define sign
+    'signed
+  | 'unsigned
+end define
+%%
+%%  Changing simple type name to allow to extract all the basic
+%%  variables at on time.
+%%
+define len
+    'short
+  | 'long
+end define
+%%
+%%  Changing simple type name to allow to extract all the basic
+%%  variables at on time.
+%%
+define pre_defined_type
+     'char
+   | 'short
+   | 'int
+   | 'float
+   | 'double
+   | 'void
+end define 
+%%  
+%%  Changed From:
+%%    |	'char | 'short | 'int | 'long | 'signed | 'unsigned 
+%%    |	'float | 'double | 'void
+%%  so I can correctly collect simple_type_name's used.
+%%
+define builtin_type
+     [len] [sign] [pre_defined_type]
+   | [len] [pre_defined_type] [sign]
+   | [sign] [len] [pre_defined_type]
+   | [sign] [pre_defined_type] [len]
+   | [pre_defined_type] [len] [sign]
+   | [pre_defined_type] [sign] [len]
+   | [sign] [pre_defined_type]
+   | [pre_defined_type] [sign]
+   | [len] [pre_defined_type]
+   | [pre_defined_type] [len]
+   | [len] [sign]
+   | [sign] [len]
+   | [sign]
+   | [len]
+   | [pre_defined_type]
+end define
+
+define simple_type_name
+     [builtin_type]
+   | [identifier]
+end define
+
+define elaborated_type_specifier
+	[class_key] [identifier]
+    |	'enum [identifier]
+end define
+
+define class_key
+	'class | 'struct | 'union
+end define
+
+define enum_specifier
+	'enum [opt identifier]  {  [opt enum_list]  }
+end define
+
+define my_enum_specifier
+	'enum [opt identifier]  {  [opt enum_list]  }
+end define
+
+define enum_list
+	[list enumerator+]
+end define
+
+define enumerator
+	[identifier] [opt equal_constant_expression]
+end define
+
+define equal_constant_expression
+	=  [constant_expression]
+end define
+
+define constant_expression
+	[conditional_expression]
+end define
+
+define linkage_specification
+	[NL] 'extern [string] { 	[NL] [IN]
+	    [declaration_list] 		[EX]
+	} [opt ';] 			[NL] [NL]
+    |	'extern [string]  [declaration]
+end define
+
+define declaration_list
+	[repeat declaration] 
+end define
+
+define declarator_list
+	[list init_declarator+]
+end define
+
+define init_declarator
+	[declarator] [opt initializer]
+end define
+
+define declarator
+    	[repeat ptr_operator] [dname] [repeat declarator_extension]
+    |	(  [declarator]  ) [repeat declarator_extension]
+end define
+%%
+%% Add [repeat ')] around argument_declaration_list because of validity of
+%% example of:
+%%      extern "C" {
+%%      int strcasecmp _G_ARGS((const char*, const char*));
+%%      }
+%%
+define declarator_extension
+    	( [repeat '(] [argument_declaration_list] 
+          [repeat ')] )  [opt cv_qualifier_list]
+    |	'[  [opt constant_expression]  ']
+end define
+
+define ptr_operator
+	[stars]  [opt cv_qualifier_list]
+    |	&  [opt cv_qualifier_list]
+    |	[identifier]  :: [stars]  [opt cv_qualifier_list]
+end define
+
+define stars
+	* | **
+end define
+
+define cv_qualifier_list
+	[repeat cv_qualifier+]
+end define
+
+define cv_qualifier
+	'const
+    |	'volatile
+end define
+
+define dname
+	[name]
+    |	~ [identifier]
+end define
+
+define type_name
+	[type_specifiers] [opt abstract_declarator]
+end define
+
+define abstract_declarator
+	[ptr_operator] [repeat abstract_extension]
+    |	( [abstract_declarator] ) [repeat abstract_extension]
+end define
+
+define abstract_extension
+    	(  [argument_declaration_list]  )  [opt cv_qualifier_list]
+    |	'[  [opt constant_expression]  ']
+    |	[ptr_operator]
+    |	(  [abstract_declarator]  )
+end define
+
+define argument_declaration_list
+    	[opt arg_declaration_list]  [opt comma_dotdotdot]
+end define
+
+define comma_dotdotdot
+	[opt ',] '...
+end define
+
+define arg_declaration_list
+	[list argument_declaration+]
+end define
+
+define argument_declaration
+	[decl_specifiers] [declarator] [opt equal_expression]
+    |	[opt "FOO*"] [decl_specifiers] [opt abstract_declarator] 
+        [opt equal_expression]
+end define
+
+define equal_expression
+	=  [expression]
+end define
+
+define fct_definition
+	[NL]
+	[opt my_decl_specifiers] [declarator] [opt ctor_initializer] [fct_body]
+end define
+
+define inline_fct_definition
+	[NL]
+	'inline [opt decl_specifiers] [declarator] [opt ctor_initializer] 
+	        [fct_body]
+end define
+
+define fct_body
+	[NL] [compound_statement] [opt ';] [NL]
+end define
+
+define initializer
+	= [expression]
+    |   = { [IN] [list expression] [EX] }
+    |	= { [IN] [initializer_list] [opt ',] [EX] [NL] }
+    |	( [expression_list] )
+end define
+
+define initializer_list
+	[list initializer_element+]
+end define
+
+define initializer_element
+	[expression]
+    |	[NL] { [IN] [initializer_list] [opt ',] [EX] }
+end define
+
+define class_specifier
+	[class_head] {			[NL] [IN]
+	    [repeat member_list]  	[EX]
+	}
+end define
+
+define my_class_specifier
+	[class_head] {			[NL] [IN]
+	    [repeat my_member_list]  	[EX]
+	}
+end define
+
+define class_head
+	[class_key] [opt identifier] [opt base_spec]
+end define
+
+%%
+%%  This has been added to allow translation.
+%%
+define member_decl2
+    	[EX] [access_specifier_colon] [NL] [IN]
+	    [repeat member_declaration] 
+end define
+
+define member_decl1
+   [repeat member_declaration] 
+end define
+
+define my_member_decl2
+    	[EX] [access_specifier_colon] [NL] [IN]
+	    [repeat my_member_declaration] 
+end define
+
+define my_member_decl1
+   [repeat my_member_declaration] 
+end define
+
+%%
+%%  Experimental change to allow me to get at the access_specifier.
+%%  Old way:
+%%    	[EX] [repeat access_specifier_colon] [IN]
+define member_list
+      [member_decl1]
+   |  [member_decl2]
+end define
+
+define my_member_list
+      [my_member_decl1]
+   |  [my_member_decl2]
+end define
+
+define access_specifier_colon
+	[access_specifier]  :	[NL]
+end define
+
+define values
+    ^F [dname] ^U
+  | ^F [my_decl_specifiers] [repeat ptr_operator] ^U
+  | ^F [argument_declaration_list] ^U
+  | ^F [access_specifier] ^U
+  | ^F [opt ctor_initializer] [fct_body] ^U
+  | ^F [id] ^U
+end define
+
+define Trans
+     (CreateAttribute [stringlit] AttributeID [id] For 
+      SymbolID [opt identifier]) [NL]
+  |  (AddAttribute Name [stringlit] Value [values] AttributeID [id]
+      SymbolID [opt identifier]) [NL]
+end define
+
+define Translation
+   (AddAttribute Type [stringlit] Value  [access_specifier]
+    To [opt identifier]) [NL]
+   (AddAttribute Type [stringlit] Value  ^G [my_class_specifier] ^G
+    To [opt identifier]) [NL]
+ | (Found a Function Decl[SPOFF]:[SPON] [opt my_decl_specifiers] [NL] [IN][IN]
+                                                                 [IN] [IN]
+                     Name[SPOFF]:[SPON] [opt member_declarator_list] [NL]
+                     Type[SPOFF]:[SPON] [access_specifier] [NL]
+                     Persistance[SPOFF]: [SPON] [persistance] [NL]
+                     Friend[SPOFF]:[SPON] [id] [NL]
+                     SC Specifier[SPOFF]:[SPON] [sc_specifier] [NL]
+                     Return Type[SPOFF]:[SPON] [my_decl_specifiers] 
+                                        [repeat ptr_operator][NL]
+                     isInline[SPOFF]:[SPON] [id] [NL]
+                     isVirtual[SPOFF]:[SPON] [id] [NL]
+                     Function Name[SPOFF]:[SPON] [dname] [NL]
+                     Function Args[SPOFF]:[SPON] [argument_declaration_list])
+                     [NL] [EX] [EX] [EX] [EX]
+   [repeat Trans]
+ | (Found a Data Decl[SPOFF]:[SPON] [opt my_decl_specifiers] [NL] [IN] [IN] 
+                                                                  [IN] [IN]
+                 Name[SPOFF]:[SPON] [opt member_declarator_list] [NL]
+                 Type[SPOFF]:[SPON] [access_specifier] [NL]
+                 Persistance[SPOFF]:[SPON] [persistance] [NL]
+                 Friend[SPOFF]:[SPON] [id] [NL]
+                 SC Specifier[SPOFF]:[SPON] [sc_specifier] [NL]
+                 Variable Type[SPOFF]:[SPON] [my_decl_specifiers] 
+                                      [repeat ptr_operator] [NL]
+                 isInline[SPOFF]:[SPON] [SP]  [SPOFF]N/A[SPON] [NL]
+                 isVirtual[SPOFF]:[SPON] [SP] [SPOFF]N/A[SPON] [NL]
+                 Variable Name[SPOFF]:[SPON] [dname]
+                                             [repeat declarator_extension]) 
+                 [NL] [EX] [EX] [EX] [EX]
+ | (Found a Data Decl[SPOFF]:[SPON] [opt my_decl_specifiers] [NL] [IN] [IN] 
+                                                                  [IN] [IN]
+                 Name[SPOFF]:[SPON] [opt member_declarator_list] [NL]
+                 Type[SPOFF]:[SPON] [access_specifier] [NL]
+                 Persistance[SPOFF]:[SPON] [persistance] [NL]
+                 Friend[SPOFF]:[SPON] [id] [NL]
+                 SC Specifier[SPOFF]:[SPON] [sc_specifier] [NL]
+                 Variable Type[SPOFF]:[SPON] [my_decl_specifiers] 
+                                      [repeat ptr_operator] [NL]
+                 isInline[SPOFF]:[SPON] [SP]  [SPOFF]N/A[SPON] [NL]
+                 isVirtual[SPOFF]:[SPON] [SP] [SPOFF]N/A[SPON] [NL]
+                 BAD DATA) [NL] [EX] [EX] 
+                                                                     [EX] [EX]
+end define
+
+%%
+%%  Test to see if I can only get the Top Level In Class Or Structer.
+%%  Added [class_specifier], [enum_specifier] change [decl_specifiers]
+%%  to [my_decl_specifiers]
+%%
+define member_declaration
+        [opt my_decl_specifiers] [opt member_declarator_list] ;	[NL]
+    |   [my_class_specifier] ;
+    |   [my_enum_specifier] ;
+    |	[fct_definition]  
+    |	[qualified_name] ;	[NL]
+    |	[preprocessor] 		[NL]
+    |	[comment] [NL] [repeat comment_NL]
+    |   [repeat Translation+]
+end define
+
+define my_member_declaration
+        [opt my_decl_specifiers] [opt member_declarator_list] ; 	[NL]
+    |   [my_class_specifier] ;
+    |   [my_enum_specifier] ;
+    |	[fct_definition]  
+    |	[qualified_name] ;	[NL]
+    |	[preprocessor] 		[NL]
+    |	[comment] [NL] [repeat comment_NL]
+    |   [Translation]
+end define
+%%
+%%  New routine to go with changes to member_declarator_list.  This was done
+%%  to remove Multiple declarations on a line.
+%%
+define followingID
+   , [member_declarator]
+end define
+%%
+%%  Changes made to resolve multiple declarations on a Line.
+%%  Old way had [list member_declarator+]  
+define member_declarator_list
+        [member_declarator] [repeat followingID]
+%%	[list member_declarator+]
+end define
+
+%%
+%%  Added extensions to member_declarator to fix parse problems due to
+%%  typedefs....
+%%
+define member_declarator
+	[opt "DATA*"] [declarator] [opt pure_specifier]
+    |	[opt identifier]  :  [constant_expression]
+%%    |   "DATA*" [identifier]
+%%    |   "FUNCTION*" [dname] '( [declarator]  ')
+end define
+
+define pure_specifier
+	=  0
+end define
+
+define base_spec
+	:  [base_list]
+end define
+
+define base_list
+	[list base_specifier+]
+end define
+
+define base_specifier
+	[identifier]
+    |	'virtual [opt access_specifier] [identifier]
+    |	[access_specifier] [opt 'virtual] [identifier]
+end define
+
+define access_specifier
+	'private
+    |	'protected
+    |	'public
+end define
+
+define conversion_function_name
+	'operator [conversion_type_name]
+end define
+
+define conversion_type_name
+	[type_specifiers] [opt ptr_operator]
+end define
+
+define ctor_initializer
+	:  [mem_initializer_list]
+end define
+
+define mem_initializer_list
+	[list mem_initializer+]
+end define
+
+define mem_initializer
+	[identifier]  (  [opt expression_list]  )
+end define
+
+define operator_function_name
+	'operator [operator]
+end define
+
+%%
+%%  Added -= to operator list. 
+define operator
+	'new | 'delete
+    |	+ | - | * | / | '% | ^ | & | '| | ~
+    |	! | = | < | > | += | -= | -+ | *= | /= | '%=
+    |	^= | &= | '|= | << | >> | >>= | <<= | == | !=
+    |	<= | >= | && | '|| | ++ | -- | , | ->* | ->
+    |	() | '[ ']
+end define
+
+define statement
+	[labeled_statement]	[KEEP]
+    |	[null_statement]	[KEEP]
+    |	[expression_statement]  [KEEP]
+    |	[compound_statement]	[KEEP]
+    |	[selection_statement]	[KEEP]
+    |	[iteration_statement]	[KEEP]
+    |	[jump_statement]	[KEEP]
+    |	[declaration_statement]	[KEEP]
+end define
+
+define labeled_statement
+	[identifier] : [dstatement]
+    |	[EX] 'case [constant_expression] :	[NL] [IN]
+	    [statement]
+    |	[EX] 'default : 			[NL] [IN]
+	    [statement]
+end define
+
+define dstatement
+	[statement]
+    |	[declaration_statement]
+end define
+
+define expression_statement
+	[expression] ;		[NL]
+end define
+
+define null_statement
+	;			[NL]
+end define
+
+define compound_statement
+	{  				[NL] [IN]
+	    [opt statement_list]  	[EX]
+	}				[NL]
+end define
+
+define statement_list
+	[repeat dstatement+]
+end define
+
+define selection_statement
+    	'if ( [expression] ) [statement] [opt else_statement]
+    |	'switch  ( [expression] ) [compound_statement]
+end define
+
+define else_statement
+	'else [statement]
+end define
+
+define iteration_statement
+	'while ( [expression] ) [statement]
+    |	'do [statement] 'while ( [expression] ) ;	[NL]
+    |	'for ( [for_init_statement] [opt expression] ;  [opt expression] ) 
+	     [for_body]
+end define
+
+define for_init_statement
+	[expression] ;		
+    |	[opt decl_specifiers] [opt declarator_list] ;
+end define
+
+define for_body
+	[compound_statement]
+    |	[IN] [NL] [statement] [EX]
+end define
+
+define jump_statement
+	'break ;			[NL]
+    |	'continue ;			[NL]
+    |	'return  [opt expression] ;	[NL]
+    |	'goto [identifier] ;		[NL]
+end define
+
+define declaration_statement
+	[declaration]
+end define
+
+define preprocessor
+    	[SPOFF] # 'define  [SPON] [identifier] ( [list identifier+] )  [expression]
+    |	[SPOFF] # 'define  [SPON] [identifier]  [expression]
+    |	[SPOFF] # 'else [SPON]
+    |	[SPOFF] # 'endif [SPON]
+    |	[SPOFF] # 'if [SPON] [expression]
+    |	[SPOFF] # 'ifdef [SPON] [identifier]
+    |	[SPOFF] # 'ifndef [SPON] [identifier]
+    |   [SPOFF] # 'ident [SP] [stringlit]
+    |	[SPOFF] # 'include [SPON]  [stringlit]
+    |	[SPOFF] # 'include [SPON] < [SPOFF] [filename] > [SPON]
+    |	[SPOFF] # 'line [SPON] [integernumber] [opt stringlit]
+    |	[SPOFF] # 'undef [SPON] [identifier]
+end define
+
+define filename
+	[identifier] [repeat dot_slash_identifier]
+end define
+
+define dot_slash_identifier
+	[opt '.] [opt '/] [identifier]
+end define
+
+-------------------------------END OF C++2.0.Grammer--------------------
+
+------------------INPUT FILE Fix.C++------------------------------------
+#ident  "$Revision: 1.17 $"
+
+
+
+
+#ident  "$Revision: 1.5 $"
+
+typedef int 	ptrdiff_t;
+
+
+
+
+#ident  "$Revision: 1.34 $"
+
+
+
+
+
+#ident  "$Revision: 1.23 $"
+
+extern void *memcpy(void *, const void *, size_t);
+extern void *memmove(void *, const void *, size_t);
+extern char *strcpy(char *, const char *);
+
+extern char *strncpy(char *, const char *, size_t);
+
+extern char *strcat(char *, const char *);
+extern char *strncat(char *, const char *, size_t);
+
+extern int memcmp(const void *, const void *, size_t);
+extern int strcmp(const char *, const char *);
+extern int strcoll(const char *, const char *);
+extern int strncmp(const char *, const char *, size_t);
+extern size_t strxfrm(char *, const char *, size_t);
+
+extern void *memchr(const void *, int, size_t);
+extern char *strchr(const char *, int);
+extern size_t strcspn(const char *, const char *);
+extern char *strpbrk(const char *, const char *);
+extern char *strrchr(const char *, int);
+extern size_t strspn(const char *, const char *);
+extern char *strstr(const char *, const char *);
+extern char *strtok(char *, const char *);
+
+extern void *memset(void *, int, size_t);
+extern char *strerror(int);
+extern size_t strlen(const char *);
+
+
+
+extern void *memccpy(void *, const void *, int, size_t);
+
+
+
+
+extern char *strdup(const char *);
+extern int ffs(int);
+
+
+
+
+
+ 
+extern int	strcasecmp(const char *, const char *);
+extern int	strncasecmp(const char *, const char *, size_t);
+
+
+
+
+
+
+
+
+
+
+
+
+
+#ident  "$Revision: 1.78 $"
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+ 
+
+ 
+ 
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#ident  "$Revision: 1.49 $"
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+ 
+
+ 
+ 
+ 
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#ident  "$Revision: 1.22 $"
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+ 
+
+ 
+ 
+ 
+
+
+
+ 
+
+
+
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+
+
+
+
+#ident 	"$Revision: 3.24 $"
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+	 
+
+
+
+
+
+
+
+
+
+
+
+
+
+	 
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+ 
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+ 
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#ident  "$Revision: 1.15 $"
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+ 
+
+ 
+ 
+ 
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+ 
+
+ 
+ 
+ 
+
+
+
+
+#ident 	"$Revision: 3.70 $"
+
+
+
+ 
+typedef unsigned char   uchar_t;
+typedef unsigned short  ushort_t;
+typedef unsigned int    uint_t;
+typedef unsigned long   ulong_t;
+
+ 
+typedef	char *		addr_t;		 
+typedef	char *		caddr_t;	 
+typedef	long		daddr_t;	 
+typedef	long		pgno_t;		 
+typedef	__uint32_t	pfn_t;		 
+typedef	short		cnt_t;		 
+
+typedef enum { B_FALSE, B_TRUE } boolean_t;
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+ 
+
+typedef struct {
+        unsigned char	u_bits[16];
+} uuid_t, *uuid_p_t;
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+typedef	ushort_t o_mode_t;		 
+typedef short	o_dev_t;		 
+typedef	ushort_t o_uid_t;		 
+typedef	o_uid_t	o_gid_t;		 
+typedef	short	o_nlink_t;		 
+typedef short	o_pid_t;		 
+typedef __uint32_t o_ino_t;		 
+
+
+
+
+typedef __uint64_t	ino64_t;	 
+
+
+typedef	long		off_t;		 
+
+typedef	__int64_t	off64_t;	 
+
+typedef __scint_t	__scoff_t;	 
+
+typedef __scoff_t	scoff_t;	 
+
+
+
+typedef	long		swblk_t;
+typedef	unsigned long	paddr_t;	 
+typedef	int		key_t;		 
+typedef	unsigned char	use_t;		 
+typedef	short		sysid_t;
+typedef	short		index_t;
+typedef unsigned int	lock_t;		 
+typedef	signed char	cpuid_t;	 
+
+
+
+
+
+
+
+
+
+
+
+typedef	long		time_t;		 
+
+
+
+
+typedef	long		clock_t;  
+
+
+
+
+typedef int processorid_t;		 
+typedef int toid_t;			 
+typedef	long *qaddr_t;		       
+typedef __uint32_t inst_t;		 
+
+ 
+
+
+
+
+
+ 
+
+
+
+
+
+typedef	signed char	int8_t;
+typedef	short		int16_t;
+typedef	__int32_t	int32_t;
+typedef	unsigned char	u_int8_t;
+typedef	unsigned short	u_int16_t;
+typedef	__uint32_t	u_int32_t;
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+typedef	long	hostid_t;
+
+ 
+
+
+
+
+
+
+
+
+ 
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#ident 	"$Revision: 1.2 $"
+
+ 
+
+
+
+
+typedef	struct { int r[1]; } *	physadr;
+typedef	unsigned char	unchar;
+typedef	unsigned char	u_char;
+typedef	unsigned short	ushort;
+typedef	unsigned short	u_short;
+typedef	unsigned int	uint;
+typedef	unsigned int	u_int;
+typedef	unsigned long	ulong;
+typedef	unsigned long	u_long;
+typedef	struct	_quad { long val[2]; } quad;
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+
+
+
+
+#ident 	"$Revision: 1.4 $"
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+typedef	struct fd_set {
+	fd_mask	fds_bits[((( 1024  )+((  (sizeof(fd_mask) * 8 )  )-1))/(  (sizeof(fd_mask) * 8 )  )) ];
+} fd_set;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+typedef struct {                 
+        __uint32_t sigbits[2];
+} k_sigset_t;
+typedef __uint32_t k_fltset_t;      
+
+
+
+
+
+
+
+
+ 
+ 
+ 
+
+ 
+ 
+ 
+
+ 
+#ident 	"$Revision: 3.37 $"
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+ 
+
+
+typedef struct flock {
+	short	l_type;
+	short	l_whence;
+	off_t	l_start;
+	off_t	l_len;		 
+        long	l_sysid;
+        pid_t	l_pid;
+	long	pad[4];		 
+} flock_t;
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+extern int fcntl(int, int, ...);
+extern int open(const char *, int, ...);
+extern int creat(const char *, mode_t);
+
+
+
+
+
+
+
+extern "C" {
+int strcasecmp _G_ARGS((const char*, const char*));
+}
+
+
+
+
+ 
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+struct IntRep                     
+{
+  unsigned short  len;           
+  unsigned short  sz;            
+  short           sgn;           
+  unsigned short  s[1];          
+};
+
+ 
+ 
+
+
+extern IntRep*  Ialloc(IntRep*, const unsigned short *, int, int, int);
+extern IntRep*  Icalloc(IntRep*, int);
+extern IntRep*  Icopy_ulong(IntRep*, unsigned long);
+extern IntRep*  Icopy_long(IntRep*, long);
+extern IntRep*  Icopy(IntRep*, const IntRep*);
+extern IntRep*  Iresize(IntRep*, int);
+extern IntRep*  add(const IntRep*, int, const IntRep*, int, IntRep*);
+extern IntRep*  add(const IntRep*, int, long, IntRep*);
+extern IntRep*  multiply(const IntRep*, const IntRep*, IntRep*);
+extern IntRep*  multiply(const IntRep*, long, IntRep*);
+extern IntRep*  lshift(const IntRep*, long, IntRep*);
+extern IntRep*  lshift(const IntRep*, const IntRep*, int, IntRep*);
+extern IntRep*  bitop(const IntRep*, const IntRep*, IntRep*, char);
+extern IntRep*  bitop(const IntRep*, long, IntRep*, char);
+extern IntRep*  power(const IntRep*, long, IntRep*);
+extern IntRep*  div(const IntRep*, const IntRep*, IntRep*);
+extern IntRep*  mod(const IntRep*, const IntRep*, IntRep*);
+extern IntRep*  div(const IntRep*, long, IntRep*);
+extern IntRep*  mod(const IntRep*, long, IntRep*);
+extern IntRep*  compl(const IntRep*, IntRep*);
+extern IntRep*  abs(const IntRep*, IntRep*);
+extern IntRep*  negate(const IntRep*, IntRep*);
+extern IntRep*  pow(const IntRep*, long);
+extern IntRep*  gcd(const IntRep*, const IntRep* y);
+extern int      compare(const IntRep*, const IntRep*);
+extern int      compare(const IntRep*, long);
+extern int      ucompare(const IntRep*, const IntRep*);
+extern int      ucompare(const IntRep*, long);
+extern char*    Itoa(const IntRep* x, int base = 10, int width = 0);
+extern char*    cvtItoa(const IntRep* x, char* fmt, int& fmtlen, int base,
+                        int showbase, int width, int align_right, 
+                        char fillchar, char Xcase, int showpos);
+extern IntRep*  atoIntRep(const char* s, int base = 10);
+extern long     Itolong(const IntRep*);
+extern int      Iislong(const IntRep*);
+extern long     lg(const IntRep*);
+
+extern IntRep _ZeroRep, _OneRep, _MinusOneRep;
+
+class Integer
+{
+protected:
+  IntRep*         rep;
+
+private:
+                  Integer(int);
+                  Integer(long);
+  struct AllocQNode
+  {
+    void*  ptr;
+    int    sz;
+  };
+	                  Integer();
+                  Integer(int);
+                  Integer(long);
+                  Integer(unsigned long);
+
+public:
+                  Integer();
+                  Integer(int);
+                  Integer(long);
+                  Integer(unsigned long);
+                  Integer(IntRep*);
+                  Integer(const Integer&);
+
+                  ~Integer();
+
+  void            operator =  (const Integer&);
+  void            operator =  (long);
+
+ 
+
+  void            operator ++ ();
+  void            operator -- ();
+  void            negate();           
+  void            abs();              
+  void            complement();       
+
+ 
+
+  void            operator += (const Integer&);
+  void            operator -= (const Integer&);
+  void            operator *= (const Integer&);
+  void            operator /= (const Integer&);
+  void            operator %= (const Integer&);
+  void            operator <<=(const Integer&);
+  void            operator >>=(const Integer&);
+  void            operator &= (const Integer&);
+  void            operator |= (const Integer&);
+  void            operator ^= (const Integer&);
+
+  void            operator += (long);
+  void            operator -= (long);
+  void            operator *= (long);
+  void            operator /= (long);
+  void            operator %= (long);
+  void            operator <<=(long);
+  void            operator >>=(long);
+  void            operator &= (long);
+  void            operator |= (long);
+  void            operator ^= (long);
+
+ 
+
+
+
+ 
+
+  friend long     lg (const Integer&);  
+  friend double   ratio(const Integer& x, const Integer& y);
+                   
+
+  friend Integer  gcd(const Integer&, const Integer&);
+  friend int      even(const Integer&);  
+  friend int      odd(const Integer&);  
+  friend int      sign(const Integer&);  
+
+  friend void     (setbit)(Integer& x, long b);    
+  friend void     clearbit(Integer& x, long b);  
+  friend int      testbit(const Integer& x, long b);   
+
+ 
+
+  friend void     abs(const Integer& x, Integer& dest);
+  friend void     negate(const Integer& x, Integer& dest);
+  friend void     complement(const Integer& x, Integer& dest);
+
+  friend int      compare(const Integer&, const Integer&);  
+  friend int      ucompare(const Integer&, const Integer&); 
+  friend void     add(const Integer& x, const Integer& y, Integer& dest);
+  friend void     sub(const Integer& x, const Integer& y, Integer& dest);
+  friend void     mul(const Integer& x, const Integer& y, Integer& dest);
+  friend void     div(const Integer& x, const Integer& y, Integer& dest);
+  friend void     mod(const Integer& x, const Integer& y, Integer& dest);
+  friend void     divide(const Integer& x, const Integer& y, 
+                         Integer& q, Integer& r);
+  friend void     and(const Integer& x, const Integer& y, Integer& dest);
+  friend void     or(const Integer& x, const Integer& y, Integer& dest);
+  friend void     xor(const Integer& x, const Integer& y, Integer& dest);
+  friend void     lshift(const Integer& x, const Integer& y, Integer& dest);
+  friend void     rshift(const Integer& x, const Integer& y, Integer& dest);
+  friend void     pow(const Integer& x, const Integer& y, Integer& dest);
+
+  friend int      compare(const Integer&, long);  
+  friend int      ucompare(const Integer&, long); 
+  friend void     add(const Integer& x, long y, Integer& dest);
+  friend void     sub(const Integer& x, long y, Integer& dest);
+  friend void     mul(const Integer& x, long y, Integer& dest);
+  friend void     div(const Integer& x, long y, Integer& dest);
+  friend void     mod(const Integer& x, long y, Integer& dest);
+  friend void     divide(const Integer& x, long y, Integer& q, long& r);
+  friend void     and(const Integer& x, long y, Integer& dest);
+  friend void     or(const Integer& x, long y, Integer& dest);
+  friend void     xor(const Integer& x, long y, Integer& dest);
+  friend void     lshift(const Integer& x, long y, Integer& dest);
+  friend void     rshift(const Integer& x, long y, Integer& dest);
+  friend void     pow(const Integer& x, long y, Integer& dest);
+
+  friend int      compare(long, const Integer&);  
+  friend int      ucompare(long, const Integer&); 
+  friend void     add(long x, const Integer& y, Integer& dest);
+  friend void     sub(long x, const Integer& y, Integer& dest);
+  friend void     mul(long x, const Integer& y, Integer& dest);
+  friend void     and(long x, const Integer& y, Integer& dest);
+  friend void     or(long x, const Integer& y, Integer& dest);
+  friend void     xor(long x, const Integer& y, Integer& dest);
+
+ 
+
+  int             fits_in_long() const { return Iislong(rep); }
+  int             fits_in_double() const;
+
+  long		  as_long() const { return Itolong(rep); }
+  double	  as_double() const;
+
+  friend char*    Itoa(const Integer& x, int base = 10, int width = 0);
+  friend Integer  atoI(const char* s, int base = 10);
+  void		  printon(ostream& s, int base = 10, int width = 0) const;
+  
+  friend istream& operator >> (istream& s, Integer& y);
+  friend ostream& operator << (ostream& s, const Integer& y);
+
+ 
+
+  int             initialized() const;
+  void   error(const char* msg) const;
+  int             OK() const;  
+};
+
+
+ 
+
+  int      operator == (const Integer&, const Integer&);
+  int      operator == (const Integer&, long);
+  int      operator != (const Integer&, const Integer&);
+  int      operator != (const Integer&, long);
+  int      operator <  (const Integer&, const Integer&);
+  int      operator <  (const Integer&, long);
+  int      operator <= (const Integer&, const Integer&);
+  int      operator <= (const Integer&, long);
+  int      operator >  (const Integer&, const Integer&);
+  int      operator >  (const Integer&, long);
+  int      operator >= (const Integer&, const Integer&);
+  int      operator >= (const Integer&, long);
+  Integer  operator -  (const Integer&);
+  Integer  operator ~  (const Integer&);
+  Integer  operator +  (const Integer&, const Integer&);
+  Integer  operator +  (const Integer&, long);
+  Integer  operator +  (long, const Integer&);
+  Integer  operator -  (const Integer&, const Integer&);
+  Integer  operator -  (const Integer&, long);
+  Integer  operator -  (long, const Integer&);
+  Integer  operator *  (const Integer&, const Integer&);
+  Integer  operator *  (const Integer&, long);
+  Integer  operator *  (long, const Integer&);
+  Integer  operator /  (const Integer&, const Integer&);
+  Integer  operator /  (const Integer&, long);
+  Integer  operator %  (const Integer&, const Integer&);
+  Integer  operator %  (const Integer&, long);
+  Integer  operator << (const Integer&, const Integer&);
+  Integer  operator << (const Integer&, long);
+  Integer  operator >> (const Integer&, const Integer&);
+  Integer  operator >> (const Integer&, long);
+  Integer  operator &  (const Integer&, const Integer&);
+  Integer  operator &  (const Integer&, long);
+  Integer  operator &  (long, const Integer&);
+  Integer  operator |  (const Integer&, const Integer&);
+  Integer  operator |  (const Integer&, long);
+  Integer  operator |  (long, const Integer&);
+  Integer  operator ^  (const Integer&, const Integer&);
+  Integer  operator ^  (const Integer&, long);
+  Integer  operator ^  (long, const Integer&);
+
+  Integer  abs(const Integer&);  
+  Integer  sqr(const Integer&);  
+
+  Integer  pow(const Integer& x, const Integer& y);
+  Integer  pow(const Integer& x, long y);
+  Integer  Ipow(long x, long y);  
+
+
+extern char*    dec(const Integer& x, int width = 0);
+extern char*    oct(const Integer& x, int width = 0);
+extern char*    hex(const Integer& x, int width = 0);
+extern Integer  sqrt(const Integer&);  
+extern Integer  lcm(const Integer& x, const Integer& y);  
+
+
+typedef Integer IntTmp;  
+
+inline Integer::Integer() :rep(&_ZeroRep) {}
+
+inline Integer::Integer(IntRep* r) :rep(r) {}
+
+inline Integer::Integer(int y) :rep(Icopy_long(0, (long)y)) {}
+
+inline Integer::Integer(long y) :rep(Icopy_long(0, y)) {}
+
+inline Integer::Integer(unsigned long y) :rep(Icopy_ulong(0, y)) {}
+
+inline Integer::Integer(const Integer&  y) :rep(Icopy(0, y.rep)) {}
+
+inline Integer::~Integer() { if (rep && !(( rep )->sz==0) ) delete rep; }
+
+inline void  Integer::operator = (const Integer&  y)
+{
+  rep = Icopy(rep, y.rep);
+}
+
+inline void Integer::operator = (long y)
+{
+  rep = Icopy_long(rep, y); 
+}
+
+inline int Integer::initialized() const
+{
+  return rep != 0;
+}
+
+ 
+
+inline int compare(const Integer& x, const Integer& y)
+{
+  return compare(x.rep, y.rep);
+}
+
+inline int ucompare(const Integer& x, const Integer& y)
+{
+  return ucompare(x.rep, y.rep);
+}
+
+inline int compare(const Integer& x, long y)
+{
+  return compare(x.rep, y);
+}
+
+inline int ucompare(const Integer& x, long y)
+{
+  return ucompare(x.rep, y);
+}
+
+inline int compare(long x, const Integer& y)
+{
+  return -compare(y.rep, x);
+}
+
+inline int ucompare(long x, const Integer& y)
+{
+  return -ucompare(y.rep, x);
+}
+
+inline void  add(const Integer& x, const Integer& y, Integer& dest)
+{
+  dest.rep = add(x.rep, 0, y.rep, 0, dest.rep);
+}
+
+inline void  sub(const Integer& x, const Integer& y, Integer& dest)
+{
+  dest.rep = add(x.rep, 0, y.rep, 1, dest.rep);
+}
+
+inline void  mul(const Integer& x, const Integer& y, Integer& dest)
+{
+  dest.rep = multiply(x.rep, y.rep, dest.rep);
+}
+
+inline void  div(const Integer& x, const Integer& y, Integer& dest)
+{
+  dest.rep = div(x.rep, y.rep, dest.rep);
+}
+
+inline void  mod(const Integer& x, const Integer& y, Integer& dest)
+{
+  dest.rep = mod(x.rep, y.rep, dest.rep);
+}
+
+inline void  and(const Integer& x, const Integer& y, Integer& dest)
+{
+  dest.rep = bitop(x.rep, y.rep, dest.rep, '&');
+}
+
+inline void  or(const Integer& x, const Integer& y, Integer& dest)
+{
+  dest.rep = bitop(x.rep, y.rep, dest.rep, '|');
+}
+
+inline void  xor(const Integer& x, const Integer& y, Integer& dest)
+{
+  dest.rep = bitop(x.rep, y.rep, dest.rep, '^');
+}
+
+inline void  lshift(const Integer& x, const Integer& y, Integer& dest)
+{
+  dest.rep = lshift(x.rep, y.rep, 0, dest.rep);
+}
+
+inline void  rshift(const Integer& x, const Integer& y, Integer& dest)
+{
+  dest.rep = lshift(x.rep, y.rep, 1, dest.rep);
+}
+
+inline void  pow(const Integer& x, const Integer& y, Integer& dest)
+{
+  dest.rep = power(x.rep, Itolong(y.rep), dest.rep);  
+}
+
+inline void  add(const Integer& x, long y, Integer& dest)
+{
+  dest.rep = add(x.rep, 0, y, dest.rep);
+}
+
+inline void  sub(const Integer& x, long y, Integer& dest)
+{
+  dest.rep = add(x.rep, 0, -y, dest.rep);
+}
+
+inline void  mul(const Integer& x, long y, Integer& dest)
+{
+  dest.rep = multiply(x.rep, y, dest.rep);
+}
+
+inline void  div(const Integer& x, long y, Integer& dest)
+{
+  dest.rep = div(x.rep, y, dest.rep);
+}
+
+inline void  mod(const Integer& x, long y, Integer& dest)
+{
+  dest.rep = mod(x.rep, y, dest.rep);
+}
+
+inline void  and(const Integer& x, long y, Integer& dest)
+{
+  dest.rep = bitop(x.rep, y, dest.rep, '&');
+}
+
+inline void  or(const Integer& x, long y, Integer& dest)
+{
+  dest.rep = bitop(x.rep, y, dest.rep, '|');
+}
+
+inline void  xor(const Integer& x, long y, Integer& dest)
+{
+  dest.rep = bitop(x.rep, y, dest.rep, '^');
+}
+
+inline void  lshift(const Integer& x, long y, Integer& dest)
+{
+  dest.rep = lshift(x.rep, y, dest.rep);
+}
+
+inline void  rshift(const Integer& x, long y, Integer& dest)
+{
+  dest.rep = lshift(x.rep, -y, dest.rep);
+}
+
+inline void  pow(const Integer& x, long y, Integer& dest)
+{
+  dest.rep = power(x.rep, y, dest.rep);
+}
+
+inline void abs(const Integer& x, Integer& dest)
+{
+  dest.rep = abs(x.rep, dest.rep);
+}
+
+inline void negate(const Integer& x, Integer& dest)
+{
+  dest.rep = negate(x.rep, dest.rep);
+}
+
+inline void complement(const Integer& x, Integer& dest)
+{
+  dest.rep = compl(x.rep, dest.rep);
+}
+
+inline void  add(long x, const Integer& y, Integer& dest)
+{
+  dest.rep = add(y.rep, 0, x, dest.rep);
+}
+
+inline void  sub(long x, const Integer& y, Integer& dest)
+{
+  dest.rep = add(y.rep, 1, x, dest.rep);
+}
+
+inline void  mul(long x, const Integer& y, Integer& dest)
+{
+  dest.rep = multiply(y.rep, x, dest.rep);
+}
+
+inline void  and(long x, const Integer& y, Integer& dest)
+{
+  dest.rep = bitop(y.rep, x, dest.rep, '&');
+}
+
+inline void  or(long x, const Integer& y, Integer& dest)
+{
+  dest.rep = bitop(y.rep, x, dest.rep, '|');
+}
+
+inline void  xor(long x, const Integer& y, Integer& dest)
+{
+  dest.rep = bitop(y.rep, x, dest.rep, '^');
+}
+
+
+ 
+
+inline int operator == (const Integer&  x, const Integer&  y)
+{
+  return compare(x, y) == 0; 
+}
+
+inline int operator == (const Integer&  x, long y)
+{
+  return compare(x, y) == 0; 
+}
+
+inline int operator != (const Integer&  x, const Integer&  y)
+{
+  return compare(x, y) != 0; 
+}
+
+inline int operator != (const Integer&  x, long y)
+{
+  return compare(x, y) != 0; 
+}
+
+inline int operator <  (const Integer&  x, const Integer&  y)
+{
+  return compare(x, y) <  0; 
+}
+
+inline int operator <  (const Integer&  x, long y)
+{
+  return compare(x, y) <  0; 
+}
+
+inline int operator <= (const Integer&  x, const Integer&  y)
+{
+  return compare(x, y) <= 0; 
+}
+
+inline int operator <= (const Integer&  x, long y)
+{
+  return compare(x, y) <= 0; 
+}
+
+inline int operator >  (const Integer&  x, const Integer&  y)
+{
+  return compare(x, y) >  0; 
+}
+
+inline int operator >  (const Integer&  x, long y)
+{
+  return compare(x, y) >  0; 
+}
+
+inline int operator >= (const Integer&  x, const Integer&  y)
+{
+  return compare(x, y) >= 0; 
+}
+
+inline int operator >= (const Integer&  x, long y)
+{
+  return compare(x, y) >= 0; 
+}
+
+
+inline void  Integer::operator += (const Integer& y)
+{
+  add(*this, y, *this);
+}
+
+inline void  Integer::operator += (long y)
+{
+  add(*this, y, *this);
+}
+
+inline void Integer::operator ++ ()
+{
+  add(*this, 1, *this);
+}
+
+
+inline void  Integer::operator -= (const Integer& y)
+{
+  sub(*this, y, *this);
+}
+
+inline void  Integer::operator -= (long y)
+{
+  sub(*this, y, *this);
+}
+
+inline void Integer::operator -- ()
+{
+  add(*this, -1, *this);
+}
+
+
+
+inline void Integer::operator *= (const Integer& y)
+{
+  mul(*this, y, *this);
+}
+
+inline void Integer::operator *= (long y)
+{
+  mul(*this, y, *this);
+}
+
+
+inline void  Integer::operator &= (const Integer& y)
+{
+  and(*this, y, *this);
+}
+
+inline void  Integer::operator &= (long y)
+{
+  and(*this, y, *this);
+}
+
+inline void  Integer::operator |= (const Integer& y)
+{
+  or(*this, y, *this);
+}
+
+inline void  Integer::operator |= (long y)
+{
+  or(*this, y, *this);
+}
+
+
+inline void  Integer::operator ^= (const Integer& y)
+{
+  xor(*this, y, *this);
+}
+
+inline void  Integer::operator ^= (long y)
+{
+  xor(*this, y, *this);
+}
+
+
+
+inline void Integer::operator /= (const Integer& y)
+{
+  div(*this, y, *this);
+}
+
+inline void Integer::operator /= (long y)
+{
+  div(*this, y, *this);
+}
+
+
+inline void Integer::operator <<= (const Integer&  y)
+{
+  lshift(*this, y, *this);
+}
+
+inline void Integer::operator <<= (long  y)
+{
+  lshift(*this, y, *this);
+}
+
+
+inline void Integer::operator >>= (const Integer&  y)
+{
+  rshift(*this, y, *this);
+}
+
+inline void  Integer::operator >>= (long y)
+{
+  rshift(*this, y, *this);
+}
+
+
+
+
+inline void Integer::abs()
+{
+  ::abs(*this, *this);
+}
+
+inline void Integer::negate()
+{
+  ::negate(*this, *this);
+}
+
+
+inline void Integer::complement()
+{
+  ::complement(*this, *this);
+}
+
+
+inline int sign(const Integer& x)
+{
+  return (x.rep->len == 0) ? 0 : ( (x.rep->sgn == 1) ? 1 : -1 );
+}
+
+inline int even(const Integer& y)
+{
+  return y.rep->len == 0 || !(y.rep->s[0] & 1);
+}
+
+inline int odd(const Integer& y)
+{
+  return y.rep->len > 0 && (y.rep->s[0] & 1);
+}
+
+inline char* Itoa(const Integer& y, int base, int width)
+{
+  return Itoa(y.rep, base, width);
+}
+
+
+
+inline long lg(const Integer& x) 
+{
+  return lg(x.rep);
+}
+
+ 
+
+
+
+inline Integer  operator +  (const Integer& x, const Integer& y) 
+{
+  Integer r; add(x, y, r); return r;
+}
+
+inline Integer  operator +  (const Integer& x, long y) 
+{
+  Integer r; add(x, y, r); return r;
+}
+
+inline Integer  operator +  (long  x, const Integer& y) 
+{
+  Integer r; add(x, y, r); return r;
+}
+
+inline Integer  operator -  (const Integer& x, const Integer& y) 
+{
+  Integer r; sub(x, y, r); return r;
+}
+
+inline Integer  operator -  (const Integer& x, long y) 
+{
+  Integer r; sub(x, y, r); return r;
+}
+
+inline Integer  operator -  (long  x, const Integer& y) 
+{
+  Integer r; sub(x, y, r); return r;
+}
+
+inline Integer  operator *  (const Integer& x, const Integer& y) 
+{
+  Integer r; mul(x, y, r); return r;
+}
+
+inline Integer  operator *  (const Integer& x, long y) 
+{
+  Integer r; mul(x, y, r); return r;
+}
+
+inline Integer  operator *  (long  x, const Integer& y) 
+{
+  Integer r; mul(x, y, r); return r;
+}
+
+inline Integer sqr(const Integer& x) 
+{
+  Integer r; mul(x, x, r); return r;
+}
+
+inline Integer  operator &  (const Integer& x, const Integer& y) 
+{
+  Integer r; and(x, y, r); return r;
+}
+
+inline Integer  operator &  (const Integer& x, long y) 
+{
+  Integer r; and(x, y, r); return r;
+}
+
+inline Integer  operator &  (long  x, const Integer& y) 
+{
+  Integer r; and(x, y, r); return r;
+}
+
+inline Integer  operator |  (const Integer& x, const Integer& y) 
+{
+  Integer r; or(x, y, r); return r;
+}
+
+inline Integer  operator |  (const Integer& x, long y) 
+{
+  Integer r; or(x, y, r); return r;
+}
+
+inline Integer  operator |  (long  x, const Integer& y) 
+{
+  Integer r; or(x, y, r); return r;
+}
+
+inline Integer  operator ^  (const Integer& x, const Integer& y) 
+{
+  Integer r; xor(x, y, r); return r;
+}
+
+inline Integer  operator ^  (const Integer& x, long y) 
+{
+  Integer r; xor(x, y, r); return r;
+}
+
+inline Integer  operator ^  (long  x, const Integer& y) 
+{
+  Integer r; xor(x, y, r); return r;
+}
+
+inline Integer  operator /  (const Integer& x, const Integer& y) 
+{
+  Integer r; div(x, y, r); return r;
+}
+
+inline Integer operator /  (const Integer& x, long y) 
+{
+  Integer r; div(x, y, r); return r;
+}
+
+inline Integer operator %  (const Integer& x, const Integer& y) 
+{
+  Integer r; mod(x, y, r); return r;
+}
+
+inline Integer operator %  (const Integer& x, long y) 
+{
+  Integer r; mod(x, y, r); return r;
+}
+
+inline Integer operator <<  (const Integer& x, const Integer& y) 
+{
+  Integer r; lshift(x, y, r); return r;
+}
+
+inline Integer operator <<  (const Integer& x, long y) 
+{
+  Integer r; lshift(x, y, r); return r;
+}
+
+inline Integer operator >>  (const Integer& x, const Integer& y) 
+{
+  Integer r; rshift(x, y, r); return r;
+}
+
+inline Integer operator >>  (const Integer& x, long y) 
+{
+  Integer r; rshift(x, y, r); return r;
+}
+
+inline Integer pow(const Integer& x, long y) 
+{
+  Integer r; pow(x, y, r); return r;
+}
+
+inline Integer Ipow(long x, long y) 
+{
+  Integer r(x); pow(r, y, r); return r;
+}
+
+inline Integer pow(const Integer& x, const Integer& y) 
+{
+  Integer r; pow(x, y, r); return r;
+}
+
+
+
+inline Integer abs(const Integer& x) 
+{
+  Integer r; abs(x, r); return r;
+}
+
+inline Integer operator - (const Integer& x) 
+{
+  Integer r; negate(x, r); return r;
+}
+
+inline Integer operator ~ (const Integer& x) 
+{
+  Integer r; complement(x, r); return r;
+}
+
+inline Integer  atoI(const char* s, int base) 
+{
+  Integer r; r.rep = atoIntRep(s, base); return r;
+}
+
+inline Integer  gcd(const Integer& x, const Integer& y) 
+{
+  Integer r; r.rep = gcd(x.rep, y.rep); return r;
+}
+
+
+
+inline void Integer::operator %= (const Integer& y)
+{
+  *this = *this % y;  
+}
+
+inline void Integer::operator %= (long y)
+{
+  *this = *this % y;  
+}
+
+
+ 
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+ 
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+typedef void (*one_arg_error_handler_t)(const char*);
+typedef void (*two_arg_error_handler_t)(const char*, const char*);
+
+long         gcd(long, long);
+long         lg(unsigned long); 
+double       pow(double, long);
+long         pow(long, long);
+
+extern "C" double       start_timer();
+extern "C" double       return_elapsed_time(double last_time = 0.0);
+
+char*        dtoa(double x, char cvt = 'g', int width = 0, int prec = 6);
+
+unsigned int hashpjw(const char*);
+unsigned int multiplicativehash(int);
+unsigned int foldhash(double);
+
+extern void  default_one_arg_error_handler(const char*);
+extern void  default_two_arg_error_handler(const char*, const char*);
+
+extern two_arg_error_handler_t lib_error_handler;
+
+extern two_arg_error_handler_t 
+       set_lib_error_handler(two_arg_error_handler_t f);
+
+
+double abs(double arg);
+float abs(float arg);
+short abs(short arg);
+long abs(long arg);
+int sign(long arg);
+int sign(double arg);
+long sqr(long arg);
+double sqr(double arg);
+int even(long arg);
+int odd(long arg);
+long lcm(long x, long y);
+void (setbit)(long& x, long b);
+void clearbit(long& x, long b);
+int testbit(long x, long b);
+
+
+
+
+inline double abs(double arg) 
+{
+  return (arg < 0.0)? -arg : arg;
+}
+
+
+inline float abs(float arg) 
+{
+  return (arg < 0.0)? -arg : arg;
+}
+
+inline short abs(short arg) 
+{
+  return (arg < 0)? -arg : arg;
+}
+
+inline long abs(long arg) 
+{
+  return (arg < 0)? -arg : arg;
+}
+
+inline int sign(long arg)
+{
+  return (arg == 0) ? 0 : ( (arg > 0) ? 1 : -1 );
+}
+
+inline int sign(double arg)
+{
+  return (arg == 0.0) ? 0 : ( (arg > 0.0) ? 1 : -1 );
+}
+
+inline long sqr(long arg)
+{
+  return arg * arg;
+}
+
+
+inline double sqr(double arg)
+{
+  return arg * arg;
+}
+
+
+inline int even(long arg)
+{
+  return !(arg & 1);
+}
+
+inline int odd(long arg)
+{
+  return (arg & 1);
+}
+
+inline long lcm(long x, long y)
+{
+  return x / gcd(x, y) * y;
+}
+
+inline void (setbit)(long& x, long b)
+{
+  x |= (1 << b);
+}
+
+inline void clearbit(long& x, long b)
+{
+  x &= ~(1 << b);
+}
+
+inline int testbit(long x, long b)
+{
+  return ((x & (1 << b)) != 0);
+}
+
+
+
+
+
+typedef unsigned short uint16;
+typedef short int16;
+typedef unsigned long  uint32;
+typedef long int32;
+
+
+
+
+
+
+
+extern uint16 Fix_default_length;
+extern int    Fix_default_print_width;
+
+struct _Frep                     
+{
+  uint16 len;          		 
+  uint16 siz;			 
+  int16 ref;          		 
+  uint16 s[1];			 
+};
+
+typedef _Frep* _Fix;
+
+extern _Frep _Frep_0;
+extern _Frep _Frep_m1;
+extern _Frep _Frep_quotient_bump;
+
+class Fix
+{
+  _Fix            rep;
+
+		  Fix(_Fix);
+
+  void		  unique();
+
+public:
+		  Fix();
+                  Fix(Fix&);
+		  Fix(double);
+                  Fix(int);
+                  Fix(int, const Fix&);
+                  Fix(int, double);
+                  Fix(int, const _Fix);
+
+                  ~Fix();
+
+  Fix             operator =  (Fix&);
+  Fix             operator =  (double);
+
+  friend int      operator == (const Fix&, const Fix& );
+  friend int      operator != (const Fix&, const Fix&);
+
+  friend int      operator <  (const Fix&, const Fix&);
+  friend int      operator <= (const Fix&, const Fix&);
+  friend int      operator >  (const Fix&, const Fix&);
+  friend int      operator >= (const Fix&, const Fix&);
+
+  Fix&            operator +  ();
+  Fix             operator -  ();
+
+  friend Fix      operator +  (Fix&, Fix&);
+  friend Fix      operator -  (Fix&, Fix&);
+  friend Fix      operator *  (Fix&, Fix&);
+  friend Fix      operator /  (Fix&, Fix&);
+
+  friend Fix      operator *  (Fix&, int);
+  friend Fix      operator *  (int, Fix&);
+  friend Fix      operator %  (Fix&, int);
+  friend Fix      operator << (Fix&, int);
+  friend Fix      operator >> (Fix&, int);
+
+
+
+  Fix            operator += (Fix&);
+  Fix            operator -= (Fix&);
+  Fix            operator *= (Fix&);
+  Fix            operator /= (Fix&);
+
+  Fix            operator *= (int);
+  Fix            operator %= (int);
+  Fix            operator <<=(int);
+  Fix            operator >>=(int);
+
+  friend char*    Ftoa(Fix&, int width = Fix_default_print_width);
+  void		  printon(ostream&, int width = Fix_default_print_width) const;
+  friend Fix      atoF(const char*, int len = Fix_default_length);
+  
+  friend istream& operator >> (istream&, Fix&);
+  friend ostream& operator << (ostream&, const Fix&);
+
+   
+  friend Fix      abs(Fix);		 
+  friend int      sgn(Fix&);		 
+  friend Integer  mantissa(Fix&);	 
+  friend double   value(const Fix&);	 
+  friend int      length(const Fix&);	 
+  friend void	  show(Fix&);		 
+
+   
+  void            error(const char* msg);		 
+  void            range_error(const char* msg);	 
+
+   
+  friend void	  mask(_Fix);
+  friend int      compare(const _Fix, const _Fix = &_Frep_0);
+
+  friend _Fix	  new_Fix(uint16);
+  friend _Fix	  new_Fix(uint16, const _Fix);
+  friend _Fix	  new_Fix(uint16, double);
+
+  friend _Fix	  copy(const _Fix, _Fix);
+  friend _Fix	  negate(_Fix, _Fix = 0 );
+  friend _Fix	  add(_Fix, _Fix, _Fix = 0 );
+  friend _Fix	  subtract(_Fix, _Fix, _Fix = 0 );
+  friend _Fix	  multiply(_Fix, _Fix, _Fix = 0 );
+  friend _Fix	  multiply(_Fix, int, _Fix = 0 );
+  friend _Fix	  divide(_Fix, _Fix, _Fix = 0 , _Fix = 0 );
+  friend _Fix	  shift(_Fix, int, _Fix = 0 );
+
+   
+  friend void	  negate(Fix& x, Fix& r);
+  friend void	  add(Fix& x, Fix& y, Fix& r);
+  friend void	  subtract(Fix& x, Fix& y, Fix& r);
+  friend void	  multiply(Fix& x, Fix& y, Fix& r);
+  friend void	  divide(Fix& x, Fix& y, Fix& q, Fix& r);
+  friend void	  shift(Fix& x, int y, Fix& r);
+};
+
+ 
+
+extern void	
+  default_Fix_error_handler(const char*),
+  default_Fix_range_error_handler(const char*);
+
+extern one_arg_error_handler_t 
+  Fix_error_handler,
+  Fix_range_error_handler;
+
+extern one_arg_error_handler_t 
+  set_Fix_error_handler(one_arg_error_handler_t f),
+  set_Fix_range_error_handler(one_arg_error_handler_t f);
+
+typedef void (*Fix_peh)(_Fix&);
+extern Fix_peh Fix_overflow_handler;
+
+extern void 
+  Fix_overflow_saturate(_Fix&),
+  Fix_overflow_wrap(_Fix&),
+  Fix_overflow_warning_saturate(_Fix&),
+  Fix_overflow_warning(_Fix&),
+  Fix_overflow_error(_Fix&);
+
+extern Fix_peh set_overflow_handler(Fix_peh);
+
+extern int Fix_set_default_length(int);
+
+ 
+
+
+inline void Fix::unique()
+{
+  if ( rep->ref > 1 )
+  {
+    rep->ref--;
+    rep = new_Fix(rep->len,rep);
+  }
+}
+
+inline void mask (_Fix x)
+{
+  int n = x->len & 0x0f;
+  if ( n )
+    x->s[x->siz - 1] &= 0xffff0000 >> n; 
+}
+
+inline _Fix copy(const _Fix from, _Fix to)
+{
+  uint16 *ts = to->s, *fs = from->s;
+  int ilim = to->siz < from->siz ? to->siz : from->siz;
+  for ( int i=0; i < ilim; i++ )
+    *ts++ = *fs++;
+  for ( ; i < to->siz; i++ )
+    *ts++ = 0;
+  mask(to);
+  return to;
+}
+
+inline Fix::Fix(_Fix f)
+{
+  rep = f;
+}
+
+inline Fix::Fix()
+{
+  rep = new_Fix(Fix_default_length);
+}
+
+inline Fix::Fix(int len)
+{
+  if ( len < 1  || len > 65535  )
+    error("illegal length in declaration");
+  rep = new_Fix((uint16 )len);
+}
+
+inline Fix::Fix(double d)
+{
+  rep = new_Fix(Fix_default_length,d);
+}
+
+inline Fix::Fix(Fix&  y)
+{
+  rep = y.rep; rep->ref++;
+}
+
+inline Fix::Fix(int len, const Fix&  y)
+{
+  if ( len < 1  || len > 65535  )
+    error("illegal length in declaration");
+  rep = new_Fix((uint16 )len,y.rep);
+}
+
+inline Fix::Fix(int len, const _Fix fr)
+{
+  if ( len < 	1  || len > 	65535  )
+    error("illegal length in declaration");
+  rep = new_Fix((uint16 )len,fr);
+}
+
+inline Fix::Fix(int len, double d)
+{
+  if ( len < 1  || len > 65535  )
+    error("illegal length in declaration");
+  rep = new_Fix((uint16 )len,d);
+}
+
+inline Fix::~Fix()
+{
+  if ( --rep->ref <= 0 ) delete rep;
+}
+
+inline Fix  Fix::operator = (Fix&  y)
+{
+  if ( rep->len == y.rep->len ) {
+    ++y.rep->ref;
+    if ( --rep->ref <= 0 ) delete rep;
+    rep = y.rep; 
+  }
+  else {
+    unique();
+    copy(y.rep,rep);
+  }
+  return *this;
+}
+
+inline Fix  Fix::operator = (double d)
+{
+  int oldlen = rep->len;
+  if ( --rep->ref <= 0 ) delete rep;
+  rep = new_Fix(oldlen,d);
+  return *this;
+}
+
+inline int operator == (const Fix&  x, const Fix&  y)
+{
+  return compare(x.rep, y.rep) == 0; 
+}
+
+inline int operator != (const Fix&  x, const Fix&  y)
+{
+  return compare(x.rep, y.rep) != 0; 
+}
+
+inline int operator <  (const Fix&  x, const Fix&  y)
+{
+  return compare(x.rep, y.rep) <  0; 
+}
+
+inline int operator <= (const Fix&  x, const Fix&  y)
+{
+  return compare(x.rep, y.rep) <= 0; 
+}
+
+inline int operator >  (const Fix&  x, const Fix&  y)
+{
+  return compare(x.rep, y.rep) >  0; 
+}
+
+inline int operator >= (const Fix&  x, const Fix&  y)
+{
+  return compare(x.rep, y.rep) >= 0; 
+}
+
+inline Fix& Fix::operator +  ()
+{
+  return *this;
+}
+
+inline Fix Fix::operator -  ()
+{
+  _Fix r = negate(rep); return r;
+}
+
+inline Fix      operator +  (Fix&  x, Fix& y)
+{
+  _Fix r = add(x.rep, y.rep); return r;
+}
+
+inline Fix      operator -  (Fix&  x, Fix& y)
+{
+  _Fix r = subtract(x.rep, y.rep); return r;
+}
+
+inline Fix      operator *  (Fix&  x, Fix& y)
+{
+  _Fix r = multiply(x.rep, y.rep); return r;
+}
+
+inline Fix      operator *  (Fix&  x, int y)
+{
+  _Fix r = multiply(x.rep, y); return r;
+}
+
+inline Fix      operator *  (int  y, Fix& x)
+{
+  _Fix r = multiply(x.rep, y); return r;
+}
+
+inline Fix operator / (Fix& x, Fix& y)
+{
+  _Fix r = divide(x.rep, y.rep); return r;
+}
+
+inline Fix  Fix::operator += (Fix& y)
+{
+  unique(); add(rep, y.rep, rep); return *this;
+}
+
+inline Fix  Fix::operator -= (Fix& y)
+{
+  unique(); subtract(rep, y.rep, rep); return *this;
+}
+
+inline Fix  Fix::operator *= (Fix& y)
+{
+  unique(); multiply(rep, y.rep, rep); return *this;
+}
+
+inline Fix  Fix::operator *= (int y)
+{
+  unique(); multiply(rep, y, rep); return *this;
+}
+
+inline Fix Fix::operator /= (Fix& y)
+{
+  unique(); divide(rep, y.rep, rep); return *this;
+}
+
+inline Fix operator % (Fix& x, int y)
+{
+  Fix r((int )x.rep->len + y, x); return r;
+}
+
+inline Fix      operator << (Fix&  x, int y)
+{
+  _Fix rep = shift(x.rep, y); return rep;
+}
+
+inline Fix      operator >> (Fix&  x, int y)
+{  
+  _Fix rep = shift(x.rep, -y); return rep;
+}
+
+inline Fix Fix::operator <<= (int y)
+{
+  unique(); shift(rep, y, rep); return *this;
+}
+
+inline Fix  Fix::operator >>= (int y)
+{
+  unique(); shift(rep, -y, rep); return *this;
+}
+
+
+
+inline Fix abs(Fix  x)
+{
+  _Fix r = (compare(x.rep) >= 0 ? new_Fix(x.rep->len,x.rep) : negate(x.rep));
+  return r;
+}
+
+inline int sgn(Fix& x)
+{
+  int a = compare(x.rep);
+  return a == 0 ? 0 : (a > 0 ? 1 : -1);
+}
+
+inline int length(const Fix& x)
+{
+  return x.rep->len;
+}
+
+inline ostream& operator << (ostream& s, const Fix& y)
+{
+  if (s.opfx())
+    y.printon(s);
+  return s;
+}
+
+inline void	negate (Fix& x, Fix& r)
+{
+  negate(x.rep, r.rep);
+}
+
+inline void	add (Fix& x, Fix& y, Fix& r)
+{
+  add(x.rep, y.rep, r.rep);
+}
+
+inline void	subtract (Fix& x, Fix& y, Fix& r)
+{
+  subtract(x.rep, y.rep, r.rep);
+}
+
+inline void	multiply (Fix& x, Fix& y, Fix& r)
+{
+  multiply(x.rep, y.rep, r.rep);
+}
+
+inline void	divide (Fix& x, Fix& y, Fix& q, Fix& r)
+{
+  divide(x.rep, y.rep, q.rep, r.rep);
+}
+
+inline void	shift (Fix& x, int y, Fix& r)
+{
+  shift(x.rep, y, r.rep);
+}
+
+
+
+ 
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#ident   "$Revision: 1.3 $"
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+class Obstack
+{
+  struct _obstack_chunk
+  {
+    char*           limit;
+    _obstack_chunk* prev;
+    char            contents[4];
+    char            ShitHead(char *, char *);
+  };
+
+protected:
+  struct AllocQNode
+  {
+    void*  ptr;
+    int    sz;
+  };
+  long	          chunksize;
+  _obstack_chunk* chunk;
+  char*	          objectbase;
+  char*	          nextfree;
+  char*	          chunklimit;
+  int             alignmentmask;
+
+  void  _free(void* obj);
+  void  newchunk(int size);
+
+public:
+        Obstack(int size = 4080, int alignment = 4);  
+
+        ~Obstack();
+
+  void* base();
+  void* next_free();
+  int   alignment_mask();
+  int   chunk_size();
+  int   size();
+  int   room();
+  int   contains(void* p);       
+
+  void  grow(const void* data, int size);
+  void  grow(const void* data, int size, char terminator);
+  void  grow(const char* s);
+  void  grow(char c);
+  void  grow_fast(char c);
+  void  blank(int size);
+  void  blank_fast(int size);
+
+  void* finish();
+  void* finish(char terminator);
+
+  void* copy(const void* data, int size);
+  void* copy(const void* data, int size, char terminator);
+  void* copy(const char* s);
+  void* copy(char c);
+  void* alloc(int size);
+
+  void  free(void* obj);
+  void  shrink(int size = 1);  
+
+  int   OK();                    
+};
+
+
+inline Obstack::~Obstack()
+{
+  _free(0); 
+}
+
+inline void* Obstack::base()
+{
+  return objectbase; 
+}
+
+inline void* Obstack::next_free()
+{
+  return nextfree; 
+}
+
+inline int Obstack::alignment_mask()
+{
+  return alignmentmask; 
+}
+
+inline int Obstack::chunk_size()
+{
+  return chunksize; 
+}
+
+inline int Obstack::size()
+{
+  return nextfree - objectbase; 
+}
+
+inline int Obstack::room()
+{
+  return chunklimit - nextfree; 
+}
+
+inline void Obstack:: grow(const void* data, int size)
+{
+  if (nextfree+size > chunklimit) 
+    newchunk(size);
+  memcpy(nextfree, data, size);
+  nextfree += size; 
+}
+
+inline void Obstack:: grow(const void* data, int size, char terminator)
+{
+  if (nextfree+size+1 > chunklimit) 
+    newchunk(size+1);
+  memcpy(nextfree, data, size);
+  nextfree += size; 
+  *(nextfree)++ = terminator; 
+}
+
+inline void Obstack:: grow(const char* s)
+{
+  grow((const void*)s, strlen(s), 0); 
+}
+
+inline void Obstack:: grow(char c)
+{
+  if (nextfree+1 > chunklimit) 
+    newchunk(1); 
+  *(nextfree)++ = c; 
+}
+
+inline void Obstack:: blank(int size)
+{
+  if (nextfree+size > chunklimit) 
+    newchunk(size);
+  nextfree += size; 
+}
+
+inline void* Obstack::finish(char terminator)
+{
+  grow(terminator); 
+  return finish(); 
+}
+
+inline void* Obstack::copy(const void* data, int size)
+{
+  grow (data, size);
+  return finish(); 
+}
+
+inline void* Obstack::copy(const void* data, int size, char terminator)
+{
+  grow(data, size, terminator); 
+  return finish(); 
+}
+
+inline void* Obstack::copy(const char* s)
+{
+  grow((const void*)s, strlen(s), 0); 
+  return finish(); 
+}
+
+inline void* Obstack::copy(char c)
+{
+  grow(c);
+  return finish(); 
+}
+
+inline void* Obstack::alloc(int size)
+{
+  blank(size);
+  return finish(); 
+}
+
+inline void Obstack:: free(void* obj)     
+{
+  if (obj >= (void*)chunk && obj<(void*)chunklimit)
+    nextfree = objectbase = (char *) obj;
+  else 
+    _free(obj); 
+}
+
+inline void Obstack:: grow_fast(char c)
+{
+  *(nextfree)++ = c; 
+}
+
+inline void Obstack:: blank_fast(int size)
+{
+  nextfree += size; 
+}
+
+inline void Obstack:: shrink(int size)  
+{
+  if (nextfree >= objectbase + size)
+    nextfree -= size;
+}
+
+
+
+ 
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+class AllocRing
+{
+
+  struct AllocQNode
+  {
+    void*  ptr;
+    int    sz;
+  };
+
+  AllocQNode* nodes;
+  int         n;
+  int         current;
+
+  struct _obstack_chunk
+  {
+    char*           limit;
+    _obstack_chunk* prev;
+    char            contents[4];
+    char            ShitHead(char *, char *);
+  };
+  int         find(void* p);
+
+public:
+  struct AllocQNode
+  {
+    void*  ptr;
+    int    sz;
+  };
+              AllocRing(int max);
+             ~AllocRing();
+  void*       alloc(int size);
+  int         contains(void* ptr);
+  unsigned long int   contains(_FIX);
+  void        clear();
+  void        free(void* p);
+  virtual inline void   foo(Fix);
+  const extern static _Fix  bar(Fix);
+  struct AllocQNode mumble(Fix);
+  int         i,j(Fix),k;
+  Fix         joe;
+  virtual inline int   foo(Fix);
+  friend class X;
+  fart(((barf)));
+  fart1(((int)));
+};
+
+typedef struct _obstack_chunk
+{	
+  char*           limit;
+  _obstack_chunk* prev;
+  char            contents[4];
+  char            ShitHead(char *, char *);
+} foobar;
+
+typedef struct 
+{	
+  char*           limit;
+  _obstack_chunk* prev;
+  char            contents[4];
+  char            ShitHead(char *, char *);
+   const char* const step[3];
+} foobar1;
+
+ const char* const step[3] = {"left", "right", "hop"};
+
+
+
+ 
+
+uint16 Fix_default_length = 16;
+int    Fix_default_print_width = 8;
+
+Fix_peh Fix_overflow_handler = Fix_overflow_saturate;
+
+_Frep _Frep_0	= { 16, 1, 1, { 0 } };
+_Frep _Frep_m1	= { 16, 1, 1, { 0x8000 } };
+_Frep _Frep_quotient_bump = { 16, 1, 1, { 0x4000 } };
+
+ 
+
+void default_Fix_error_handler(const char* msg)
+{
+  cerr << "Fix: " << msg << "\n";
+  abort();
+}
+
+void default_Fix_range_error_handler(const char* msg)
+{
+  cerr << "Fix: range error in " << msg << "\n";
+   
+}
+
+one_arg_error_handler_t 
+  Fix_error_handler = default_Fix_error_handler,
+  Fix_range_error_handler = default_Fix_range_error_handler;
+
+one_arg_error_handler_t set_Fix_error_handler(one_arg_error_handler_t f)
+{
+  one_arg_error_handler_t old = Fix_error_handler;
+  Fix_error_handler = f;
+  return old;
+}
+
+one_arg_error_handler_t set_Fix_range_error_handler(one_arg_error_handler_t f)
+{
+  one_arg_error_handler_t old = Fix_range_error_handler;
+  Fix_range_error_handler = f;
+  return old;
+}
+
+void Fix::error(const char* msg)
+{
+  (*Fix_error_handler)(msg);
+}
+
+void Fix::range_error(const char* msg)
+{
+  (*Fix_range_error_handler)(msg);
+}
+
+ 
+
+static inline _Fix _new_Fix(uint16 len)
+{
+  int siz = (((uint32 )len + 15) >> 4);
+  if (siz <= 0) siz = 1;
+  unsigned int allocsiz = (sizeof(_Frep) + (siz - 1) * sizeof(uint16));
+  _Fix z = (_Fix)(new char[allocsiz]);
+  memset(z, 0, allocsiz);
+  z->len = len;
+  z->siz = siz;
+  z->ref = 1;
+  return z;
+}
+
+_Fix new_Fix(uint16 len)
+{
+  return _new_Fix(len);
+}
+
+_Fix new_Fix(uint16 len, const _Fix x)
+{
+  _Fix z = _new_Fix(len);
+  return copy(x,z);
+}
+
+_Fix new_Fix(uint16 len, double d)
+{
+  _Fix z = _new_Fix(len);
+
+  if ( d == 1.0  )
+  {
+    z->s[0] = 0x7fff;
+    for ( int i=1; i < z->siz; i++ )
+      z->s[i] = 0xffff;
+  }
+  else if ( d < -1.0  || d > 1.0  )
+    (*Fix_range_error_handler)("declaration");
+  else
+  {
+    if (d < 0)
+      d += 2.0;
+    d *= 32768;
+    for ( int i=0; i < z->siz; i++ )
+    {
+      z->s[i] = (uint16 )d;
+      d -= z->s[i];
+      d *= 65536;
+    }
+    if ( d >= 32768 )
+      z->s[z->siz-1]++;
+  }
+  mask(z);
+  return z;
+}
+
+ 
+
+double value(const Fix& x)
+{ 
+  double d = 0.0;
+  for ( int i=x.rep->siz-1; i >= 0; i-- )
+  {
+    d += x.rep->s[i];
+    d *= 1.0/65536.0;
+  }
+  d *= 2.;
+  return d < 1. ? d : d - 2.;
+}
+
+ 
+
+Integer mantissa(Fix& x)
+{
+  Integer a = 1, b=1;
+  for ( int i=0; i < x.rep->siz; i++ )
+  {
+    a <<= 16;
+    a += x.rep->s[i];
+    b <<= 16;
+  }
+  return a-b;
+}
+
+ 
+  
+inline static int docmp(uint16* x, uint16* y, int siz)
+{
+  int diff = (int16 )*x - (int16 )*y;
+  while ( --siz && !diff )
+    diff = (int32 )(uint32 )*++x - (int32 )(uint32 )*++y;
+  return diff;
+}
+
+inline static int docmpz(uint16* x, int siz)
+{
+  while ( siz-- )
+    if ( *x++ ) return 1;
+  return 0;
+}
+
+int compare(const _Fix x, const _Fix y)
+{
+  if ( x->siz == y->siz )
+    return docmp(x->s, y->s, x->siz);
+  else
+  {
+    int r;
+    _Fix longer, shorter;
+    if ( x->siz > y->siz )
+    {
+      longer = x;
+      shorter = y;
+      r = 1;
+    }
+    else
+    {
+      longer = y;
+      shorter = x;
+      r = -1;
+    }
+    int diff = docmp(x->s, y->s, shorter->siz);
+    if ( diff )
+      return diff;
+    else if ( docmpz(&longer->s[shorter->siz], longer->siz-shorter->siz) )
+      return r;
+    else
+      return 0;
+  }
+}
+
+ 
+
+_Fix add(_Fix x, _Fix y, _Fix r)
+{
+  uint16 xsign = x->s[0], ysign = y->s[0];
+  _Fix longer, shorter;
+  if ( x->len >= y->len )
+    longer = x, shorter = y;
+  else
+    longer = y, shorter = x;
+  if ( r == 0  )
+    r = new_Fix(longer->len);
+  for ( int i=r->siz-1; i >= longer->siz; i-- )
+    r->s[i] = 0;
+  for ( ; i >= shorter->siz; i-- )
+    r->s[i] = longer->s[i];
+  uint32 sum = 0, carry = 0;
+  for ( ; i >= 0; i-- )
+  {
+    sum = carry + (uint32 )x->s[i] + (uint32 )y->s[i];
+    carry = sum >> 16;
+    r->s[i] = sum;
+  }
+  if ( (xsign ^ sum) & (ysign ^ sum) & 0x8000 )
+    (*Fix_overflow_handler)(r);
+  return r;
+}
+
+_Fix subtract(_Fix x, _Fix y, _Fix r)
+{
+  uint16 xsign = x->s[0], ysign = y->s[0];
+  _Fix longer, shorter;
+  if ( x->len >= y->len )
+    longer = x, shorter = y;
+  else
+    longer = y, shorter = x;
+  if ( r == 0  )
+    r = new_Fix(longer->len);
+  for ( int i=r->siz-1; i >= longer->siz; i-- )
+    r->s[i] = 0;
+  for ( ; i >= shorter->siz; i-- )
+    r->s[i] = (longer == x ? x->s[i] : -y->s[i]);
+  int16 carry = 0;
+  uint32 sum = 0;
+  for ( ; i >= 0; i-- )
+  {
+    sum = (int32 )carry + (uint32 )x->s[i] - (uint32 )y->s[i];
+    carry = sum >> 16;
+    r->s[i] = sum;
+  }
+  if ( (xsign ^ sum) & (~ysign ^ sum) & 0x8000 )
+    (*Fix_overflow_handler)(r);
+  return r;
+}
+
+_Fix multiply(_Fix x, _Fix y, _Fix r)
+{
+  if ( r == 0  )
+    r = new_Fix(x->len + y->len);
+  int xsign = x->s[0] & 0x8000,
+    ysign = y->s[0] & 0x8000;
+  Fix X(x->len), Y(y->len);
+  if ( xsign )
+    x = negate(x,X.rep);
+  if ( ysign )
+    y = negate(y,Y.rep);
+  for ( int i=0; i < r->siz; i++ )
+    r->s[i] = 0;
+  for ( i=x->siz-1; i >= 0; i-- )
+  {
+    uint32 carry = 0;
+    for ( int j=y->siz-1; j >= 0; j-- ) 
+    {
+      int k = i + j + 1;
+      uint32 a = (uint32 )x->s[i] * (uint32 )y->s[j];
+      uint32 b = ((a << 1) & 0xffff) + carry;
+      if ( k < r->siz )
+      {
+	b += r->s[k];
+        r->s[k] = b;
+      }
+      if ( k < (int)r->siz + 1 )
+        carry = (a >> 15) + (b >> 16);
+    }
+    r->s[i] = carry;
+  }
+  if ( xsign != ysign )
+    negate(r,r);
+  return r;
+}
+
+_Fix multiply(_Fix x, int y, _Fix r)
+{
+  if ( y != (int16 )y )
+    (*Fix_range_error_handler)("multiply by int -- int too large");
+  if ( r == 0  )
+    r = new_Fix(x->len);
+  for ( int i=r->siz-1; i >= x->siz; i-- )
+    r->s[i] = 0;
+  int32 a, carry = 0;
+  for ( ; i > 0; i-- )
+  {
+    a = (int32 )(uint32 )x->s[i] * y + carry;
+    r->s[i] = a;
+    carry = a >> 16;		 
+  }
+  a = (int32 )(int16 )x->s[0] * y + carry;
+  r->s[0] = a;
+  a &= 0xffff8000L;
+  if ( a != 0xffff8000L && a != 0L ) {
+    r->s[0] = 0x8000 ^ x->s[0] ^ y;
+    (*Fix_overflow_handler)(r);
+  }
+  return r;
+}
+
+_Fix divide(_Fix x, _Fix y, _Fix q, _Fix r)
+{
+  int xsign = x->s[0] & 0x8000, 
+    ysign = y->s[0] & 0x8000;
+  if ( q == 0  )
+    q = new_Fix(x->len);
+  copy(&_Frep_0,q);
+  if ( r == 0  )
+    r = new_Fix(x->len + y->len - 1);
+  if ( xsign )
+    negate(x,r);
+  else
+    copy(x,r);
+  Fix Y(y->len);
+  y = ( ysign ? negate(y,Y.rep) : copy(y,Y.rep) );
+  if ( !compare(y) )
+    (*Fix_range_error_handler)("division -- division by zero");
+  else if ( compare(x,y) >= 0 )
+    if ( compare(x,y) == 0 && (xsign ^ ysign) != 0 )
+    {
+      copy(&_Frep_m1,q);
+      copy(&_Frep_0,r);
+    }
+    else
+      (*Fix_range_error_handler)("division");
+  else
+  {
+    _Fix t;
+    Fix S(r->len),
+      W(q->len,&_Frep_quotient_bump);
+    for ( int i=1; i < q->len; i++ )
+    {
+      shift(y,-1,y);
+      subtract(r,y,S.rep);
+      int s_status = compare(S.rep);
+      if ( s_status == 0 ) 
+      {
+	t = r, r = S.rep, S.rep = t;
+	break;
+      }
+      else if ( s_status > 0 )
+      {
+	t = r, r = S.rep, S.rep = t;
+	add(q,W.rep,q);
+      }
+      shift(W.rep,-1,W.rep);
+    }
+    if ( xsign ^ ysign )
+      negate(q,q);
+  }
+  return q;
+}
+
+_Fix shift(_Fix x, int y, _Fix r)
+{
+  if ( y == 0 )
+    return x;
+  else if ( r == 0  )
+    r = new_Fix(x->len);
+
+  int ay = abs((long) y),
+    ayh = ay >> 4,
+    ayl = ay & 0x0f;
+  int xl, u, ilow, ihigh;
+  uint16 *rs, *xsl, *xsr;
+
+  if ( y > 0 )
+  {
+    rs = r->s;
+    xsl = x->s + ayh;
+    xsr = xsl + 1;
+    xl = ayl;
+    u = 1;
+    ihigh = x->siz - ayh - 1;
+    ilow = 0;
+  }
+  else
+  {
+    rs = &r->s[r->siz - 1];
+    xsr = &x->s[r->siz - 1] - ayh;
+    xsl = xsr - 1;
+    xl = 16 - ayl;
+    u = -1;
+    ihigh = r->siz - ayh - 1;
+    ilow = ihigh - x->siz;
+  }
+
+  int xr = 16 - xl;
+  uint16 xrmask = 0xffffL >> xr;
+  for ( int i=0; i < ilow; i++, rs+=u, xsl+=u, xsr+=u )
+    *rs = 0;
+  for ( ; i < ihigh; i++, rs+=u, xsl+=u, xsr+=u )
+    *rs = (*xsl << xl) + ((*xsr >> xr) & xrmask);
+  *rs = (y > 0 ? (*xsl << xl) : ((*xsr >> xr) & xrmask));
+  rs += u;
+  for ( ; ++i < r->siz; rs+=u )
+    *rs = 0;
+  return r;
+}
+
+_Fix negate(_Fix x, _Fix r)
+{
+  if ( r == 0  )
+    r = new_Fix(x->len);
+  uint32 carry = 1;
+  for ( int i=r->siz-1; i >= x->siz; i-- )
+    r->s[i] = 0;
+  for ( ; i >= 0; i-- )
+  {
+    uint32 a = (uint16 )~x->s[i] + carry;	 
+    r->s[i] = a;
+    carry = a >> 16;
+  }
+  return r;
+}
+
+ 
+
+Fix atoF(const char* a, int len)
+{
+  return Fix(len,atof(a));
+}
+
+extern AllocRing _libgxx_fmtq;
+
+void Fix::printon(ostream& s, int width) const
+{
+  double val = value(*this);
+  int old_precision = s.precision(width-3);
+  long old_flags = s.setf(ios::fixed, ios::fixed|ios::scientific);
+  if (val >= 0)
+      s << ' ';
+  s.width(width-2);
+  s << val;
+  s.precision(old_precision);
+  s.flags(old_flags);
+}
+
+char* Ftoa(Fix& x, int width)
+{
+  int wrksiz = width + 2;
+  char *fmtbase = (char *) _libgxx_fmtq.alloc(wrksiz);
+  ostrstream stream(fmtbase, wrksiz);
+  
+  x.printon(stream, width);
+  stream << ends;
+  return fmtbase;
+}
+
+extern Obstack _libgxx_io_ob;
+
+Fix Fix::operator %= (int y)
+{
+  Fix r((int )rep->len + y, *this); return *this = r;
+}
+
+istream& operator >> (istream& s, Fix& y)
+{
+  int got_one = 0;
+  if (!s.ipfx(0))
+  {
+    s.clear(ios::failbit|s.rdstate());  
+    return s;
+  }
+
+  char sign = 0, point = 0;
+  char ch;
+  s >> ws;
+  if (!s.good())
+  {
+    s.clear(ios::failbit|s.rdstate());
+    return s;
+  }
+  while (s.get(ch))
+  {
+    if (ch == '-')
+    {
+      if (sign == 0)
+      {
+        sign = 1;
+        _libgxx_io_ob.grow(ch);
+      }
+      else
+        break;
+    }
+    if (ch == '.')
+    {
+      if (point == 0)
+      {
+        point = 1;
+        _libgxx_io_ob.grow(ch);
+      }
+      else
+        break;
+    }
+    else if (ch >= '0' && ch <= '9')
+    {
+      got_one = 1;
+      _libgxx_io_ob.grow(ch);
+    }
+    else
+      break;
+  }
+  char * p = (char*)(_libgxx_io_ob.finish(0));
+  if (s.good())
+    s.putback(ch);
+  if (!got_one)
+    s.clear(ios::failbit|s.rdstate());
+  else
+    y = atoF(p);
+  _libgxx_io_ob.free(p);
+  return s;
+}
+
+void show(Fix& x)
+{
+  cout << "len = " << x.rep->len << "\n";
+  cout << "siz = " << x.rep->siz << "\n";
+  cout << "ref = " << x.rep->ref << "\n";
+  cout << "man = ";
+
+  int old_flags = cout.setf(ios::hex, ios::hex|ios::dec|ios::oct);
+  cout.width(4*x.rep->siz);
+  cout << mantissa(x);
+  cout.setf(old_flags, ios::hex|ios::dec|ios::oct);
+
+  cout << "\n";
+  cout << "val = " << value(x) << "\n";
+}
+
+ 
+
+Fix_peh set_overflow_handler(Fix_peh new_handler) {
+  Fix_peh old_handler = Fix_overflow_handler;
+  Fix_overflow_handler = new_handler;
+  return old_handler;
+}
+
+int Fix_set_default_length(int newlen)
+{
+  uint16 oldlen = Fix_default_length;
+  if ( newlen < 1  || newlen > 65535  )
+    (*Fix_error_handler)("illegal length in Fix_set_default_length");
+  Fix_default_length = newlen;
+  return oldlen;
+}
+
+ 
+
+void Fix_overflow_saturate(_Fix& r) {
+  if ( (int16 )r->s[0] > 0 ) 
+  {
+    r->s[0] = 0x8000;
+    for ( int i=1; i < r->siz; i++ )
+      r->s[i] = 0;
+  }
+  else
+  {
+    r->s[0] = 0x7fff;
+    for ( int i = 1; i < (int)r->siz; i++ )
+      r->s[i] = 0xffff;
+    mask(r);
+  }
+}
+
+void Fix_overflow_wrap(_Fix&) {}
+
+void Fix_overflow_warning_saturate(_Fix& r) {
+  Fix_overflow_warning(r);
+  Fix_overflow_saturate(r);
+}
+
+void Fix_overflow_warning(_Fix&) {
+  cerr << "Fix: overflow warning\n"; 
+}
+
+void Fix_overflow_error(_Fix&) {
+  cerr << "Fix: overflow error\n"; 
+  abort();
+}
+
+--------------------------End of Input File Fix.C++
+
+Thanks
+
+Mike
+melges@advancedsw.com
+
+
+

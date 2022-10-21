@@ -1,0 +1,32 @@
+TXL Example Specification
+-------------------------
+
+Name:	
+	OOTstub.Txl
+
+Description:
+	TXL program to construct the 'stub' (interface) of an Object-Oriented
+	Turing (OOT) module or monitor given the source of an implementation.  
+	The interface consists of the exported items, their signatures
+	and types.  The transform is careful to retain comments from the 
+	implementation source that are relevant to the interface specification.  
+	In order to do this, it assumes that a project-standard commenting 
+	convention has been used in the implementation (although the transform
+	will work, ignoring comments, even if this commenting convention is 
+	not followed).
+
+	This transform is intended to be used as an embedded process in a
+	software engineering environment.
+
+Author:
+   	J.R. Cordy
+
+Affiliation:
+	Software Technology Laboratory
+	Queen's University, Kingston, Canada
+
+Date:
+	May 1992
+
+Example:
+	txl -comment Family.OOTstub > Family.interface

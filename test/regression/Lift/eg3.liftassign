@@ -1,0 +1,22 @@
+E6 := r * y
+E5 := y + z
+loop
+    x := E5
+    a := 3
+    j := 1
+    E12 := x + z
+    E11 := (E12) * r
+    E10 := a + z
+    loop
+        exit when j > 10
+        k := E10
+        b := j * z
+        d := (E5) * d
+        e := E11
+        j := j + 1
+    end loop
+    c := a + y
+    m := y * b
+    n := E6
+end loop
+

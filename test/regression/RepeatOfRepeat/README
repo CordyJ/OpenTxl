@@ -1,0 +1,7 @@
+Another incarnation of the repeat-of-repeat bug.
+Happens anywhere that repeat-of-repeat turns up
+in TXL 7.7a8.  Seems to have been introduced when we
+fixed another bug by bottoming out depthOfLastAccept
+with 999999999.
+
+Jim 22.12.94

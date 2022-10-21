@@ -1,0 +1,51 @@
+TXL Example Specification
+-------------------------
+
+Name:	
+	Calculator.Txl
+	DP.Txl
+	Sort.Txl
+	Mates.Txl
+	Denormalize-Mates.Txl
+	Normalize-Mates.Txl
+
+Description:
+	Various general purpose transformational tasks implemented in TXL
+	to test the range of applicability of the tool.
+
+	Calculator - A simple numeric expression calculator,
+		transforms a numeric expression into its result value.
+
+	DP    - Computer the dot product of two vectors.
+	
+	Sort  - Bubble sort of a sequence of numbers.
+
+	Mates, Denormalize-Mates, Normalize-Mates - 
+		Implementation of a normalizer and simplifier for
+		logical propositions expressed in the Mates system of
+		logic notation.  
+		
+	The Mates simplifier does a fair job of proposition simplification
+	using a small set of standard axioms and theorems to transform
+	subterms.  Does some useful but not difficult theorem proving.
+
+Author:
+	I.A. Carmichael
+   	J.R. Cordy
+
+Affiliation:
+	Queen's University, Kingston, Canada
+
+Date:
+	June 1989 - July 1990
+
+Example:
+	txl Expression.Calculator
+	itxl Calculator		(lets you type in input)
+	txl TwoVectors.DP
+	txl Numbers.Sort
+	txl Tautology1.Mates
+	txl Tautology2.Mates
+	txl Proposition1.Mates
+	itxl Mates		(lets you type in propositions)
+	txl Predicate.Normalize-Mates

@@ -1,0 +1,15 @@
+var n;
+read n;
+var fac;
+fac := 1;
+var sum;
+sum := 0;
+var i;
+i := 1;
+while i != n+1 do
+    fac := fac * i;
+    sum := sum + i;
+    i := i + 1;
+end
+<foo>write fac;</foo>
+write sum;

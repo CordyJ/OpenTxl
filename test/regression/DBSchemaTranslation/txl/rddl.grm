@@ -1,0 +1,91 @@
+% rddl.Grammar: Txl syntax definition of a relational data 
+% definition language (ddl) 
+
+% Rateb Abu-Hamdeh, July 1993
+% Written for TXL v 7.4
+
+
+
+
+
+compounds
+	--* 
+end compounds
+
+keys    IDENTIFYING_REL RELATTIONSHIP ROLE ROLES
+	CREATE TABLE NOT NULL PRIMARY KEY FOREIGN 
+	CHARACTER INTEGER FLOAT   ON DELETE CASCADE
+end keys
+
+
+define tableDefinition
+	CREATE TABLE  [table] (		[IN]
+        [list attributeDefinition] )	[NL][EX]
+	[repeat uniqueConstraint]
+        [primaryKeyDefinition] 
+        [repeat foreignKeyDefinition] [NL] 
+end define
+
+define notNull
+	'NOT 'NULL
+end define
+
+define attributeDefinition
+	[NL] [attribute] [dataType] [opt  notNull]
+end define
+
+define uniqueConstraint
+	UNIQUE ( [list attribute] ) [NL]
+end define
+
+define primaryKeyDefinition 
+        PRIMARY KEY ( [list attribute] )	[NL]
+end define
+
+%define EDconstraint
+%	ON DELETE CASCADE
+%end define
+
+define foreignKeyDefinition 
+        [opt IdentifyingRelComment] 
+	FOREIGN KEY ( [list attribute] )  [NL] [IN]
+	    REFERENCES [table] %[opt EDconstraint] 
+	    [opt SpecialComment] [EX][NL]
+end define
+
+define SpecialComment
+	[RelComment]
+	| [RoleComment]
+end define
+
+define IdentifyingRelComment
+	--* IDENTIFYING_REL: [relationshipName]   [NL]
+	--* ROLE: [role] [constraint] [NL] 
+end define
+
+define RelComment
+	[NL] --* RELATIONSHIP : [relationshipName]  [NL]
+	--* ROLES: [role] [constraint] , [role] [constraint] 
+end define
+
+define RoleComment
+	--* ROLE : [role] [constraint] 
+end define
+
+define attribute
+        [id] 
+end define
+
+define table
+        [id]
+end define
+
+define int
+	'( [integernumber] ') 
+end define
+
+define dataType
+        CHARACTER [opt int]
+        | INTEGER
+        | FLOAT
+end define

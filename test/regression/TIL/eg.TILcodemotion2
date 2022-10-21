@@ -1,0 +1,11 @@
+
+var a; var b; var c; 
+var x; var y; var z;
+while 1 do
+    x := a + b;
+    y := x;
+    a := y + 3;
+    x := b + c;
+    y := x - 2;
+    z := x + a * y;
+end

@@ -1,0 +1,26 @@
+TXL Example Specification
+-------------------------
+
+Name:	
+	par.Txl
+
+Description:
+	This TXL program takes an arbitrary standard Pascal program
+	as input and collects all sequences of independent assignments 
+	into single parallel assignment statements.  The parallelization
+	is semantics-preserving, which means it will not parallelize
+	any assignments that are mututally dependent.
+
+Author:
+	Jim Cordy
+
+Affiliation:
+	Software Technology Laboratory, Queen's University
+
+Date:
+	May 1993
+
+Example:
+	txl test1.par		(simple example)
+	txl init.par		(extensive example)
+

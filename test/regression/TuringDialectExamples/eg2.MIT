@@ -1,0 +1,30 @@
+
+% Example Inheritance Turing dialect program
+
+const stacksize := 10
+type itemtype : string
+
+module stack 
+    import (stacksize, itemtype)
+    export (push, pop)
+
+    var top : 0 .. stacksize := 0
+    var contents : array 1 .. stacksize of itemtype
+
+    procedure push (item : itemtype)
+	top := top + 1
+	contents (top) := item
+    end push
+
+    procedure pop (var item : itemtype)
+	item := contents (top)
+	top := top - 1
+    end pop
+end stack
+
+module stackplusempty refines stack
+    export (empty)
+    function empty : boolean
+	result top = 0
+    end empty
+end stackplusempty

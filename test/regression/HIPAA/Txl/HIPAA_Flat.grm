@@ -1,0 +1,88 @@
+% Grammar for flattened HIPAA documents
+% Jim Cordy
+% Feb 2007
+
+% Process newlines
+#pragma -w 32000 -newline -char -nomultiline
+
+% Flattened documents are just sections
+define program
+	[repeat section]
+end define
+
+define section
+	[section_label] [opt section_title] [repeat paragraph]
+end define
+
+define section_label
+	'§ [number] [opt subsection_label] [opt subsubsection_label] [opt subsubsubsection_label] 
+	[opt subsubsubsubsection_label] [opt subsubsubsubsubsection_label]
+end define
+
+define section_title
+	[repeat id_or_punctuation] '.
+end define
+
+define id_or_punctuation
+	[id] | , | : | ; | [space]
+end define
+
+define subsection_label
+	( [a_z] )
+end define
+
+define a_z
+	a | b | c | d | e | f | g | h | i | j | k | l | m 
+    | 	n | o | p | q | r | s | t | u | v | w | x | y | z
+end define
+
+define subsubsection_label
+	( [number] )
+end define
+
+define subsubsubsection_label
+	( [roman_number] )
+end define
+
+define roman_number
+	i | ii | iii | iv | v | vi | vii | viii | ix | x | xi 
+    | 	xii | xiii | xiv | xv | xvi | xvii | xviii | xix | xx
+end define
+
+define subsubsubsubsection_label
+	( [A_Z] )
+end define
+
+define A_Z
+	A | B | C | D | E | F | G | H | I | J | K | L | M 
+    | 	N | O | P | Q | R | S | T | U | V | W | X | Y | Z
+end define
+
+define subsubsubsubsubsection_label
+	( [number] )
+end define
+
+define paragraph
+	[repeat word_or_other]
+end define
+
+define word_or_other
+	[label_reference] | [id] | [not label] [token]
+end define
+
+define label_reference
+	[prelabel] [opt space] [label] [repeat prelabel_label] 
+end define
+
+define prelabel
+	[id] | ', | '; | [number] [opt id] | '§ | -
+end define
+
+define prelabel_label
+	[opt prelabel] [opt space] [label]
+end define
+
+define label
+	[section_label] | [subsection_label] | [subsubsection_label] 
+    | 	[subsubsubsection_label] | [subsubsubsubsection_label]
+end define

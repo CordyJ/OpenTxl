@@ -1,0 +1,5 @@
+This is an example input file
+for the fputs built-in function test.
+Output from it should include everything,
+right up to the following line:
+end of input.

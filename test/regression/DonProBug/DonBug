@@ -1,0 +1,57 @@
+From jardined Sun Apr  9 15:03 EDT 1995
+From: Donald Jardine <jardined@qucis.queensu.ca>
+Subject: What am I doing wrong?
+To: cordy@qucis.queensu.ca
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Length: 855
+
+
+Here's the grammar and rule.
+
+external function unparse X[any]
+external function parse X[stringlit]
+external function print
+
+
+define program
+    [repeat num_char]
+end define
+define num_char   [number][charlit]
+end define
+rule mainRule   
+	replace [program]
+    cl [num_char] rest [repeat num_char]
+
+construct X [stringlit] _ [unparse cl][print]
+construct numb [num_char] cl [parse X]
+    by rest
+end rule
+
+-----------------
+Here's the source:
+
+1 'XX'
+2 'YY'
+3 'ZZ'
+4 'LL'
+5 'kk'
+6 'qq'
+
+-----------------------------
+Heere's the result
+
+[f:\cobol\cobtest]txl test.daj
+TXL Pro 1.0d2 (5.4/95) Copyright 1995 by Legasys Corp. & James R. Cordy
+Compiling daj.Txl ...
+Parsing test.daj ...
+Transforming ... \'XX\'
+TXL ERROR : External function [parse] unable to parse
+    "1 \'XX\'" 
+as a [num_char]
+-----------------------------
+
+What am I doing wrong?
+
+Don.
+
+

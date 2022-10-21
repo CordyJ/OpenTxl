@@ -1,0 +1,175 @@
+%%
+%%	Extensions to Clock grammar to handle GTML constructs
+%%
+%%	N. Graham, 21 August 1992
+%%	GMD Karlsruhe
+%%
+%%
+
+
+
+%  Hack for the identifiers:  in GTML, the capitalization convention
+%  id's is not the same as in Clock.  There is no easy way of doing this
+%  conversion in TXL, so special symbols are used to flag the kind
+%  of identifiers, and a post-pass is used to fix them.
+
+define variable
+    [lowerupperid]
+  | ^ [lowerupperid]
+end define
+
+define functionName
+    [lowerupperid]
+  | @ [lowerupperid]
+end define
+
+define predefinedFunctionName
+    [lowerupperid]
+  | ~ [lowerupperid]
+end define
+
+define constructorSymbol
+    [upperlowerid] [directiveSymbol]
+  | [upperlowerid]
+  | $ [upperlowerid] [opt directiveSymbol]
+end define
+
+define typeName
+    [upperlowerid]
+  | & [upperlowerid]
+end define
+
+define typeVariable
+    [lowerupperid]
+  | ^ [lowerupperid]
+end define
+
+define typeDefinition
+    'type [typeName] [repeat typeVariable] = [typeSpec] .
+  | 'type [typeName] [opt typeVariableList] == [typeSpec] .
+end define
+
+define typeVariableList
+    ( [list typeVariable+] )
+end define
+
+define typeSpec
+    [simpleType]
+  | [simpleType] -> [typeSpec]          % Function type
+  | [typeName] [repeat simpleType]      % Specialization of parametric type
+
+  | 'void -> [typeSpec]			% gtml function type
+  | [simpleType] => [typeSpec]		% gtml lambda-abstraction
+  | [typeName] ( [list simpleType+] )	% gtml Specialization
+end define
+
+define dataDefinition
+    'data [typeName] [repeat typeVariable] = [dataTypes] .
+  | 'type [typeName] [opt typeVariableList] ::= [dataTypes] .
+end define
+
+define dataType
+    [constructorSymbol] [repeat simpleType]
+  | [constructorSymbol] [opt simpleTypeList]
+end define
+
+define simpleTypeList
+    ( [list simpleType+] )
+end define
+
+define funDefinition
+    [functionName] :: [functionTypeSpec] .
+  | 'type [functionName] :: [functionTypeSpec] .
+end define
+
+define functionTypeSpec
+    'void -> [typeSpec]
+  | [typeSpec]
+end define
+
+define equation
+    [simpleEquation]
+  | [parameterEquation]
+
+  | [gtmlHead] ->			[NL][IN]
+	[expression] .			[NL][EX]
+end define
+
+define gtmlHead
+    'fun [functionName]
+end define
+
+define pattern
+    [simplePattern]
+  | [constructorSymbol] [repeat simplePattern]
+  | [constructorSymbol] [opt simplePatternList]
+end define
+
+define simplePatternList
+    ( [list simplePattern+] )
+end define
+
+
+define constructorTerm
+    [constructorSymbol] [repeat simpleExpression+]
+  | [constructorSymbol] ( [list simpleExpression+] )
+end define
+
+define predefinedApplication
+    [predefinedFunctionName] [repeat simpleExpression+]
+  | [predefinedFunctionName] ( [list simpleExpression+] )
+end define
+
+define lambdaAbstraction
+    [simpleLambdaAbstraction]
+  | [patternLambdaAbstraction]
+  | [onePatternLambdaAbstraction]
+
+  | ( 'fn [variable] =>			[NL][IN]
+	[expression]			[NL][EX]
+    )
+end define
+
+
+define ifExpression
+    'if [ifCondition] 'then             [NL][IN]
+        [expression]                    [NL][EX]
+    [repeat elsifClause]
+    [elseClause]
+    'end 'if
+
+  | ( 'if [ifCondition] 'then		[NL][IN]
+	[expression]			[NL][EX]
+    [opt elseClause]
+    )
+end define
+
+define caseExpression
+    'case [expression] 'of              [NL][IN]
+        [alternative]
+        [repeat alternatives]           [EX]
+    'end 'case
+
+  | ( 'case [expression] 'of		[NL][IN]
+	[alternative]
+	[repeat alternatives]		[EX]
+    )
+end define
+
+define alternative
+    [pattern] ->                        [NL][IN]
+        [expression]                    [NL][EX]
+  | [pattern] :                         [NL][IN]
+	[expression]                    [NL][EX]
+end define
+
+
+define letExpression
+    'let [list binding+] 'in            [NL][IN]
+        [expression]                    [NL][EX]
+    'end 'let
+
+  | ( 'let [list binding+] 'in		[NL][IN]
+	[expression]			[NL][EX]
+    )
+end define

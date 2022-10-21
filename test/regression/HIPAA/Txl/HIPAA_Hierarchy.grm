@@ -1,0 +1,165 @@
+% Grammar for hierarchy of HIPAA documents
+% Jim Cordy
+% Feb 2007
+
+% Process newlines
+#pragma -w 32000 -newline -char -nomultiline
+
+% Allow for ids of the form "person(s)" so we don't mistake the "(s)" for a subsection label
+tokens
+	id  |  "\a+\(s\)"
+end tokens
+
+% Grammar for sections "?123.456", subsections "(a)", subsubsections "(1)", 
+% subsubsubsections "(ii)", subsubsubsubsections "(A)" and subsubsubsubsubsections "(1)"
+define program
+	[repeat section]
+end define
+
+define section
+	[NL][NL] [section_label] [space] [section_title]
+	[repeat subsection]
+end define
+
+define section_label
+	'§ [number]
+end define
+
+define section_title
+	[repeat id_or_punctuation] '. [repeat newline]
+end define
+
+define id_or_punctuation
+	[id] | , | : | ; | [space]
+end define
+
+define subsection
+	[NL][NL] [opt subsection_label] [IN] [repeat subsubsection] [EX]
+    | 	[repeat paragraph]
+end define
+
+define subsection_label
+	[opt annotate_section_label] [real_subsection_label]
+end define
+
+define annotate_section_label
+	[not token] [section_label]
+end define
+
+define real_subsection_label
+	( [a_z] )
+end define
+
+define a_z
+	a | b | c | d | e | f | g | h | i | j | k | l | m 
+    | 	n | o | p | q | r | s | t | u | v | w | x | y | z
+end define
+
+define subsubsection
+	[NL][NL] [subsubsection_label] [IN] [repeat subsubsubsection] [EX]
+    | 	[repeat paragraph]
+end define
+
+define subsubsection_label
+	[opt annotate_subsection_label] [real_subsubsection_label]
+end define
+
+define annotate_subsection_label
+	[not token] [subsection_label]
+end define
+
+define real_subsubsection_label
+	( [number] )
+end define
+
+define subsubsubsection
+	[NL][NL] [subsubsubsection_label] [IN] [repeat subsubsubsubsection] [EX]
+    | 	[repeat paragraph]
+end define
+
+define subsubsubsection_label
+	[opt annotate_subsubsection_label] [real_subsubsubsection_label]
+end define
+
+define annotate_subsubsection_label
+	[not token] [subsubsection_label]
+end define
+
+define real_subsubsubsection_label
+	( [roman_number] )
+end define
+
+define roman_number
+	i | ii | iii | iv | v | vi | vii | viii | ix | x | xi 
+    | 	xii | xiii | xiv | xv | xvi | xvii | xviii | xix | xx
+end define
+
+define subsubsubsubsection
+	[NL][NL] [subsubsubsubsection_label] [IN] [repeat paragraph] [subsubsubsubsubsections] [EX]
+    | 	[repeat paragraph]
+end define
+
+define subsubsubsubsection_label
+	[opt annotate_subsubsubsection_label] [real_subsubsubsubsection_label]
+end define
+
+define annotate_subsubsubsection_label
+	[not token] [subsubsubsection_label]
+end define
+
+define real_subsubsubsubsection_label
+	( [A_Z] )
+end define
+
+define A_Z
+	A | B | C | D | E | F | G | H | I | J | K | L | M 
+    | 	N | O | P | Q | R | S | T | U | V | W | X | Y | Z
+end define
+
+% Have to be sure this one isn't really a return to a higher level,
+% so it's only a nested level if it starts with (1)
+define subsubsubsubsubsections
+	[NL][NL] [first_subsubsubsubsubsection] [repeat subsubsubsubsubsection]
+    | 	[repeat paragraph]
+end define
+
+define first_subsubsubsubsubsection
+	[opt annotate_subsubsubsubsection_label] (1) [IN] [repeat paragraph] [EX]
+end define
+
+define subsubsubsubsubsection
+	[subsubsubsubsubsection_label] [IN] [repeat paragraph] [EX]
+end define
+
+define subsubsubsubsubsection_label
+	[opt annotate_subsubsubsubsection_label] ( [number] )
+end define
+
+define annotate_subsubsubsubsection_label
+	[not token] [subsubsubsubsection_label]
+end define
+
+define paragraph
+	[repeat word_or_other]
+end define
+
+define word_or_other
+	[label_reference] | [id] | [not label] [token]
+end define
+
+define label_reference
+	[prelabel] [opt space] [label] [repeat prelabel_label] 
+end define
+
+define prelabel
+	[id] | ', | '; | [number] [opt id] | '§ | - 
+end define
+
+define prelabel_label
+	[opt prelabel] [opt space] [label]
+end define
+
+define label
+	[section_label] | [real_subsection_label] | [real_subsubsection_label] 
+    | 	[real_subsubsubsection_label] | [real_subsubsubsubsection_label]
+end define

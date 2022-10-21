@@ -1,0 +1,59 @@
+% Example object-oriented Turing dialect program
+
+% An object class for queues of strings
+type queuetype : string
+const queuesize := 10
+
+type queue :
+    object
+	import (queuetype, queuesize)
+	export (empty, enqueue, dequeue)
+
+	var qend : 0 .. queuesize - 1 := 0
+	var qstart : 0 .. queuesize - 1 := 1
+	var qlength : 0 .. queuesize := 0
+	var contents : array 0 .. queuesize - 1 of queuetype
+
+	procedure enqueue (item : queuetype)
+	    pre qlength < queuesize
+	    qlength := qlength + 1
+	    qend := (qend + 1) mod queuesize
+	    contents (qend) := item
+	end enqueue
+
+	procedure dequeue (var item : queuetype)
+	    pre qlength > 0
+	    item := contents (qstart)
+	    qstart := (qstart + 1) mod queuesize
+	    qlength := qlength - 1
+	end dequeue
+
+	function empty : boolean
+	    result qlength = 0
+	end empty
+
+    end queue
+
+% An array of queues of strings
+var qarray : array 1 .. 10 of queue
+
+qarray (1).enqueue ("hello")
+qarray (1).enqueue ("stuff")
+qarray (1).enqueue ("goodbye")
+qarray (2).enqueue ("hi there")
+
+qarray (3) := qarray (2)
+
+var s : string
+qarray (1).dequeue (s)
+qarray (1).dequeue (s)
+qarray (3).enqueue (s)
+qarray (1).dequeue (s)
+assert qarray (1).empty
+qarray (3).enqueue (s)
+
+loop
+    exit when qarray (3).empty
+    qarray (3).dequeue (s)
+    put s
+end loop

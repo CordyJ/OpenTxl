@@ -1,0 +1,483 @@
+% OpenTxl Version 11 bootstrap grammar
+% J.R. Cordy, July 2022
+
+% Copyright 2022, James R. Cordy and others
+
+% Permission is hereby granted, free of charge, to any person obtaining a copy of this software 
+% and associated documentation files (the “Software”), to deal in the Software without restriction, 
+% including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+% and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, 
+% subject to the following conditions:
+
+% The above copyright notice and this permission notice shall be included in all copies 
+% or substantial portions of the Software.
+
+% THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, 
+% INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE 
+% AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, 
+% DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, 
+% OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+% Abstract
+
+% This file is the bootstrap grammar of the TXL programming language itself.
+% The TXL processor uses the same parser to parse TXL programs as it does to parse input language source programs.
+
+% NOTE: Because this bootstrap grammar defines the meanings of nonterminal modifiers such as [opt X], 
+%	[repeat X] and [list X], these nonterminal modifiers cannot be used in these defines, 
+%	and they must be coded by hand in their expanded versions, as follows:
+%
+%	[opt X]		define opt_X 
+%			    [X] | [empty]
+%			end define
+%
+%	[repeat X]	define rep_X
+%			    [X] [ind_X] | [empty]
+%			end define
+%
+%			define ind_X 
+%			    [X] [rep_X]
+%			end define	
+%
+%	[list X]	(not used)
+
+% NOTE: Because this grammar has to simultaneously handle both TXL's own syntax and the syntax of the input language 
+%	source, it is wildly ambiguous and must be fenced to avoid misparses and unbounded backtracking.
+%	The backtracking fence [KEEP] is used to prevent backtracking over TXL's own syntax.
+
+% WARNING - The TXL processor has intimate knowledge of the names and structure of productions that appear in this file.
+
+% Modification Log
+
+% v11.0	Initial revision, revised from FreeTXL bootstrap grammar 10.8b.
+%	Removed unused external rule statement.
+
+define program
+	[TXL_statements_]
+end define
+
+define TXL_statements_
+	[TXL_indStatements_]
+    |	[empty]
+end define
+
+define TXL_indStatements_
+	[TXL_statement_] [TXL_statements_]
+end define
+
+define TXL_statement_
+	[TXL_defineStatement_]		
+    |	[TXL_ruleStatement_]	
+    |	[TXL_functionStatement_]
+end define
+
+define TXL_literals_
+	[TXL_indLiterals_]
+    |	[empty]
+end define
+
+define TXL_indLiterals_
+	[TXL_literal_] [TXL_literals_]
+end define
+
+define TXL_literal_
+	[TXL_quotedLiteral_]
+    |	[token]
+end define
+
+define TXL_quotedLiteral_
+	'' [TXL_tokenOrKey_]
+end define
+
+define TXL_tokenOrKey_
+	[token]
+    |	[key]
+end define
+
+define TXL_defineStatement_
+	[TXL_defineOrRedefine_] [id]
+	    [TXL_optDotDotDotBar_]
+	    [TXL_literalsAndBracketedDescriptions_]
+	    [TXL_repBarLiteralsAndBracketedDescriptions_]
+	    [TXL_optBarDotDotDot_]
+	'end [TXL_defineOrRedefine_] 
+	[KEEP]
+end define
+
+define TXL_defineOrRedefine_
+	'define
+    |	'redefine
+end define
+
+define TXL_optDotDotDotBar_
+	[TXL_dotDotDotBar_]
+    |	[empty]	
+end define
+
+define TXL_dotDotDotBar_
+	'... [TXL_optBar_]
+end define
+
+define TXL_optBar_	
+	'|
+    |	[empty]
+end define
+
+define TXL_optBarDotDotDot_
+	[TXL_barDotDotDot_]
+    |	[empty]	
+end define
+
+define TXL_barDotDotDot_
+	[TXL_optBar_] '...
+end define
+
+define TXL_repBarLiteralsAndBracketedDescriptions_
+	[TXL_indRepBarLiteralsAndBracketedDescriptions_]
+    |	[empty]
+end define
+
+define TXL_indRepBarLiteralsAndBracketedDescriptions_
+	'| [TXL_literalsAndBracketedDescriptions_] 
+	[TXL_repBarLiteralsAndBracketedDescriptions_]
+end define
+
+define TXL_literalsAndBracketedDescriptions_
+	[TXL_indLiteralsAndBracketedDescriptions_]
+    |	[empty]
+end define
+
+define TXL_indLiteralsAndBracketedDescriptions_
+	[TXL_literalOrBracketedDescription_]
+	[TXL_literalsAndBracketedDescriptions_]
+end define
+
+define TXL_literalOrBracketedDescription_
+	[TXL_bracketedDescription_]
+    |	[TXL_literal_]
+end define
+
+define TXL_ruleOrFunction_
+	'rule | 'function
+end define
+
+define TXL_ruleStatement_
+	'rule [id] [TXL_arguments_]
+	    [TXL_parts_]
+	    [TXL_optSkippingBracketedDescription_] 
+	    [TXL_replaceOrMatch_] [TXL_optStarDollarHash_]
+			[TXL_bracketedDescription_] 
+		[TXL_pattern_]
+	    [TXL_parts_]
+	    [TXL_optByReplacement_]
+	'end 'rule 
+	[KEEP]
+end define
+
+define TXL_functionStatement_
+	'function [id] [TXL_arguments_]
+	    [TXL_parts_]
+	    [TXL_optSkippingBracketedDescription_] 
+	    [TXL_replaceOrMatch_] [TXL_optStarDollarHash_] 
+			[TXL_bracketedDescription_] 
+		[TXL_pattern_]	
+	    [TXL_parts_]
+	    [TXL_optByReplacement_]
+	'end 'function
+	[KEEP]
+end define
+
+define TXL_replaceOrMatch_
+    	'replace | 'match
+end define
+
+define TXL_optByReplacement_
+	[TXL_byReplacement_]
+    |	[empty]
+end define
+
+define TXL_byReplacement_
+	'by
+	    [TXL_replacement_]
+end define
+
+define TXL_optSkippingBracketedDescription_
+	[TXL_skippingBracketedDescription_]
+    |	[empty]
+end define
+
+define TXL_skippingBracketedDescription_
+	'skipping [TXL_bracketedDescription_]
+end define
+
+define TXL_parts_
+	[TXL_indPart_]
+    |	[empty]
+end define
+
+define TXL_indPart_
+	[TXL_part_] [TXL_parts_]
+end define
+
+define TXL_part_
+	[TXL_constructPart_]
+    |	[TXL_deconstructPart_]
+    |	[TXL_conditionPart_]
+    |	[TXL_importPart_]
+    |	[TXL_exportPart_]
+end define
+
+define TXL_constructPart_
+	'construct [id] [TXL_bracketedDescription_]
+	    [TXL_replacement_]
+	    [KEEP]
+end define
+
+define TXL_deconstructPart_
+	[TXL_optSkippingBracketedDescription_] 
+	'deconstruct [TXL_optNot_] [TXL_optStarDollarHash_] [TXL_optBracketedDescription_] [id] 
+	    [TXL_pattern_]
+	    [KEEP]
+end define
+
+define TXL_optBracketedDescription_
+	[TXL_bracketedDescription_]
+    |	[empty]
+end define
+
+define TXL_conditionPart_
+	[TXL_whereOrAssert_] [TXL_optNot_] [TXL_optAll_]		
+	    [TXL_expression_]
+	    [KEEP]
+end define
+
+define TXL_whereOrAssert_
+	'where
+    |	'assert
+end define
+
+define TXL_optNot_
+    	'not	
+    |	[empty]
+end define
+
+define TXL_optAll_
+    	'all
+    |	[empty]
+end define
+
+define TXL_importPart_
+	'import [id] [TXL_optBracketedDescription_]
+	    [TXL_pattern_]
+	    [KEEP]
+end define
+
+define TXL_exportPart_
+	'export [id] [TXL_optBracketedDescription_]
+	    [TXL_replacement_]
+	    [KEEP]
+end define
+
+define TXL_arguments_
+	[TXL_indArguments_]
+    |	[empty]
+end define
+
+define TXL_indArguments_
+	[TXL_argument_] [TXL_arguments_]
+end define
+
+define TXL_argument_
+	[id] [TXL_bracketedDescription_]
+end define
+
+define TXL_firstTimes_
+	[TXL_indFirstTimes_]
+    |	[empty]
+end define
+
+define TXL_indFirstTimes_
+	[TXL_firstTime_] [TXL_firstTimes_]
+end define
+
+define TXL_firstTime_
+	[id] '[ [TXL_description_] ']
+end define
+
+define TXL_pattern_
+	[TXL_firstsAndLits_]
+end define
+
+define TXL_replacement_
+	[TXL_expsAndLits_]
+end define
+
+define TXL_bracketedDescription_
+	'[ [TXL_description_] ']
+end define
+
+define TXL_description_
+	[id]
+    |	[TXL_newoptDescription_]
+    |	[TXL_newrepeatDescription_]
+    |	[TXL_newlistDescription_]
+    |	[TXL_newrepeat1Description_]
+    |	[TXL_newlist1Description_]
+    |	[TXL_attrDescription_]
+    |	[TXL_optDescription_]
+    |	[TXL_repeatDescription_]
+    |	[TXL_listDescription_]
+    |	[TXL_repeat1Description_]
+    |	[TXL_list1Description_]
+    |	[TXL_seeDescription_]
+    |	[TXL_notDescription_]
+    |	[TXL_fenceDescription_]
+    |	[TXL_pushDescription_]
+    |	[TXL_popDescription_]
+end define
+
+define TXL_repeatDescription_
+	'repeat [TXL_idOrLiteral_] [TXL_optStar_]
+end define
+
+define TXL_listDescription_
+	'list [TXL_idOrLiteral_] [TXL_optStar_]
+end define
+
+define TXL_optStar_
+    	'*
+    |	[empty]
+end define
+
+define TXL_optStarDollarHash_
+    	'*
+    |	'$
+    |	'#
+    |	[empty]
+end define
+
+define TXL_repeat1Description_
+	'repeat [TXL_idOrLiteral_] '+
+end define
+
+define TXL_list1Description_
+	'list [TXL_idOrLiteral_] '+
+end define
+
+define TXL_optDescription_
+	'opt [TXL_idOrLiteral_]
+end define
+
+define TXL_attrDescription_
+	'attr [TXL_idOrLiteral_]
+end define
+
+define TXL_newrepeatDescription_
+	[empty] [TXL_idOrLiteral_] '*
+end define
+
+define TXL_newlistDescription_
+	[empty] [TXL_idOrLiteral_] ',
+end define
+
+define TXL_newrepeat1Description_
+	[empty] [TXL_idOrLiteral_] '+
+end define
+
+define TXL_newlist1Description_
+	[empty] [TXL_idOrLiteral_] ', '+
+end define
+
+define TXL_newoptDescription_
+	[empty] [TXL_idOrLiteral_] '?
+end define
+
+define TXL_seeDescription_
+	[TXL_see_] [TXL_idOrLiteral_]
+end define
+
+define TXL_see_
+	'see
+    |	':
+end define
+
+define TXL_notDescription_
+	[TXL_not_] [TXL_idOrLiteral_]
+end define
+
+define TXL_not_
+	'not
+    |	'~
+end define
+
+define TXL_fenceDescription_
+	'!
+end define
+
+define TXL_pushDescription_
+	[TXL_push_] [TXL_idOrLiteral_]
+end define
+
+define TXL_push_
+	'push
+    |	'>
+end define
+
+define TXL_popDescription_
+	[TXL_pop_] [TXL_idOrLiteral_]
+end define
+
+define TXL_pop_
+	'pop
+    |	'<
+end define
+
+define TXL_idOrLiteral_
+    	[id]
+    |	[TXL_literal_]
+end define
+
+define TXL_firstsAndLits_
+	[TXL_indFirstsAndLits_]
+    |	[empty]
+end define
+
+define TXL_indFirstsAndLits_
+	[TXL_firstOrLit_] [TXL_firstsAndLits_]
+end define
+
+define TXL_firstOrLit_
+	[TXL_firstTime_]
+    |	[TXL_literal_]
+end define
+
+define TXL_expsAndLits_
+	[TXL_indExpsAndLits_]
+    |	[empty]
+end define
+
+define TXL_indExpsAndLits_
+	[TXL_expOrLit_] [TXL_expsAndLits_]
+end define
+
+define TXL_expOrLit_
+	[TXL_expression_]
+    |	[TXL_literal_]
+end define
+
+define TXL_expression_
+	[id] [TXL_ruleCalls_]
+end define
+
+define TXL_ruleCalls_
+	[TXL_indRuleCalls_]
+    |	[empty]
+end define
+
+define TXL_indRuleCalls_
+	[TXL_ruleCall_] [TXL_ruleCalls_]
+end define
+
+define TXL_ruleCall_
+	'[ [token] [TXL_literals_] ']
+end define

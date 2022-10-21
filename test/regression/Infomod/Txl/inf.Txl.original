@@ -1,0 +1,12 @@
+include "infomod.bas"
+
+% % % % external rule print
+% % % % external rule debug
+% % % % external rule message M [stringlit]
+% % % % external rule breakpoint
+
+include "infomod.rul"               % include the type transforms
+
+%include "infomod.mainrule"          % debug only, only a nul main rule
+
+

@@ -1,0 +1,35 @@
+type class stack (maxdepth, elementType) :
+    object
+	import (error)
+	export (push, pop)
+	var storage : array 1 .. maxdepth of elementType
+	var depth : 0 .. maxdepth
+	procedure push (e : elementType)
+	    depth += 1
+	    storage (depth) := e
+	end push
+	procedure pop (var e : elementType)
+	    e := storage (depth)
+	    depth -= 1
+	end pop
+	depth := 0
+    end stack
+
+
+type stringStack : instance stack (100, string)
+
+type stringStackWithTop :
+    object 
+	refines stringStack
+	import (error)
+	export (top)	
+	procedure top (var e : string)
+	    if depth > 0 then
+		e := storage (depth)
+	    else
+		error ("stack empty")
+	    end if
+	end top
+    end stringStackWithTop
+
+var sst : stringStackWithTop

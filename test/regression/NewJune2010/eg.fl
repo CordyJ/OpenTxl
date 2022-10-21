@@ -1,0 +1,5 @@
+      FUNCTION  RELERR( U,V);
+          IF( SIGN( o, u) .EQ. SIGN( o, v)) THEN;
+              y= 1;
+          ENDIF;
+      END;

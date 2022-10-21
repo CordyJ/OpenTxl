@@ -1,0 +1,7 @@
+Porting OpenTxl to a platform that does not support Turing+
+
+To port OpenTxl to a platform not supported by Turing+, use the command "make C" 
+in this directory on a supported platform to make the auto-generated C directory "csrc", 
+copy the "csrc" directory to the new platform, then build on the new platform as described 
+in the README.txt file in the "csrc" directory.
+

@@ -1,0 +1,29 @@
+var a;
+var b;
+var c;
+a := 1;
+b := a + 1;
+var i;
+i := 7;
+c := a + 1;
+i := i - c;
+c := b + i;
+for i := 1 to 10 do
+    a := b + i;
+    if b + i != 10 then
+	c := b;
+    else
+        c := b + i;
+    end
+    b := b + i;
+end 
+while b != 10 do
+    a := b + i;
+    if b + i != 10 then
+	a := c;
+    else
+        c := b + i;
+    end
+    b := b + i;
+end
+write (i - c);

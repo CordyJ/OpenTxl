@@ -1,0 +1,110 @@
+% TXL Pro predefined external rule universal headers
+% J.R. Cordy, April 1995
+
+% Copyright 1995 by Legasys Corp. and James R. Cordy
+
+% Version 1.3, September 1995
+
+external rule message M [any]
+    % output a progress message to the terminal without affecting the TXL computation
+    % Example:
+    %		X [subrule] [message "done subrule"]
+
+external rule print
+    % output the scope to the terminal without affecting the computation
+    % Example:
+    %		X [dostuff] [print]
+
+external rule printattr
+    % output the scope *with attributes* to the terminal without affecting the computation
+    % Example:
+    %		X [dostuff] [printattr]
+
+external rule debug
+    % output a debugging message giving the tree diagram for the scope 
+    % to the terminal without affecting the computation
+    % Example:
+    %		X [dostuff] [debug]
+
+external rule breakpoint
+    % output a breakpoint prompt and wait for RETURN to be pressed
+    % Example:
+    %		X [dostuff] [print] [breakpoint]
+
+external rule quote X [any]
+external rule unparse X [any]
+    % concatenate the unparsed output text of X to the [stringlit] scope
+    % Example:
+    %		construct TextOfExpn [stringlit]
+    %		    _ [quote Expn] 
+
+external rule unquote S [any]
+    % replace the [id] scope with the text of S as an identifier (even if it isn't one)
+    % S must be either a [stringlit] or a [charlit]
+    % Example:
+    %		construct IdWithBlanksInIt [id]
+    %		    _ [unquote "This will be an id with blanks in it"]
+
+external rule parse S [stringlit]
+    % replace the scope with the parse of the text of S as the scope type
+    % Example:
+    %		construct Fact [prolog_fact]
+    %		    _ [parse "father(jim,siobhan)."]
+
+external rule reparse T [any]
+    % replace the scope with the parse of the leaves of T as the scope type
+    % Example:
+    %		construct SequenceOfExpressions [repeat expression]
+    %		    _ [reparse SequenceOfIds]
+
+external rule read F [stringlit]
+    % read the text in file F and replace the scope with 
+    % the parse of the text as the scope type
+    % Example:
+    %		construct IncludedStatements [statementOrDeclaration*]
+    %		    _ [read IncludeFileName]
+
+external rule write F [stringlit]
+    % write the unparsed output text of the scope to the file F 
+    % Example:
+    %		ProcedureDeclaration [write ProcedureFileName]
+
+external rule get 
+external rule getp P [stringlit]
+    % read one line of text from the terminal and replace the scope with
+    % the parse of the text as the scope type.
+    % the parameter of [getp] is the input prompt 
+    % Example:
+    %		construct ExpresssionToBeEvaluated [expn]
+    %		    _ [getp "Please input an expression to evaluate: "]
+
+external rule put 
+external rule putp P [stringlit]
+    % output the unparsed text of the scope to the terminal 
+    % the parameter of [putp] is an output pattern string of the form 
+    % "Here it is % - and there it went" where the % marks where to embed the scope text
+    % Example:
+    %		N [putp "The value of N is: %"]
+
+external rule index S1 [stringlit] S2 [stringlit]
+    % replace the [number] scope with the index of substring S2 in string S1
+    % Example:
+    %		construct WheresJim [number]
+    %		    _ [index "Here is where Jim is" "Jim"]
+
+external rule length R [any]
+    % replace the [number] scope with the number of items in the scope,
+    % which must be of type [repeat X] for some [X]
+    % Example:
+    %		construct NumberOfStatementsInScope [number]
+    %		    _ [length Scope]
+
+external rule select N1 [number] N2 [number]
+external rule head N2 [number] 
+external rule tail N1 [number] 
+    % replace the [repeat X] scope with items N1 through N2 of the scope.
+    % for [head], N1 is implicitly 1, and for [tail], N2 is implicitly 
+    % the length of the scope.
+    % Example:
+    %		construct First2Statements [repeat statement]
+    %		    Statements [head 2]

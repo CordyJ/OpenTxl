@@ -1,0 +1,245 @@
+% =============================================================
+
+function decomposePattern
+            Statement [informationModelStatement_48]
+
+    % This function searches for Pattern statements and takes them apart
+    % into their syntactic components.
+    % First, insist that the statement is a pattern, otherwise
+    % there's nothing to do
+
+    deconstruct Statement
+        SId [opt statementIdentifier_3]
+        oDC [opt domainsClause_216]
+        pW [patternWords_666]
+        ': 
+        PEV [entityVariableName_80]
+        '( 
+        AV [list attributePhraseDeclaration_81]
+        ') 
+        sT [statementTerminator_22]
+
+    % If we got this far then it's a pattern specification
+    %  Replace it with its constituent atomic patterns.
+
+    replace [repeat informationModelStatement_48]
+        patterns [repeat informationModelStatement_48]
+    by
+        patterns [addNewPattern pW PEV sT each AV]
+            [cleanupAV]
+            [cleanupEVD_1]
+            [cleanupEVD_2]
+end function
+
+%=====================================================
+
+function addNewPattern
+            pW [patternWords_666]
+            PEV [entityVariableName_80]
+            sT [statementTerminator_22]
+            AV [attributePhraseDeclaration_81]
+
+    % Construct a new Pattern statement containing exactly
+    % one attributeVariableReference, and splice it into the 
+    % tree. The first one is used for type-checking, the second
+    % one is used to check if there are any patterns for which no
+    % rule has been specified. The third one is used if there is a 
+    % mention of the primeEntityVariable only in e.g. a class definition.
+
+    construct newStatement1 [informationModelStatement_48]
+        pW ': PEV '( AV ') sT 
+
+    construct newStatement2 [informationModelStatement_48]
+        'Unment_ pW ': PEV '( AV ') sT 
+
+    construct newStatement3 [informationModelStatement_48]
+        pW ': PEV '( ') sT 
+
+    replace [repeat informationModelStatement_48]
+        patterns [repeat informationModelStatement_48]
+    by
+        patterns [. newStatement1]
+            [. newStatement2]
+            [. newStatement3]
+end function
+
+%======================================================
+
+rule cleanupAV
+
+    % This rule goes through each constructed pattern and removes 
+    % the repetition braces { and } around an attributePhraseDeclaration
+
+    replace [attributePhraseDeclaration_81]
+        '{ 
+        sPD [singleAttributePhraseDeclaration_82]
+        '} 
+    by
+        sPD 
+end rule
+
+%======================================================
+
+rule cleanupEVD_1
+
+    % This rule goes through each constructed INFOMOD Pattern and removes 
+    % the brackets around entityVariableNames in the Pattern.
+    % This replace pattern will fail if there are no brackets of any kind. 
+
+    replace [singleAttributePhraseDeclaration_82]
+        aN [associationName_94]
+        rep_rNEVD [repeat roleNameEntityVariableDeclarator_86]
+
+    construct nul_rNEVN [repeat roleNameEntityVariableName_130]
+        % ( empty ) 
+
+    construct rNEVN [repeat roleNameEntityVariableName_130]
+        nul_rNEVN [convert_rNEVD each rep_rNEVD]
+    by
+        aN rNEVN 
+end rule
+
+%======================================================
+
+rule cleanupEVD_2
+
+    % This rule goes through each constructed INFOMOD Pattern and removes 
+    % the brackets around entityVariableNames in the Pattern.
+    % This replace pattern will fail if there are no brackets of any kind. 
+
+    replace [singleAttributePhraseDeclaration_82]
+        eVD [entityVariableDeclarator_87]
+        rep_rNEVD [repeat roleNameEntityVariableDeclarator_86]
+
+    construct nul_eVN [entityVariableName_80]
+        'Dummy 
+
+    construct first_eVN [entityVariableName_80]
+        nul_eVN [stripCurlyBrackets eVD]
+            [stripAngleBrackets eVD]
+
+    construct nul_rNEVN [repeat roleNameEntityVariableName_130]
+        % ( empty ) 
+
+    construct rNEVN [repeat roleNameEntityVariableName_130]
+        nul_rNEVN [convert_rNEVD each rep_rNEVD]
+    by
+        first_eVN rNEVN 
+end rule
+
+%======================================================
+
+function convert_rNEVD
+            rNEVD [roleNameEntityVariableDeclarator_86]
+
+    % This is a type-changer that converts roleNameEntityVariableDeclarator
+    % to roleNameEntityVariableName_130, and removes brackets.
+
+    deconstruct rNEVD
+        rN [roleNames_98]
+        eVD [entityVariableDeclarator_87]
+
+    construct nul_eVN [entityVariableName_80]
+        'Dummy 
+
+    construct new_eVN [entityVariableName_80]
+        nul_eVN [stripCurlyBrackets eVD]
+            [stripAngleBrackets eVD]
+
+    replace [repeat roleNameEntityVariableName_130]
+        rNEVN [repeat roleNameEntityVariableName_130]
+
+    construct new_rNEVN [roleNameEntityVariableName_130]
+        rN new_eVN 
+    by
+	%% This was an error - you can't splice onto a non-repeat! -- JRC
+        rNEVN [. new_rNEVN]
+end function
+
+% ===============================================================
+
+function stripCurlyBrackets
+            eVD [entityVariableDeclarator_87]
+
+    % This function goes through each constructed pattern and removes 
+    % the  brackets { and } around an  entityVariableName
+
+    deconstruct eVD
+        '{ 
+        new_eVN [entityVariableName_80]
+        '} 
+
+    replace [entityVariableName_80]
+        eVN [entityVariableName_80]
+    by
+        new_eVN 
+end function
+
+% ===============================================================
+
+function stripAngleBrackets
+            eVD [entityVariableDeclarator_87]
+
+    % This function goes through each constructed pattern and removes 
+    % the  brackets << and >> around an  entityVariableName
+
+    deconstruct eVD
+        '<< 
+        new_eVN [entityVariableName_80]
+        '>> 
+
+    replace [entityVariableName_80]
+        eVN [entityVariableName_80]
+    by
+        new_eVN 
+end function
+
+% ===============================================================
+%==========================================================
+% +++++++++++++++++ ENTRY POINT ++++++++++++++++++++++++++++
+% =============================================================
+
+function decomposeClassDefs
+            Statement [informationModelStatement_48]
+
+    % This function searches for class definition statements and takes them apart
+    % into their syntactic components.
+    % First, insist that the statement is a class def, otherwise
+    % there's nothing to do
+
+    deconstruct Statement
+        SId [opt statementIdentifier_3]
+        eVN [entityVariableName_80]
+        eOp [equalOp_544]
+        cE [classExpression_137]
+        ST [statementTerminator_22]
+
+    % If we got this far then it's a class definition 
+    %  Replace it with its constituent atomic patterns.
+
+    replace [repeat informationModelStatement_48]
+        patterns [repeat informationModelStatement_48]
+    by
+        patterns [addNewClass eVN]
+end function
+
+%=====================================================
+
+function addNewClass
+            eVN [entityVariableName_80]
+
+    % Construct a new class definition statement containing exactly
+    % the class name and splice it into the tree. 
+
+    construct newStatement1 [informationModelStatement_48]
+        'Class_ eVN '. 
+
+    replace [repeat informationModelStatement_48]
+        patterns [repeat informationModelStatement_48]
+    by
+        patterns [. newStatement1]
+end function
+
+%======================================================
+
+

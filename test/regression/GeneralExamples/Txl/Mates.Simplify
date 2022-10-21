@@ -1,0 +1,435 @@
+% Simplify Mates formulas using inference rules, axioms and theorems
+
+rule simplify
+    replace [formula]
+	S [formula]
+    construct NewS [formula]
+	S [inference]
+	  [simplifynot]
+	  [simplifyor]
+	  [axiom1]
+	  [axiom2]
+	  [axiom3]
+	  [theorem1]
+	  [theorem2]
+	  [theorem3]
+	  [theorem4]
+	  [theorem5]
+	  [theorem6]
+	  [theorem7]
+	  [theorem8]
+	  [theorem9]
+	  [theorem10]
+	  [theorem11]
+	  [theorem12]
+	  [theorem13]
+	  [theorem14]
+	  [theorem15]
+	  [theorem16]
+	  [theorem17]
+	  [theorem18]
+	  [theorem19]
+	  [theorem20]
+	  [transitiveelimination]
+	  [distributiveelimination]
+	  [deductiveelimination]
+	  [doublenotelimination]
+	  [redundancyelimination]
+    where not
+	NewS [= S]
+    by
+	NewS
+end rule
+
+function inference
+    replace [formula]
+	S [formula]
+    by
+	S [inference1a]
+	  [inference1b]
+end function
+
+rule inference1a
+    replace [formula]
+	- ( - S [formula] '| - ( - S '| R [formula] ) ) 
+    by
+	R
+end rule
+
+rule inference1b
+    replace [formula]
+	- ( - ( - S [formula] '| R [formula] ) '| - S ) 
+    by
+	R
+end rule
+
+function simplifynot
+    replace [formula]
+	S [formula]
+    by
+	S [simplifynottrue]
+	  [simplifynotfalse]
+end function
+
+rule simplifynottrue
+    replace [formula]
+	- true
+    by
+	false
+end rule
+
+rule simplifynotfalse
+    replace [formula]
+	- false
+    by
+	true
+end rule
+
+function simplifyor
+    replace [formula]
+	S [formula]
+    by
+	S [simplifyor1]
+	  [simplifyor2]
+	  [simplifyor3]
+	  [simplifyor4]
+end function
+
+rule simplifyor1
+    replace [formula]
+	( false '| P [formula] )
+    by
+	P
+end rule
+
+rule simplifyor2
+    replace [formula]
+	( P [formula] '| false )
+    by
+	P
+end rule
+
+rule simplifyor3
+    replace [formula]
+	( true '| P [formula] )
+    by
+	true
+end rule
+
+rule simplifyor4
+    replace [formula]
+	( P [formula] '| true )
+    by
+	true
+end rule
+
+rule axiom1
+    replace [formula]
+	( - P [formula] '| - ( - P '| - P ) ) 
+    by
+	true
+end rule
+
+rule axiom2
+    replace [formula]
+	( ( - P [formula] '| - Q [formula] ) '| P ) 
+    by
+	true
+end rule
+
+rule axiom3
+    replace [formula]
+	( - ( - P [formula] '| Q [formula] ) '| ( - ( - Q '| - R [formula] ) '| ( - R '| - P ) ) ) 
+    by
+	true
+end rule
+
+rule theorem1
+    replace [formula]
+	( S [formula] '| - S )
+    by
+	true
+end rule
+
+rule theorem2
+    replace [formula]
+	( - S [formula] '| S )
+    by
+	true
+end rule
+
+rule theorem3
+    replace [formula]
+	( - ( Q [formula] '| R [formula] ) '| ( R '| Q ) ) 
+    by
+	true
+end rule
+
+rule theorem4
+    replace [formula]
+	( S [formula] '| - S )
+    by
+	true
+end rule
+
+rule theorem5
+    replace [formula]
+	( - ( - Q [formula] '| P [formula] ) '| ( P '| - Q ) ) 
+    by
+	true
+end rule
+
+rule theorem6
+    replace [formula]
+	( ( - R [formula] '| - P [formula] ) '| - ( - P '| - R ) ) 
+    by
+	true
+end rule
+
+rule theorem7
+    replace [formula]
+	( - P [formula] '| P )
+    by
+	true
+end rule
+
+rule theorem8
+    replace [formula]
+	( ( - R [formula] '| - P [formula] ) '| - ( - P '| - R ) ) 
+    by
+	true
+end rule
+
+rule theorem9
+    replace [formula]
+	( - ( - P [formula] '| - R [formula] ) '| ( - R '| - P ) ) 
+    by
+	true
+end rule
+
+function theorem10
+    replace [formula]
+	S [formula]
+    by
+	S [theorem10a]
+	  [theorem10b]
+end function
+
+rule theorem10a
+    replace [formula]
+	( ( ( - P [formula] '| - Q [formula] ) '| - R [formula] ) '| - ( - P '| ( - Q '| - R ) ) ) 
+    by
+	true
+end rule
+
+rule theorem10b
+    replace [formula]
+	( ( - P [formula] '| ( - Q [formula] '| - R [formula] ) ) '| - ( ( - P '| - Q ) '| - R ) ) 
+    by
+	true
+end rule
+
+rule theorem11
+    replace [formula]
+	( - ( P [formula] '| Q [formula] ) '| ( Q '| P ) ) 
+    by
+	true
+end rule
+
+function theorem12
+    replace [formula]
+	S [formula]
+    by
+	S [theorem12a]
+	  [theorem12b]
+end function
+
+rule theorem12a
+    replace [formula]
+	( - ( ( P [formula] '| Q [formula] ) '| R [formula] ) '| ( P '| ( Q '| R ) ) ) 
+    by
+	true
+end rule
+
+rule theorem12b
+    replace [formula]
+	( - ( P [formula] '| ( Q [formula] '| R [formula] ) ) '| ( ( P '| Q ) '| R ) ) 
+    by
+	true
+end rule
+
+rule theorem13
+    replace [formula]
+	( - ( - P [formula] '| ( - Q [formula] '| R [formula] ) ) '| ( ( - P '| - Q ) '| R ) ) 
+    by
+	true
+end rule
+
+rule theorem14
+    replace [formula]
+	( - ( ( - P [formula] '| - Q [formula] ) '| R [formula] ) '| ( - P '| ( - Q '| R ) ) ) 
+    by
+	true
+end rule
+
+rule theorem15
+    replace [formula]
+	( - P [formula] '| ( - Q [formula] '| - ( - P '| - Q ) ) ) 
+    by
+	true
+end rule
+
+rule theorem16
+    replace [formula]
+	( - P [formula] '| ( - Q [formula] '| P ) ) 
+    by
+	true
+end rule
+
+rule theorem17
+    replace [formula]
+	( ( - ( - P [formula] '| Q [formula] ) '| - ( - Q '| R [formula] ) ) '| ( - P '| R ) ) 
+    by
+	true
+end rule
+
+rule theorem18
+    replace [formula]
+	( ( - S [formula] '| R [formula] ) '| ( - R '| S ) ) 
+    by
+	true
+end rule
+
+rule theorem19
+    replace [formula]
+	- ( - ( P [formula] '| Q [formula] ) '| - P )
+    by
+	true
+end rule
+
+rule theorem20
+    replace [formula]
+	- ( - ( Q [formula] '| P [formula] ) '| - P )
+    by
+	true
+end rule
+
+function transitiveelimination
+    replace [formula]
+	S [formula]
+    by
+	S [transitiveelimination1]
+	  [transitiveelimination2]
+	  [transitiveelimination3]
+	  [transitiveelimination4]
+end function
+
+rule transitiveelimination1
+    replace [formula]
+	- ( - ( - P [formula] '| Q [formula] ) '| - ( - Q '| R [formula] ) ) 
+    where not
+	P [= R]
+    by
+	( - P '| R )
+end rule
+
+rule transitiveelimination2
+    replace [formula]
+	- ( - ( - P [formula] '| Q [formula] ) '| - ( R [formula] '| - Q ) ) 
+    where not
+	P [= R]
+    by
+	( - P '| R )
+end rule
+
+rule transitiveelimination3
+    replace [formula]
+	- ( - ( Q [formula] '| - P [formula] ) '| - ( - Q '| R [formula] ) ) 
+    where not
+	P [= R]
+    by
+	( - P '| R )
+end rule
+
+rule transitiveelimination4
+    replace [formula]
+	- ( - ( Q [formula] '| - P [formula] ) '| - ( R [formula] '| - Q ) ) 
+    where not
+	P [= R]
+    by
+	( - P '| R )
+end rule
+
+function distributiveelimination
+    replace [formula]
+	S [formula]
+    by
+	S [distributiveelimination1]
+	  [distributiveelimination2]
+end function
+
+rule distributiveelimination1
+    replace [formula]
+	- ( - - ( - P [formula] '| - Q [formula] ) '| - ( - Q '| R [formula] ) )
+    by
+        - ( - P '| - R )
+end rule
+
+rule distributiveelimination2
+    replace [formula]
+	- ( - - ( - Q [formula] '| - P [formula] ) '| - ( - Q '| R [formula] ) )
+    by
+        - ( - P '| - R )
+end rule
+
+function deductiveelimination
+    replace [formula]
+	S [formula]
+    by
+	S [deductiveelimination1]
+	  [deductiveelimination2]
+	  [deductiveelimination3]
+	  [deductiveelimination4]
+end function
+
+rule deductiveelimination1
+    replace [formula]
+	( - P [formula] '| - ( - P '| R [formula] ) ) 
+    by
+	- R
+end rule
+
+rule deductiveelimination2
+    replace [formula]
+	( - ( - P [formula] '| R [formula] ) '| - P ) 
+    by
+	- R
+end rule
+
+rule deductiveelimination3
+    replace [formula]
+	( - - ( - P [formula] '| - Q [formula] ) '| Q )
+    by
+	P
+end rule
+
+rule deductiveelimination4
+    replace [formula]
+	( - - ( - Q [formula] '| - P [formula] ) '| Q )
+    by
+	P
+end rule
+
+rule redundancyelimination
+    replace [formula]
+	( P [formula] '| P )
+    by
+	P
+end rule
+
+rule doublenotelimination
+    replace [formula]
+	- - P [formula]
+    by
+	P
+end rule

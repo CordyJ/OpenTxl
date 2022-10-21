@@ -1,0 +1,35 @@
+type class stack (maxdepth, elementType) :
+    object
+	import (error)
+	export (push, pop)
+
+	var storage : array 1 .. maxdepth of elementType
+	var depth : 0 .. maxdepth
+
+	procedure push (e : elementType)
+	% .  .  .  same body as before  .  .  .	
+	end push
+
+	procedure pop (var e : elementType)
+	% .  .  .  same body as before  .  .  .	
+	end pop
+
+	depth := 0
+    end smallStackOfString
+
+type smallStackOfString : instance stack (10, string)
+var pileOfStringObjects : collection of  smallStackOfString
+var oneOfManyStringObjects, anotherOfManyStringObjects : pointer to pileOfStringObjects
+
+% Dynamically allocate some new objects in the collection
+new pileOfStringObjects, oneOfManyStringObjects
+new pileOfStringObjects, anotherOfManyStringObjects
+
+% Now use one of them
+pileOfStringObjects (oneOfManyStringObjects).push ("Greetings")
+
+% Dynamically bind it to another object later
+oneOfManyStringObjects := anotherOfManyStringObjects
+
+% And use it
+pileOfStringObjects (oneOfManyStringObjects).push ("Hoho")

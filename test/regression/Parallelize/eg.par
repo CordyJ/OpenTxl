@@ -1,0 +1,11 @@
+program p (output);
+    var z,x,y,q : real;
+    procedure pr (var r : real);
+	begin
+	    x := z + 6;
+	    y := y + z;
+	    r := y + 1;
+	end {pr};
+begin
+   pr (q);
+end.

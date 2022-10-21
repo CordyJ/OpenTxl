@@ -1,0 +1,49 @@
+event e = e.
+invariant = All [].
+initially n = All [].
+
+aboveRight a b =
+    Views
+    [
+	At (XSomewhere, YBaseOffset 2 1) (XBaseOffset 1 0, YSomewhere) a,
+	At origin (XBaseOffset 1 0, YBaseOffset 2 0) b
+    ].
+
+letterTag =
+    let
+	letter = singleInstance "letterView",
+	w = 10
+    in
+	Views
+	[
+	    At (x (w + 1), yOrigin) (XBaseOffset 3 0, YBaseOffset 4 0)
+	    (
+		letter
+	    ),
+
+ 	    polyLineG Solid
+ 	    [
+ 		origin,
+ 		(x w, YBaseOffset 4 1),
+ 		(XBaseOffset 3 1, YBaseOffset 4 1),
+ 		(XBaseOffset 3 (w + 1), yOrigin)
+ 	    ]
+	]
+    end let.
+
+card =
+    blackShadow
+    (
+	At origin (x 400, y 115)
+	(
+	    Box Solid
+	    (
+		At (x 40, y 15) stretching
+		(
+		    singleInstance "cardContents"
+		)
+	    )
+	)
+    ).
+
+view = aboveRight letterTag card.

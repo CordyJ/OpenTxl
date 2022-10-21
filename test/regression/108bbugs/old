@@ -1,0 +1,82 @@
+TXL v10.8b (13.7.22) (c) 1988-2022 Queen's University at Kingston
+Bootstrapping TXL ... 
+  ... used 429 trees and 255 kids.
+Scanning the TXL program bug.txl
+Parsing the TXL program
+  ... used 136 trees and 217 kids.
+Making the object language grammar tree
+[bug.txl] : TXL0213I define 'pat' - (Information) Optimized left recursive define
+  ... used 60 trees and 26 kids.
+Making the rule table
+
+?program P
+!program
+  ... used 2 trees and 0 kids.
+Scanning the input file eg.bug
+Parsing the input file
+?program (
+?pat (
+.?formal (
+..?__formal_1__ (
+..?( (
+..!(
+..?pat_list m
+..?list_0_pat m
+..?pat m
+...?formal m
+....?__formal_1__ m
+....?( m
+....#( m
+....#__formal_1__ m
+....?id m
+....!id
+...!formal
+..!pat
+..!list_0_pat
+..!pat_list
+..?) +
+..#) +
+..?pat_list <-*->  +
+..?list_0_pat <-*->  +
+..?list_0_pat <-*->  +
+..#list_0_pat +
+..?pat <-*->  +
+...?__pat_2__ +
+....?__pat_1__ +
+....?+ +
+....!+
+....?number 1
+....!number
+....!__pat_1__
+...!__pat_2__
+..!pat
+..!list_0_pat
+..!pat_list
+..?) )
+..!)
+..!__formal_1__
+.!formal
+!pat
+!program
+  ... used 16 trees and 21 kids.
+Applying the transformation rules
+?repeat_0_stringlit EOF
+.?stringlit EOF
+.#stringlit EOF
+!repeat_0_stringlit
+  ... used 8 trees and 4 kids.
+Generating transformed output
+Used a total of 651 trees (0%) and 523 kids (0%).
+<program>
+ <pat><formal> (
+   <pat_list><list_pat>
+     <pat>
+      <pat><formal><id>m</id></formal></pat>
+       +
+      <number>1</number>
+     </pat>
+    </list_pat>
+   </pat_list> )
+  </formal>
+ </pat>
+</program>

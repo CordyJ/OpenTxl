@@ -1,0 +1,59 @@
+(* Fork monitor *)
+MODULE Fork;
+ 
+FROM XdrM2_Fork IMPORT tAck,tFork;
+IMPORT InOut;
+
+CONST 
+    None = 0;
+    Left = 1;
+    Right = 2;
+    pickup = 1;
+    putdown = 2;
+
+
+VAR
+    allocated: INTEGER;
+    req: tFork;
+    ack: tAck;
+
+
+PROCEDURE display(allocated: INTEGER;req: tFork);
+
+BEGIN
+    InOut.WriteString("Fork ");
+    CASE allocated OF
+	None: 
+	    InOut.WriteString(" not allocated");
+      | Left, Right: 
+	  InOut.WriteString(" allocated to philosopher ");
+	  InOut.WriteString(req.Name);
+    END;
+    InOut.WriteLn();
+END display;
+
+
+BEGIN
+    allocated := None;
+    LOOP
+        display(allocated,req); 
+        SELECT
+            (allocated = None) OR (allocated = Left) && ACCEPT(left,req) :
+	        CASE req.order OF
+	            pickup:
+	                allocated := Left;
+	          | putdown:
+	                allocated := None;
+		END;
+		REPLY(left,ack);
+          | (allocated = None) OR (allocated = Right) && ACCEPT(right,req) :
+	        CASE req.order OF
+	            pickup:
+	                 allocated := Right;
+	          | putdown:
+	                 allocated := None;
+		END;
+		REPLY(left,ack);
+        END;
+    END;
+END Fork.

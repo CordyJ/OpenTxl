@@ -1,0 +1,5 @@
+#!/bin/csh 
+# TXL Pro Paragrapher
+# Copyright 1995 by Legasys Corp. & James R. Cordy 
+
+txl $1 Txlpara.Txl $2 $3 $4 $5 $6 $7 $8 $9

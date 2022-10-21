@@ -1,0 +1,104 @@
+program SslProcessor (output, sslFile, inFile,
+                        outDefFile, outSslFile, listFile, optionFile);
+
+    procedure InitInputScanner;
+        var c: ordCharFirst .. ordCharLast;
+            t: firstInputToken .. lastInputToken;
+            i: integer;
+            k: integer;
+        begin
+            c := ordCharFirst;
+            lowerCase[c] := chr(c);
+            repeat
+                c := c + 1;
+                lowerCase[c] := chr(c);
+            until c = ordCharLast;
+
+            c := ord('A');
+            i := ord('a') - ord('A');
+            lowerCase[c] := chr(c+i);
+            repeat
+                c := c + 1;
+                lowerCase [c] := chr(c+i);
+            until c = ord('Z');
+
+            keywordChars[1] := 'm';
+            keywordChars[2] := 'e';
+            keywordChars[3] := 'c';
+            keywordChars[4] := 'h';
+            keywordChars[5] := 'a';
+            keywordChars[6] := 'n';
+            keywordChars[7] := 'i';
+            keywordChars[8] := 's';
+            keywordChars[9] := 'm';
+            keywordChars[10] := '.';
+
+            i := 1;
+            k := 1;
+            repeat
+                keywordIndex[i] := k;
+                repeat
+                    k := k + 1;
+                until keywordChars[k] = '.';
+
+                keywordLength[i] := k - keywordIndex[i];
+                k := k + 1;
+                i := i + 1;
+            until keywordChars[k] = '.';
+
+            SslAssert ((i = noKeywords+1) and (k = noKeywdChars), 70);
+            keywordLength[noKeywords+1] := 0;
+
+            keywordToken[1] := tMechanism;
+            keywordToken[2] := tOutput;
+            keywordToken[3] := tInput;
+            keywordToken[4] := tError;
+            keywordToken[5] := tRules;
+            keywordToken[6] := tType;
+            keywordToken[7] := tEnd;
+            keywordToken[8] := tCycle;
+            keywordToken[9] := tCycleEnd;
+            keywordToken[10] := tChoice;
+
+            t := firstInputToken;
+            specialChar[t] := blank;
+            repeat
+                t := t + 1;
+                specialChar[t] := blank;
+            until t = lastInputToken;
+
+            specialChar[tColon] := ':';
+            specialChar[tSemicolon] := ';';
+            specialChar[tEqual] := '=';
+            specialChar[tQuestionMark] := '?';
+            specialChar[tPeriod] := '.';
+            specialChar[tErrorSignal] := '#';
+            specialChar[tCall] := '@';
+            specialChar[tExit] := '>';
+            specialChar[tLeftParen] := '(';
+            specialChar[tRightParen] := ')';
+
+            nextChar := newline;
+            firstChar := true;
+
+            reset (inFile );
+
+            if listing then
+                rewrite (listFile );
+        end ;
+
+    begin
+        newline := chr(10);        
+        newpage := chr(12);        
+        endfile := chr(0);        
+        reset (sslFile );
+        i := 0;
+        repeat
+            read (sslFile, j);
+            SslAssert (i <= sslTblSize, 520);
+            sslTable[i] := j;
+            i := i + 1;
+        until eof (sslFile);
+
+        SslWalker;
+    end .

@@ -1,0 +1,124 @@
+function typeRequiredRule
+            Statement [informationModelStatement_48]
+
+    % This function searches for Required Rule statements and takes them apart
+    % into their syntactic components.
+    % First, insist that the statement is a Required Rule, otherwise
+    % there's nothing to do
+
+    deconstruct Statement
+        SId [opt statementIdentifier_3]
+        oDC [opt domainsClause_216]
+        rI [requiredIndicator_671]
+        ': 
+        rAS [list requiredAttributesSpecification_212+]
+        sT [statementTerminator_22]
+
+    % If we got this far then it's a Required Rule specification.
+
+    construct nul_patterns [repeat informationModelStatement_48]
+        % ( empty ) 
+
+    construct mentioned_patterns [repeat informationModelStatement_48]
+        nul_patterns [extractSAPs each rAS]
+
+    replace [repeat informationModelStatement_48]
+        patterns [repeat informationModelStatement_48]
+    by
+        patterns [checkIfDeclared Statement each mentioned_patterns]
+            [markIfUsedByReqd each mentioned_patterns]
+end function
+
+%=======================================================
+
+function extractSAPs
+            rAS [requiredAttributesSpecification_212]
+
+    deconstruct rAS
+        pEV [primeEntityVariable_79]
+       '( lrAE [list requiredAttributeExpression_213+] ')
+
+    construct nullSAPs [repeat simpleAttributePhrase_129]
+        % ( empty ) 
+
+    construct sAPs [repeat simpleAttributePhrase_129]
+        nullSAPs [^ rAS]
+
+    %  [message '" atomic reqd Att Spec "][print]
+
+    replace [repeat informationModelStatement_48]
+        mentioned_patterns [repeat informationModelStatement_48]
+    by
+        mentioned_patterns [buildReqdAtomicPattern pEV each sAPs]
+end function
+
+%=======================================================
+
+function buildReqdAtomicPattern
+            pEV [primeEntityVariable_79]
+            sAP [simpleAttributePhrase_129]
+
+    % From the parameters, construct an atomicPattern statement
+
+    construct sAPD_nul [singleAttributePhraseDeclaration_82]
+        'Nul 
+
+    % nul
+
+    construct sAPD [singleAttributePhraseDeclaration_82]
+        sAPD_nul [convertSAP1_to_SAPD sAP]
+            %type 1 sAP
+            [convertSAP2_to_SAPD sAP]
+
+    %type_2 sAP
+
+    construct new_mentioned_pattern [informationModelStatement_48]
+        'Pattern ': pEV '( sAPD ') '. 
+
+    replace [repeat informationModelStatement_48]
+        mentioned_patterns [repeat informationModelStatement_48]
+    by
+        mentioned_patterns [. new_mentioned_pattern]
+end function
+
+% ==============================================================
+
+rule markIfUsedByReqd
+            mentioned_pattern [informationModelStatement_48]
+
+    deconstruct mentioned_pattern
+        pW [patternWords_666]
+        ': 
+        eVP [entityVectorPattern_76]
+        sT [statementTerminator_22]
+
+    construct search_pattern [informationModelStatement_48]
+        'Unment_ pW ': eVP sT 
+
+    construct replace_pattern [informationModelStatement_48]
+        'Ment_ pW ': eVP sT 
+
+    replace [repeat informationModelStatement_48]
+        search_pattern 
+        rest [repeat informationModelStatement_48]
+
+    construct added_pattern [informationModelStatement_48]
+        'Ident_ pW ': eVP sT 
+
+    % exit if not found. Else, mark the pattern as having been mentioned.
+
+    by
+        replace_pattern 
+        rest [. added_pattern]
+end rule
+
+% ==============================================================
+
+define errorMessage_R02
+        [repeat tokenOrKey] [NL] [IN] 
+        [entityVectorPattern_76] [EX] [NL] 
+        [repeat tokenOrKey] [NL] [IN] 
+        [informationModelStatement_48] [EX] 
+end define
+
+

@@ -1,0 +1,81 @@
+% Recursive descent parser for T4 parameter lists
+
+function currentToken (exists TokenList)
+    first (TokenList)
+end currentToken;
+
+procedure advanceToken (exists TokenList)
+    TokenList := rest (TokenList);
+end advanceToken;
+
+function matches (exists TokenList, MatchToken)
+    equal (currentToken(), MatchToken)
+end matches;
+
+procedure accept (exists TokenList, MatchToken)
+    if matches (MatchToken) then
+	advanceToken();
+    else
+	TokenList := "Parse Error";
+    endif;
+end accept;
+
+procedure id (out Tree, exists TokenList)
+    Tree := ["id", currentToken()];
+    advanceToken();
+end id;
+
+procedure singleParm (out Tree, exists TokenList)
+    if matches ("exists") then
+	advanceToken();
+	id (Tree);
+	Tree := ["existsParm", Tree];
+    elseif matches ("inout") then
+	advanceToken();
+	id (Tree);
+	Tree := ["inOutParm", Tree];
+    elseif matches ("out") then
+	advanceToken();
+	id (Tree);
+	Tree := ["outParm", Tree];
+    else
+	id (Tree);
+    endif;
+    Tree := ["singleParm", Tree];
+end singleParm;
+
+procedure followingParms (out Tree, exists TokenList)
+    accept (",");
+    singleParm (Tree);
+    if matches (",") then
+	var F;
+	followingParms (F);
+	Tree := ["sfp", Tree, F];
+    endif;
+    Tree := ["followingParms", Tree];
+end followingParms;
+
+procedure parseParmList (out Tree, exists TokenList)
+    var NodeContents;
+    accept ("(");
+    if matches (")") then
+	NodeContents := [];
+    else
+	singleParm (NodeContents);
+	if matches (",") then
+	    var F;
+	    followingParms (F);
+	    NodeContents := ["sfp", NodeContents, F];
+	endif;
+    endif;
+    accept (")");
+    Tree := ["parmList", NodeContents];
+end parseParmList;
+
+var TokenList;
+TokenList := ["(", "inout", "A", ",", "exists", "B", ")"];
+
+var Tree;
+parseParmList (Tree);
+
+Tree

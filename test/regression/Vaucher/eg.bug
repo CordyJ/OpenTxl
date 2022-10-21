@@ -1,0 +1,9 @@
+/* commentaire */
+
+bbb ::= toto
+    |  jack
+    |  marie 
+
+/* test_suite  ::= systemdef */
+
+aaa ::=  fred and harry 

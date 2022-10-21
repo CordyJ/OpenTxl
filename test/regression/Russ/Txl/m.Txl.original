@@ -1,0 +1,6 @@
+include "Miranda.Grammar"
+
+function mainRule
+	match [program]
+		P [program]
+end function

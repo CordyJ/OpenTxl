@@ -1,0 +1,4 @@
+Apparently TXL does not notice a recursive construct.
+This can sometimes crash us.
+
+Jim

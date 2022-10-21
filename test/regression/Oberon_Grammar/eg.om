@@ -1,0 +1,99 @@
+MODULE ReverseIPv4;
+
+   IMPORT Conclusions, Conditions, DNSResolvers, DNSStdResolvers, Errors,
+      EventConditions, Events, IPv4Addresses, Jobs, Read, RelatedEvents,
+      Storage, Streams, Tasks, Write;
+
+   TYPE
+      Job = POINTER TO JobRec;
+      JobRec =
+	 RECORD
+	    (Jobs.JobRec)
+	    ipaddr: IPv4Addresses.Address;
+	 END;
+
+   TYPE
+      Event = POINTER TO EventRec;
+      EventRec =
+	 RECORD
+	    (Events.EventRec)
+	    ipaddr: IPv4Addresses.Address;
+	    resolved: BOOLEAN;
+	    hosts: DNSResolvers.HostnameList;
+	    errors: RelatedEvents.Object;
+	 END;
+   VAR
+      result: Events.EventType;
+
+   PROCEDURE ReverseAddress(job: Jobs.Job);
+      VAR
+	 event: Event;
+   BEGIN
+      WITH job: Job DO
+	 NEW(event); event.type := result; event.ipaddr := job.ipaddr;
+	 event.hosts := NIL;
+	 NEW(event.errors); RelatedEvents.QueueEvents(event.errors);
+	 event.resolved := DNSResolvers.GetHostByIPv4Addr(DNSResolvers.std,
+			      job.ipaddr, event.hosts, event.errors);
+	 Events.Raise(event);
+      END;
+   END ReverseAddress;
+
+   PROCEDURE DoIt;
+      VAR
+	 job: Job;
+	 ipaddr: IPv4Addresses.Address;
+	 count: INTEGER;
+	 condition: Conditions.Condition;
+	 event: Event;
+	 host: DNSResolvers.HostnameList;
+	 line: ARRAY 16 OF CHAR;
+
+      PROCEDURE PrintResults;
+      BEGIN
+	 Tasks.WaitFor(condition);
+	 WHILE EventConditions.TestAndGet(condition, event) DO
+	    IPv4Addresses.WriteText(Streams.stdout, event.ipaddr);
+	    IF event.resolved THEN
+	       Write.String(":");
+	       host := event.hosts;
+	       WHILE host # NIL DO
+		  Write.Char(" ");
+		  Write.String(host.hostname);
+		  host := host.next;
+	       END;
+	    ELSE
+	       Conclusions.Conclude(event.errors, Errors.error, "");
+	    END;
+	    Write.Ln;
+	    DEC(count);
+	 END;
+      END PrintResults;
+
+   BEGIN
+      EventConditions.Create(condition, result);
+      count := 0;
+      WHILE IPv4Addresses.ReadText(Streams.stdin, ipaddr) DO
+	 NEW(job); job.ipaddr := ipaddr;
+	 Jobs.Submit(job, ReverseAddress);
+	 INC(count);
+	 IF count MOD 10 = 0 THEN PrintResults END;
+      END;
+      IF ~Streams.stdin.eof THEN
+	 Read.Line(line);
+	 Write.String("stopped at ");
+	 Write.Line(line);
+	 (*
+	 Conclusions.Conclude(Streams.stdin, Errors.fatal, "");
+	 *)
+      END;
+      WHILE count > 0 DO
+	 PrintResults;
+      END;
+   END DoIt;
+
+BEGIN
+   Storage.DisableCollection;
+   Events.Define(result);
+   DoIt;
+END ReverseIPv4.

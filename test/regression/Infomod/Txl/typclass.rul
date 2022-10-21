@@ -1,0 +1,272 @@
+function typeClassStatement
+            Statement [informationModelStatement_48]
+
+    % This function is the beginning of a suite of rules that type-check
+    % class statements.  It handles exactly one class statement
+    % at a time.
+    % A class definition can contain optSelectedEntity_220 clauses.
+    % These must be analyzed by converting them to atomic sentences and
+    % then to INFOMOD Patterns for checking.
+
+    construct Statement_1 [informationModelStatement_48]
+        Statement [removeSimpleSelExpr_1]
+            [removeSimpleSelExpr_2]
+
+    % Check that this is a class definition statement
+
+    deconstruct Statement_1
+        SId [opt statementIdentifier_3]
+        cD [classDefinition_137]
+        sT [statementTerminator_22]
+
+    % Change the type to suit rules for analyzing atomic sentences.
+
+    construct NulStatements [repeat informationModelStatement_48]
+        % ( empty ) 
+
+    % ( empty ) 
+
+    construct Statements [repeat informationModelStatement_48]
+        NulStatements [. Statement_1]
+
+    construct atomicSentences [repeat informationModelStatement_48]
+        Statements [promoteThatClauses]
+            [promoteFinalThatClauses]
+            [promoteOneCommaEntityThatClauses]
+            [promoteTwoCommaEntityThatClauses]
+            [extractAtomicSentences]
+
+    % Now take the original statement and find all the [entityVariableName_80]
+    % in it that are in [classEnumeration_??], ignoring their selection clauses.
+    % These  [entityVariableName_80] are of two types: those that are also of
+    % type [atomicClass_146], and those that refer to non-class entities, and 
+    % therefore are embedded in [classEnumeration_147] as part of 
+    % [memberIndication_151].  The non-class entities are syntactically 
+    % distinguished by being derived from [optSelectedEntity_220]
+    % Get the atomic classes.
+
+    construct nul_raC [repeat atomicClass_146]
+        % ( empty ) 
+
+    % ( empty ) 
+
+    construct raC [repeat atomicClass_146]
+        nul_raC [^ Statement]
+
+    construct nul_patterns [repeat informationModelStatement_48]
+        % ( empty ) 
+
+    % ( empty ) 
+
+    construct mentioned_patterns [repeat informationModelStatement_48]
+        nul_patterns [decomposeALE each atomicSentences]
+            [findClassNames each raC]
+
+    % Txl variable mentioned_patterns now contains all the items of type
+    % [entityVariableName_80] that also derived from atomicClass_146
+  
+    % Now get the non-class entities derived from [optSelectedEntity_220]
+    % in which [optSelectedEntity_220] in the definiens
+    % consists of [entityVariableName_80][simpleEntitySelection_225]
+
+    construct nul_reVN [repeat entityVariableName_80]
+        % ( empty ) 
+
+    construct mentioned_eVNs [repeat entityVariableName_80]
+        nul_reVN [findEntityVariables each raC]
+
+    replace [repeat informationModelStatement_48]
+        patterns [repeat informationModelStatement_48]
+
+    % Now construct the set of all Infomod entityVectorPattern 
+    % subtrees  contained in the TXL-variable 'patterns'.
+
+    construct nul_eVP [repeat entityVectorPattern_76]
+        % ( empty ) 
+
+    construct reVP [repeat entityVectorPattern_76]
+        nul_eVP [^ patterns]
+    by
+        patterns [checkIfClassDeclared Statement each mentioned_patterns]
+            [checkIfEntityDeclared Statement reVP each mentioned_eVNs]
+end function
+
+% =================================================================
+
+function excludeDefinedClass
+            cD [classDefinition_137]
+            Statement [informationModelStatement_48]
+
+    % This rule ensures that the class name being defined does not also
+    % occur in the definition.
+
+    match [repeat informationModelStatement_48]
+        patterns [repeat informationModelStatement_48]
+
+    deconstruct cD
+        eVN [entityVariableName_80]
+        eO [equalOp_544]
+        cE [classExpression_137]
+
+    where not
+        cD [containsSharedVariable eVN] 
+
+    % issues error message and returns if the test fails.
+
+    construct string1 [repeat tokenOrKey]
+        ** WARNING ** The class name ' ' 
+
+    construct string2 [repeat tokenOrKey]
+        ' ' occurs in the part 
+
+    construct string3 [repeat tokenOrKey]
+        occurring 'in the statement 
+
+    construct eM [errorMessage_Cls02]
+        string1 eVN string2 cD string3 Statement 
+
+    construct output [errorMessage_Cls02]
+        eM [print]
+end function
+
+%=======================================================
+
+function findClassNames
+            aC [atomicClass_146]
+
+    % Select only  those items of type [atomicClass_146] that are also	
+    % of type [entityVariableName_80]. Add them to the pattern list.
+
+    deconstruct aC
+        eVN [entityVariableName_80]
+
+    construct new_item [informationModelStatement_48]
+        'Class_ eVN '. 
+
+    replace [repeat informationModelStatement_48]
+        mentioned_patterns [repeat informationModelStatement_48]
+    by
+        mentioned_patterns [. new_item]
+end function
+
+%==============================================================
+
+function findEntityVariables
+            aC [atomicClass_146]
+
+    construct nul_roSE [repeat optSelectedEntity_220]
+        % ( empty ) 
+
+    % ( empty ) 
+
+    construct roSE [repeat optSelectedEntity_220]
+        nul_roSE [^ aC]
+
+    replace [repeat entityVariableName_80]
+        reVN [repeat entityVariableName_80]
+    by
+        reVN [stripSelection each roSE]
+end function
+
+%==============================================================
+
+function stripSelection
+            oSE [optSelectedEntity_220]
+
+    % get rid of the selection clauses
+
+    deconstruct oSE
+        eVN [entityVariableName_80]
+        osExp [opt selectionExpression_224]
+
+    replace [repeat entityVariableName_80]
+        reVN [repeat entityVariableName_80]
+    by
+        reVN [. eVN]
+end function
+
+%==============================================================
+
+function checkIfClassDeclared
+            Statement [informationModelStatement_48]
+            mentioned_pattern [informationModelStatement_48]
+
+    % Check the  list built by 
+    % the function 'decomposeClass'for an entry that that matches eVN.
+    % If there is no such entry, the class name is undefined. 
+    % and an error message is issued.
+
+    deconstruct mentioned_pattern
+        'Class_ 
+        eVN [entityVariableName_80]
+        '. 
+
+    match [repeat informationModelStatement_48]
+        patterns [repeat informationModelStatement_48]
+
+    where not
+        patterns [contains mentioned_pattern] 
+
+    construct string1 [repeat tokenOrKey]
+        '** 'ERROR '** 'No 'Pattern 'or 'definition 'for 
+        'the 'name 
+
+    construct string2 [repeat tokenOrKey]
+        occurring in the statement 
+
+    construct eM [errorMessage_Cls01]
+        string1 eVN string2 Statement 
+
+    construct dummy1 [errorMessage_Cls01]
+        eM [print]
+end function
+
+%==============================================================
+
+rule checkIfEntityDeclared
+            Statement [informationModelStatement_48]
+            reVP [repeat entityVectorPattern_76]
+            mentioned_eVN [entityVariableName_80]
+
+    % This function looks for occurrences of mentioned_eVN in reVP, and
+    % issues an error message if not found. This rule is invoked for each
+    % mentioned_eVN.
+
+    match [repeat informationModelStatement_48]
+        patterns [repeat informationModelStatement_48]
+
+    where not
+        reVP [containsSharedVariable mentioned_eVN] 
+
+    construct string1 [repeat tokenOrKey]
+        '** 'ERROR '** 'No 'Pattern 'or 'definition 'for 
+        'the 'name 
+
+    construct string2 [repeat tokenOrKey]
+        occurring in the statement 
+
+    construct eM [errorMessage_Cls01]
+        string1 mentioned_eVN string2 Statement 
+
+    construct dummy1 [errorMessage_Cls01]
+        eM [print]
+end rule
+
+%==============================================================
+
+define errorMessage_Cls01
+        [repeat tokenOrKey] [entityVariableName_80] [NL] 
+        [repeat tokenOrKey] [NL] [IN] 
+        [informationModelStatement_48] [EX] [NL] 
+end define
+
+%===========================================================
+
+define errorMessage_Cls02
+        [repeat tokenOrKey] [entityVariableName_80] [repeat tokenOrKey] [NL] [IN] 
+        [classDefinition_137] [EX] [NL] 
+        [repeat tokenOrKey] [NL] [IN] 
+        [informationModelStatement_48] [EX] 
+end define
+
+

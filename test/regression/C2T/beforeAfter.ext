@@ -1,0 +1,62 @@
+% TXL 7.7a4
+% Andy Maloney, Queen's University, April 1995
+%       [part of 499 project]
+%
+% This file re-implements the before and after functions using the new TXL 'index' function.
+
+
+
+function before SL [stringlit]
+	replace [stringlit]
+		Scope [stringlit]
+
+	construct N [number]
+		_ [index Scope SL]
+
+	construct newN [number]
+		N [- 1]
+
+	by
+		Scope
+			[changeNull N]
+			[changeNOTNull 1 newN]
+end function
+
+function after SL [stringlit]
+	replace [stringlit]
+		Scope [stringlit]
+
+	construct N [number]
+		_ [index Scope SL]
+
+	construct newN [number]
+		N [+ 1]
+
+	by
+		Scope
+			[changeNull N]
+			[changeNOTNull newN 9999]
+end function
+
+
+function changeNull N [number]
+	replace [stringlit]
+		SL [stringlit]
+
+	where
+		N [<= 1]
+
+	by
+		""
+end function
+
+function changeNOTNull N1 [number] N2 [number]
+	replace [stringlit]
+		SL [stringlit]
+
+	where not
+		SL [= ""]
+
+	by
+		SL [: N1 N2]
+end function

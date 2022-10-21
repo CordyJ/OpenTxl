@@ -1,0 +1,6 @@
+#!/bin/csh
+if ($#argv != 1) then
+    echo "Usage:  query entityname [ > entityinfofile ]"
+    exit 99
+endif
+echo $1 | (txlpro -size 10 factbase.analyze > proquery.results) |& more -s -p -u 

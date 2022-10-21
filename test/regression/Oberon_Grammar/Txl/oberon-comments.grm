@@ -1,0 +1,84 @@
+% Comment preserviation overrides for Oberon grammar
+% J.R. Cordy, Queen's University, October 2010
+
+% #pragma -comment
+
+define commenting
+    [comment_NL+] 
+end define
+
+define comment_NL
+    [comment] [NL]
+end define
+
+redefine module 
+    [commenting?] ...
+end redefine
+
+redefine module 
+    ... [NL_commenting?] 
+end redefine
+
+define NL_commenting
+    [NL] [commenting]
+end define
+
+redefine ImportList
+    [commenting?] ...
+end redefine
+
+redefine BEGIN_StatementSequence
+    [commenting?] ...
+end redefine
+
+redefine const_type_or_var_declaration
+	[commenting?] ...
+end redefine
+
+redefine ConstantDeclaration
+	[commenting?] ...
+end redefine
+
+redefine TypeDeclaration
+	[commenting?] ...
+end redefine
+
+redefine factor 
+    [commenting?] ...
+end redefine
+
+define type 
+    [commenting?] ...
+end redefine
+
+redefine FieldList 
+    [commenting?] ...
+end redefine
+
+redefine VariableDeclaration 
+    [commenting?] ...
+end redefine
+
+redefine ProcedureHeading 
+    [commenting?] ...
+end redefine
+
+redefine FPSection 
+    [commenting?] ...
+end redefine
+
+redefine ProcedureBody 
+    [commenting?] ...
+end redefine
+
+redefine ForwardDeclaration
+    [commenting?] ...
+end redefine
+
+redefine statement
+    	[commenting?] ...
+end redefine
+
+redefine StatementSequence
+    	... [commenting?] 
+end redefine

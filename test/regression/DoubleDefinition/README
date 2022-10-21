@@ -1,0 +1,5 @@
+If a TXL variable is rebound (i.e., the same name is introduced
+with a type a second time in a rule) TXL does not notice.
+We need an error message about this.
+
+Jim

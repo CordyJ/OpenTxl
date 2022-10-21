@@ -1,0 +1,350 @@
+function normalize
+              iMS [informationModelStatement_48 ]
+
+   deconstruct iMS
+         oSI [opt statementIdentifier_3]
+         iR  [informationRule_105]
+
+    % This module transforms all axioms into a standard normal form, 
+    % suitable for further conversion to a logic engine.
+
+    replace [repeat informationModelStatement_48]
+            riMS [repeat informationModelStatement_48]
+
+    % First convert all the suborinate clauses to a standard form of
+    % 'such that' <atomic sentence>
+
+    construct normalAxiom [informationModelStatement_48]
+          iMS [promoteThatClauses]
+            [promoteFinalThatClauses]
+            [promoteOneCommaEntityThatClauses]
+            [promoteTwoCommaEntityThatClauses]
+            [convertEntitySuchThat]
+            [convertAttributeSuchThat]
+            [convertAndOrAttributeExpressions]
+            
+
+         by
+      riMS [. normalAxiom] 
+           
+end function
+
+%===================================================
+
+rule convertEntitySuchThat
+
+    % This rule finds the 'such that' clauses, extracts their atomic sentences
+    % and then reconstructs the original sentence as 
+    % <originalAtomicSentence> minus the <selectionClause> anded with
+    % <selectionClause>. I.e., if p, q are predicates, 
+    %  transform  q(x such that px) => qx and px
+
+    replace [logicalTerm_115]
+
+        % logical factor
+        onO [opt notOp_526]
+        eVN [entityVariableName_80]
+        ', 
+        cI [criterionIndicator_662]
+        eVN2 [entityVariableName_80]
+        aLE [attributeLogicalExpression_402]
+        ', 
+        osI [opt situationIndication_122]
+        % end logical factor
+        % now the rest of logical term
+        raOLF [repeat andOpLogicalFactor_115]
+
+    % This pattern makes sure that only 'such that' clauses
+    % are treated by this rule, and the replacement removes the 
+    % 'such that' clause that was found, thus guaranteeing termination.          
+    % Construct the part without the 'such that'
+
+    construct new_lF [logicalFactor_116]
+        onO eVN osI 
+
+    % Splice the new 'and'... into the repeated part.  The 
+    % 'such that' is now gone, and this rule goes on to find any remaining
+    % 'such that' clauses in raOLF, and then in all remaining 
+    % items of type [logicalTerm_115]
+  
+    construct added_raOLF [andOpLogicalFactor_115]
+        'and  eVN2 aLE 
+
+% now go analyse the attributes, convert the 'such that' clauses
+% in attributes  to sentences and add them on with 'and' in between 
+% each of them.
+
+    construct nul_rsC [repeat selectionClause_234]
+        % ( empty ) 
+
+    construct rsC [repeat selectionClause_234]
+        nul_rsC [^ aLE]
+                [^ osI]
+            [removeTail_sC_1]
+            [removeTail_sC_2]
+          
+% now add in the constribution from the selected entity, and then the 
+% constributions from the attribute selection clauses.
+
+    construct new_raOLF [repeat andOpLogicalFactor_115]
+        raOLF [ . added_raOLF]
+              [ attach_Sc each rsC]
+
+        construct new_lT [logicalTerm_115]
+        new_lF new_raOLF 
+    by
+        new_lT 
+end rule
+
+%===================================================
+
+rule convertAttributeSuchThat
+
+    % This rule finds the 'such that' clauses in 
+    %  [attributeLogicalExpression_402], extracts their atomic sentences
+    % and then reconstructs the original expression as 
+    % <originalExpression> minus the <selectionClause> anded with
+    % <selectionClause>. I.e., if p, q are predicates, 
+    %  transform  xq y such that ypz) => xqy and ypz 
+
+    replace [attributeLogicalTerm_406]
+        aLT [attributeLogicalTerm_406]
+
+    where
+        aLT [contains_sC]
+
+    deconstruct aLT
+        aLF [attributeLogicalFactor_410]
+        raOALF [repeat andOpAttributeLogicalFactor_408]
+
+    construct stripped_aLT [attributeLogicalTerm_406]
+        aLT [removeSuchThat_1]
+            [removeSuchThat_2]
+            [removeSuchThat_3]
+           
+ 
+         by
+         stripped_aLT 
+end rule
+
+%===================================================
+
+rule removeSuchThat_1
+
+    % get rid of [selectionClause_234] in [associatedEntityReference_416]
+
+    replace [associatedEntityReference_416]
+        rn [roleNames_98]
+        eVN [entityVariableName_80]
+        ', 
+        sC [selectionClause_234]
+        ', 
+    by
+        rn eVN 
+end rule
+
+%===================================================
+
+rule removeSuchThat_2
+
+    % get rid of [selectionClause_234] in [associatedEntityReference_416]
+
+    replace [finalAssociatedEntityReference_416]
+        rn [roleNames_98]
+        eVN [entityVariableName_80]
+        ', 
+        sC [selectionClause_234]
+    by
+        rn eVN 
+end rule
+
+%===================================================
+
+rule removeSuchThat_3
+
+    % get rid of [selectionClause_234] in [attributeReference_414]
+
+    replace [attributeReference_414]
+        eVN [entityVariableName_80]
+        ', 
+        sC [selectionClause_234]
+        ', 
+        raER [repeat associatedEntityReference_416]
+        ofAER [opt finalAssociatedEntityReference_416]
+    by
+        eVN raER ofAER 
+end rule
+
+%===================================================
+
+rule contains_sC
+    match [selectionClause_234]
+        sC [selectionClause_234]
+end rule
+
+%===================================================
+
+rule removeTail_sC_1
+
+% This rule gets rid of an assocEntitySelection_417 that has a 
+% selectionClause_234 in it. The selectionClause_234 has already
+% been converted to a conjunction with the equivalent atomic sentence.
+
+    replace [associatedEntityReference_416]
+        rN [roleNames_98]
+        eVN [entityVariableName_80]
+        aES [assocEntitySelection_417]
+
+    where
+        aES [contains_sC]
+    by
+        rN eVN 
+end rule
+
+%===================================================
+
+rule removeTail_sC_2
+
+% This rule gets rid of a finalAssocEntitySelection_417 that has a 
+% selectionClause_234 in it. The selectionClause_234 has already
+% been converted to a conjunction with the equivalent atomic sentence.
+
+
+
+    replace [finalAssociatedEntityReference_416]
+        rN [roleNames_98]
+        eVN [entityVariableName_80]
+        fAES [finalAssocEntitySelection_417]
+
+    where
+        fAES [contains_sC]
+    by
+        rN eVN 
+end rule
+
+%===================================================
+
+function attach_Sc  
+         sC [selectionClause_234]
+
+% This function takes each selection clause and turns it into 'and
+% [logicalFactor] and then appends it to the existing repeat.
+% This function is driven by an 'each; .
+ 
+    deconstruct sC
+        cI [criterionIndicator_662]
+        lF [logicalFactor_116]
+
+    replace  [repeat andOpLogicalFactor_115]
+          new_raOLF [repeat andOpLogicalFactor_115]
+
+construct new_lF [andOpLogicalFactor_115]
+           'and lF
+
+by new_raOLF [  . new_lF]
+
+end function
+%===================================================
+rule distribute_oSE
+
+% Distribute the optSelectedEntity_120 through a parenthesized
+% attributeLogicalExpression_402
+
+replace   [logicalPrimary_118]
+         oSE [optSelectedEntity_120] '(       
+         aLE [attributeLogicalExpression_402] ')
+	
+construct new_lP [logicalPrimary_118]
+           '( oSE aLE ')
+by new_lP
+
+end rule
+
+%===================================================
+
+rule  convertAndOrAttributeExpressions
+
+
+% This rule takes a complex attribute expression involving 'and' and 'or'
+% and breaks it down into
+% its equivalent atomic components by distributing the primeEntityVariable
+% across the expression components.
+
+replace   [logicalPrimary_118]  
+          lP [logicalPrimary_118]
+          where lP [contains_orOp]   [contains_andOp]  
+
+deconstruct lP 
+         oSE [optSelectedEntity_120]        
+         aLE [attributeLogicalExpression_402]
+
+by  lP 
+              [distribute_oSE]
+              [unwind_orOp oSE aLE]
+              [unwind_andOp oSE aLE]
+
+
+end   rule 
+%===================================================
+
+function unwind_orOp
+   oSE [optSelectedEntity_120] 
+   aLE [attributeLogicalExpression_402]
+
+% This function takes an attribute expression involving 'or' and rewrites
+% it as atomic sentences connected by 'or'.
+
+replace [logicalPrimary_118]
+      lP [logicalPrimary_118]
+
+deconstruct  aLE 
+                aLT_1  [attributeLogicalTerm_406] 
+                oO     [alternativeOrOp_522] 
+               aLT_2 [attributeLogicalTerm_406] 
+               rest  [repeat orOpAttributeLogicalTerm_404] 
+ 
+construct aS_1 [atomicSentence_119] oSE aLT_1
+construct aS_2 [atomicSentence_119] oSE aLT_2 rest
+
+by '( aS_1 oO aS_2 ')
+end function 	
+%===================================================
+
+function unwind_andOp
+   oSE [optSelectedEntity_120] 
+   aLE [attributeLogicalExpression_402]
+
+% This function takes an attribute expression involving 'and' and rewrites
+% it as atomic sentences connected by 'and'.
+
+
+       replace  [logicalPrimary_118]
+        lP [logicalPrimary_118]
+
+deconstruct  aLE 
+          aLF_1  [attributeLogicalFactor_410]
+          aO [andOp_525] 
+          aLF_2 [attributeLogicalFactor_410]
+          rest [repeat andOpAttributeLogicalFactor_408] 
+ 
+ 
+construct aS_1 [atomicSentence_119] oSE aLF_1
+construct aS_2 [atomicSentence_119] oSE aLF_2 rest
+
+by '( aS_1 aO aS_2 ')
+
+end function
+%===================================================
+rule contains_orOp
+
+match  [alternativeOrOp_522] 
+       aOO  [alternativeOrOp_522]
+end rule
+%===================================================
+
+rule contains_andOp
+match [andOp_525] 
+       aO  [andOp_525] 
+end rule
+%===================================================
+

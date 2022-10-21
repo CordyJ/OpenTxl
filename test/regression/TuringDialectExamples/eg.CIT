@@ -1,0 +1,71 @@
+% Example Class Inheritance Turing dialect program
+
+module class stack (itemtype, stacksize)
+    export (push, pop)
+
+    var top : 0 .. stacksize := 0
+    var contents : array 1 .. stacksize of itemtype
+
+    procedure push (item : itemtype)
+	top := top + 1
+	contents (top) := item
+    end push
+
+    procedure pop (var item : itemtype)
+	item := contents (top)
+	top := top - 1
+    end pop
+end stack
+
+% A module of class stack - note inheritance and widening
+module stringstack refines stack (string, 100)
+    export (empty)
+    function empty : boolean
+	result top = 0
+    end empty
+end stringstack
+
+% Another module supporting a stack of records
+type symbolinfo:
+    record
+	symbol : string
+	number : int
+    end record
+
+module symbolstack refines stack (symbolinfo, 30)
+    import (symbolinfo)
+    export (symbol, number, allgone)
+    function symbol : string
+	result contents (top).symbol
+    end symbol
+    function number : int
+	result contents (top).number
+    end number
+    function allgone : boolean
+	result top = 0
+    end allgone
+end symbolstack
+    
+% Use them
+for i : ord ("a") .. ord ("z")
+    stringstack.push (chr (i))
+end for
+
+loop
+    exit when stringstack.empty
+    var s : string
+    stringstack.pop (s)
+    var si : symbolinfo
+    si.symbol := s
+    si.number := ord (s)
+    symbolstack.push (si)
+end loop
+
+loop
+    exit when symbolstack.allgone
+    put symbolstack.symbol ..
+    var si: symbolinfo
+    symbolstack.pop (si)
+end loop
+
+put ""

@@ -1,0 +1,7 @@
+7.2.94
+Apparently Sun/Unix treats a user stack overflow as
+an illegal instruction.  This causes trouble since
+TXL then crashes rather than giving an error message.
+Don't know how to fix this.
+
+Jim

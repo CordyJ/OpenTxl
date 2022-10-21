@@ -1,0 +1,5 @@
+Two examples of a remaining sharing bug due to
+post constructs.  Survived all the way to TXL 7.7a1.
+See the TXL files for details.
+
+JRC 18oct94

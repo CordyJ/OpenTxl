@@ -1,0 +1,1090 @@
+IDENTIFICATION DIVISION.                                         
+PROGRAM-ID.    TRE050C0.                                         
+                                                            
+ENVIRONMENT DIVISION.                                            
+CONFIGURATION SECTION.                                           
+SOURCE-COMPUTER. IBM-370.                                        
+OBJECT-COMPUTER. IBM-370.                                        
+INPUT-OUTPUT SECTION.                                            
+                                                                 
+FILE-CONTROL.                                                    
+    SELECT TABLE-CNTL-CRD          ASSIGN TO TRETBL1I.           
+    SELECT BRANCH-CNTL-CRD         ASSIGN TO TREBRH1I.           
+    SELECT EXTRACT-CONTROL-REPORT  ASSIGN TO TRERPT1O.           
+    SELECT EXTRACTED-DATA-FILE     ASSIGN TO TREEXT1O.           
+                                                            
+DATA DIVISION.                                                   
+                                                
+PROCEDURE DIVISION.     
+                                         
+000000-START.                                                    
+    IF TABLE-CODE-IN = 'ABH'                                     
+       PERFORM 410001-OPEN-CURRABH                               
+       PERFORM 420001-LENGTH-ABH                                 
+       PERFORM 430001-EXTRACT-ABH                                
+       PERFORM 440001-CLOSE-CURRABH                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'ACC'                                     
+       PERFORM 410002-OPEN-CURRACC                               
+       PERFORM 420002-LENGTH-ACC                                 
+       PERFORM 430002-EXTRACT-ACC                                
+       PERFORM 440002-CLOSE-CURRACC                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'ACI'                                     
+       PERFORM 410003-OPEN-CURRACI                               
+       PERFORM 420003-LENGTH-ACI                                 
+       PERFORM 430003-EXTRACT-ACI                                
+       PERFORM 440003-CLOSE-CURRACI                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'ACO'                                     
+       PERFORM 410004-OPEN-CURRACO                               
+       PERFORM 420004-LENGTH-ACO                                 
+       PERFORM 430004-EXTRACT-ACO                                
+       PERFORM 440004-CLOSE-CURRACO                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'ACR'                                     
+       PERFORM 410005-OPEN-CURRACR                               
+       PERFORM 420005-LENGTH-ACR                                 
+       PERFORM 430005-EXTRACT-ACR                                
+       PERFORM 440005-CLOSE-CURRACR                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'ACT'                                     
+       PERFORM 410006-OPEN-CURRACT                               
+       PERFORM 420006-LENGTH-ACT                                 
+       PERFORM 430006-EXTRACT-ACT                                
+       PERFORM 440006-CLOSE-CURRACT                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'ADV'                                     
+       PERFORM 410007-OPEN-CURRADV                               
+       PERFORM 420007-LENGTH-ADV                                 
+       PERFORM 430007-EXTRACT-ADV                                
+       PERFORM 440007-CLOSE-CURRADV                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'AIT'                                     
+       PERFORM 410008-OPEN-CURRAIT                               
+       PERFORM 420008-LENGTH-AIT                                 
+       PERFORM 430008-EXTRACT-AIT                                
+       PERFORM 440008-CLOSE-CURRAIT                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'BCY'                                     
+       PERFORM 410009-OPEN-CURRBCY                               
+       PERFORM 420009-LENGTH-BCY                                 
+       PERFORM 430009-EXTRACT-BCY                                
+       PERFORM 440009-CLOSE-CURRBCY                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'BGO'                                     
+       PERFORM 410010-OPEN-CURRBGO                               
+       PERFORM 420010-LENGTH-BGO                                 
+       PERFORM 430010-EXTRACT-BGO                                
+       PERFORM 440010-CLOSE-CURRBGO                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'BIN'                                     
+       PERFORM 410011-OPEN-CURRBIN                               
+       PERFORM 420011-LENGTH-BIN                                 
+       PERFORM 430011-EXTRACT-BIN                                
+       PERFORM 440011-CLOSE-CURRBIN                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'BKA'                                     
+       PERFORM 410012-OPEN-CURRBKA                               
+       PERFORM 420012-LENGTH-BKA                                 
+       PERFORM 430012-EXTRACT-BKA                                
+       PERFORM 440012-CLOSE-CURRBKA                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'BKD'                                     
+       PERFORM 410013-OPEN-CURRBKD                               
+       PERFORM 420013-LENGTH-BKD                                 
+       PERFORM 430013-EXTRACT-BKD                                
+       PERFORM 440013-CLOSE-CURRBKD                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'BKF'                                     
+       PERFORM 410014-OPEN-CURRBKF                               
+       PERFORM 420014-LENGTH-BKF                                 
+       PERFORM 430014-EXTRACT-BKF                                
+       PERFORM 440014-CLOSE-CURRBKF                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'BKT'                                     
+       PERFORM 410015-OPEN-CURRBKT                               
+       PERFORM 420015-LENGTH-BKT                                 
+       PERFORM 430015-EXTRACT-BKT                                
+       PERFORM 440015-CLOSE-CURRBKT                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'BRF'                                     
+       PERFORM 410016-OPEN-CURRBRF                               
+       PERFORM 420016-LENGTH-BRF                                 
+       PERFORM 430016-EXTRACT-BRF                                
+       PERFORM 440016-CLOSE-CURRBRF                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'BTO'                                     
+       PERFORM 410017-OPEN-CURRBTO                               
+       PERFORM 420017-LENGTH-BTO                                 
+       PERFORM 430017-EXTRACT-BTO                                
+       PERFORM 440017-CLOSE-CURRBTO                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'CAC'                                     
+       PERFORM 410018-OPEN-CURRCAC                               
+       PERFORM 420018-LENGTH-CAC                                 
+       PERFORM 430018-EXTRACT-CAC                                
+       PERFORM 440018-CLOSE-CURRCAC                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'CAD'                                     
+       PERFORM 410019-OPEN-CURRCAD                               
+       PERFORM 420019-LENGTH-CAD                                 
+       PERFORM 430019-EXTRACT-CAD                                
+       PERFORM 440019-CLOSE-CURRCAD                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'CBH'                                     
+       PERFORM 410020-OPEN-CURRCBH                               
+       PERFORM 420020-LENGTH-CBH                                 
+       PERFORM 430020-EXTRACT-CBH                                
+       PERFORM 440020-CLOSE-CURRCBH                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'CCD'                                     
+       PERFORM 410021-OPEN-CURRCCD                               
+       PERFORM 420021-LENGTH-CCD                                 
+       PERFORM 430021-EXTRACT-CCD                                
+       PERFORM 440021-CLOSE-CURRCCD                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'CCP'                                     
+       PERFORM 410022-OPEN-CURRCCP                               
+       PERFORM 420022-LENGTH-CCP                                 
+       PERFORM 430022-EXTRACT-CCP                                
+       PERFORM 440022-CLOSE-CURRCCP                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'CDL'                                     
+       PERFORM 410023-OPEN-CURRCDL                               
+       PERFORM 420023-LENGTH-CDL                                 
+       PERFORM 430023-EXTRACT-CDL                                
+       PERFORM 440023-CLOSE-CURRCDL                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'CFM'                                     
+       PERFORM 410024-OPEN-CURRCFM                               
+       PERFORM 420024-LENGTH-CFM                                 
+       PERFORM 430024-EXTRACT-CFM                                
+       PERFORM 440024-CLOSE-CURRCFM                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'CFP'                                     
+       PERFORM 410025-OPEN-CURRCFP                               
+       PERFORM 420025-LENGTH-CFP                                 
+       PERFORM 430025-EXTRACT-CFP                                
+       PERFORM 440025-CLOSE-CURRCFP                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'CKP'                                     
+       PERFORM 410026-OPEN-CURRCKP                               
+       PERFORM 420026-LENGTH-CKP                                 
+       PERFORM 430026-EXTRACT-CKP                                
+       PERFORM 440026-CLOSE-CURRCKP                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'CMB'                                     
+       PERFORM 410027-OPEN-CURRCMB                               
+       PERFORM 420027-LENGTH-CMB                                 
+       PERFORM 430027-EXTRACT-CMB                                
+       PERFORM 440027-CLOSE-CURRCMB                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'CMC'                                     
+       PERFORM 410028-OPEN-CURRCMC                               
+       PERFORM 420028-LENGTH-CMC                                 
+       PERFORM 430028-EXTRACT-CMC                                
+       PERFORM 440028-CLOSE-CURRCMC                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'COM'                                     
+       PERFORM 410029-OPEN-CURRCOM                               
+       PERFORM 420029-LENGTH-COM                                 
+       PERFORM 430029-EXTRACT-COM                                
+       PERFORM 440029-CLOSE-CURRCOM                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'CRT'                                     
+       PERFORM 410030-OPEN-CURRCRT                               
+       PERFORM 420030-LENGTH-CRT                                 
+       PERFORM 430030-EXTRACT-CRT                                
+       PERFORM 440030-CLOSE-CURRCRT                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'CTF'                                     
+       PERFORM 410031-OPEN-CURRCTF                               
+       PERFORM 420031-LENGTH-CTF                                 
+       PERFORM 430031-EXTRACT-CTF                                
+       PERFORM 440031-CLOSE-CURRCTF                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'CTO'                                     
+       PERFORM 410032-OPEN-CURRCTO                               
+       PERFORM 420032-LENGTH-CTO                                 
+       PERFORM 430032-EXTRACT-CTO                                
+       PERFORM 440032-CLOSE-CURRCTO                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'CUF'                                     
+       PERFORM 410033-OPEN-CURRCUF                               
+       PERFORM 420033-LENGTH-CUF                                 
+       PERFORM 430033-EXTRACT-CUF                                
+       PERFORM 440033-CLOSE-CURRCUF                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'CVX'                                     
+       PERFORM 410034-OPEN-CURRCVX                               
+       PERFORM 420034-LENGTH-CVX                                 
+       PERFORM 430034-EXTRACT-CVX                                
+       PERFORM 440034-CLOSE-CURRCVX                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'DCD'                                     
+       PERFORM 410035-OPEN-CURRDCD                               
+       PERFORM 420035-LENGTH-DCD                                 
+       PERFORM 430035-EXTRACT-DCD                                
+       PERFORM 440035-CLOSE-CURRDCD                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'DCP'                                     
+       PERFORM 410036-OPEN-CURRDCP                               
+       PERFORM 420036-LENGTH-DCP                                 
+       PERFORM 430036-EXTRACT-DCP                                
+       PERFORM 440036-CLOSE-CURRDCP                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'DDH'                                     
+       PERFORM 410037-OPEN-CURRDDH                               
+       PERFORM 420037-LENGTH-DDH                                 
+       PERFORM 430037-EXTRACT-DDH                                
+       PERFORM 440037-CLOSE-CURRDDH                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'DDM'                                     
+       PERFORM 410038-OPEN-CURRDDM                               
+       PERFORM 420038-LENGTH-DDM                                 
+       PERFORM 430038-EXTRACT-DDM                                
+       PERFORM 440038-CLOSE-CURRDDM                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'DDT'                                     
+       PERFORM 410039-OPEN-CURRDDT                               
+       PERFORM 420039-LENGTH-DDT                                 
+       PERFORM 430039-EXTRACT-DDT                                
+       PERFORM 440039-CLOSE-CURRDDT                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'DEH'                                     
+       PERFORM 410040-OPEN-CURRDEH                               
+       PERFORM 420040-LENGTH-DEH                                 
+       PERFORM 430040-EXTRACT-DEH                                
+       PERFORM 440040-CLOSE-CURRDEH                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'DEP'                                     
+       PERFORM 410041-OPEN-CURRDEP                               
+       PERFORM 420041-LENGTH-DEP                                 
+       PERFORM 430041-EXTRACT-DEP                                
+       PERFORM 440041-CLOSE-CURRDEP                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'DET'                                     
+       PERFORM 410042-OPEN-CURRDET                               
+       PERFORM 420042-LENGTH-DET                                 
+       PERFORM 430042-EXTRACT-DET                                
+       PERFORM 440042-CLOSE-CURRDET                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'ECD'                                     
+       PERFORM 410043-OPEN-CURRECD                               
+       PERFORM 420043-LENGTH-ECD                                 
+       PERFORM 430043-EXTRACT-ECD                                
+       PERFORM 440043-CLOSE-CURRECD                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'ECP'                                     
+       PERFORM 410044-OPEN-CURRECP                               
+       PERFORM 420044-LENGTH-ECP                                 
+       PERFORM 430044-EXTRACT-ECP                                
+       PERFORM 440044-CLOSE-CURRECP                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'EUD'                                     
+       PERFORM 410045-OPEN-CURREUD                               
+       PERFORM 420045-LENGTH-EUD                                 
+       PERFORM 430045-EXTRACT-EUD                                
+       PERFORM 440045-CLOSE-CURREUD                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'EUP'                                     
+       PERFORM 410046-OPEN-CURREUP                               
+       PERFORM 420046-LENGTH-EUP                                 
+       PERFORM 430046-EXTRACT-EUP                                
+       PERFORM 440046-CLOSE-CURREUP                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'FVA'                                     
+       PERFORM 410047-OPEN-CURRFVA                               
+       PERFORM 420047-LENGTH-FVA                                 
+       PERFORM 430047-EXTRACT-FVA                                
+       PERFORM 440047-CLOSE-CURRFVA                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'FXD'                                     
+       PERFORM 410048-OPEN-CURRFXD                               
+       PERFORM 420048-LENGTH-FXD                                 
+       PERFORM 430048-EXTRACT-FXD                                
+       PERFORM 440048-CLOSE-CURRFXD                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'FXI'                                     
+       PERFORM 410049-OPEN-CURRFXI                               
+       PERFORM 420049-LENGTH-FXI                                 
+       PERFORM 430049-EXTRACT-FXI                                
+       PERFORM 440049-CLOSE-CURRFXI                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'FXP'                                     
+       PERFORM 410050-OPEN-CURRFXP                               
+       PERFORM 420050-LENGTH-FXP                                 
+       PERFORM 430050-EXTRACT-FXP                                
+       PERFORM 440050-CLOSE-CURRFXP                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'FXV'                                     
+       PERFORM 410051-OPEN-CURRFXV                               
+       PERFORM 420051-LENGTH-FXV                                 
+       PERFORM 430051-EXTRACT-FXV                                
+       PERFORM 440051-CLOSE-CURRFXV                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'HIS'                                     
+       PERFORM 410052-OPEN-CURRHIS                               
+       PERFORM 420052-LENGTH-HIS                                 
+       PERFORM 430052-EXTRACT-HIS                                
+       PERFORM 440052-CLOSE-CURRHIS                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'HLD'                                     
+       PERFORM 410053-OPEN-CURRHLD                               
+       PERFORM 420053-LENGTH-HLD                                 
+       PERFORM 430053-EXTRACT-HLD                                
+       PERFORM 440053-CLOSE-CURRHLD                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'HST'                                     
+       PERFORM 410054-OPEN-CURRHST                               
+       PERFORM 420054-LENGTH-HST                                 
+       PERFORM 430054-EXTRACT-HST                                
+       PERFORM 440054-CLOSE-CURRHST                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'INV'                                     
+       PERFORM 410055-OPEN-CURRINV                               
+       PERFORM 420055-LENGTH-INV                                 
+       PERFORM 430055-EXTRACT-INV                                
+       PERFORM 440055-CLOSE-CURRINV                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'LFX'                                     
+       PERFORM 410056-OPEN-CURRLFX                               
+       PERFORM 420056-LENGTH-LFX                                 
+       PERFORM 430056-EXTRACT-LFX                                
+       PERFORM 440056-CLOSE-CURRLFX                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'LGB'                                     
+       PERFORM 410057-OPEN-CURRLGB                               
+       PERFORM 420057-LENGTH-LGB                                 
+       PERFORM 430057-EXTRACT-LGB                                
+       PERFORM 440057-CLOSE-CURRLGB                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'LGE'                                     
+       PERFORM 410058-OPEN-CURRLGE                               
+       PERFORM 420058-LENGTH-LGE                                 
+       PERFORM 430058-EXTRACT-LGE                                
+       PERFORM 440058-CLOSE-CURRLGE                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'LGF'                                     
+       PERFORM 410059-OPEN-CURRLGF                               
+       PERFORM 420059-LENGTH-LGF                                 
+       PERFORM 430059-EXTRACT-LGF                                
+       PERFORM 440059-CLOSE-CURRLGF                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'LGM'                                     
+       PERFORM 410060-OPEN-CURRLGM                               
+       PERFORM 420060-LENGTH-LGM                                 
+       PERFORM 430060-EXTRACT-LGM                                
+       PERFORM 440060-CLOSE-CURRLGM                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'LND'                                     
+       PERFORM 410061-OPEN-CURRLND                               
+       PERFORM 420061-LENGTH-LND                                 
+       PERFORM 430061-EXTRACT-LND                                
+       PERFORM 440061-CLOSE-CURRLND                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'MEM'                                     
+       PERFORM 410062-OPEN-CURRMEM                               
+       PERFORM 420062-LENGTH-MEM                                 
+       PERFORM 430062-EXTRACT-MEM                                
+       PERFORM 440062-CLOSE-CURRMEM                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'MMB'                                     
+       PERFORM 410063-OPEN-CURRMMB                               
+       PERFORM 420063-LENGTH-MMB                                 
+       PERFORM 430063-EXTRACT-MMB                                
+       PERFORM 440063-CLOSE-CURRMMB                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'MMR'                                     
+       PERFORM 410064-OPEN-CURRMMR                               
+       PERFORM 420064-LENGTH-MMR                                 
+       PERFORM 430064-EXTRACT-MMR                                
+       PERFORM 440064-CLOSE-CURRMMR                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'NOS'                                     
+       PERFORM 410065-OPEN-CURRNOS                               
+       PERFORM 420065-LENGTH-NOS                                 
+       PERFORM 430065-EXTRACT-NOS                                
+       PERFORM 440065-CLOSE-CURRNOS                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'NSD'                                     
+       PERFORM 410066-OPEN-CURRNSD                               
+       PERFORM 420066-LENGTH-NSD                                 
+       PERFORM 430066-EXTRACT-NSD                                
+       PERFORM 440066-CLOSE-CURRNSD                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'NSV'                                     
+       PERFORM 410067-OPEN-CURRNSV                               
+       PERFORM 420067-LENGTH-NSV                                 
+       PERFORM 430067-EXTRACT-NSV                                
+       PERFORM 440067-CLOSE-CURRNSV                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'OPT'                                     
+       PERFORM 410068-OPEN-CURROPT                               
+       PERFORM 420068-LENGTH-OPT                                 
+       PERFORM 430068-EXTRACT-OPT                                
+       PERFORM 440068-CLOSE-CURROPT                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'PCD'                                     
+       PERFORM 410069-OPEN-CURRPCD                               
+       PERFORM 420069-LENGTH-PCD                                 
+       PERFORM 430069-EXTRACT-PCD                                
+       PERFORM 440069-CLOSE-CURRPCD                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'PCH'                                     
+       PERFORM 410070-OPEN-CURRPCH                               
+       PERFORM 420070-LENGTH-PCH                                 
+       PERFORM 430070-EXTRACT-PCH                                
+       PERFORM 440070-CLOSE-CURRPCH                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'PFD'                                     
+       PERFORM 410071-OPEN-CURRPFD                               
+       PERFORM 420071-LENGTH-PFD                                 
+       PERFORM 430071-EXTRACT-PFD                                
+       PERFORM 440071-CLOSE-CURRPFD                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'PND'                                     
+       PERFORM 410072-OPEN-CURRPND                               
+       PERFORM 420072-LENGTH-PND                                 
+       PERFORM 430072-EXTRACT-PND                                
+       PERFORM 440072-CLOSE-CURRPND                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'PNF'                                     
+       PERFORM 410073-OPEN-CURRPNF                               
+       PERFORM 420073-LENGTH-PNF                                 
+       PERFORM 430073-EXTRACT-PNF                                
+       PERFORM 440073-CLOSE-CURRPNF                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'PNI'                                     
+       PERFORM 410074-OPEN-CURRPNI                               
+       PERFORM 420074-LENGTH-PNI                                 
+       PERFORM 430074-EXTRACT-PNI                                
+       PERFORM 440074-CLOSE-CURRPNI                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'PNL'                                     
+       PERFORM 410075-OPEN-CURRPNL                               
+       PERFORM 420075-LENGTH-PNL                                 
+       PERFORM 430075-EXTRACT-PNL                                
+       PERFORM 440075-CLOSE-CURRPNL                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'PPI'                                     
+       PERFORM 410076-OPEN-CURRPPI                               
+       PERFORM 420076-LENGTH-PPI                                 
+       PERFORM 430076-EXTRACT-PPI                                
+       PERFORM 440076-CLOSE-CURRPPI                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'PPN'                                     
+       PERFORM 410077-OPEN-CURRPPN                               
+       PERFORM 420077-LENGTH-PPN                                 
+       PERFORM 430077-EXTRACT-PPN                                
+       PERFORM 440077-CLOSE-CURRPPN                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'PPS'                                     
+       PERFORM 410078-OPEN-CURRPPS                               
+       PERFORM 420078-LENGTH-PPS                                 
+       PERFORM 430078-EXTRACT-PPS                                
+       PERFORM 440078-CLOSE-CURRPPS                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'PPT'                                     
+       PERFORM 410079-OPEN-CURRPPT                               
+       PERFORM 420079-LENGTH-PPT                                 
+       PERFORM 430079-EXTRACT-PPT                                
+       PERFORM 440079-CLOSE-CURRPPT                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'PSO'                                     
+       PERFORM 410080-OPEN-CURRPSO                               
+       PERFORM 420080-LENGTH-PSO                                 
+       PERFORM 430080-EXTRACT-PSO                                
+       PERFORM 440080-CLOSE-CURRPSO                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'PSP'                                     
+       PERFORM 410081-OPEN-CURRPSP                               
+       PERFORM 420081-LENGTH-PSP                                 
+       PERFORM 430081-EXTRACT-PSP                                
+       PERFORM 440081-CLOSE-CURRPSP                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'PYI'                                     
+       PERFORM 410082-OPEN-CURRPYI                               
+       PERFORM 420082-LENGTH-PYI                                 
+       PERFORM 430082-EXTRACT-PYI                                
+       PERFORM 440082-CLOSE-CURRPYI                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'PYS'                                     
+       PERFORM 410083-OPEN-CURRPYS                               
+       PERFORM 420083-LENGTH-PYS                                 
+       PERFORM 430083-EXTRACT-PYS                                
+       PERFORM 440083-CLOSE-CURRPYS                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'QUD'                                     
+       PERFORM 410084-OPEN-CURRQUD                               
+       PERFORM 420084-LENGTH-QUD                                 
+       PERFORM 430084-EXTRACT-QUD                                
+       PERFORM 440084-CLOSE-CURRQUD                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'RPD'                                     
+       PERFORM 410085-OPEN-CURRRPD                               
+       PERFORM 420085-LENGTH-RPD                                 
+       PERFORM 430085-EXTRACT-RPD                                
+       PERFORM 440085-CLOSE-CURRRPD                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'RPM'                                     
+       PERFORM 410086-OPEN-CURRRPM                               
+       PERFORM 420086-LENGTH-RPM                                 
+       PERFORM 430086-EXTRACT-RPM                                
+       PERFORM 440086-CLOSE-CURRRPM                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'RPT'                                     
+       PERFORM 410087-OPEN-CURRRPT                               
+       PERFORM 420087-LENGTH-RPT                                 
+       PERFORM 430087-EXTRACT-RPT                                
+       PERFORM 440087-CLOSE-CURRRPT                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'STI'                                     
+       PERFORM 410088-OPEN-CURRSTI                               
+       PERFORM 420088-LENGTH-STI                                 
+       PERFORM 430088-EXTRACT-STI                                
+       PERFORM 440088-CLOSE-CURRSTI                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'STM'                                     
+       PERFORM 410089-OPEN-CURRSTM                               
+       PERFORM 420089-LENGTH-STM                                 
+       PERFORM 430089-EXTRACT-STM                                
+       PERFORM 440089-CLOSE-CURRSTM                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'STO'                                     
+       PERFORM 410090-OPEN-CURRSTO                               
+       PERFORM 420090-LENGTH-STO                                 
+       PERFORM 430090-EXTRACT-STO                                
+       PERFORM 440090-CLOSE-CURRSTO                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'STP'                                     
+       PERFORM 410091-OPEN-CURRSTP                               
+       PERFORM 420091-LENGTH-STP                                 
+       PERFORM 430091-EXTRACT-STP                                
+       PERFORM 440091-CLOSE-CURRSTP                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'SWG'                                     
+       PERFORM 410092-OPEN-CURRSWG                               
+       PERFORM 420092-LENGTH-SWG                                 
+       PERFORM 430092-EXTRACT-SWG                                
+       PERFORM 440092-CLOSE-CURRSWG                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'SWH'                                     
+       PERFORM 410093-OPEN-CURRSWH                               
+       PERFORM 420093-LENGTH-SWH                                 
+       PERFORM 430093-EXTRACT-SWH                                
+       PERFORM 440093-CLOSE-CURRSWH                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'SWP'                                     
+       PERFORM 410094-OPEN-CURRSWP                               
+       PERFORM 420094-LENGTH-SWP                                 
+       PERFORM 430094-EXTRACT-SWP                                
+       PERFORM 440094-CLOSE-CURRSWP                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'TAX'                                     
+       PERFORM 410095-OPEN-CURRTAX                               
+       PERFORM 420095-LENGTH-TAX                                 
+       PERFORM 430095-EXTRACT-TAX                                
+       PERFORM 440095-CLOSE-CURRTAX                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'TLX'                                     
+       PERFORM 410096-OPEN-CURRTLX                               
+       PERFORM 420096-LENGTH-TLX                                 
+       PERFORM 430096-EXTRACT-TLX                                
+       PERFORM 440096-CLOSE-CURRTLX                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'TNT'                                     
+       PERFORM 410097-OPEN-CURRTNT                               
+       PERFORM 420097-LENGTH-TNT                                 
+       PERFORM 430097-EXTRACT-TNT                                
+       PERFORM 440097-CLOSE-CURRTNT                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'TRN'                                     
+       PERFORM 410098-OPEN-CURRTRN                               
+       PERFORM 420098-LENGTH-TRN                                 
+       PERFORM 430098-EXTRACT-TRN                                
+       PERFORM 440098-CLOSE-CURRTRN                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'TRP'                                     
+       PERFORM 410099-OPEN-CURRTRP                               
+       PERFORM 420099-LENGTH-TRP                                 
+       PERFORM 430099-EXTRACT-TRP                                
+       PERFORM 440099-CLOSE-CURRTRP                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'TRV'                                     
+       PERFORM 410100-OPEN-CURRTRV                               
+       PERFORM 420100-LENGTH-TRV                                 
+       PERFORM 430100-EXTRACT-TRV                                
+       PERFORM 440100-CLOSE-CURRTRV                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'TRW'                                     
+       PERFORM 410101-OPEN-CURRTRW                               
+       PERFORM 420101-LENGTH-TRW                                 
+       PERFORM 430101-EXTRACT-TRW                                
+       PERFORM 440101-CLOSE-CURRTRW                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'TWS'                                     
+       PERFORM 410102-OPEN-CURRTWS                               
+       PERFORM 420102-LENGTH-TWS                                 
+       PERFORM 430102-EXTRACT-TWS                                
+       PERFORM 440102-CLOSE-CURRTWS                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'TXE'                                     
+       PERFORM 410103-OPEN-CURRTXE                               
+       PERFORM 420103-LENGTH-TXE                                 
+       PERFORM 430103-EXTRACT-TXE                                
+       PERFORM 440103-CLOSE-CURRTXE                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'TXH'                                     
+       PERFORM 410104-OPEN-CURRTXH                               
+       PERFORM 420104-LENGTH-TXH                                 
+       PERFORM 430104-EXTRACT-TXH                                
+       PERFORM 440104-CLOSE-CURRTXH                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'TXR'                                     
+       PERFORM 410105-OPEN-CURRTXR                               
+       PERFORM 420105-LENGTH-TXR                                 
+       PERFORM 430105-EXTRACT-TXR                                
+       PERFORM 440105-CLOSE-CURRTXR                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'UNC'                                     
+       PERFORM 410106-OPEN-CURRUNC                               
+       PERFORM 420106-LENGTH-UNC                                 
+       PERFORM 430106-EXTRACT-UNC                                
+       PERFORM 440106-CLOSE-CURRUNC                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'VDX'                                     
+       PERFORM 410107-OPEN-CURRVDX                               
+       PERFORM 420107-LENGTH-VDX                                 
+       PERFORM 430107-EXTRACT-VDX                                
+       PERFORM 440107-CLOSE-CURRVDX                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'ADR'                                     
+       PERFORM 410108-OPEN-CURRADR                               
+       PERFORM 420108-LENGTH-ADR                                 
+       PERFORM 430108-EXTRACT-ADR                                
+       PERFORM 440108-CLOSE-CURRADR                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'BCR'                                     
+       PERFORM 410109-OPEN-CURRBCR                               
+       PERFORM 420109-LENGTH-BCR                                 
+       PERFORM 430109-EXTRACT-BCR                                
+       PERFORM 440109-CLOSE-CURRBCR                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'BCT'                                     
+       PERFORM 410110-OPEN-CURRBCT                               
+       PERFORM 420110-LENGTH-BCT                                 
+       PERFORM 430110-EXTRACT-BCT                                
+       PERFORM 440110-CLOSE-CURRBCT                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'BNF'                                     
+       PERFORM 410111-OPEN-CURRBNF                               
+       PERFORM 420111-LENGTH-BNF                                 
+       PERFORM 430111-EXTRACT-BNF                                
+       PERFORM 440111-CLOSE-CURRBNF                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'CCA'                                     
+       PERFORM 410112-OPEN-CURRCCA                               
+       PERFORM 420112-LENGTH-CCA                                 
+       PERFORM 430112-EXTRACT-CCA                                
+       PERFORM 440112-CLOSE-CURRCCA                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'CC'                                      
+       PERFORM 410113-OPEN-CURRCC                                
+       PERFORM 420113-LENGTH-CC                                  
+       PERFORM 430113-EXTRACT-CC                                 
+       PERFORM 440113-CLOSE-CURRCC                               
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'CCR'                                     
+       PERFORM 410114-OPEN-CURRCCR                               
+       PERFORM 420114-LENGTH-CCR                                 
+       PERFORM 430114-EXTRACT-CCR                                
+       PERFORM 440114-CLOSE-CURRCCR                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'CCY'                                     
+       PERFORM 410115-OPEN-CURRCCY                               
+       PERFORM 420115-LENGTH-CCY                                 
+       PERFORM 430115-EXTRACT-CCY                                
+       PERFORM 440115-CLOSE-CURRCCY                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'CID'                                     
+       PERFORM 410116-OPEN-CURRCID                               
+       PERFORM 420116-LENGTH-CID                                 
+       PERFORM 430116-EXTRACT-CID                                
+       PERFORM 440116-CLOSE-CURRCID                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'CRI'                                     
+       PERFORM 410117-OPEN-CURRCRI                               
+       PERFORM 420117-LENGTH-CRI                                 
+       PERFORM 430117-EXTRACT-CRI                                
+       PERFORM 440117-CLOSE-CURRCRI                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'CTY'                                     
+       PERFORM 410118-OPEN-CURRCTY                               
+       PERFORM 420118-LENGTH-CTY                                 
+       PERFORM 430118-EXTRACT-CTY                                
+       PERFORM 440118-CLOSE-CURRCTY                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'CUS'                                     
+       PERFORM 410119-OPEN-CURRCUS                               
+       PERFORM 420119-LENGTH-CUS                                 
+       PERFORM 430119-EXTRACT-CUS                                
+       PERFORM 440119-CLOSE-CURRCUS                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'FAC'                                     
+       PERFORM 410120-OPEN-CURRFAC                               
+       PERFORM 420120-LENGTH-FAC                                 
+       PERFORM 430120-EXTRACT-FAC                                
+       PERFORM 440120-CLOSE-CURRFAC                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'FAH'                                     
+       PERFORM 410121-OPEN-CURRFAH                               
+       PERFORM 420121-LENGTH-FAH                                 
+       PERFORM 430121-EXTRACT-FAH                                
+       PERFORM 440121-CLOSE-CURRFAH                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'GAD'                                     
+       PERFORM 410122-OPEN-CURRGAD                               
+       PERFORM 420122-LENGTH-GAD                                 
+       PERFORM 430122-EXTRACT-GAD                                
+       PERFORM 440122-CLOSE-CURRGAD                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'GAX'                                     
+       PERFORM 410123-OPEN-CURRGAX                               
+       PERFORM 420123-LENGTH-GAX                                 
+       PERFORM 430123-EXTRACT-GAX                                
+       PERFORM 440123-CLOSE-CURRGAX                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'GCD'                                     
+       PERFORM 410124-OPEN-CURRGCD                               
+       PERFORM 420124-LENGTH-GCD                                 
+       PERFORM 430124-EXTRACT-GCD                                
+       PERFORM 440124-CLOSE-CURRGCD                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'GCP'                                     
+       PERFORM 410125-OPEN-CURRGCP                               
+       PERFORM 420125-LENGTH-GCP                                 
+       PERFORM 430125-EXTRACT-GCP                                
+       PERFORM 440125-CLOSE-CURRGCP                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'GCY'                                     
+       PERFORM 410126-OPEN-CURRGCY                               
+       PERFORM 420126-LENGTH-GCY                                 
+       PERFORM 430126-EXTRACT-GCY                                
+       PERFORM 440126-CLOSE-CURRGCY                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'GDL'                                     
+       PERFORM 410127-OPEN-CURRGDL                               
+       PERFORM 420127-LENGTH-GDL                                 
+       PERFORM 430127-EXTRACT-GDL                                
+       PERFORM 440127-CLOSE-CURRGDL                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'GDX'                                     
+       PERFORM 410128-OPEN-CURRGDX                               
+       PERFORM 420128-LENGTH-GDX                                 
+       PERFORM 430128-EXTRACT-GDX                                
+       PERFORM 440128-CLOSE-CURRGDX                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'GFD'                                     
+       PERFORM 410129-OPEN-CURRGFD                               
+       PERFORM 420129-LENGTH-GFD                                 
+       PERFORM 430129-EXTRACT-GFD                                
+       PERFORM 440129-CLOSE-CURRGFD                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'GFP'                                     
+       PERFORM 410130-OPEN-CURRGFP                               
+       PERFORM 420130-LENGTH-GFP                                 
+       PERFORM 430130-EXTRACT-GFP                                
+       PERFORM 440130-CLOSE-CURRGFP                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'GID'                                     
+       PERFORM 410131-OPEN-CURRGID                               
+       PERFORM 420131-LENGTH-GID                                 
+       PERFORM 430131-EXTRACT-GID                                
+       PERFORM 440131-CLOSE-CURRGID                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'GIN'                                     
+       PERFORM 410132-OPEN-CURRGIN                               
+       PERFORM 420132-LENGTH-GIN                                 
+       PERFORM 430132-EXTRACT-GIN                                
+       PERFORM 440132-CLOSE-CURRGIN                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'GL'                                      
+       PERFORM 410133-OPEN-CURRGL                                
+       PERFORM 420133-LENGTH-GL                                  
+       PERFORM 430133-EXTRACT-GL                                 
+       PERFORM 440133-CLOSE-CURRGL                               
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'GMB'                                     
+       PERFORM 410134-OPEN-CURRGMB                               
+       PERFORM 420134-LENGTH-GMB                                 
+       PERFORM 430134-EXTRACT-GMB                                
+       PERFORM 440134-CLOSE-CURRGMB                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'GMR'                                     
+       PERFORM 410135-OPEN-CURRGMR                               
+       PERFORM 420135-LENGTH-GMR                                 
+       PERFORM 430135-EXTRACT-GMR                                
+       PERFORM 440135-CLOSE-CURRGMR                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'GPD'                                     
+       PERFORM 410136-OPEN-CURRGPD                               
+       PERFORM 420136-LENGTH-GPD                                 
+       PERFORM 430136-EXTRACT-GPD                                
+       PERFORM 440136-CLOSE-CURRGPD                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'GPM'                                     
+       PERFORM 410137-OPEN-CURRGPM                               
+       PERFORM 420137-LENGTH-GPM                                 
+       PERFORM 430137-EXTRACT-GPM                                
+       PERFORM 440137-CLOSE-CURRGPM                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'GPT'                                     
+       PERFORM 410138-OPEN-CURRGPT                               
+       PERFORM 420138-LENGTH-GPT                                 
+       PERFORM 430138-EXTRACT-GPT                                
+       PERFORM 440138-CLOSE-CURRGPT                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'GRF'                                     
+       PERFORM 410139-OPEN-CURRGRF                               
+       PERFORM 420139-LENGTH-GRF                                 
+       PERFORM 430139-EXTRACT-GRF                                
+       PERFORM 440139-CLOSE-CURRGRF                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'GRV'                                     
+       PERFORM 410140-OPEN-CURRGRV                               
+       PERFORM 420140-LENGTH-GRV                                 
+       PERFORM 430140-EXTRACT-GRV                                
+       PERFORM 440140-CLOSE-CURRGRV                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'GRW'                                     
+       PERFORM 410141-OPEN-CURRGRW                               
+       PERFORM 420141-LENGTH-GRW                                 
+       PERFORM 430141-EXTRACT-GRW                                
+       PERFORM 440141-CLOSE-CURRGRW                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'GTF'                                     
+       PERFORM 410142-OPEN-CURRGTF                               
+       PERFORM 420142-LENGTH-GTF                                 
+       PERFORM 430142-EXTRACT-GTF                                
+       PERFORM 440142-CLOSE-CURRGTF                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'GTN'                                     
+       PERFORM 410143-OPEN-CURRGTN                               
+       PERFORM 420143-LENGTH-GTN                                 
+       PERFORM 430143-EXTRACT-GTN                                
+       PERFORM 440143-CLOSE-CURRGTN                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'GTP'                                     
+       PERFORM 410144-OPEN-CURRGTP                               
+       PERFORM 420144-LENGTH-GTP                                 
+       PERFORM 430144-EXTRACT-GTP                                
+       PERFORM 440144-CLOSE-CURRGTP                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'GTT'                                     
+       PERFORM 410145-OPEN-CURRGTT                               
+       PERFORM 420145-LENGTH-GTT                                 
+       PERFORM 430145-EXTRACT-GTT                                
+       PERFORM 440145-CLOSE-CURRGTT                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'GUD'                                     
+       PERFORM 410146-OPEN-CURRGUD                               
+       PERFORM 420146-LENGTH-GUD                                 
+       PERFORM 430146-EXTRACT-GUD                                
+       PERFORM 440146-CLOSE-CURRGUD                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'GUF'                                     
+       PERFORM 410147-OPEN-CURRGUF                               
+       PERFORM 420147-LENGTH-GUF                                 
+       PERFORM 430147-EXTRACT-GUF                                
+       PERFORM 440147-CLOSE-CURRGUF                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'GUP'                                     
+       PERFORM 410148-OPEN-CURRGUP                               
+       PERFORM 420148-LENGTH-GUP                                 
+       PERFORM 430148-EXTRACT-GUP                                
+       PERFORM 440148-CLOSE-CURRGUP                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'GVX'                                     
+       PERFORM 410149-OPEN-CURRGVX                               
+       PERFORM 420149-LENGTH-GVX                                 
+       PERFORM 430149-EXTRACT-GVX                                
+       PERFORM 440149-CLOSE-CURRGVX                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'GWG'                                     
+       PERFORM 410150-OPEN-CURRGWG                               
+       PERFORM 420150-LENGTH-GWG                                 
+       PERFORM 430150-EXTRACT-GWG                                
+       PERFORM 440150-CLOSE-CURRGWG                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'GXP'                                     
+       PERFORM 410151-OPEN-CURRGXP                               
+       PERFORM 420151-LENGTH-GXP                                 
+       PERFORM 430151-EXTRACT-GXP                                
+       PERFORM 440151-CLOSE-CURRGXP                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'LGG'                                     
+       PERFORM 410152-OPEN-CURRLGG                               
+       PERFORM 420152-LENGTH-LGG                                 
+       PERFORM 430152-EXTRACT-LGG                                
+       PERFORM 440152-CLOSE-CURRLGG                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'NSE'                                     
+       PERFORM 410153-OPEN-CURRNSE                               
+       PERFORM 420153-LENGTH-NSE                                 
+       PERFORM 430153-EXTRACT-NSE                                
+       PERFORM 440153-CLOSE-CURRNSE                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'NSR'                                     
+       PERFORM 410154-OPEN-CURRNSR                               
+       PERFORM 420154-LENGTH-NSR                                 
+       PERFORM 430154-EXTRACT-NSR                                
+       PERFORM 440154-CLOSE-CURRNSR                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'OPR'                                     
+       PERFORM 410155-OPEN-CURROPR                               
+       PERFORM 420155-LENGTH-OPR                                 
+       PERFORM 430155-EXTRACT-OPR                                
+       PERFORM 440155-CLOSE-CURROPR                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'PCF'                                     
+       PERFORM 410156-OPEN-CURRPCF                               
+       PERFORM 420156-LENGTH-PCF                                 
+       PERFORM 430156-EXTRACT-PCF                                
+       PERFORM 440156-CLOSE-CURRPCF                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'PYA'                                     
+       PERFORM 410157-OPEN-CURRPYA                               
+       PERFORM 420157-LENGTH-PYA                                 
+       PERFORM 430157-EXTRACT-PYA                                
+       PERFORM 440157-CLOSE-CURRPYA                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'PYM'                                     
+       PERFORM 410158-OPEN-CURRPYM                               
+       PERFORM 420158-LENGTH-PYM                                 
+       PERFORM 430158-EXTRACT-PYM                                
+       PERFORM 440158-CLOSE-CURRPYM                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'RGN'                                     
+       PERFORM 410159-OPEN-CURRRGN                               
+       PERFORM 420159-LENGTH-RGN                                 
+       PERFORM 430159-EXTRACT-RGN                                
+       PERFORM 440159-CLOSE-CURRRGN                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'RVS'                                     
+       PERFORM 410160-OPEN-CURRRVS                               
+       PERFORM 420160-LENGTH-RVS                                 
+       PERFORM 430160-EXTRACT-RVS                                
+       PERFORM 440160-CLOSE-CURRRVS                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'SIC'                                     
+       PERFORM 410161-OPEN-CURRSIC                               
+       PERFORM 420161-LENGTH-SIC                                 
+       PERFORM 430161-EXTRACT-SIC                                
+       PERFORM 440161-CLOSE-CURRSIC                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'SII'                                     
+       PERFORM 410162-OPEN-CURRSII                               
+       PERFORM 420162-LENGTH-SII                                 
+       PERFORM 430162-EXTRACT-SII                                
+       PERFORM 440162-CLOSE-CURRSII                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'TBH'                                     
+       PERFORM 410163-OPEN-CURRTBH                               
+       PERFORM 420163-LENGTH-TBH                                 
+       PERFORM 430163-EXTRACT-TBH                                
+       PERFORM 440163-CLOSE-CURRTBH                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'TBL'                                     
+       PERFORM 410164-OPEN-CURRTBL                               
+       PERFORM 420164-LENGTH-TBL                                 
+       PERFORM 430164-EXTRACT-TBL                                
+       PERFORM 440164-CLOSE-CURRTBL                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'LUC'                                     
+       PERFORM 410165-OPEN-CURRLUC                               
+       PERFORM 420165-LENGTH-LUC                                 
+       PERFORM 430165-EXTRACT-LUC                                
+       PERFORM 440165-CLOSE-CURRLUC                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'LGA'                                     
+       PERFORM 410166-OPEN-CURRLGA                               
+       PERFORM 420166-LENGTH-LGA                                 
+       PERFORM 430166-EXTRACT-LGA                                
+       PERFORM 440166-CLOSE-CURRLGA                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'FFI'                                     
+       PERFORM 410167-OPEN-CURRFFI                               
+       PERFORM 420167-LENGTH-FFI                                 
+       PERFORM 430167-EXTRACT-FFI                                
+       PERFORM 440167-CLOSE-CURRFFI                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'FNR'                                     
+       PERFORM 410168-OPEN-CURRFNR                               
+       PERFORM 420168-LENGTH-FNR                                 
+       PERFORM 430168-EXTRACT-FNR                                
+       PERFORM 440168-CLOSE-CURRFNR                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'HFX'                                     
+       PERFORM 410169-OPEN-CURRHFX                               
+       PERFORM 420169-LENGTH-HFX                                 
+       PERFORM 430169-EXTRACT-HFX                                
+       PERFORM 440169-CLOSE-CURRHFX                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'HIC'                                     
+       PERFORM 410170-OPEN-CURRHIC                               
+       PERFORM 420170-LENGTH-HIC                                 
+       PERFORM 430170-EXTRACT-HIC                                
+       PERFORM 440170-CLOSE-CURRHIC                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'ICI'                                     
+       PERFORM 410171-OPEN-CURRICI                               
+       PERFORM 420171-LENGTH-ICI                                 
+       PERFORM 430171-EXTRACT-ICI                                
+       PERFORM 440171-CLOSE-CURRICI                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'ICP'                                     
+       PERFORM 410172-OPEN-CURRICP                               
+       PERFORM 420172-LENGTH-ICP                                 
+       PERFORM 430172-EXTRACT-ICP                                
+       PERFORM 440172-CLOSE-CURRICP                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'LGI'                                     
+       PERFORM 410173-OPEN-CURRLGI                               
+       PERFORM 420173-LENGTH-LGI                                 
+       PERFORM 430173-EXTRACT-LGI                                
+       PERFORM 440173-CLOSE-CURRLGI                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'MAI'                                     
+       PERFORM 410174-OPEN-CURRMAI                               
+       PERFORM 420174-LENGTH-MAI                                 
+       PERFORM 430174-EXTRACT-MAI                                
+       PERFORM 440174-CLOSE-CURRMAI                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'CAR'                                     
+       PERFORM 410175-OPEN-CURRCAR                               
+       PERFORM 420175-LENGTH-CAR                                 
+       PERFORM 430175-EXTRACT-CAR                                
+       PERFORM 440175-CLOSE-CURRCAR                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'DDI'                                     
+       PERFORM 410176-OPEN-CURRDDI                               
+       PERFORM 420176-LENGTH-DDI                                 
+       PERFORM 430176-EXTRACT-DDI                                
+       PERFORM 440176-CLOSE-CURRDDI                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'DDB'                                     
+       PERFORM 410177-OPEN-CURRDDB                               
+       PERFORM 420177-LENGTH-DDB                                 
+       PERFORM 430177-EXTRACT-DDB                                
+       PERFORM 440177-CLOSE-CURRDDB                              
+    ELSE                                                         
+    IF TABLE-CODE-IN = 'HDD'                                     
+       PERFORM 410178-OPEN-CURRHDD                               
+       PERFORM 420178-LENGTH-HDD                                 
+       PERFORM 430178-EXTRACT-HDD                                
+       PERFORM 440178-CLOSE-CURRHDD.                             
+    PERFORM 490000-PRINT-REPORT.                                 
+    PERFORM 300000-READ-TABLE-REC.                               
+                    

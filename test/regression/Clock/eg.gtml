@@ -1,0 +1,38 @@
+fun @ event ->
+    (fn ^ e =>
+        ^ e
+    ).
+
+fun @ invariant ->
+    $ All ([]).
+
+fun @ initially ->
+    (fn ^ n =>
+        $ All ([])
+    ).
+
+fun @ aboveRight ->
+    (fn ^ a =>
+        (fn ^ b =>
+            $ Views ([$ Att (($ XSomewhere, $ YBaseOffset (2, 1)), ($
+              XBaseOffset (1, 0), $ YSomewhere), ^ a), $ Att (@ origin, ($
+              XBaseOffset (1, 0), $ YBaseOffset (2, 0)), ^ b)])
+        )
+    ).
+
+fun @ letterTag ->
+    (let ^ letter = @ singleInstance "letterView", ^ w = 10 in
+        $ Views ([$ Att ((@ x (^ w + 1), @ yOrigin), ($ XBaseOffset (3, 0), $
+          YBaseOffset (4, 0)), (^ letter)), (@ polyLineG $ Solid) [@ origin, (@
+          x ^ w, $ YBaseOffset (4, 1)), ($ XBaseOffset (3, 1), $ YBaseOffset (4
+          , 1)), ($ XBaseOffset (3, (^ w + 1)), @ yOrigin)]])
+    ).
+
+fun @ card ->
+    @ blackShadow ($ Att (@ origin, (@ x 400, @ y 115), ($ Box ($ Solid, ($ Att
+      ((@ x 40, @ y 15), @ stretching, (@ singleInstance "cardContents"))))))).
+
+fun @ view ->
+    (@ aboveRight @ letterTag) @ card.
+
+

@@ -1,0 +1,434 @@
+% TXL 103a3
+% Rihab Eltayeb, Sudan University, August 2005
+% [part of master thesis project]
+% % *****
+% % common to Statements and control structures 
+%
+% ----------------------------------------------------------------------------
+% *********	Block STATEMENTS 	*********
+% ----------------------------------------------------------------------------
+% [0]find a block as the body of a method or constructor or a statementt
+function translateBlock
+	replace*[block]
+	   '{                                        
+        	DeclOrStmt[repeat declaration_or_statement]     
+    	   '}
+	by
+	   '{
+	   	DeclOrStmt[translateVarDeclaration]
+	   	          [translateClassInBlock]     
+           	          [translateStatementInBlock]
+           '}
+end function
+% *************************************************************************
+% [1-1]VARIABLE DECLARATIONS-------------------------------------------------
+function translateVarDeclaration
+replace*[repeat declaration_or_statement]
+	Var[local_variable_declaration]
+	Remaining[repeat declaration_or_statement]
+by
+	Var[checkLocalVars]
+	   [checkLocalConstants][checkLocalRunTimeConstants]
+	   [checkLocalBlankConstants][changeArrayDimensions]
+	Remaining[translateVarDeclaration]
+end function
+% [1-1-1]for constants that has predefined value in their declaration-------------
+function checkLocalConstants
+	replace[local_variable_declaration]
+		Modifiers[repeat modifier] 
+		TypeSpecifier[type_specifier] 
+		VarDecl[variable_declarators];
+	construct AllVarDecl[repeat variable_declarator]
+		_[^ VarDecl]
+	deconstruct AllVarDecl
+		FirstVarDecl[variable_declarator]Remaining[repeat variable_declarator]
+	where Modifiers[containFinal]
+	where FirstVarDecl[isCompileTime]
+	by
+		Modifiers[finalToConst][changeProtected]
+		TypeSpecifier[changeDataTypes][changeArrayTypes][changeExceptionName]
+		VarDecl[changeCSException][changeCSStatement] ;	
+end function 
+% [1-1-2]for constants that has no immediate value in their declaration-----------
+% final is not permitted in C# so change it to a variable
+% comment must be added
+function checkLocalRunTimeConstants
+	replace[local_variable_declaration]
+		Modifiers[repeat modifier] 
+		TypeSpecifier[type_specifier] 
+		VarDecl[variable_declarators];
+	construct AllVarDecl[repeat variable_declarator]
+		_[^ VarDecl]
+	deconstruct AllVarDecl
+		FirstVarDecl[variable_declarator]Remaining[repeat variable_declarator]
+	where Modifiers[containFinal]
+	where not FirstVarDecl[isCompileTime]
+	by
+		Modifiers[changeProtected][removeNonCS]%remove final
+		TypeSpecifier[changeDataTypes][changeArrayTypes][changeExceptionName]
+		VarDecl[changeCSException][changeCSStatement] ;	
+end function 
+% [1-1-3]for blank constants with no initializer
+function checkLocalBlankConstants
+	replace[local_variable_declaration]
+		Modifiers[repeat modifier] 
+		TypeSpecifier[type_specifier] 
+		VarDecl[variable_name];%no initializer
+	where Modifiers[containFinal]
+	by
+		Modifiers[changeProtected][removeNonCS]%remove final
+		TypeSpecifier[changeDataTypes][changeArrayTypes][changeExceptionName]
+		VarDecl[changeCSException][changeCSStatement] ;	
+end function 
+% [1-1-4]for normal local variable declaration
+function checkLocalVars
+	replace*[local_variable_declaration]
+		Modifiers[repeat modifier] 
+		TypeSpecifier[type_specifier] 
+		VarDecl[variable_declarators];
+		construct AllVarDecl[repeat variable_declarator]
+		_[^ VarDecl]
+	deconstruct AllVarDecl
+		FirstVarDecl[variable_declarator]Remaining[repeat variable_declarator]
+	where not Modifiers[containFinal]
+	by
+		Modifiers[removeNonCSModifiers][changeProtected]
+		TypeSpecifier[changeDataTypes][changeArrayTypes][changeExceptionName]
+		VarDecl[changeCSException][changeCSStatement] ;	
+end function
+% *************************************************************************
+% [1-2]ARRAY DECLARATIONS-------------------------------------------------
+% change int b[] to int[]b 
+function changeArrayDimensions 
+	replace[local_variable_declaration]
+		Modifiers[repeat modifier] 
+		DataType[type_name]
+		VarName[declared_name]Dim [repeat dimension]VarInit [opt equals_variable_initializer];
+	construct NewTypeSpecifier[type_specifier]
+		DataType Dim
+	by
+		Modifiers NewTypeSpecifier VarName VarInit ;
+end function
+% *************************************************************************
+% [2]CLASS DECLARATION-----------------------------------------------------
+% no transformation just comment for this.
+function translateClassInBlock 
+	replace*[repeat declaration_or_statement]
+		ClassInBlock[class_declaration]
+		Remaining[repeat declaration_or_statement]
+		construct S[stringlit]
+		"//J2C# Unsupported:Classes within blocks must be removed manually"
+		construct Comment[comment]
+			_[unquote S]
+	by
+		Comment
+		ClassInBlock
+		Remaining[translateVarDeclaration]
+end function
+% *************************************************************************
+% [3]STATEMENTS DECLARATIONS-----------------------------------------------
+function translateStatementInBlock
+	replace*[repeat declaration_or_statement]
+		Stmnt[statement]
+		Remaining[repeat declaration_or_statement]
+	by
+		Stmnt[translateStatement]
+		Remaining[translateStatementInBlock]
+end function
+% [3-1]one statement at a time--------------------------------------------
+function translateStatement
+	replace [statement]
+		OneStmnt[statement]
+	by
+		OneStmnt[changeExpressionStmt]
+		        [changeIf]
+		        [changeSwitch]
+		        [changeWhile]
+		        [changeDoWhile]
+		        [changeFor]
+		        [changeBreak]
+		        [changeContinue]
+		        [changeReturn]
+		        [changeThrow]
+		        [changeSynchronized]
+		        [changeTry]
+		       
+end function	       
+% [3-2]Expression Statement-----------------------------------------------
+function changeExpressionStmt
+	replace[statement]
+		Expression[expression];
+	by
+		Expression[changeExpression][changeCSStatement];
+end function
+function changeExpression
+	replace*[expression]
+		Expression[expression]
+	by
+		Expression[$ '>>> '>>]
+end function
+
+% [3-3]If Statement--------------------------------------------------------
+function changeIf
+	replace*[statement]
+		'if '( IfExp[expression] ')     
+		        IfStmt[statement]
+    		ElseClause[opt else_clause] 
+	by
+		'if '( IfExp[changeExpression] ')     
+			IfStmt[translateStatement][translateBlock]
+    		ElseClause[changeElseClause] 
+end function
+% [3-4]else clause-----------------------------------------------------------
+function changeElseClause
+	replace[opt else_clause]
+		'else ElseStmts [statement]
+	by
+		'else ElseStmts[translateStatement][translateBlock]
+end function
+% [3-5]Switch Statement--------------------------------------------------------
+function changeSwitch
+replace*[statement]
+    'switch '( SwitchExp[expression] ') '{ SwitchAlters [repeat switch_alternative] '}
+by
+    'switch '( SwitchExp[changeExpression] ')'{ SwitchAlters [addBreak][fallThrough]
+    							     [changeSwitchStmts] '}   	
+end function
+% [3-5-1]In C# the last case alternative has to have a break
+function addBreak
+	replace[repeat switch_alternative]
+	  	SwitchAlters [repeat switch_alternative]   
+	construct Length[number]
+		 _[length SwitchAlters]
+	construct Index[number]
+		Length[- 1]
+	construct LastAlter[repeat switch_alternative]
+		SwitchAlters [tail Length]
+	deconstruct LastAlter
+		Label[switch_label]  Stmts[repeat declaration_or_statement] 
+	%no break ?
+	where not Stmts[ContainBreak]
+	% all alternatives before the last one
+	construct BeforeLastAlter[repeat switch_alternative]
+		SwitchAlters [head Index]
+	%a new break to be added
+	construct Break[repeat declaration_or_statement]
+		break ;
+	construct NewStmts[repeat declaration_or_statement] 
+		Stmts[. Break]
+	%new statements with break
+	construct NewLastAlter[repeat switch_alternative]
+		Label NewStmts
+	construct NewSwitchAlters[repeat switch_alternative]
+		BeforeLastAlter[. NewLastAlter]
+	by
+		NewSwitchAlters  
+end function
+% [3-5-2]check if the last statements contain a break
+function ContainBreak
+	match[repeat declaration_or_statement]
+		Stmts[repeat declaration_or_statement]
+	construct Length[number]
+		 _[length Stmts]
+	construct LastDecStmt[repeat declaration_or_statement]
+		Stmts [tail Length]
+	deconstruct *LastDecStmt
+		breakStmt[break_statement]
+end function
+% [3-5-3]check if the last statements contain a goto
+function isGoto
+match[repeat declaration_or_statement]
+		Stmts[repeat declaration_or_statement]
+	construct Length[number]
+		 _[length Stmts]
+	construct LastDecStmt[repeat declaration_or_statement]
+		Stmts [tail Length]
+	deconstruct *LastDecStmt
+		gotoStmt[goto_statement]
+end function
+% [3-5-4]C# does not allow fall through( case without break or goto)
+% unless the case label contains no statements.
+function fallThrough
+	replace*[repeat switch_alternative]
+	  	Label[switch_label]  Stmts[repeat declaration_or_statement] 
+		RemainingSwitchAlters [repeat switch_alternative]   
+	construct Length[number]
+		 _[length Stmts]
+	%no break and at least one statement is present
+	where not Stmts[ContainBreak]
+	where Length[ > 0]
+	where not Stmts[isGoto]
+	deconstruct RemainingSwitchAlters
+		NextLabel[switch_label]  NextStmts[repeat declaration_or_statement] 
+		RemainingAlters [repeat switch_alternative] 
+	%goto the next alternative
+	construct GotoStmt[repeat declaration_or_statement]
+		goto NextLabel 
+	%replace colon with semi colon to be a valid statement
+	construct NewGotoStmt[repeat declaration_or_statement]
+		GotoStmt[$ ': '; ]	
+	construct NewStmts[repeat declaration_or_statement] 
+		Stmts[. NewGotoStmt]
+	%new statements with goto
+	construct NewAlter[repeat switch_alternative]
+		Label NewStmts
+	%check the other cases also
+	construct NewRemainingAlters[repeat switch_alternative]
+		RemainingSwitchAlters[fallThrough]
+	%the final result
+	construct NewSwitchAlters[repeat switch_alternative]
+		NewAlter[. NewRemainingAlters]
+	by
+		  NewSwitchAlters
+end function
+% [3-5-5] to translate the statements inside the switch case
+function changeSwitchStmts
+replace*[repeat switch_alternative]
+	  	Label[switch_label]  Stmts[repeat declaration_or_statement] 
+		RemainingSwitchAlters [repeat switch_alternative]
+	by
+		Label  Stmts[translateStatementInBlock] 
+		RemainingSwitchAlters[changeSwitchStmts] 
+
+end function
+
+% [3-6]While Statement--------------------------------------------------------
+function changeWhile
+	replace*[statement]
+		'while '( WhileExp[expression] ') 
+        		Stmts[statement]   
+	by
+		'while '( WhileExp[changeExpression]') 
+        		Stmts[translateStatement][translateBlock]
+end function
+
+% [3-7]While Statement--------------------------------------------------------
+function changeDoWhile
+	replace*[statement]
+		'do
+			Stmts[statement]
+		'while '( DoWhileExp[expression] ');    
+	by
+		'do
+			Stmts[translateStatement][translateBlock]
+		'while '( DoWhileExp[changeExpression]'); 	
+end function
+% [3-8]For Statement--------------------------------------------------------
+function changeFor
+	replace*[statement]
+		'for '( InitExp[for_init] ForExp[for_expression]UpdateExp [for_update] ')
+        		Stmts[statement]    
+	by
+		'for '( InitExp[checkLocalVars][changeExpression] ForExp[changeExpression]UpdateExp [changeExpression] ')
+        		Stmts[translateStatement][translateBlock]  	
+end function
+% [3-9]Break Statement--------------------------------------------------------
+function changeBreak
+	replace*[statement]
+		BreakStmt[break_statement]
+	deconstruct BreakStmt
+		'break LabelName[reference]';
+	by
+		BreakStmt[$ 'break 'goto]%'goto LabelName ';
+end function
+% [3-10]Continue Statement--------------------------------------------------------
+function changeContinue
+	replace*[statement]
+		ContinueStmt[continue_statement]
+	deconstruct ContinueStmt
+		'continue LabelName[reference]';
+	by
+		ContinueStmt[$ 'continue 'goto]%'goto LabelName ';
+end function      
+% [3-11]Return Statement--------------------------------------------------------
+function changeReturn
+	replace*[statement]
+		'return ReturnExp[opt expression] ';
+	by
+		'return ReturnExp[changeOptExpression] ';
+end function		
+% [3-12]Throw Statement--------------------------------------------------------
+% The Java exception name [see table ] is matched and converted to the C# equivalent one.
+function changeThrow
+	replace*[statement]
+		'throw ThrowExp[expression] ';
+	by
+		'throw ThrowExp[changeExpression][changeCSException][changeCSStatement] ';
+end function
+% [3-13]Synchronized Statement--------------------------------------------------------
+function changeSynchronized
+	replace*[statement]
+    	    'synchronized '( SyncExp[expression] ')
+        	Stmts[statement]                 
+        by
+            'lock '( SyncExp[changeExpression] ')
+        	Stmts[translateStatement][translateBlock]                 
+end function
+% [3-14]Try Statement--------------------------------------------------------
+function changeTry
+	replace*[statement]
+		'try TryBlock[block] Catches[repeat catch_clause] Finally[opt finally_clause]
+	construct NewCatches[repeat catch_clause]
+		_[changeCatch each Catches]
+	by
+		'try TryBlock[translateBlock] NewCatches Finally[changeFinally]
+end function		
+% %[3-14-1]find a catch clause and change its data type--------------------------
+function changeCatch CatchClause[catch_clause]
+	replace[repeat catch_clause]
+		Catches[repeat catch_clause]
+	deconstruct CatchClause	
+		'catch '( DataType[type_specifier] Name[variable_name] ') 
+			CatchBlock[block] 
+	construct NewCatchClause[catch_clause]
+		'catch '( DataType[changeDataTypes][changeArrayTypes][changeExceptionName] Name ') 
+			CatchBlock[translateBlock]  
+	by
+		Catches[. NewCatchClause]
+end function
+% [3-14-2]find a finally clause and change its block------------------------------
+function changeFinally
+	replace[opt finally_clause]
+		'finally FinBlock[block] 
+	by
+		'finally FinBlock[translateBlock]
+end function   
+% [4]*******************************************API Part
+% to fetch for a call for a method in a class
+% mainly used to change System classes such as out.println or print methods
+% [4-1]this fuction should be changed to satisfy other patterns of method calls
+function changeCSStatement
+	replace [expression]
+		FirstId[id] '. SecondId[id]'. ThirdId[id]Remaining[repeat component]
+	%to search for specified entry in the statemnts table
+	construct Key[reference]
+		FirstId.SecondId.ThirdId
+	import StatementMapping [StmtMapper]
+	% match the key entry with C# one
+	deconstruct *[table_entry] StatementMapping
+		Key -> CSStmt [reference]
+	% to build a new valid expression 
+	deconstruct CSStmt
+		FirstCSId[id] CSRemaining[repeat component]
+	%join the method arguements with the new part
+	by 
+		FirstCSId CSRemaining[. Remaining]
+end function
+% *******************************************API Part
+% [4-2]for changing the exception names
+function changeCSException
+	replace *[expression]
+		exp[expression]
+	deconstruct exp
+		'new ExceptionName[qualified_name]()
+	by
+		'new ExceptionName[changeExceptionName]()
+end function
+% Generally for optional expression
+function changeOptExpression
+	replace[opt expression]
+		Expression[opt expression]
+	by
+		Expression[$ '>>> '>>]
+end function
+

@@ -1,0 +1,1800 @@
+	PROGRAM "CRGMCC", NOCLR ::
+	CONST REVISIONE$="15.11.2006" ::
+	DCL y_euro$=tyzY_EURO ::
+	FIELD=M,y_euro ::
+	   DCL     _euro#         ::
+	   DCL     _ndec#         ::
+	   DCL     _a6dec#        ::
+	   DCL     _a7dec#        ::
+	   DCL     _a6mul&=8      ::
+	   DCL     _a7mul&=8      ::
+	   DCL     _azieuro#      ::
+	   DCL     _azideclieu$=8 ::
+	   DCL     _reuritl&=8    ::
+	   DCL     _divisa$=3 ::
+	   DCL     _inveuro#      ::
+	   DCL     _invdivisa$=3 ::
+	   DCL     _invndec# ::
+	   DCL     _eurofil$=3 ::
+CONST ardbdizversion$="19980325"  ::
+FUNCTION FRTDS10135$=1() ::
+ FRTDS10135="1" ::
+ENDF ::
+        FIELD=M ::
+        DCL STRING$=70 ::
+        ARG STRING ::
+        FIELD=M,STRING ::
+           DCL STRCPRG$=8     ::
+           DCL STRNSEG$=3     ::
+           DCL STRPRGC$=8     ::
+           DCL STRAUTO$=1     ::
+           DCL STRPARA$=50    ::
+        DCL _dummy_8$=8 ::
+        DCL KEYDAT$=2                    ::
+        DCL INDKEYDAT#                   ::
+        DCL GGMMAA$=8                    ::
+        DCL KEYMD$=2                     ::
+        DCL INDKEYMD#                    ::
+        DCL DISCO$=4                     ::
+        DCL VWXYZ$=4                     ::
+        DCL KEYTERM$=2                   ::
+        DCL INDKEYTER#                   ::
+        DCL CODTERM$=5                   ::
+        DCL FILTERM$=3                   ::
+        DCL K3$=7                        ::
+        FIELD=M,K3 ::
+           DCL K3_1$=1                   ::
+           DCL K3_16$=6                  ::
+        FIELD=M,K3 ::
+           DCL K3_2$=2                   ::
+           DCL K3_25$=5                  ::
+        FIELD=M,K3 ::
+           DCL K3_3$=3                   ::
+           DCL K3_34$=4                  ::
+        FIELD=M,K3_34 ::
+           DCL K3_34_2$=2                ::
+           DCL K3_52_1$=1                ::
+           FIELD=M,K3_34 ::
+              DCL K3_34_3$=3             ::
+              FIELD=M,K3 ::
+                 DCL K3_4$=4             ::
+                 DCL K3_43$=3            ::
+        FIELD=M,K3 ::
+           DCL K3_5$=5                   ::
+           DCL K3_52$=2                  ::
+        FIELD=M,K3 ::
+           DCL K3_6$=6                   ::
+           DCL K3_61$=1                  ::
+        FIELD=M,K3 ::
+           DCL K3_7$=7                   ::
+        DCL INDK3#                       ::
+        DCL DESCR$=30                    ::
+        FIELD=M,DESCR ::
+           DCL DESCRADIBCC$=50(4)        ::
+        DCL RADBCCSNDESC$=1              ::
+        DCL RADBCCSNINS$=1               ::
+        DCL RADBCCSNDEL$=1               ::
+        DCL RADBCCSNDESC2$=1             ::
+        DCL RADBCCSNDESC3$=1             ::
+        DCL RADBCCSNDESC4$=1             ::
+        DCL RADBCCSNDESC5$=1             ::
+        DCL RADBCCSFILLER$=43            ::
+        FIELD=M,DESCR ::
+           DCL DESLINGUA$=50(5)          ::
+        DCL VOCA$=8(20,2)                ::
+        FIELD=M,VOCA(1,1) ::
+           DCL VOCE=8(20,2)              ::
+        DCL UDESIN_SIGLA$=2              ::
+        DCL UDESIN_TIME$=4               ::
+        FIELD=M,DESCR ::
+           DCL UDESIN_DESCR$=50          ::
+        DCL FILLER=526                   ::
+        DCL DK3$=7                        ::
+        FIELD=M,K3 ::
+           DCL DK3_1$=1                   ::
+           DCL DK3_16$=6                  ::
+        FIELD=M,K3 ::
+           DCL DK3_2$=2                   ::
+           DCL DK3_25$=5                  ::
+        FIELD=M,K3 ::
+           DCL DK3_3$=3                   ::
+           DCL DK3_34$=4                  ::
+        FIELD=M,K3_34 ::
+           DCL DK3_34_2$=2                ::
+           DCL DK3_52_1$=1                ::
+           FIELD=M,K3_34 ::
+              DCL DK3_34_3$=3             ::
+              FIELD=M,K3 ::
+                 DCL DK3_4$=4             ::
+                 DCL DK3_43$=3            ::
+        FIELD=M,K3 ::
+           DCL DK3_5$=5                   ::
+           DCL DK3_52$=2                  ::
+        FIELD=M,K3 ::
+           DCL DK3_6$=6                   ::
+           DCL DK3_61$=1                  ::
+        FIELD=M,K3 ::
+           DCL DK3_7$=7                   ::
+        DCL DINDK3#                       ::
+        DCL DDESCR$=30                    ::
+        FIELD=M,DESCR ::
+           DCL DESCRADIBCC$=50(4)        ::
+        DCL DRADBCCSNDESC$=1              ::
+        DCL DRADBCCSNINS$=1               ::
+        DCL DRADBCCSNDEL$=1               ::
+        DCL DRADBCCSNDESC2$=1             ::
+        DCL DRADBCCSNDESC3$=1             ::
+        DCL DRADBCCSNDESC4$=1             ::
+        DCL DRADBCCSNDESC5$=1             ::
+        DCL DRADBCCSFILLER$=43            ::
+        FIELD=M,DESCR ::
+           DCL DESLINGUA$=50(5)          ::
+        DCL DVOCA$=8(20,2)                ::
+        FIELD=M,VOCA(1,1) ::
+           DCL DVOCE=8(20,2)              ::
+        DCL DUDESIN_SIGLA$=2              ::
+        DCL DUDESIN_TIME$=4               ::
+        FIELD=M,DESCR ::
+           DCL DUDESIN_DESCR$=50          ::
+        DCL DFILLER=526                   ::
+        DCL K01$=5                       ::
+        DCL INDK01#                      ::
+        DCL W1$=2                        ::
+        DCL W2$=40                       ::
+        DCL KAZI$=2                      ::
+        DCL INDKAZI#                     ::
+        DCL AZIRAG$=40                   ::
+        DCL AZIIND$=25                   ::
+        DCL AZICAP=3                     ::
+        DCL AZICIT$=20                   ::
+        DCL AZIPROV$=2                   ::
+        DCL AZIFISC$=16                  ::
+        DCL AZIPIVA=6                    ::
+        DCL AZIATT=5                     ::
+        DCL AZIDOMIND$=25                ::
+        DCL AZIDOMCAP=3                  ::
+        DCL AZIDOMCIT$=20                ::
+        DCL AZIDOMPRO$=2                 ::
+        DCL AZISNAUT$=1                  ::
+        DCL AZIPROT=3(11)                ::
+        DCL AZICTPIVA=6                  ::
+        DCL AZITFT$=1                    ::
+        DCL AZISNGF$=1                   ::
+        DCL AZISNSR$=1                   ::
+        DCL AZIABI$=8                    ::
+        DCL AZICAB$=8                    ::
+        DCL AZIDATCAP$=8                 ::
+        DCL AZICAPSOC=8                  ::
+        DCL AZIDES$=40                   ::
+        DCL AZIGIOR=5                    ::
+        DCL AZIREGIVA$=1                 ::
+        DCL AZIAPPBIL$=8                 ::
+        DCL AZICRIAP$=2                  ::
+        DCL AZICCHIU$=2                  ::
+        DCL AZICCEE$=2                   ::
+        DCL AZISNSEZ$=1(5)               ::
+        DCL AZICODDIV$=3                 ::
+        DCL AZDATAPASSAGGIO$=8           ::
+        DCL AZDECLIEU$=8                 ::
+        DCL AZDECEURO$=8                 ::
+        DCL AZCAMLIEU=8                  ::
+        DCL AZCAMEULI=8                  ::
+        DCL AZSIGLAULTIMAMODIFICA$=2     ::
+        DCL AZTERMULTIMAMODIFICA$=5      ::
+        DCL AZTESTEURO$=2                ::
+        DCL AZMAXEURO=8                  ::
+        DCL AZCAUPASSAGGIO$=2            ::
+        DCL AZSTCPASSAGGIO$=9            ::
+        DCL AZPASSAGGIOEUR$=8            ::
+        DCL AZSTCQDIVBIL$=8              ::
+        DCL AZSTCQDIVORD$=8              ::
+        DCL AZSTCQDIVIMP$=8              ::
+        DCL AZIDIVBOLL$=3                ::
+        DCL AZNUMDECARR#                 ::
+        DCL AZNDECDIVEMU#                ::
+        DCL AZTIPOINTEST$=1              ::
+        DCL AZNUMRIGPRIN#                ::
+        DCL AZMAXPAGBOL=5                ::
+        DCL AZCODSIA$=5                  ::
+        DCL AZTIPCIN$=1                  ::
+        DCL AZCAUPACAR$=2                ::
+        DCL AZCAUPASCA$=2                ::
+        DCL AZCAUSTORNO$=2               ::
+        DCL AZCTOFATRIC$=8               ::
+        DCL AZCAUFATRIC$=2               ::
+        DCL AZINUMPAGGIOR=5              ::
+        DCL AZICODIVAACQ$=2              ::
+        DCL AZICODIVAVEN$=2              ::
+        DCL AZISEZIONALE$=2              ::
+        DCL AZICLIMAS$=2                 ::
+        DCL AZICLICON$=2                 ::
+        DCL AZIFORMAS$=2                 ::
+        DCL AZIFORCON$=2                 ::
+        DCL AZDATSTAGIO$=8               ::
+        DCL AZPROGDARE=8                 ::
+        DCL AZPROGAVERE=8                ::
+        DCL AZFACSTO$=1                  ::
+        DCL AZICODIVAVEN2$=2             ::
+        DCL AZIFIL$=18                   ::
+        DCL UANAAZI_TIME$=4              ::
+        DCL PRGKEY$=8                    ::
+        FIELD=M,PRGKEY ::
+           DCL PRGTIP$=3                 ::
+           DCL PRGNUM$=5                 ::
+        DCL PRGIND#                      ::
+        DCL PRGDES$=75                   ::
+        DCL PRGSTR$=75                   ::
+        DCL FILLER=106                   ::
+        DCL KEYFORMA$=8                  ::
+        FIELD=M,KEYFORMA ::
+           DCL KEYNOME$=7                ::
+           DCL KEYLINGUA$=1              ::
+        DCL INDKEYFORMA#                 ::
+        DCL FORDESC$=30                  ::
+        DCL FRELAZI%(1000)               ::
+        DCL FILLER=4114                  ::
+        FIELD=M,FRELAZI(1) ::
+           DCL FRRELAZI%(300)            ::
+           DCL FCOLREL#(300)             ::
+           DCL FRIGREL#(300)             ::
+           DCL FBYTEINI%(300)            ::
+           DCL FNBYTE#(300)              ::
+        DCL FFORMAT#(300)                ::
+        DCL FBARRAO#(100)                ::
+        DCL FBARRAV#(100)                ::
+        DCL FORTABV#                     ::
+        DCL FORRMAX#                     ::
+        DCL FORTAB0#                     ::
+        DCL FSINOLIB$=2                  ::
+        DCL FSINOTESTA$=2                ::
+        DCL FSINOVOLTA$=2                ::
+        DCL FNRTOTLIB%                   ::
+        DCL FNRIGLIB#                    ::
+        DCL FPASSOLIB#                   ::
+        DCL FRIGASALTOLIB#               ::
+        DCL FNRSALTILIB#                 ::
+        DCL FRIGCOL$=1                   ::
+        DCL FSINODIS$=2                  ::
+        DCL FTABOCONT#                   ::
+        DCL FTABVCONT#                   ::
+        DCL FSALTOPAG#                   ::
+        DCL FCOPIETP#                    ::
+        DCL FCOPIEDIFF#                  ::
+        DCL FTIPSORT$=2                  ::
+        DCL FINIFIN$=1                   ::
+        DCL FCONTCOLL$=7                 ::
+        DCL FCONT132$=1                  ::
+        DCL FCCSRIG#(40)                 ::
+        DCL FCCSCOL#(40)                 ::
+        DCL FCCSCOD#(40)                 ::
+        DCL FGRUPPO$=4                   ::
+        DCL FFORMBCC$=1                  ::
+        DCL FCONTWORD$=7                 ::
+        DCL FFILL148$=113                ::
+        FIELD=M,FFILL148 ::
+           DCL FKEYSPOOL$=19             ::
+           FIELD=M,FKEYSPOOL ::
+              DCL SPOOLDATA$=8           ::
+              DCL SPOOLTERM$=5           ::
+              DCL SPOOLREG$=6            ::
+           DCL FINDSPOOL$=1              ::
+           DCL RWFKEYSPOOL$=19           ::
+           DCL SPOOLFORM$=8              ::
+           DCL SPOOLK1$=22               ::
+           DCL SPOOLDARE=8               ::
+           DCL SPOOLAVERE=8              ::
+           DCL SPOOLCAU$=2               ::
+           DCL SPOOLAGG#                 ::
+           DCL SPOOLSEL#                 ::
+           DCL SPOOLKEYSEL$=22           ::
+           DCL SPOOLSIGLA$=2             ::
+        DCL FORMA_TIPO$=2                ::
+        DCL FORMA_SEMPRE$=1              ::
+        DCL FORMA_VARRAP#                ::
+        DCL FILLER=23                    ::
+        DCL FORBYTE$=1(80,40)            ::
+        FIELD=M,FORBYTE(1,1) ::
+           DCL FORRIGA$=80(40)           ::
+        FIELD=M,FORBYTE(1,1) ::
+           DCL FOR132BY$=1(132,24)       ::
+           FIELD=M,FOR132BY(1,1) ::
+              DCL FORRI132$=132(24)      ::
+           DCL FORFIL132$=32             ::
+        DCL RWKEYFORMA$=8                ::
+        DCL SNBANCA2000$=1    ::
+        DCL RECMSGRETE#       ::
+        DCL SNNONINVALIDA$=1  ::
+        DCL SNLAMPEGGIA$=1    ::
+        DCL SNPOSSEOBB$=1     ::
+        DCL SNNOESIBITORE$=1  ::
+        DCL SNRICHIESTACF$=1  ::
+        DCL SNFORZACTP$=1     ::
+        DCL SNNOTEPART$=1     ::
+        DCL SNECINIZIO$=1     ::
+        DCL SNBASEASSFIN$=1   ::
+        DCL SNNOSTAMPA$=1     ::
+        DCL SNMODVALPART$=1   ::
+        DCL SNFORZACARNET$=1  ::
+        DCL SNLORDOZC$=1      ::
+        DCL SNTASSOCDPER$=1   ::
+        DCL SNSCADRATAANT$=1  ::
+        DCL SNPAGRATEINT$=1   ::
+        DCL SNDIRFISSOCS$=1   ::
+        DCL SNDOCOBBLIG$=1    ::
+        DCL SNINDOBBLIG$=1    ::
+        DCL SNCCIIAOBBLIG$=1  ::
+        DCL SNVALPARTCC$=1    ::
+        DCL SNMODFILASSCIR$=1 ::
+        DCL SNTOTF8QTER$=1    ::
+        DCL SNCONTOXSCONFI$=1 ::
+        DCL DTFINEANNO$=8 ::
+        FIELD=M,DTFINEANNO ::
+           DCL DTFINESSAA$=4 ::
+           DCL DTFINE1231$=4 ::
+           FIELD=M,DTFINE1231 ::
+              DCL DTFINEMM$=2,DTFINEGG$=2 ::
+        DCL FCS_N%,FCS_I%,FCS_J%,KSTRSTAM$=256,KSTR_A%,KSTR_B%,KSTR_C# ::
+        DCL SINORAPLIRE$=2           ::
+        DCL SINORAPEURO$=2           ::
+        DCL ESPODIVISA$ =3           ::
+        DCL SELEDIVISA$ =3           ::
+        DCL VISDIVISA$  =3           ::
+        DCL DIVISAMOV$=3             ::
+        DCL SNSET181$=1              ::
+        DCL RIFPAVV$=9 ::
+        DCL KDIVISA$=3,KFORMATECNICA$=2 ::
+        DCL V_STAMP$=3 ::
+        DCL CGOSUB$=8 ::
+        DCL R1#,R2#,R3#,R4#,R5#,R6#,R7#,R8#,R9#,RA#,RB#,RC#,RD#,RE#,RF#,RG#,RH#,RI#,RL#,RM#,RN#,RO#,RP#,RQ# ::
+        DCL T1#,T2#,T3#,T4#,T5#,T6#,T7#,T8#,T9#,Y1%,Y2%,Y3% ::
+        DCL X$=1,T$=1 ::
+        DCL L$=80 ::
+        DCL B$=79,BB$=80 ::
+        DCL E%,M%,N%,J%,I%,II%,F6#,Y% ::
+        DCL FLAG#,FLAGSEG0# ::
+        DCL FLCOMP#                      ::
+        DCL TESTORA$=12 ::
+        FIELD=M,TESTORA ::
+                DCL FILLER=2,ORA$=2,FILLER=1,MIN$=2,FILLER=1,SCD$=2,FILLER=2 ::
+        DCL ALTROMENU%                   ::
+        DCL NOMEPROG$   =8               ::
+        DCL TESTMENU$   =45              ::
+        DCL DESPUNTI$   =45              ::
+        DCL TESTSEG$    =80              ::
+        DCL NF$         =12(96)          ::
+        DCL LK%            (96)          ::
+        DCL LD%            (96)          ::
+        DCL LT%            (96)          ::
+        DCL LM%            (96)          ::
+        DCL MARCHIO$    =12              ::
+        DCL DURATAPROG                   ::
+        DCL STAZIONE%                    ::
+        DCL OSIBUF$     =256             ::
+        DCL SALTOPAG$   =  1             ::
+        DCL ESP$=2 ::
+        FIELD=M,ESP ::
+        DCL ESP1#,ESP2# ::
+        DCL SALTARIGHE#,SALTAB# ::
+        DCL EXCASPOST$=4 ::
+        DCL IMPERWORD$=3                  ::
+        DCL DATAODIERNA$=8               ::
+        DCL Z1$=2(4)                     ::
+        DCL GMANCOR#(12)                 ::
+        DCL GMANSCA#(12)                 ::
+        DCL SNFM$=1                      ::
+        DCL DATRIAPER$=8                 ::
+        DCL GGFEST$=8(60)                ::
+        DCL LENDAT#                      ::
+        DCL DATAPRSEC$=8                 ::
+        FIELD=M,DATAPRSEC ::
+                DCL SEC$=2 ::
+                DCL ANN$=2 ::
+                DCL MES$=2 ::
+                DCL GIO$=2 ::
+        DCL DATINI$=8                    ::
+        DCL DATFIN$=8                    ::
+        DCL DATOUT$=10                   ::
+        DCL DATINP$=8                    ::
+        DCL SS$=2                        ::
+        DCL AA$=2                        ::
+        DCL MM$=2                        ::
+        DCL GG$=2                        ::
+        DCL SCADPER%                     ::
+        DCL DESCPER$=15(18)              ::
+        DCL SCADINP$=8                   ::
+        DCL SCADOUT$=8                   ::
+        FIELD=M,SCADOUT ::
+                DCL GGSCA$=2 ::
+                DCL MMSCA$=2 ::
+                DCL SASCA$=4 ::
+        DCL AAA,AAAA,AAAAA               ::
+        DCL MMM,MMMM,MMMMM               ::
+        DCL GGG,GGGG,GGGGG               ::
+        DCL EPANNO,EPMESE,EPOCA          ::
+        DCL EPOCOMM ::
+        DCL EPOCAINI,EPOCAFIN ::
+        DCL EPOCACOM ::
+        DCL DESGIO$=10                   ::
+        DCL INDGIO#                      ::
+        DCL EPOCAAP                      ::
+        DCL EPOCAAC                      ::
+        DCL EPOCAOD                      ::
+        DCL EPOCAVAL                     ::
+        DCL EPOCASCA                     ::
+        DCL EPOCAPRE                     ::
+        DCL GGANNO=5                     ::
+        DCL GGDURA=5                     ::
+        DCL HKEYTER$=11                  ::
+        FIELD=M,HKEYTER ::
+           DCL HTERTIPOR$=1              ::
+           DCL HTERCOD$=5                ::
+           FIELD=M,HTERCOD ::
+              DCL HTERFIL$=2             ::
+              DCL HTERTER$=3             ::
+           DCL HTERTAM$=5                ::
+        DCL HINDKSICUR#                  ::
+        DCL HSIGLA$=2                    ::
+        DCL HKCC$=9                      ::
+        DCL HIMPOPE=8                    ::
+        DCL HDIVISAMOV$=3                ::
+        DCL HCAUSALE$=2                  ::
+        DCL HFIDCON=8                    ::
+        DCL HASSCON=8                    ::
+        DCL HSBFCON=8                    ::
+        DCL HSCONFI=8                    ::
+        DCL HINDIS=8                     ::
+        DCL HCRPROT$=6                   ::
+        DCL HVALUT$=8                    ::
+        DCL HIMPPRE=8                    ::
+        DCL HFLAGVAL$=1                  ::
+        DCL HPOTPROPRI$=1                ::
+        DCL HRISCAS$=2                   ::
+        DCL HSEGCHAIN%                   ::
+        DCL HKEYEXFID$=29                ::
+        DCL HFORTECEST$=2                ::
+        DCL HSIGNONCONC$=2               ::
+        DCL HDESNONCONC$=30              ::
+        DCL HSIGDESTAUT$=2(20)           ::
+        DCL HSIGASSUPOT$=2(20)           ::
+        DCL HAUTFILLER$=21               ::
+        DCL KEYUTEN$=11                  ::
+        FIELD=M,KEYUTEN ::
+           DCL UTENTIPOR$=1              ::
+           DCL UTENCOD$=2                ::
+           DCL UTENTAM$=8                ::
+        DCL INDKUTEN#                    ::
+        DCL SIGDATI$=256                 ::
+        FIELD=M,SIGDATI ::
+           DCL PAROLA$=10                ::
+           DCL NOMUT$=25                 ::
+           DCL SNHBANK$=1                ::
+           DCL SIGCLASSE$=2(11)          ::
+           DCL SIGMENUCOL$=1             ::
+           DCL SIGUSOMULTIPLO$=1         ::
+           DCL SNMONITOR$=1              ::
+           DCL SIGTIPO$=2                ::
+           DCL SIGMENU$=1                ::
+           DCL SIGUTERM$=5(10)           ::
+           DCL SIGGGPWD=4                ::
+           DCL SIGCHIULIV1$=1            ::
+           DCL SIGDATULTUT$=8            ::
+           DCL SIGTIPOSN$=1              ::
+           DCL SIGCONSORTILE$=1          ::
+           DCL SIGAMB_EFFETTIVO$=1       ::
+           DCL SIGAMB_PUMA$=1            ::
+           DCL SIGAMB_BILANCIO$=1        ::
+           DCL SIGAMB_TEST$=1            ::
+           DCL SIGAMB_ALTRI$=1           ::
+           DCL SIGNDG$=9                 ::
+           DCL SIGPRESENTE$=2            ::
+           DCL SIGMAIL$=50               ::
+           DCL SIGLIVPWD$=1(20)          ::
+           DCL SIGFILIA$=2               ::
+           DCL SIGSTATUS$=1              ::
+           DCL SIGORAULTUT$=6            ::
+           DCL SIGSIGLAHOST$=8           ::
+           DCL SIGFILLER$=24             ::
+        DCL KEYTER$=11                   ::
+        FIELD=M,KEYTER ::
+           DCL TERTIPOR$=1               ::
+           DCL TERCOD$=5                 ::
+           FIELD=M,TERCOD ::
+              DCL TERFIL$=2              ::
+              DCL TERTER$=3              ::
+           DCL TERTAM$=5                 ::
+        DCL INDKSICUR#                   ::
+        DCL SIGLA$=2                     ::
+        DCL DESTMENU#                    ::
+        DCL PROVMENU#                    ::
+        DCL PROGTER$=12                  ::
+        DCL ANNRICH$=4                   ::
+        DCL MESRICH$=2                   ::
+        DCL GIORICH$=2                   ::
+        DCL ORARICH$=2                   ::
+        DCL MINRICH$=2                   ::
+        DCL SECRICH$=2                   ::
+        DCL ORARILA$=4                   ::
+        DCL MINRILA$=2                   ::
+        DCL SECRILA$=2                   ::
+        DCL UUTSIGMENU$=1                ::
+        DCL UUTSIGMENUV#(8)              ::
+        DCL UUTEURODIVISA$=3             ::
+        DCL UUTMPX$=32                   ::
+        DCL UUSEG_RIC%                   ::
+        DCL UUSEG_DESSEG$=45             ::
+        DCL UUSEG_PRGCHIA$=12            ::
+        DCL UUSEG_PRGMENU$=8             ::
+        DCL UB2USESSION$=7               ::
+        DCL UUT_SBIATTIVO#               ::
+        DCL UUT_BIOMETAUT#               ::
+        DCL FILLER=98                    ::
+        DCL KEYACCES$=11                 ::
+        FIELD=M,KEYACCES ::
+           DCL ACCTIPOR$=1               ::
+           DCL ACCSIGLA$=2               ::
+           DCL ACCCOD$=8                 ::
+        DCL INDKACCES#                   ::
+        DCL SINOPROGACC$=1               ::
+        DCL SINOACCESSG$=1(32)           ::
+        DCL FILLER=223                   ::
+        DCL KEYVALI$=11                  ::
+        FIELD=M,KEYVALI ::
+           DCL VALITIPOR$=1              ::
+           DCL VALICOD$=2                ::
+           DCL VALITAM$=8                ::
+        DCL INDKVALI#                    ::
+        DCL VALUINI$=8                   ::
+        DCL VALSIGINI$=2                 ::
+        DCL VALDATINI$=8                 ::
+        DCL VALTERINI$=5                 ::
+        DCL VALUFIN$=8                   ::
+        DCL VALSIGFIN$=2                 ::
+        DCL VALDATFIN$=8                 ::
+        DCL VALTERFIN$=5                 ::
+        DCL VALDESCR$=18                 ::
+        DCL FILLER=192                   ::
+        DCL USICUPK$=11                  ::
+        DCL USICUPIX#                    ::
+        DCL USICUPD$=1(4096)             ::
+        DCL KEYPROG$=11                  ::
+        FIELD=M,KEYPROG ::
+           DCL PROGTIPOR$=1              ::
+           DCL PROGCOD$=8                ::
+           DCL PROTAM$=2                 ::
+        DCL INDKPROG#                    ::
+        DCL USIPXX$=256(16)              ::
+        FIELD=M,USIPXX(1) ::
+           DCL DESPROG$=45               ::
+           DCL RICHIAM1$=12              ::
+           DCL RICHIAM2$=12              ::
+           DCL NLOGFILES%(64)            ::
+           DCL SINOWR$=1(64)             ::
+           DCL SINOEX$=1(64)             ::
+           DCL DESSEG$=45(32)            ::
+           DCL NUMFISICO%(32)            ::
+           DCL SINOALTROMENU$=2(32)      ::
+           FIELD=M,SINOALTROMENU(1) ::
+              DCL ALTRO_PRG%(32)         ::
+           DCL TIPOPROCBIT$=1            ::
+           DCL SEGCLASSE$=2(32)          ::
+           DCL CALL_PROGRAM$=8           ::
+           DCL PRGMONITORSINO$=1         ::
+           DCL ACCINCHIUSURA$=1(32)      ::
+           DCL USICP_PROGRAM$=8(32)      ::
+           DCL USICP_NUMFIS%(32)         ::
+           DCL USICP_LMENUP$=1           ::
+           DCL USICP_REVCLI%             ::
+           DCL FILLER=1774               ::
+        DCL KEYFILES$=11                 ::
+        FIELD=M,KEYFILES ::
+           DCL FILTIPOR$=1               ::
+           DCL FILCOD$=8                 ::
+           DCL FILTAM$=2                 ::
+        DCL INDKFILES#                   ::
+        DCL USIFXX$=256(16)              ::
+        FIELD=M,USIFXX(1) ::
+           DCL NOMFILE$=8(200)           ::
+           DCL UNITAFIL$=4(200)          ::
+           DCL LKFILE#(200)              ::
+           DCL LDFILE%(200)              ::
+           DCL SNGESTSOCI$=1             ::
+           DCL SNDECODIF$=1              ::
+           DCL SINOGIOR$=1               ::
+           DCL MASKCONTO$=1              ::
+           DCL MAXGGEXF$=3               ::
+           DCL POTNDGPOS$=3              ::
+           DCL AZICRED$=2                ::
+           DCL NBYTESKEY#                ::
+           DCL NBYFILKEY#                ::
+           DCL NBYCATKEY#                ::
+           DCL NBYCONTKEY#               ::
+           DCL DIVCINCC#                 ::
+           DCL NBYCIN#(15)               ::
+           DCL SNM43KEY$=1               ::
+           DCL SNM43DATI$=1              ::
+           DCL NSOTCATCC#                ::
+           DCL SNMOVCCSPACCA$=1          ::
+           DCL UNSERVSPACCA$=4           ::
+           DCL UNTERMSPACCA$=4           ::
+           DCL EXCONTISBF#               ::
+           DCL MULTILINGUA$=1            ::
+           DCL PWDINTERNA$=10            ::
+           DCL UNITAESCA$=4              ::
+           DCL UNITABCC99$=4             ::
+           DCL FREQUEMESS$=2             ::
+           DCL SOMMASBF$=1               ::
+           DCL NBYTESPC#                 ::
+           DCL SNM43PC$=1                ::
+           DCL NBYMASPC#                 ::
+           DCL NBYCONPC#                 ::
+           DCL NBYSOTPC#                 ::
+           DCL FILLER=1024               ::
+        DCL F2KEYFILES$=11               ::
+        FIELD=M,F2KEYFILES ::
+           DCL F2FILTIPOR$=1             ::
+           DCL F2FILCOD$=8               ::
+           DCL F2FILTAM$=2               ::
+        DCL F2INDKFILES#                 ::
+        DCL F2NOMFILE$=8(200)            ::
+        DCL F2UNITAFIL$=4(200)           ::
+        DCL F2LKFILE#(200)               ::
+        DCL F2LDFILE%(200)               ::
+        DCL FILCATUKEYVA$=9(5)           ::
+        DCL F2UNITFC$=4                  ::
+        DCL F2FILL1$=6                   ::
+        DCL NDGHOMEBANK$=9               ::
+        DCL LIMPOTER$=1                  ::
+        DCL F2UNITEFF$=4                 ::
+        DCL F2UNITPUM$=4                 ::
+        DCL F2UNITBIL$=4                 ::
+        DCL F2FILUSICU$=1019             ::
+        DCL KEYAUTOR$=11                 ::
+        FIELD=M,KEYAUTOR ::
+           DCL AUTTIPOR$=1               ::
+           DCL AUTSIGLA$=2               ::
+           DCL AUTTAM$=8                 ::
+        DCL INDKAUTOR#                   ::
+        DCL USIPAA$=256(16)              ::
+        FIELD=M,USIPAA(1) ::
+           DCL AUTORIZ$=2(20)            ::
+           DCL PERCSC#(20)               ::
+           DCL MAXCON=8(20)              ::
+           DCL STRUTTURA$=2              ::
+           DCL ATTIVATT$=2               ::
+           DCL AUTORTT$=2(20)            ::
+           DCL AUTCAUES$=2               ::
+           DCL AUTOEST$=2(12)            ::
+           DCL SCOSTCAMB=3               ::
+           DCL UFFESTERO$=13             ::
+           DCL AUTPAN$=2(8)              ::
+           DCL AUT2RIZ$=2(50)            ::
+           DCL SCOTASCD=3                ::
+           DCL TSLIVSIG$=1               ::
+           DCL SCOSTAPCT=8               ::
+           DCL SNIASAFS$=1               ::
+           DCL SNIASHFT$=1               ::
+           DCL SNIASHTM$=1               ::
+           DCL SNIASLR$=1                ::
+           DCL AUTORTT2$=2(20)           ::
+           DCL SCOSTCOM=8                ::
+           DCL AUTBENEST$=2              ::
+           DCL FILLER=3608               ::
+        DCL KEYPWD$=11                   ::
+        FIELD=M,KEYPWD ::
+           DCL PWDTIPOR$=1               ::
+           DCL PWDTAM$=10                ::
+        DCL INDKPWDR#                    ::
+        DCL PWDAN$=10(3)                 ::
+        DCL PWDFI$=10(3)                 ::
+        DCL PWDCR$=10(3)                 ::
+        DCL PWDCC$=10(3)                 ::
+        DCL PWDDR$=10(3)                 ::
+        DCL PWDCD$=10(3)                 ::
+        DCL PWDMT$=10(3)                 ::
+        DCL PWDES$=10(3)                 ::
+        DCL PWDPT$=10(3)                 ::
+        DCL PWDUT$=10(3)                 ::
+        DCL PWDRT$=10(3)                 ::
+        DCL PWDTT$=10(3)                 ::
+        DCL PWDMF$=10(3)                 ::
+        DCL PWDCO$=10(3)                 ::
+        DCL PWDSI$=10(3)                 ::
+        DCL PWDTS$=10(3)                 ::
+        DCL PWDPU$=10(3)                 ::
+        DCL PWDXX$=10(3)                 ::
+        DCL FILLER=3556                  ::
+        DCL UTESTAKCREVIS$=11            ::
+        DCL UTESTAIXCREVIS#              ::
+        DCL CREVIS_SO0$=3                ::
+        DCL CREVIS_SO1$=3                ::
+        DCL CREVIS_SO2$=3                ::
+        DCL CREVIS_SO3$=3                ::
+        DCL CREVIS_OR0$=3                ::
+        DCL CREVIS_TR0$=3                ::
+        DCL CREVIS_TT0$=3                ::
+        DCL CREVIS_PR0$=3                ::
+        DCL CREVIS_DC1$=3                ::
+        DCL CREVIS_DC0$=3                ::
+        DCL CREVIS_OR1$=3                ::
+        DCL CREVIS_SO5$=3                ::
+        DCL CREVIS_SO6$=3                ::
+        DCL CREVIS_SO7$=3                ::
+        DCL CREVIS_SVIL$=2               ::
+        DCL CREVIS_PROG$=2               ::
+        DCL CREVIS_BTOPT$=20             ::
+        DCL CREVIS_PRONAM$=8             ::
+        DCL CREVIS_BTXSN$=1              ::
+        DCL CREVIS_BTXLST$=16            ::
+        DCL CREVIS_BTXOPT$=30            ::
+        DCL CREVIS_BTXDST$=3             ::
+        DCL CREVIS_EUROSN$=1             ::
+        DCL CREVIS_PRGDIZUNI$=3          ::
+        DCL CREVIS_SVIDIZUNI$=3          ::
+        DCL CREVIS_SVIPRGDIZUNI$=3       ::
+        DCL CREVIS_SVIANGDC0$=3          ::
+        DCL CREVIS_SVIPRODC0$=3          ::
+        DCL CREVIS_DOCUNI$=3             ::
+        DCL CREVIS_OLDUNI$=3             ::
+        DCL CREVIS_FILLER$=366           ::
+        DCL CREVIS_FILLV$=256(14)        ::
+        DCL UTESTAKUREVIS$=11            ::
+        DCL UTESTAIXUREVIS#              ::
+        DCL UREVIS_US0$=3                ::
+        DCL UREVIS_UR0$=3                ::
+        DCL UREVIS_TAPE$=70              ::
+        DCL UREVIS_DISK$=70              ::
+        DCL UREVIS_PRL$=3(10)            ::
+        DCL UREVIS_DAL$=3(10)            ::
+        DCL UREVIS_FILLER$=306           ::
+        DCL UREVIS_FILLV$=256(14)        ::
+        DCL NSEGNOTE%         ::
+        DCL SINOCATALOGATA$= 2,SINOROLL$=2 ::
+        DCL SINOCONSORZIO$ = 2 ::
+        DCL NUMCONSORZIO# ::
+        DCL SINOBCC99$ = 2 ::
+        DCL SNCAMBIODATA$ = 1 ::
+        DCL SNUDESACC$=1   ::
+        DCL NFANAAZI#,NFAZIEND#,NFK3#,NFK1#,NFUFORMA# ::
+        DCL IMP_PARPR=8          ::
+        DCL STAMPADIFFERITA$=1   ::
+        DCL CASPOST$=7 ::
+        FIELD=m,CASPOST ::
+           DCL CASPOSTFF$=2 ::
+           DCL CASPOSTNR$=5 ::
+	FIELD=M ::
+        DCL AREACONTABILITA$=400 ::
+        FIELD=M,AREACONTABILITA ::
+           DCL AZICONT$=2           ::
+           DCL DATCONT$=8           ::
+           DCL TERCONT$=5           ::
+           DCL SIGCONT$=2           ::
+           DCL REGCONT$=6           ::
+           DCL RIGCONT$=1           ::
+           DCL TIPCONT$=1           ::
+           DCL MCSCONT$=9           ::
+           DCL CAUCONT$=2           ::
+           DCL DIVCONT$=3           ::
+           DCL IMPCONT&=8           ::
+           DCL DUACONT&=8           ::
+           DCL CTVCONT$=1           ::
+           DCL SEGCONT$=1           ::
+           DCL ANNCONT$=1           ::
+           DCL DESCONT$=26          ::
+           DCL DTDOCCONT$=8         ::
+           DCL DTDECCONT$=8         ::
+           DCL DTSCACONT$=8         ::
+           DCL DTVALCONT$=8         ::
+           DCL NRDOCCONT=5          ::
+           DCL NRREACONT$=6         ::
+           DCL TIPRECONT$=1         ::
+           DCL TIPDOCONT$=1         ::
+           DCL SIMPCONT&=8          ::
+           DCL SIVACONT&=8          ::
+           DCL NDGDCCONT$=9         ::
+           DCL KCCDCCONT$=9         ::
+           DCL CAPCHCONT$=2         ::
+           DCL CKMDCCONT$=31        ::
+           DCL CIMPOCONT&=8         ::
+           DCL CSEGNCONT$=1         ::
+           DCL PRTCONT$=2           ::
+           DCL GFOCONT$=2           ::
+           DCL DE1CONT$=26          ::
+           DCL DE2CONT$=26          ::
+           DCL SQUACONT$=1          ::
+           DCL SETCONT$=2           ::
+           DCL PARCONT$=2           ::
+           DCL MENCONT%             ::
+           DCL DIVDICUI$=3          ::
+           DCL CGPROGCOD$=8         ::
+           DCL CGNOSCORPORO$=1      ::
+           DCL NUM_RATPAG$=2        ::
+           DCL TIPO_CDC$=1          ::
+           DCL COD_CDC$=4           ::
+           DCL CGTIPRIF$=3          ::
+           DCL CGRIFERIM$=33        ::
+           DCL CGMOVRAG$=1          ::
+           DCL GCREGIVA$=2          ::
+           DCL CGCODSOS$=5          ::
+           DCL CGNUMSOS$=15         ::
+           DCL CGSOSCASC$=1         ::
+           DCL CGIVACONS$=1         ::
+           DCL CGDET_SL%            ::
+           DCL CGDET_SUF$=2         ::
+           DCL FILCONT$=48          ::
+        DCL AREACCDR$=800 ::
+        FIELD=M,AREACCDR ::
+          DCL CCDR_FI%                ::
+          DCL CCDR_INDRAPP#           ::
+          DCL CCDR_STATOCORR$=3       ::
+          DCL CCDR_RAGGIORNALE$=35    ::
+          DCL CCDR_SINOGIOR$=1        ::
+          DCL CCDR_CAUTIP$=1          ::
+          DCL CCDR_CAUPV#             ::
+          DCL CCDR_TIPOAGG#           ::
+          DCL CCDR_KCONTO$=9          ::
+          DCL CCDR_TERCOD$=5          ::
+          DCL CCDR_CRPROTMOV$=6       ::
+          DCL CCDR_CAUSALMOV$=2       ::
+          DCL CCDR_CONTROVALUTA$=1    ::
+          DCL CCDR_DIVISA$=3          ::
+          DCL CCDR_IMPORTOMOV=8       ::
+          DCL CCDR_DUALEMOV=8         ::
+          DCL CCDR_SEGNOMOV$=1        ::
+          DCL CCDR_DESCAUMOV$=22      ::
+          DCL CCDR_DESCA1MOV$=22      ::
+          DCL CCDR_DESCA2MOV$=22      ::
+          DCL CCDR_ASSEGNMOV$=9       ::
+          DCL CCDR_CTPARTMOV$=9       ::
+          DCL CCDR_PARTITAMOV$=9      ::
+          DCL CCDR_CAUPARTMOV$=2      ::
+          DCL CCDR_VALUTAMOV$=8       ::
+          DCL CCDR_DISPONMOV$=8       ::
+          DCL CCDR_SALDOCMOV =8       ::
+          DCL CCDR_SCONFINMOV=8       ::
+          DCL CCDR_INDISPOMOV=8       ::
+          DCL CCDR_IMPAVVMOV =8       ::
+          DCL CCDR_NPAVVMOV$ =9       ::
+          DCL CCDR_TESTASMOV$=1       ::
+          DCL CCDR_TESTSPMOV$=1       ::
+          DCL CCDR_TESTCFMOV$=1       ::
+          DCL CCDR_TESTFOMOV$=1       ::
+          DCL CCDR_TESTSTMOV$=1       ::
+          DCL CCDR_CAUMASKMOV$=7      ::
+          DCL CCDR_DESAGG$=22(6)      ::
+          DCL CCDR_CABCKT$=5          ::
+          DCL CCDR_PRIMARIGA#         ::
+          DCL CCDR_CONLACONTABILE$=2  ::
+          DCL CCDR_CONILBOLLO$=2      ::
+          DCL CCDR_CONTBONUNICA$=2    ::
+          DCL CCDR_DATIRETE$=3        ::
+          DCL CCDR_TIPESIB$=1         ::
+          DCL CCDR_NDGESIB$=9         ::
+          DCL CCDR_LEGESIB$=1         ::
+          DCL CCDR_1CONTROP$=30       ::
+          DCL CCDR_2CONTROP$=20       ::
+          DCL CCDR_3CONTROP$=20       ::
+          DCL CCDR_CCCTP$=15          ::
+          DCL CCDR_CTPCAB$=6          ::
+          DCL CCDR_CTPPAESE$=3        ::
+          DCL CCDR_ABICTP$=5          ::
+          DCL CCDR_CABCTP$=5          ::
+          DCL CCDR_TIPIMP#            ::
+          DCL CCDR_CASCASSA$=8        ::
+          DCL CCDR_CASINDEX$=1        ::
+          DCL CCDR_CASTIP#            ::
+          DCL CCDR_SINOTCAS$=1        ::
+          DCL CCDR_TERMVIRT$=5        ::
+          DCL CCDR_SINOTERMVIRT$=1    ::
+          DCL CCDR_PENALEMOV =4       ::
+          DCL CCDR_COMDPOSSE$=9       ::
+          DCL CCDR_GGINTPENALE=3      ::
+          DCL CCDR_GGCAPPENALE=3      ::
+          DCL CCDR_SINOESTIN$=2       ::
+          DCL CCDR_GGDURA=5           ::
+          DCL CCDR_INDGIA#            ::
+          DCL CCDR_SALPREC=8          ::
+          DCL CCDR_DATACAPIT$=8       ::
+          DCL CCDR_TASMAT=4           ::
+          DCL CCDR_INTMAT=8           ::
+          DCL CCDR_RITMAT=8           ::
+          DCL CCDR_NUMMAT=8           ::
+          DCL CCDR_GIAMED=8           ::
+          DCL CCDR_SPESEDR=8          ::
+          DCL CCDR_ASSICDR=8          ::
+          DCL CCDR_PSCKT$=1           ::
+          DCL CCDR_PSCABCKT$=5        ::
+          DCL CCDR_PROGCOD$=8         ::
+          DCL CCDR_SNCAPIT$=1         ::
+          DCL CCDR_TIPDISP$=1         ::
+          DCL CCDR_KEYDISP$=23        ::
+          DCL CCDR_SNKKEYVA$=1        ::
+          DCL CCDR_KEYSTORNO$=19      ::
+          DCL CCDR_DATREGOL$=8        ::
+          DCL CCDR_FAMILAPL$=8        ::
+          DCL CCDR_MTIPRIFER$=3       ::
+          DCL CCDR_MRIFERIM$=33       ::
+          DCL CCDR_DATCONT$=8         ::
+          DCL CCDR_SNMAFIA$=1         ::
+          DCL CCDR_MTERMEFF$=5        ::
+          DCL CCDR_ACPAPER$=1         ::
+          DCL CCDR_TRAPPA$=1          ::
+          DCL CCDR_CRAPPA$=9          ::
+          DCL CCDR_TIPOSTAMPA$=1      ::
+          DCL CCDR_ULIMOPE$=1         ::
+          DCL CCDR_MODCONT$=1         ::
+          DCL CCDR_MOTIVOPDS$=1       ::
+          DCL CCDR_TIPCONBON$=1       ::
+          DCL CCDR_NREGCOL$=6         ::
+          DCL CCDR_NDGSOGG$=9         ::
+          DCL CCDR_FORZADATA$=1       ::
+          DCL CCDR_PDSBLOCC$=1        ::
+          DCL CCDR_SL_DISDET%         ::
+          DCL CCDR_FILLER$=13         ::
+        DCL HWSPARAM$=1800 ::
+        FIELD=M,HWSPARAM ::
+           DCL HNMXFIELD#        ::
+           DCL HSNFILT#          ::
+           DCL HNRLINK#          ::
+           DCL HSKINI$=120       ::
+           DCL HSKFIN$=120       ::
+           DCL HS1KEY$=120       ::
+           DCL HSNFILE$=15       ::
+           DCL HSNFILE2$=15      ::
+           DCL HLINK2$=11(10)    ::
+           DCL HSFZDETRIGA$=16   ::
+           DCL HPCOL#            ::
+           DCL HPRIG#            ::
+           DCL HRDET#            ::
+           DCL HLDET#            ::
+           DCL HC_CPOP#          ::
+           DCL HC_SPOP#          ::
+           DCL HC_CCUR#          ::
+           DCL HC_SCUR#          ::
+           DCL HBOIT$=12         ::
+           FIELD=M,HBOIT         ::
+              DCL HBTS$=1(12) ::
+           DCL HDESTITOLO$=150   ::
+           DCL HTITOLO$ =80      ::
+           DCL HW24RIGA$ =120    ::
+           DCL HKEYZOOM#(10)     ::
+           DCL HFUNZOOM$=16      ::
+           DCL HKEYENTER#        ::
+           DCL HFFILTRO$=16      ::
+           DCL HFUNVAR$=100      ::
+           DCL HBYTINI%(10)        ::
+           DCL HBYTLUN%(10)        ::
+           DCL HTFIELD$=1(10)      ::
+           DCL HFFORMAT$=15(10)    ::
+           DCL HSEPARA$=10(10)     ::
+           DCL HSFLCP%(10,2)         ::
+           DCL HSTOPERA$=1(10)       ::
+           DCL HS2OPERA$=20(10)      ::
+           DCL HSFLOPCF$=1(10)       ::
+           DCL HSFLOPLO$=1(10)       ::
+           DCL H2$=2                 ::
+           FIELD=M,H2 ::
+              DCL H2_1# ::
+              DCL H2_2# ::
+           DCL H0$=2                 ::
+           FIELD=M,H0 ::
+              DCL H0_1# ::
+              DCL H0_2# ::
+           DCL HWSRIFER$=8          ::
+           DCL HWSREVERSE#          ::
+           DCL HKEYDOWN#(10)        ::
+           DCL HFUNDOWN$=16         ::
+           DCL HWFILLER$=39 ::
+           DCL HWSKEYRET$=120       ::
+	FIELD=M ::
+	CONST PRG_VERSIONE%=5     ::
+	DCL   CLI_VERSIONE%       ::
+	DCL RETURN_197#           ::
+SEGMENT 0 ::
+	aribt000(string,y_euro,revisione,rtds000_version) ::
+ESEG 0 ::
+	SEGMENT 220 ::
+	DATINI="19920710" ::
+	BENVAL="19920921" ::
+	CODINI="000000000" ::
+	CODFIN="999999999" ::
+	IF NBYFILKEY<>2 ::
+	   CODFIN="009999999" ::
+	ENDIF ::
+	SINOSTAMPA="SI" ::
+	SINOAGG="NO" ::
+	SINOPRT="NO" ::
+	R1=8 ::
+	R2=R1+1 ::
+	R3=R2+1 ::
+	R4=R3+1 ::
+	R5=R4+1 ::
+	R6=R5+1 ::
+	R7=R6+1 ::
+	T1=01 ::
+	T2=T1+23 ::
+10       ::
+	PRINT=1: CLEAR ::
+	PRINT=1:TAB(01,01),ATB(2),TESTSEG,ATB(0) ::
+	PRINT=1:TAB(T1,R1),"Dal conto........... :" ::
+	PRINT=1:TAB(T1,R2)," al conto........... :" ::
+	PRINT=1:TAB(T1,R3),"Stampa lista (SI/NO) :" ::
+	PRINT=1:TAB(T1,R4),"Addebito     (SI/NO) :" ::
+	PRINT=1:TAB(T1,R5),"Causale di addebito. :" ::
+	PRINT=1:TAB(T1,R6),"Valuta di addebito.. :" ::
+	PRINT=1:TAB(T1,R7),"Contabile    (SI/NO) :" ::
+	PRINT=1:TAB(01,23),L ::
+200     PRINT=1:TAB(01,24),B,TAB(01,24),ATB(2)," ESC ",ATB(0),"=fine          " ::
+	COLKEY=T2 ::
+	RIGKEY=R1 ::
+	COMDUPKEY=CODINI ::
+	SINO0099KEY="SI" ::
+	GOSUB &ASKEY ::
+	CODINI=SUBSTR(COMDUPKEY,1,NBYTESKEY) ::
+	IF LABKEY="       " GOTO 210 ::
+	IF LABKEY="24RIGA " GOTO 200 ::
+	IF LABKEY="&LABESC" GOTO 9000 ::
+	GOTO 200 ::
+210     PRINT=1:TAB(01,24),B,TAB(01,24),ATB(2)," ESC ",ATB(0),"=fine                     ",ATB(2)," UP ",ATB(0),"=input precedente        " ::
+	COLKEY=T2 ::
+	RIGKEY=R2 ::
+	COMDUPKEY=CODFIN ::
+	SINO0099KEY="SI" ::
+	GOSUB &ASKEY ::
+	CODFIN=SUBSTR(COMDUPKEY,1,NBYTESKEY) ::
+	IF LABKEY="       " GOTO 220 ::
+	IF LABKEY="24RIGA " GOTO 210 ::
+	IF LABKEY="&LABUP " GOTO 200 ::
+	IF LABKEY="&LABESC" GOTO 9000 ::
+	GOTO 210 ::
+220     ASK=1,I=9000,U=210:TAB(T2,R3),SINOSTAMPA=TAB(T2),SINOSTAMPA ::
+	PRINT=1:TAB(T2),SINOSTAMPA ::
+	IF (SINOSTAMPA<>"SI") AND (SINOSTAMPA<>"NO") GOTO 220 ::
+230     ASK=1,I=9000,U=220:TAB(T2,R4),SINOAGG=TAB(T2),SINOAGG ::
+	PRINT=1:TAB(T2),SINOAGG ::
+	IF (SINOAGG<>"SI") AND (SINOAGG<>"NO") GOTO 230 ::
+	IF (SINOSTAMPA="NO") AND (SINOAGG="NO") GOTO 230 ::
+	IF SINOAGG="NO" ::
+	   PRINT=1:TAB(01,R5),B ::
+	   PRINT=1:TAB(01,R6),B ::
+	   PRINT=1:TAB(01,R7),B ::
+	   GOTO 300 ::
+	ENDIF ::
+240     ASK=1,I=9000,U=230:TAB(T2,R5),COMCAU=TAB(T2),COMCAU ::
+	PRINT=1:TAB(T2),COMCAU ::
+	KEYCAUSA="7"+COMCAU ::
+	SEARCH=NFUCAUSA,KEYCAUSA:240,E,CAUDES(1),LD(NFUCAUSA) ::
+	PRINT=1:TAB(T2+4),CAUDES(1) ::
+250     DATAPRSEC=BENVAL ::
+	DATINP=GIO+MES+SEC+ANN ::
+	ASK=1,I=9000,U=240:TAB(T2,R6),GIO,"/",MES,"/",SEC,ANN=TAB(T2),DATINP ::
+	DATOUT=DATA8900 ::
+	IF DATOUT=" " GOTO 250 ::
+	PRINT=1:TAB(T2),DATOUT ::
+	BENVAL=SS+AA+MM+GG ::
+260     ASK=1,I=9000,U=250:TAB(T2,R7),SINOPRT=TAB(T2),SINOPRT ::
+	PRINT=1:TAB(T2),SINOPRT ::
+	IF (SINOPRT<>"SI") AND (SINOPRT<>"NO") GOTO 260 ::
+300     PRINT=1:TAB(01,24),B,TAB(01,24),ATB(2)," ESC ",ATB(0),"=fine         ",ATB(2)," F1 ",ATB(0)," per confermare " ::
+	ASK=1,I=9000,0x11=&F1:=T ::
+	GOTO 300 ::
+&F1     PRINT=1:TAB(01,20),B,TAB(20,20),ATB(2)," ELABORAZIONE IN CORSO ",ATB(0) ::
+	PRINT=1:TAB(01,24),B,TAB(01,24),ATB(2)," F6 ",ATB(0)," per interrompere l'elaborazione " ::
+	PAG=0 ::
+	NRIGA=0 ::
+	FOR I=1 TO 10 ::
+	   P(I)=0 ::
+	NEXT I ::
+	KDR=CODINI ::
+	SEARCH=NFUDERIS,KDR:&DWDR,E,DNDG,LD(NFUDERIS) ::
+	GOTO &DWDR1 ::
+&DWDR   DOWN=NFUDERIS:&ENDDR,E,KDR,LT(NFUDERIS) ::
+	OP &OP ,F6 ::
+	GOTO &DWDR1 ::
+&OP     IF F6<>0x16 GOTO &DWDR1 ::
+	PRINT=1:TAB(01,24),B,TAB(01,24),ATB(2)," ESC ",ATB(0)," per terminare       ",ATB(2)," F1 ",ATB(0)," per proseguire" ::
+	ASK=1,I=&ENDDR,0x11=&OP1:=T ::
+	GOTO &OP ::
+&OP1    PRINT=1:TAB(01,24),B,TAB(01,24),ATB(2)," F6 ",ATB(0)," per interrompere l'elaborazione " ::
+&DWDR1  IF KDR>CODFIN GOTO &ENDDR ::
+	IF (DSTATO="E") OR (DSTATO="L") ::
+	   IF DDATUM<DATINI GOTO &DWDR ::
+	ENDIF ::
+	DIVISAMOV=DDIVISA ::
+	SETDIVISA(DIVISAMOV) ::
+	K1=DNDG ::
+	SEARCH=NFUANAGE,K1:&DWDR2,E,TIPO,LD(NFUANAGE) ::
+&DWDR2  IF E<>0 ::
+	   TITOLO=" " ::
+	   RAGSO1=DPORRAG ::
+	   RAGSO2=" " ::
+	   INDIRIZZO=DPORIND ::
+	   CAP=DPORCAP ::
+	   CITTARES=DPORCIT ::
+	   PROV=DPORPRO ::
+	   LINGUA="0" ::
+	ENDIF ::
+	PRINT=1:TAB(01,21),KDR," ",RAGSO1 ::
+	TITOLOCORR=TITOLO ::
+	RAGSO1CORR=RAGSO1 ::
+	RAGSO2CORR=RAGSO2 ::
+	INDIRICORR=INDIRIZZO ::
+	CAPCORR=CAP ::
+	CITTACORR=CITTARES ::
+	PROVCORR=PROV ::
+	CABCORR=SEDLEG ::
+	STATOCORR=ESTERO ::
+	CODLINGUA=LINGUA ::
+	INDLINGUA=CONV(LINGUA)+1 ::
+	GOSUB 1000                ::
+	IF COMSALCTP>0 ::
+	   IF SINOSTAMPA="SI" ::
+	      GOSUB &STAMPA ::
+	   ENDIF ::
+	   IF SINOAGG="SI" ::
+	      EPOCAVAL=EPOCAOD ::
+	      LDGO.SEG 45 ::
+	      GOSUB &AGGDR ::
+	   ENDIF ::
+	ENDIF ::
+	GOTO &DWDR ::
+&ENDDR  IF P(1)>0 ::
+	   PRINT=2:TAB(01),GENER(130,"-") ::
+	   PRINT=2:TABV(1) ::
+	   PRINT=2:TAB(01),((EUROPRINT("SN9"))),P(1) ::
+	   PRINT=2:TAB(50),((EUROPRINT("SN12"))),P(2) ::
+	   PRINT=2:TAB(70),((EUROPRINT("SN12"))),P(3) ::
+	   PRINT=2: PAGE ::
+	   PRINT=2:SALTOPAG ::
+	ENDIF ::
+	GOTO 10 ::
+1000     ::
+	COMSALCTP=DSALAT(_EURO) ::
+	CCONTO=KDR ::
+	CDATA="99999999" ::
+	CTERM="zzzzz" ::
+	CREG="zzzzzz" ::
+	SEARCH=NFUKECDR,KEYECC:1100,E ::
+1100    UP=NFUKECDR:1900,E,KEYECC,LT(NFUKECDR) ::
+	IF CCONTO<>KDR GOTO 1900 ::
+	IF CDATA<DATINI GOTO 1900 ::
+	RTERM=CTERM ::
+	RDATA=CDATA ::
+	RREG=CREG ::
+	SEARCH=NFUMOVDR,KEYMDR:1110,E,RSIGLA,LD(NFUMOVDR) ::
+1110    IF E<>0 ::
+	   PRINT=1:TAB(01,24),B,BELL,TAB(01,24)," Errore in ",NF(NFUMOVDR)," : ",E," ",KEYMDR ::
+	   ASK=1:BELL=T ::
+	ENDIF ::
+	IF RSEGNO="D" ::
+	   COMSALCTP=COMSALCTP+RIMPOR(_EURO) ::
+	ELSE ::
+	   COMSALCTP=COMSALCTP-RIMPOR(_EURO) ::
+	ENDIF ::
+	GOTO 1100 ::
+1900    RETURN ::
+&STAMPA  ::
+	IF PAG=0 ::
+	   GOSUB &TESTA ::
+	ENDIF ::
+	IF NRIGA=55 ::
+	   PRINT=2:TAB(01),GENER(130,"-") ::
+	   PRINT=2:TABV(1) ::
+	   PRINT=2:TAB(110),"SEGUE -->" ::
+	   GOSUB &TESTA ::
+	ENDIF ::
+	COLKEY=01 ::
+	RIGKEY=0 ::
+	COMDUPKEY=KDR ::
+	DEVICEKEY=2 ::
+	GOSUB &PRKEY ::
+	PRINT=2:TAB(14),RAGSO1 ::
+	PRINT=2:TAB(50),((EUROPRINT("SN12"))),COMSALCTP ::
+	M1=EUROROUN(COMSALCTP*0.006) ::
+	PRINT=2:TAB(70),((EUROPRINT("SN12"))),M1 ::
+	IF (DSTATO="E") OR (DSTATO="L") ::
+	   PRINT=2:TAB(90),"ESTINTO" ::
+	ENDIF ::
+	IF (DSTATO="D") OR (DSTATO="T") ::
+	   PRINT=2:TAB(90),"BLOCCATO DARE" ::
+	ENDIF ::
+	PRINT=2:TABV(1) ::
+	NRIGA=NRIGA+1 ::
+	P(1)=P(1)+1 ::
+	P(2)=P(2)+COMSALCTP ::
+	P(3)=P(3)+M1 ::
+	RETURN ::
+&TESTA   ::
+	IF PAG>0 ::
+	   PRINT=2: PAGE ::
+	ELSE ::
+	   PRINT=2:TABV(0) ::
+	ENDIF ::
+	PAG=PAG+1 ::
+	NRIGA=0 ::
+	PRINT=2:TAB(01),"LISTA DEGLI ADDEBITI RELATIVI AL D.L. 333 DELL' 11 LUGLIO 1992 EFFETTUATI IL ",Z1(1),"/",Z1(2),"/",Z1(3),Z1(4) ::
+	PRINT=2:TABV(1) ::
+	PRINT=2:TAB(01),"=======================================================================================" ::
+	PRINT=2:TABV(2) ::
+	PRINT=2:TAB(01),GENER(130,"-") ::
+	PRINT=2:TABV(1) ::
+	PRINT=2:TAB(01),"CONTO N." ::
+	PRINT=2:TAB(14),"RAGIONE SOCIALE" ::
+	PRINT=2:TAB(50),"SALDO CONTABILE" ::
+	PRINT=2:TAB(70),"        IMPOSTA" ::
+	PRINT=2:TAB(90),"NOTE" ::
+	PRINT=2:TABV(1) ::
+	PRINT=2:TAB(01),GENER(130,"-") ::
+	PRINT=2:TABV(1) ::
+	RETURN ::
+&AGGDR   ::
+	SEARCH.M=NFUDERIS,KDR:&ERR74,E,INKDR,LM(NFUDERIS) ::
+&ERR74  IF E=74 ::
+	   PRINT=1:TAB(01,24),B,TAB(01,24),"Conto ",KDR," bloccato da altro terminale - attendere. " ::
+	   WAIT 3 ::
+	   PRINT=1:TAB(01,24),B,TAB(01,24),ATB(2)," F6 ",ATB(0)," per interrompere l'elaborazione " ::
+	   GOTO &AGGDR ::
+	ENDIF ::
+	IF (DSTATO="E") OR (DSTATO="L")      ::
+	   RETURN ::
+	ENDIF ::
+	COMDPOSSE=DPOSSE ::
+	KCONTO=KDR ::
+	NRIGHEMOV=1 ::
+	FI=1 ::
+	GOSUB &AGGPRT ::
+	IMPORTOMOV(FI)=EUROROUN(COMSALCTP*0.006) ::
+	SEGNOMOV(FI)="D"                  ::
+	CAUSALMOV(FI)=COMCAU              ::
+	TESTASMOV(FI)=TESTAS              ::
+	DESCAUMOV(FI)=CAUDES(1)           ::
+	DESCA1MOV(FI)=" "                 ::
+	DESCA2MOV(FI)=" "                 ::
+	NRIGVERMOV(FI)=0                  ::
+	CAUMASKMOV(FI)=CAUMASK            ::
+	ASSEGNMOV(FI)=" "                 ::
+	CTPARTMOV(FI)=MMCCSSSS            ::
+	VALUTAMOV(FI)=BENVAL              ::
+	DISPONMOV(FI)=Z1(3)+Z1(4)+Z1(2)+Z1(1)     ::
+	SALDOCMOV(FI)=DSALAT(_EURO)-IMPORTOMOV(FI) ::
+	SCONFINMOV(FI)=0                  ::
+	INDISPOMOV(FI)=0                  ::
+	IMPAVVMOV(FI)=0                   ::
+	NPAVVMOV(FI)=" "                  ::
+	TESTSPMOV(FI)=TESTSP              ::
+	TESTCFMOV(FI)=TESTCF              ::
+	TESTFOMOV(FI)=" "                 ::
+	TESTSTMOV(FI)=" "                 ::
+	PENALEMOV(FI)=0                   ::
+	CAUPVMOV(FI)=0                    ::
+	SNESIMOV(FI)=SNESIBITORE          ::
+	CAUUICMOV(FI)=CAUUICMAF           ::
+	TIPOLOGMOV(FI)=" "                ::
+	TIPOAGG=7 ::
+	IF SINOPRT="SI" ::
+&AGGASK    PRINT=1:TAB(01,24),B,TAB(01,24),ATB(2)," F1 ",ATB(0)," per stampare la contabile ",ATB(2)," F5 ",ATB(0)," =no stampa " ::
+	   ASK=1,0x11=&AGGF1,0x15=&AGGF5:=T ::
+	   GOTO &AGGASK ::
+&AGGF1     IF CAUMASKMOV(FI)=" " ::
+	      KEYFORMA="MVDRDA "+CODLINGUA ::
+	   ELSE ::
+	      KEYFORMA=CAUMASKMOV(FI)+CODLINGUA ::
+	   ENDIF ::
+	   SEARCH=NFUFORMA,KEYFORMA:&AGGF5,E,FORDESC,LD(NFUFORMA) ::
+	   LDGO.SEG 101 ::
+	ENDIF ::
+&AGGF5  LDGO.SEG 108 ::
+	RETURN ::
+&AGGPRT  ::
+	NLOOP74=0 ::
+&PRT01  K16=TERCOD ::
+	SEARCH.M=NFCASSA,K16:&ER16A,E,INK16,LM(NFCASSA) ::
+	GOTO &PRT02 ::
+&ER16A  IF E<>74 GOTO &ER16B ::
+	IF NLOOP74=50 ::
+	   PRINT=1:TAB(01,24),B,TAB(01,24),"Record di ",NF(NFCASSA)," bloccato. Provvedere allo sblocco. " ::
+	   ASK=1:=T ::
+	   PRINT=1:TAB(01,24),B ::
+	   NLOOP74=0 ::
+	ENDIF ::
+	WAIT 1 ::
+	NLOOP74=NLOOP74+1 ::
+	GOTO &PRT01 ::
+&PRT02  IF CRPROT(1)<CONV(CRPROTMOV(1)) ::
+	   CRPROT(1)=CONV(CRPROTMOV(1)) ::
+	ENDIF ::
+	MODIF=NFCASSA,K16:&ER16B,E,CRNOME,LD(NFCASSA) ::
+	CRPROTMOV(1)=CONV(CRPROT(1)+1) ::
+	RETURN ::
+&ER16B  PRINT=1:TAB(01,24),B,BELL,TAB(01,24),"Errore in ",NF(NFCASSA)," ",E," ",K16 ::
+	ASK=1:=T ::
+	PRINT=1:TAB(01,24),B ::
+&PRT03  RETURN ::
+&PRKEY   ::
+	CGOSUB="&PRKEY" ::
+	LDGO.SEG 234 ::
+	RETURN ::
+&ASKEY   ::
+	CGOSUB="&ASKEY" ::
+	LDGO.SEG 234 ::
+	RETURN ::
+9000    SEGCHAIN=0 ::
+	RET.SEG ::
+	STOP ::
+	ESEG 220 ::
+	SEGMENT 230 ::
+	DCL ROTDIVISA$=3 ::
+	DCL TIPOGEST$=1 ::
+	BB=TESTSEG ::
+&M10    R1=5 ::
+	R2=R1+2 ::
+	R3=R2+2 ::
+	R4=R3+2 ::
+	R5=R4+2 ::
+	R6=R5+2 ::
+	R7=R6+2 ::
+	R8=R7+2 ::
+	T1=13 ::
+	T2=T1+51 ::
+	PRINT=1: CLEAR ::
+	PRINT=1:TAB(01,01),ATB(2),TESTSEG,ATB(0) ::
+	PRINT=1:TAB(T1,R1),"Addebita / Accredita un importo................. = ",ATB(2)," F1 ",ATB(0) ::
+	PRINT=1:TAB(T1,R2),"Addebita Assicurazione.......................... = ",ATB(2)," F2 ",ATB(0) ::
+	PRINT=1:TAB(T1,R3),"Addebita Spese Minime........................... = ",ATB(2)," F3 ",ATB(0) ::
+	PRINT=1:TAB(T1,R4),"Addebita Imposta di bollo....................... = ",ATB(2)," F4 ",ATB(0) ::
+	PRINT=1:TAB(01,23),L ::
+&M100   PRINT=1:TAB(01,24),B,TAB(01,24),ATB(2)," ESC ",ATB(0)," per terminare   " ::
+	ASK=1,I=&FINE,0x11=&F1,0x12=&F2,0x13=&F3,0x14=&F4:=T ::
+	GOTO &M100 ::
+&F1     TESTSEG=INCLUD(18,"            ADDEBITA / ACCREDITA UN IMPORTO       ") ::
+	GOTO 10 ::
+&F2     TESTSEG=INCLUD(18,"               ADDEBITA ASSICURAZIONE               ") ::
+	LDGO.SEG 231 ::
+	GOTO &F80 ::
+&F3     TESTSEG=INCLUD(18,"               ADDEBITA SPESE MINIME                ") ::
+	LDGO.SEG 232 ::
+	GOTO &F80 ::
+&F4     TESTSEG=INCLUD(18,"               ADDEBITA IMPOSTA DI BOLLO            ") ::
+	LDGO.SEG 233 ::
+	GOTO &F80 ::
+&F80    TESTSEG=BB ::
+	GOTO &M10 ::
+&FINE   BB=SPACE(80) ::
+	RET.SEG ::
+	STOP ::
+10      CODINI="000000000" ::
+	CODFIN="999999999" ::
+	IF NBYFILKEY<>2 ::
+	   CODFIN="009999999" ::
+	ENDIF ::
+	DATFIN="99999999" ::
+	DATINI="00000000" ::
+	SINOSTAMPA="SI" ::
+	SINOAGG="NO" ::
+	SINOPRT="NO" ::
+	REGINI="000000" ::
+	REGFIN="999999" ::
+	SNZOOM="Z"              ::
+	CAPPAG=0                ::
+	COMCAU=" "              ::
+	COMSEG=" "              ::
+	ORDIMP=0                ::
+	BENVAL=DATAODIERNA      ::
+	ROTDIVISA="EUR" ::
+	TIPOGEST="Z" ::
+	R1=5 ::
+	R2=R1+1 ::
+	R3=R2+1 ::
+	R4=R3+1 ::
+	R5=R4+3 ::
+	R6=R5+2 ::
+	R7=R6+1 ::
+	R8=R7+1 ::
+	R9=R8+1 ::
+	RA=R9+1 ::
+	RB=RA+1 ::
+	T1=01 ::
+	T2=T1+36 ::
+	PRINT=1: CLEAR ::
+	PRINT=1:TAB(01,01),ATB(2),TESTSEG,ATB(0) ::
+	PRINT=1:TAB(T1,R1),"Dal conto....................... :" ::
+	PRINT=1:TAB(T1,R2)," al conto....................... :" ::
+	PRINT=1:TAB(T1,R3),"Dalla sottocategoria............ :" ::
+	PRINT=1:TAB(T1,R4)," Alla sottocategoria............ :" ::
+	PRINT=1:TAB(T1,R4+1),"Dalla data apertura............. :" ::
+	PRINT=1:TAB(T1,R4+2)," Alla data apertura............. :" ::
+	PRINT=1:TAB(T1,R5),"P=Portore  N=Nominativo  Z=Tutti :" ::
+	PRINT=1:TAB(T1,R5+1),"Tipo gestione................... :" ::
+	PRINT=1:TAB(T1,R6),"Causale Operazione.............. :" ::
+	PRINT=1:TAB(T1,R7),"Rapporti in Divisa (ITL/EUR).... :" ::
+	PRINT=1:TAB(T1,R8),"Se saldo contabile maggiore di.. :" ::
+	PRINT=1:TAB(T1,R9),"Importo Operazione.............. :" ::
+	PRINT=1:TAB(T1,RA),"Segno   Operazione.............. :" ::
+	PRINT=1:TAB(T1,RB),"Valuta  Operazione.............. :" ::
+	PRINT=1:TAB(01,23),L ::
+200     PRINT=1:TAB(01,24),B,TAB(01,24),ATB(2)," ESC ",ATB(0),"=fine          " ::
+	COLKEY=T2 ::
+	RIGKEY=R1 ::
+	COMDUPKEY=CODINI ::
+	SINO0099KEY="SI" ::
+	GOSUB &ASKEY ::
+	CODINI=SUBSTR(COMDUPKEY,1,NBYTESKEY) ::
+	IF LABKEY="       " GOTO 210 ::
+	IF LABKEY="24RIGA " GOTO 200 ::
+	IF LABKEY="&LABESC" GOTO 9000 ::
+	GOTO 200 ::
+210     PRINT=1:TAB(01,24),B,TAB(01,24),ATB(2)," ESC ",ATB(0),"=fine                     ",ATB(2)," UP ",ATB(0),"=input precedente        " ::
+	COLKEY=T2 ::
+	RIGKEY=R2 ::
+	COMDUPKEY=CODFIN ::
+	SINO0099KEY="SI" ::
+	GOSUB &ASKEY ::
+	CODFIN=SUBSTR(COMDUPKEY,1,NBYTESKEY) ::
+	IF CODFIN<CODINI GOTO 210 ::
+	IF LABKEY="       " GOTO 220 ::
+	IF LABKEY="24RIGA " GOTO 210 ::
+	IF LABKEY="&LABUP " GOTO 200 ::
+	IF LABKEY="&LABESC" GOTO 9000 ::
+	GOTO 210 ::
+220     PRINT=1:TAB(T2,R3),SPACE(35) ::
+	COM3=SUBSTR(REGINI,1,3) ::
+	M1=CONV(COM3) ::
+	ASK=1,I=9000,U=210:TAB(T2,R3),(Z3),M1=TAB(T2),(N3),M1 ::
+	COM3=CONV(M1) ::
+	PRINT=1:TAB(T2),COM3 ::
+	REGINI=COM3+"000" ::
+	IF COM3="000" ::
+	   PRINT=1:TAB(T2+5),"Dalla Prima  " ::
+	ELSE ::
+	   K3="SCDR"+COM3 ::
+	   SEARCH=NFK3,K3:220,E,DESCR,LD(NFK3) ::
+	   PRINT=1:TAB(T2+5),DESCR ::
+	   REGFIN=REGINI ::
+	ENDIF ::
+230     PRINT=1:TAB(T2,R4),SPACE(35) ::
+	PRINT=1:TAB(01,24),B ::
+	PRINT=1:TAB(01,24),ATB(2)," ESC ",ATB(0)," = Per Terminare           ",ATB(2)," UP ",ATB(0)," = Input Precedente " ::
+	COM3=SUBSTR(REGFIN,1,3) ::
+	M1=CONV(COM3) ::
+	ASK=1,I=9000,U=220:TAB(T2,R4),(Z3),M1=TAB(T2),(N3),M1 ::
+	COM3=CONV(M1) ::
+	PRINT=1:TAB(T2),COM3 ::
+	REGFIN=COM3+"000" ::
+	IF COM3="999" ::
+	   PRINT=1:TAB(T2+5)," All'Ultima  " ::
+	ELSE ::
+	   K3="SCDR"+COM3 ::
+	   SEARCH=NFK3,K3:230,E,DESCR,LD(NFK3) ::
+	   PRINT=1:TAB(T2+5),DESCR ::
+	ENDIF ::
+233     RDOPTION(RDOPT_0," ") ::
+	RDPLUS(T2+12,25,"00000000=Dalla prima") ::
+	TASTO = RDDATA(T2,R4+1,"<ENTU>",DATINI) ::
+	SELECT TASTO ::
+	  CASE "UP-" ::
+	     GOTO 230 ::
+	  CASE "ESC" ::
+	     GOTO 9000 ::
+	ENDSEL ::
+235     RDOPTION(RDOPT_9," ") ::
+	RDPLUS(T2+12,25,"99999999=All'ultima") ::
+	TASTO = RDDATA(T2,R4+2,"<ENTU>",DATFIN) ::
+	SELECT TASTO ::
+	  CASE "ESC" ::
+	     GOTO 9000 ::
+	  CASE "UP-" ::
+	     GOTO 233 ::
+	ENDSEL ::
+	IF DATFIN < DATINI ::
+	   GOTO 235 ::
+	ENDIF ::
+240     ASK=1,I=9000,U=235:TAB(T2,R5),SNZOOM=TAB(T2),SNZOOM ::
+	PRINT=1:TAB(T2),SNZOOM ::
+	IF SNZOOM="P" ::
+	   PRINT=1:TAB(T2+05),"Portatore " ::
+	   PRINT=1:TAB(T2,R5+1),"Z" ::
+	   PRINT=1:TAB(T2+05,R5+1),"Tutti     " ::
+	   GOTO 250 ::
+	ENDIF ::
+	IF SNZOOM="N" ::
+	   PRINT=1:TAB(T2+05),"Nominativo" ::
+	   PRINT=1:TAB(T2,R5+1),"Z" ::
+	   PRINT=1:TAB(T2+05,R5+1),"Tutti     " ::
+	   GOTO 250 ::
+	ENDIF ::
+	IF SNZOOM="Z" ::
+	   PRINT=1:TAB(T2+05),"Tutti     " ::
+	   PRINT=1:TAB(T2,R5+1),"Z" ::
+	   PRINT=1:TAB(T2+05,R5+1),"Tutti     " ::
+	   GOTO 250 ::
+	ENDIF ::
+	GOTO 240 ::
+&TIPOGES ::
+	TASTO=RDLIST(T2,R5+1,T2+5,20,"<ENT10U>","Z=Tutti","DRGEST",TIPOGEST) ::
+	SELECT TASTO ::
+	   CASE "ESC" ::
+	      GOTO 9000 ::
+	   CASE "UP-" ::
+	      GOTO 240 ::
+	ENDSEL ::
+250 ::
+260     ASK=1,I=9000,U=&TIPOGES:TAB(T2,R6),COMCAU=TAB(T2),COMCAU ::
+	PRINT=1:TAB(T2),COMCAU ::
+	CAUTIP="7" ::
+	CAUSAL=COMCAU ::
+	SEARCH=NFUCAUSA,KEYCAUSA:260,E,CAUDES(1),LD(NFUCAUSA) ::
+	PRINT=1:TAB(T2+05),CAUDES(1) ::
+	COMSEG=SEGNO ::
+280     ASK=1,I=9000,U=260:TAB(T2,R7),ROTDIVISA=TAB(T2),ROTDIVISA ::
+	PRINT=1:TAB(T2),ROTDIVISA ::
+	IF (ROTDIVISA <> "ITL") AND (ROTDIVISA <> "EUR")  GOTO 280 ::
+	SetDivisa(ROTDIVISA) ::
+285     ASK=1,I=9000,U=280:TAB(T2,R8),((EUROPRINT("SN12Z"))),CAPPAG=TAB(T2),((EUROASK("N12"))),CAPPAG ::
+	PRINT=1:TAB(T2),((EUROPRINT("SN12Z"))),CAPPAG ::
+290     ASK=1,I=9000,U=280:TAB(T2,R9),((EUROPRINT("SN12Z"))),ORDIMP=TAB(T2),((EUROASK("N12"))),ORDIMP ::
+	PRINT=1:TAB(T2),((EUROPRINT("SN12Z"))),ORDIMP ::
+	IF ORDIMP=0 GOTO 290 ::
+300     PRINT=1:TAB(01,24),B ::
+	PRINT=1:TAB(01,24),ATB(2)," ESC ",ATB(0)," = Per Terminare           ",ATB(2)," UP ",ATB(0)," = Input Precedente " ::
+	ASK=1,I=9000,U=290:TAB(T2,RA),COMSEG=TAB(T2),COMSEG ::
+	PRINT=1:TAB(T2),COMSEG ::
+	IF (COMSEG<>"D") AND (COMSEG<>"A") GOTO 300 ::
+	IF SEGNO<>" " ::
+	   IF COMSEG<>SEGNO ::
+	      PRINT=1:TAB(01,24),B ::
+	      PRINT=1:TAB(01,24),ATB(2)," ATTENZIONE : ",ATB(0)," Segno non congruo con la causale !!! " ::
+	      ASK=1:BELL=T ::
+	      GOTO 300 ::
+	   ENDIF ::
+	ENDIF ::
+310     DATAPRSEC=BENVAL ::
+	DATINP=GIO+MES+SEC+ANN ::
+	ASK=1,I=9000,U=300:TAB(T2,RB),GIO,"/",MES,"/",SEC,ANN=TAB(T2),DATINP ::
+	DATOUT=DATA8900 ::
+	IF DATOUT=" " GOTO 310 ::
+	PRINT=1:TAB(T2),DATOUT ::
+	BENVAL=SS+AA+MM+GG ::
+500     PRINT=1:TAB(01,24),B,BELL ::
+	PRINT=1:TAB(01,24),ATB(2)," ESC ",ATB(0),"=per terminare              ",ATB(2)," F1 ",ATB(0),"=per confermare " ::
+	ASK=1,I=9000,0x11=1000:=T ::
+	GOTO 500 ::
+1000    PRINT=1:TAB(01,20),B,TAB(20,20),ATB(2)," ELABORAZIONE IN CORSO ",ATB(0) ::
+	PRINT=1:TAB(01,24),B,TAB(01,24),ATB(2)," F6 ",ATB(0)," per interrompere l'elaborazione " ::
+	PAG=0 ::
+	NRIGA=0 ::
+	FOR I=1 TO 10 ::
+	   P(I)=0 ::
+	NEXT I ::
+	KDR=CODINI ::
+	SEARCH=NFUDERIS,KDR:&DWDR,E,DNDG,LD(NFUDERIS) ::
+	GOTO &DWDR1 ::
+&DWDR   DOWN=NFUDERIS:&ENDDR,E,KDR,LT(NFUDERIS) ::
+	IF KDR>CODFIN GOTO &ENDDR ::
+	IF (DATINI<>"00000000") OR (DATFIN<>"99999999") ::
+	   IF DDATAP < DATINI GOTO &DWDR ::
+	   IF DDATAP > DATFIN GOTO &DWDR ::
+	ENDIF ::
+	PRINT=1:TAB(01,21),KDR,(W40),B ::
+	OP &OP ,F6 ::
+	GOTO &DWDR1 ::
+&OP     IF F6<>0x16 GOTO &DWDR1 ::
+	PRINT=1:TAB(01,24),B,TAB(01,24),ATB(2)," ESC ",ATB(0)," per terminare       ",ATB(2)," F1 ",ATB(0)," per proseguire" ::
+	ASK=1,I=&ENDDR,0x11=&OP1:=T ::
+	GOTO &OP ::
+&OP1    PRINT=1:TAB(01,24),B,TAB(01,24),ATB(2)," F6 ",ATB(0)," per interrompere l'elaborazione " ::
+&DWDR1  IF KDR > CODFIN                            GOTO &ENDDR ::
+	IF (DSTATO="E") OR (DSTATO="L")            GOTO &DWDR ::
+	IF DSOTCAT<SUBSTR(REGINI,1,3)              GOTO &DWDR ::
+	IF DSOTCAT>SUBSTR(REGFIN,1,3)              GOTO &DWDR ::
+	IF DSALAT(_EURO)<=CAPPAG                   GOTO &DWDR ::
+	IF (DDIVISA<>"ITL") AND (DDIVISA <> "EUR") GOTO &DWDR ::
+	IF DDIVISA <> ROTDIVISA                    GOTO &DWDR ::
+	DIVISAMOV=DDIVISA ::
+	IF SNZOOM<>"Z" ::
+	   IF SNZOOM<>DRTIPO GOTO &DWDR ::
+	ENDIF ::
+	IF TIPOGEST<>"Z" ::
+	   IF TIPOGEST<>DGESTLIB GOTO &DWDR ::
+	ENDIF ::
+	DIVISAMOV=DDIVISA ::
+	SETDIVISA(DIVISAMOV) ::
+	EPOCAVAL=EPOCAOD ::
+	LDGO.SEG 45 ::
+&DR10   SEARCH.M=NFUDERIS,KDR:&DR20,E,INKDR,LM(NFUDERIS) ::
+&DR20   IF E<>0 ::
+	   IF E=74 ::
+	      PRINT=1:TAB(01,24),B,TAB(01,24),"Conto ",KDR," bloccato da altro terminale - attendere. " ::
+	      WAIT 3 ::
+	      PRINT=1:TAB(01,24),B,TAB(01,24),ATB(2)," F6 ",ATB(0)," per interrompere l'elaborazione " ::
+	      GOTO &DR10 ::
+	   ELSE ::
+	      PRINT=1:TAB(01,24),B ::
+	      PRINT=1:TAB(01,24)," Errore in ",NF(NFUDERIS)," : ",E,"  ",KDR ::
+	      ASK=1,I=9000:BELL=T ::
+	      GOTO &DWDR ::
+	   ENDIF ::
+	ENDIF ::
+	IMPMOV=ORDIMP ::
+	IF COMSEG="D" ::
+	   IF DSALAT(_EURO)<IMPMOV ::
+	      IMPMOV=DSALAT(_EURO) ::
+	   ENDIF ::
+	ENDIF ::
+	IF MMCCSSSS=" " ::
+	   E=CaricaUcolcc(KDR,DSOTCAT) ::
+	   IF E = 0 ::
+	      FORMINI=COLLPC(5) ::
+	   ENDIF ::
+	ELSE ::
+	   FORMINI=MMCCSSSS ::
+	ENDIF ::
+&NOCTP  K1=DNDG ::
+	SEARCH=NFUANAGE,K1:&DWDR2,E,TIPO,LD(NFUANAGE) ::
+&DWDR2  IF E<>0 ::
+	   TITOLO=" " ::
+	   RAGSO1=DPORRAG ::
+	   RAGSO2=" " ::
+	   INDIRIZZO=DPORIND ::
+	   CAP=DPORCAP ::
+	   CITTARES=DPORCIT ::
+	   PROV=DPORPRO ::
+	ENDIF ::
+	PRINT=1:TAB(01,21),KDR," ",RAGSO1 ::
+	TITOLOCORR=TITOLO ::
+	RAGSO1CORR=RAGSO1 ::
+	RAGSO2CORR=RAGSO2 ::
+	INDIRICORR=INDIRIZZO ::
+	CAPCORR=CAP ::
+	CITTACORR=CITTARES ::
+	PROVCORR=PROV ::
+	CABCORR=SEDLEG ::
+	STATOCORR=ESTERO ::
+	GOSUB &STAMPA ::
+	GOSUB &AGGDR ::
+	GOTO &DWDR ::
+&ENDDR  IF P(1)>0 ::
+	   PRINT=2:TAB(01),GENER(130,"-") ::
+	   PRINT=2:TABV(1) ::
+	   PRINT=2:TAB(01),((EUROPRINT("SN9"))),P(1) ::
+	   PRINT=2:TAB(50),((EUROPRINT("SN12"))),P(2) ::
+	   PRINT=2:TAB(70),((EUROPRINT("SN12"))),P(3) ::
+	   PRINT=2: PAGE ::
+	   PRINT=2:SALTOPAG ::
+	ENDIF ::
+	GOTO 10 ::
+&STAMPA  ::
+	IF PAG=0 ::
+	   GOSUB &TESTA ::
+	ENDIF ::
+	IF NRIGA=50 ::
+	   PRINT=2:TAB(01),GENER(130,"-") ::
+	   PRINT=2:TABV(1) ::
+	   PRINT=2:TAB(110),"SEGUE -->" ::
+	   GOSUB &TESTA ::
+	ENDIF ::
+	COLKEY=01 ::
+	RIGKEY=0 ::
+	COMDUPKEY=KDR ::
+	DEVICEKEY=2 ::
+	GOSUB &PRKEY ::
+	PRINT=2:TAB(14),RAGSO1 ::
+	PRINT=2:TAB(50),((EUROPRINT("SN12"))),DSALAT(_EURO) ::
+	PRINT=2:TAB(70),((EUROPRINT("SN12"))),IMPMOV ::
+	PRINT=2:TAB(92),COMSEG ::
+	IF COMSEG="D" ::
+	   IF (DSTATO="D") OR (DSTATO="T") ::
+	      PRINT=2:TAB(100),"BLOCCATO DARE" ::
+	   ENDIF ::
+	ELSE ::
+	   IF (DSTATO="A") OR (DSTATO="T") ::
+	      PRINT=2:TAB(100),"BLOCCATO AVERE" ::
+	   ENDIF ::
+	ENDIF ::
+	PRINT=2:TABV(1) ::
+	NRIGA=NRIGA+1 ::
+	P(1)=P(1)+1 ::
+	P(2)=P(2)+DSALAT(_EURO) ::
+	P(3)=P(3)+IMPMOV ::
+	RETURN ::
+&TESTA   ::
+	IF PAG>0 ::
+	   PRINT=2: PAGE ::
+	ELSE ::
+	   PRINT=2:TABV(0) ::
+	ENDIF ::
+	PAG=PAG+1 ::
+	NRIGA=0 ::
+	PRINT=2:TAB(01),"LISTA DELLE OPERAZIONI DI DEPOSITO A RISPARMIO EFFETTUATE IL ",Z1(1),"/",Z1(2),"/",Z1(3),Z1(4) ::
+	PRINT=2:TAB(110),"Pag.:",(N4),PAG ::
+	PRINT=2:TABV(2) ::
+	PRINT=2:TAB(01),"CAUSALE OPERAZIONE : ",COMCAU,"  ",CAUDES(1) ::
+	PRINT=2:TABV(2) ::
+	PRINT=2:TAB(01),GENER(130,"-") ::
+	PRINT=2:TABV(1) ::
+	PRINT=2:TAB(001),"CONTO N." ::
+	PRINT=2:TAB(014),"RAGIONE SOCIALE" ::
+	PRINT=2:TAB(050),"SALDO CONTABILE" ::
+	PRINT=2:TAB(070),"        IMPORTO" ::
+	PRINT=2:TAB(090),"SEGNO" ::
+	PRINT=2:TAB(100),"NOTE" ::
+	PRINT=2:TABV(1) ::
+	PRINT=2:TAB(01),GENER(130,"-") ::
+	PRINT=2:TABV(1) ::
+	RETURN ::
+&AGGDR   ::
+	COMDPOSSE=DPOSSE ::
+	KCONTO=KDR ::
+	NRIGHEMOV=1 ::
+	FI=1 ::
+	GOSUB &AGGPRT ::
+	IMPORTOMOV(FI)=IMPMOV             ::
+	SEGNOMOV(FI)=COMSEG               ::
+	CAUSALMOV(FI)=COMCAU              ::
+	TESTASMOV(FI)=TESTAS              ::
+	DESCAUMOV(FI)=CAUDES(1)           ::
+	DESCA1MOV(FI)=" "                 ::
+	DESCA2MOV(FI)=" "                 ::
+	NRIGVERMOV(FI)=0                  ::
+	CAUMASKMOV(FI)=CAUMASK            ::
+	ASSEGNMOV(FI)=" "                 ::
+	CTPARTMOV(FI)=FORMINI             ::
+	VALUTAMOV(FI)=BENVAL              ::
+	DISPONMOV(FI)=Z1(3)+Z1(4)+Z1(2)+Z1(1)     ::
+	SALDOCMOV(FI)=DSALAT(_EURO)-IMPORTOMOV(FI) ::
+	SCONFINMOV(FI)=0                  ::
+	INDISPOMOV(FI)=0                  ::
+	IMPAVVMOV(FI)=0                   ::
+	NPAVVMOV(FI)=" "                  ::
+	TESTSPMOV(FI)=TESTSP              ::
+	TESTCFMOV(FI)=TESTCF              ::
+	TESTFOMOV(FI)=" "                 ::
+	TESTSTMOV(FI)=" "                 ::
+	PENALEMOV(FI)=0                   ::
+	CAUPVMOV(FI)=0                    ::
+	SNESIMOV(FI)=SNESIBITORE          ::
+	CAUUICMOV(FI)=CAUUICMAF           ::
+	TIPOLOGMOV(FI)=" "                ::
+	TIPOAGG=7 ::
+	LDGO.SEG 108 ::
+	RETURN ::
+&AGGPRT  ::
+	NLOOP74=0 ::
+&PRT01  K16=TERCOD ::
+	SEARCH.M=NFCASSA,K16:&ER16A,E,INK16,LM(NFCASSA) ::
+	GOTO &PRT02 ::
+&ER16A  IF E<>74 GOTO &ER16B ::
+	IF NLOOP74=50 ::
+	   PRINT=1:TAB(01,24),B,TAB(01,24),"Record di ",NF(NFCASSA)," bloccato. Provvedere allo sblocco. " ::
+	   ASK=1:=T ::
+	   PRINT=1:TAB(01,24),B ::
+	   NLOOP74=0 ::
+	ENDIF ::
+	WAIT 1 ::
+	NLOOP74=NLOOP74+1 ::
+	GOTO &PRT01 ::
+&PRT02  IF CRPROT(1)<CONV(CRPROTMOV(1)) ::
+	   CRPROT(1)=CONV(CRPROTMOV(1)) ::
+	ENDIF ::
+	MODIF=NFCASSA,K16:&ER16B,E,CRNOME,LD(NFCASSA) ::
+	CRPROTMOV(1)=CONV(CRPROT(1)+1) ::
+	RETURN ::
+&ER16B  PRINT=1:TAB(01,24),B,BELL,TAB(01,24),"Errore in ",NF(NFCASSA)," ",E," ",K16 ::
+	ASK=1:=T ::
+	PRINT=1:TAB(01,24),B ::
+&PRT03  RETURN ::
+&PRKEY   ::
+	CGOSUB="&PRKEY" ::
+	LDGO.SEG 234 ::
+	RETURN ::
+&ASKEY   ::
+	CGOSUB="&ASKEY" ::
+	LDGO.SEG 234 ::
+	RETURN ::
+7900     ::
+	CGOSUB="&G7900" ::
+	LDGO.SEG 201 ::
+	RETURN ::
+9000    GOTO &F80 ::
+	RET.SEG ::
+	STOP ::
+	ESEG 230 ::
+	END ::

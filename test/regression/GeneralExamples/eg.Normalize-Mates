@@ -1,0 +1,1 @@
+(A x)(F x a -> (E y)(F x y & G z y))

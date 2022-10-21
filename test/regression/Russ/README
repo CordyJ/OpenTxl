@@ -1,0 +1,11 @@
+This demonstrates a remaining problem with left recursive
+grammars.  The nonterminal [exp] seems to cause trouble;
+thiungs that are legal do not parse.
+
+Jim
+
+The problem seems to come up with the [rhs] nonterminal.
+If the [cases] alternative is first, all works wonderfully.
+Something about the right recursion.
+
+JRC 10 March 1995

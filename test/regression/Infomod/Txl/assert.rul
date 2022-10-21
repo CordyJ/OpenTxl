@@ -1,0 +1,299 @@
+function typeAssertionStatement
+            Statement [informationModelStatement_48]
+
+    % This function is the beginning of a suite of rules that type-check
+    % assertion statements.  It handles exactly one assertion statement
+    % at a time.
+
+    deconstruct Statement
+        SId [opt statementIdentifier_3]
+        aS [assertionStatement_106]
+        sT [statementTerminator_22]
+
+    % If we got this far then it's an assertionStatement. Apply the rules
+    % to type the assertion statement.
+
+    replace [repeat informationModelStatement_48]
+        patterns [repeat informationModelStatement_48]
+
+    % If we got this far then it's an assertionStatement.
+    % Check for a solitary entity as a sentence, then and only then
+    % remove expressions, because A=5 is a valid atomic sentence, but A is not.
+
+    construct Statement_1 [informationModelStatement_48]
+        Statement [check_solitary_Entity_Sentence Statement]
+            [removeSimpleSelExpr_1]
+            [removeSimpleSelExpr_2]
+            % check for shared quant variable
+            [checkSharedQuantVar Statement]
+
+    construct NulStatements [repeat informationModelStatement_48]
+        % ( empty ) 
+
+    construct Statements [repeat informationModelStatement_48]
+        NulStatements [. Statement_1]
+
+    construct atomicSentences [repeat informationModelStatement_48]
+        Statements [promoteThatClauses]
+            [promoteFinalThatClauses]
+            [promoteOneCommaEntityThatClauses]
+            [promoteTwoCommaEntityThatClauses]
+            [extractAtomicSentences]
+
+    construct nul_patterns [repeat informationModelStatement_48]
+        % ( empty ) 
+
+    construct mentioned_patterns [repeat informationModelStatement_48]
+        nul_patterns [decomposeALE each atomicSentences]
+
+    construct debug [repeat informationModelStatement_48]
+        mentioned_patterns 
+
+    %[message '"***** Mentioned Patterns ******* "]
+    %[print]
+    %[message '"***** End Mentioned Patterns ******* "]
+    % Apply the rules to type the assertion statement.
+
+    by
+        patterns [checkIfDeclared Statement each mentioned_patterns]
+            [markIfUsedByAssert each mentioned_patterns]
+        %[message '"***** marked patterns"][print]
+        %[message '"***** end marked patterns"]
+end function
+
+% =======================================================
+
+rule check_solitary_Entity_Sentence
+            Statement [informationModelStatement_48]
+
+    % Check to see that no atomic sentence consists of only an entity-variable
+    % This must be checked in a rule because the syntax has to allow it 
+    % for application of the declaration checking rules.  These rules reduce all
+    % atomic sentences to a single variable to prevent indefinite rematch of
+    % TXL pattern matches.  It's easier and faster  to reduce the item to an
+    % 'illegal' syntactic form than to mark it.
+
+    match [atomicSentence_119]
+        eVN [entityVariableName_80]
+
+    construct string1 [repeat tokenOrKey]
+        '** ERROR *** The solitary entity variable 
+
+    construct string2 [repeat tokenOrKey]
+        occurs as an atomic sentence in the statement 
+
+    construct eM [errorMessage_S01]
+        string1 eVN string2 Statement 
+
+    construct dummy1 [errorMessage_S01]
+        eM [print]
+end rule
+
+% ===========================================================
+
+function checkSharedQuantVar
+            Statement [informationModelStatement_48]
+
+    % This function ensures that the quantification Variable also occurs in 
+    % the assertion Statement governed by the quantifier.
+    % aS is the scope of the quantification, which need not be the whole
+    % Statement.  Statement is carried along for the error message.
+
+    replace [informationModelStatement_48]
+        osI [opt statementIdentifier_3]
+        ldc [list domainClause_217]
+        ': 
+        cS [conditionalStatement_108]
+        sT [statementTerminator_22]
+
+    where
+        cS [sharesQuantVariable Statement each ldc]
+    by
+        osI ldc ': cS sT 
+end function
+
+% ===========================================================
+
+function sharesQuantVariable
+            Statement [informationModelStatement_48]
+            dC [domainClause_217]
+
+    % Checks to see that the following scope contains the variable governed
+    % by the quantifier
+
+    match [conditionalStatement_108]
+        cS [conditionalStatement_108]
+
+    deconstruct dC
+        qI [quantifierIndication_229]
+        eVN [entityVariableName_80]
+        oSE [opt selectionExpression_224]
+
+    where not
+        cS [containsSharedVariable eVN] 
+
+    % issues error message and returns if the test fails.
+
+    construct string1 [repeat tokenOrKey]
+        ** WARNING ** The quantification variable ' ' 
+
+    construct string2 [repeat tokenOrKey]
+        ' ' does 
+	'not occur in the part 
+
+    construct string3 [repeat tokenOrKey]
+        occurring 'in the statement 
+
+    construct eM [errorMessage_Q01]
+        string1 eVN string2 cS string3 Statement 
+
+    construct output [errorMessage_Q01]
+        eM [print]
+end function
+
+% ==============================================================
+
+function checkSharedSelectVariable
+            patterns [repeat informationModelStatement_48]
+            eVN [entityVariableName_80]
+            Statement [informationModelStatement_48]
+
+    % This function ensures that the selection Variable also occurs in 
+    % the assertion Statement governed by the selection 
+    % (Entity such that ..).
+
+    match [assertionStatement_106]
+        qAS [assertionStatement_106]
+
+    where not
+        qAS [containsSharedVariable eVN] 
+
+    % issues error message and returns if the test fails.
+
+    construct string1 [repeat tokenOrKey]
+        ** WARNING ** The variable 
+
+    construct string2 [repeat tokenOrKey]
+        does 'not occur in the selection clause 
+
+    construct string3 [repeat tokenOrKey]
+        'in the statement 
+
+    construct eM [errorMessage_C01]
+        string1 eVN string2 qAS string3 Statement 
+
+    construct output [errorMessage_C01]
+        eM [print]
+end function
+
+% ==============================================================
+
+function checkIfDeclared
+            Statement [informationModelStatement_48]
+            mentioned_pattern [informationModelStatement_48]
+
+    % See if mentioned_pattern has been declared.
+
+    match [repeat informationModelStatement_48]
+        patterns [repeat informationModelStatement_48]
+
+    where not
+        patterns [contains mentioned_pattern] 
+
+    % exit if already declared. Else go on to issue message.
+
+    deconstruct mentioned_pattern
+        'Pattern ': 
+        pEV [primeEntityVariable_79]
+        '( 
+        sAPD [singleAttributePhraseDeclaration_82]
+        ') '. 
+
+    construct undeclaredPhrase [entityVectorPattern_76]
+        pEV sAPD 
+
+    construct string1 [repeat tokenOrKey]
+        '** 'ERROR '** 'No 'pattern 'defined 'for 'phrase 
+
+    construct string2 [repeat tokenOrKey]
+        in the statement 
+
+    construct eM [errorMessage_P01]
+        string1 undeclaredPhrase string2 Statement 
+
+    construct dummy1 [errorMessage_P01]
+        eM [print]
+end function
+
+% ==============================================================
+
+rule markIfUsedByAssert
+            mentioned_pattern [informationModelStatement_48]
+
+    deconstruct mentioned_pattern
+        pW [patternWords_666]
+        ': 
+        eVP [entityVectorPattern_76]
+        sT [statementTerminator_22]
+
+    construct search_pattern [informationModelStatement_48]
+        'Unment_ pW ': eVP sT 
+
+    construct replace_pattern [informationModelStatement_48]
+        'Ment_ pW ': eVP sT 
+
+    construct added_pattern [informationModelStatement_48]
+        'Assert_ pW ': eVP sT 
+
+    replace [repeat informationModelStatement_48]
+        search_pattern 
+        rest [repeat informationModelStatement_48]
+
+    % exit if not found. Else, mark the pattern as having been mentioned.
+
+    by
+        replace_pattern 
+        rest [. added_pattern]
+end rule
+
+% ==============================================================
+% ==============================================================
+
+define errorMessage_S01
+        [repeat tokenOrKey] [entityVariableName_80] [NL] 
+        [repeat tokenOrKey] [NL] [IN] 
+        [informationModelStatement_48] [EX] 
+end define
+
+% ===========================================================
+
+define errorMessage_Q01
+        [repeat tokenOrKey] [entityVariableName_80] [repeat tokenOrKey] [NL] [IN] 
+        [conditionalStatement_108] [EX] [NL] 
+        [repeat tokenOrKey] [NL] [IN] 
+        [informationModelStatement_48] [EX] 
+end define
+
+define quote
+        ' ' 
+end define
+
+% ==========================================================
+
+define errorMessage_C01
+        [repeat tokenOrKey] [entityVariableName_80] [repeat tokenOrKey] [NL] [IN] 
+        [assertionStatement_106] [EX] [NL] 
+        [repeat tokenOrKey] [NL] [IN] 
+        [informationModelStatement_48] [EX] [NL] 
+end define
+
+% ==================================================================
+
+define errorMessage_P01
+        [repeat tokenOrKey] [entityVectorPattern_76] [repeat tokenOrKey] [NL] [IN] 
+        [informationModelStatement_48] [EX] 
+end define
+
+% ===============================================================
+
+

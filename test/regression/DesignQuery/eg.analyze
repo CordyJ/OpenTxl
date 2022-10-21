@@ -1,0 +1,2725 @@
+calls(MAIN clear,MAIN ident reinitialize).
+calls(MAIN clear,MAIN runstack initscope).
+calls(MAIN clear,MAIN runstack pushscope).
+calls(MAIN crmode,LIBRARY gtty).
+calls(MAIN crmode,LIBRARY stty).
+calls(MAIN echo,LIBRARY gtty).
+calls(MAIN echo,LIBRARY stty).
+calls(MAIN edit,LIBRARY intstr).
+calls(MAIN edit,LIBRARY length).
+calls(MAIN edit,LIBRARY min).
+calls(MAIN edit,LIBRARY ord).
+calls(MAIN edit,LIBRARY repeat).
+calls(MAIN edit,MAIN crmode).
+calls(MAIN edit,MAIN echo).
+calls(MAIN edit,MAIN enter).
+calls(MAIN edit,MAIN execute).
+calls(MAIN edit,MAIN nocrmode).
+calls(MAIN edit,MAIN noecho).
+calls(MAIN edit,MAIN scan expandline).
+calls(MAIN enter,LIBRARY intstr).
+calls(MAIN enter,LIBRARY length).
+calls(MAIN enter,LIBRARY ord).
+calls(MAIN enter,MAIN parse parseline).
+calls(MAIN enter,MAIN scan expandline).
+calls(MAIN enter,MAIN scan scanline).
+calls(MAIN exec execarraybounds,MAIN exec execconstant).
+calls(MAIN exec execarraytype,MAIN exec execarraybounds).
+calls(MAIN exec execarraytype,MAIN exec execsimpletype).
+calls(MAIN exec execassert,MAIN exec execerror).
+calls(MAIN exec execassert,MAIN exec execexpression).
+calls(MAIN exec execassert,MAIN runstack runpopboolean).
+calls(MAIN exec execassignment,MAIN exec execerror).
+calls(MAIN exec execassignment,MAIN exec execexpression).
+calls(MAIN exec execassignment,MAIN exec execvariable).
+calls(MAIN exec execassignment,MAIN runstack runassign).
+calls(MAIN exec execassignment,MAIN runstack runkind).
+calls(MAIN exec execcall,MAIN exec execerror).
+calls(MAIN exec execcall,MAIN runstack runpop).
+calls(MAIN exec execcall,MAIN runstack runpushdesc).
+calls(MAIN exec execconst,MAIN exec execerror).
+calls(MAIN exec execconst,MAIN exec execexpression).
+calls(MAIN exec execconst,MAIN runstack runallocate).
+calls(MAIN exec execconst,MAIN runstack runassign).
+calls(MAIN exec execconst,MAIN runstack runlookup).
+calls(MAIN exec execconst,MAIN runstack runpushdesc).
+calls(MAIN exec execconst,MAIN runstack runswap).
+calls(MAIN exec execconstant,LIBRARY length).
+calls(MAIN exec execconstant,MAIN exec execerror).
+calls(MAIN exec execconstant,MAIN ident identident).
+calls(MAIN exec execconstant,MAIN runstack runevaluate).
+calls(MAIN exec execconstant,MAIN runstack runkind).
+calls(MAIN exec execconstant,MAIN runstack runpop).
+calls(MAIN exec execconstant,MAIN runstack runpushboolean).
+calls(MAIN exec execconstant,MAIN runstack runpushdesc).
+calls(MAIN exec execconstant,MAIN runstack runpushint).
+calls(MAIN exec execconstant,MAIN runstack runpushstring).
+calls(MAIN exec execelse,MAIN exec execerror).
+calls(MAIN exec execelse,MAIN exec execskiptoend).
+calls(MAIN exec execelse,MAIN runstack popscope).
+calls(MAIN exec execelse,MAIN runstack pushscope).
+calls(MAIN exec execelse,MAIN runstack scopekind).
+calls(MAIN exec execelse,MAIN runstack scopevalue).
+calls(MAIN exec execelsif,MAIN exec execerror).
+calls(MAIN exec execelsif,MAIN exec execif).
+calls(MAIN exec execelsif,MAIN exec execskiptoend).
+calls(MAIN exec execelsif,MAIN runstack popscope).
+calls(MAIN exec execelsif,MAIN runstack scopekind).
+calls(MAIN exec execelsif,MAIN runstack scopevalue).
+calls(MAIN exec execend,MAIN exec execerror).
+calls(MAIN exec execendfor,MAIN exec execerror).
+calls(MAIN exec execendfor,MAIN runstack popscope).
+calls(MAIN exec execendfor,MAIN runstack runassign).
+calls(MAIN exec execendfor,MAIN runstack runevaluate).
+calls(MAIN exec execendfor,MAIN runstack runpopint).
+calls(MAIN exec execendfor,MAIN runstack runpushdesc).
+calls(MAIN exec execendfor,MAIN runstack runpushint).
+calls(MAIN exec execendfor,MAIN runstack scopeident).
+calls(MAIN exec execendfor,MAIN runstack scopekind).
+calls(MAIN exec execendfor,MAIN runstack scopeline).
+calls(MAIN exec execendfor,MAIN runstack scopevalue).
+calls(MAIN exec execendif,MAIN exec execerror).
+calls(MAIN exec execendif,MAIN runstack popscope).
+calls(MAIN exec execendif,MAIN runstack scopekind).
+calls(MAIN exec execendif,MAIN runstack scopevalue).
+calls(MAIN exec execendloop,MAIN exec execerror).
+calls(MAIN exec execendloop,MAIN runstack scopekind).
+calls(MAIN exec execendloop,MAIN runstack scopeline).
+calls(MAIN exec execerror,MAIN error).
+calls(MAIN exec execexit,MAIN exec execerror).
+calls(MAIN exec execexit,MAIN exec execexpression).
+calls(MAIN exec execexit,MAIN exec execskiptoend).
+calls(MAIN exec execexit,MAIN runstack popscope).
+calls(MAIN exec execexit,MAIN runstack runpopboolean).
+calls(MAIN exec execexit,MAIN runstack scopekind).
+calls(MAIN exec execexpression,MAIN exec execsubexpression).
+calls(MAIN exec execexpression,MAIN operator operatorexec).
+calls(MAIN exec execfor,MAIN exec execerror).
+calls(MAIN exec execfor,MAIN exec execexpression).
+calls(MAIN exec execfor,MAIN exec execskiptoend).
+calls(MAIN exec execfor,MAIN runstack pushscope).
+calls(MAIN exec execfor,MAIN runstack runallocate).
+calls(MAIN exec execfor,MAIN runstack runassign).
+calls(MAIN exec execfor,MAIN runstack runlookup).
+calls(MAIN exec execfor,MAIN runstack runpopint).
+calls(MAIN exec execfor,MAIN runstack runpushdesc).
+calls(MAIN exec execfor,MAIN runstack runpushint).
+calls(MAIN exec execfor,MAIN runstack runswap).
+calls(MAIN exec execget,LIBRARY length).
+calls(MAIN exec execget,LIBRARY strint).
+calls(MAIN exec execget,MAIN exec execerror).
+calls(MAIN exec execget,MAIN exec execvariable).
+calls(MAIN exec execget,MAIN runstack runassign).
+calls(MAIN exec execget,MAIN runstack runpushboolean).
+calls(MAIN exec execget,MAIN runstack runpushint).
+calls(MAIN exec execget,MAIN runstack runpushstring).
+calls(MAIN exec execget,MAIN runstack runtype).
+calls(MAIN exec execif,MAIN exec execerror).
+calls(MAIN exec execif,MAIN exec execexpression).
+calls(MAIN exec execif,MAIN exec execskiptoelseorendif).
+calls(MAIN exec execif,MAIN runstack pushscope).
+calls(MAIN exec execif,MAIN runstack runpopboolean).
+calls(MAIN exec execinvariant,MAIN exec execassert).
+calls(MAIN exec execline,MAIN exec execassert).
+calls(MAIN exec execline,MAIN exec execassignment).
+calls(MAIN exec execline,MAIN exec execcall).
+calls(MAIN exec execline,MAIN exec execconst).
+calls(MAIN exec execline,MAIN exec execelse).
+calls(MAIN exec execline,MAIN exec execelsif).
+calls(MAIN exec execline,MAIN exec execend).
+calls(MAIN exec execline,MAIN exec execendfor).
+calls(MAIN exec execline,MAIN exec execendif).
+calls(MAIN exec execline,MAIN exec execendloop).
+calls(MAIN exec execline,MAIN exec execerror).
+calls(MAIN exec execline,MAIN exec execexit).
+calls(MAIN exec execline,MAIN exec execfor).
+calls(MAIN exec execline,MAIN exec execget).
+calls(MAIN exec execline,MAIN exec execif).
+calls(MAIN exec execline,MAIN exec execinvariant).
+calls(MAIN exec execline,MAIN exec execloop).
+calls(MAIN exec execline,MAIN exec execprocedure).
+calls(MAIN exec execline,MAIN exec execput).
+calls(MAIN exec execline,MAIN exec exectype).
+calls(MAIN exec execline,MAIN exec execvar).
+calls(MAIN exec execloop,MAIN exec execerror).
+calls(MAIN exec execloop,MAIN runstack pushscope).
+calls(MAIN exec execoperand,LIBRARY chr).
+calls(MAIN exec execoperand,LIBRARY length).
+calls(MAIN exec execoperand,LIBRARY ord).
+calls(MAIN exec execoperand,MAIN exec execerror).
+calls(MAIN exec execoperand,MAIN exec execsubexpression).
+calls(MAIN exec execoperand,MAIN exec execvariable).
+calls(MAIN exec execoperand,MAIN ident identident).
+calls(MAIN exec execoperand,MAIN operator operatorexec).
+calls(MAIN exec execoperand,MAIN runstack runevaluate).
+calls(MAIN exec execoperand,MAIN runstack runpopint).
+calls(MAIN exec execoperand,MAIN runstack runpopstring).
+calls(MAIN exec execoperand,MAIN runstack runpushboolean).
+calls(MAIN exec execoperand,MAIN runstack runpushint).
+calls(MAIN exec execoperand,MAIN runstack runpushstring).
+calls(MAIN exec execoperator,MAIN exec execerror).
+calls(MAIN exec execoperator,MAIN operator operatorexec).
+calls(MAIN exec execprocedure,MAIN exec execerror).
+calls(MAIN exec execprocedure,MAIN exec execsimpletype).
+calls(MAIN exec execput,MAIN exec execerror).
+calls(MAIN exec execput,MAIN exec execexpression).
+calls(MAIN exec execput,MAIN runstack runpopboolean).
+calls(MAIN exec execput,MAIN runstack runpopint).
+calls(MAIN exec execput,MAIN runstack runpopstring).
+calls(MAIN exec execput,MAIN runstack runtype).
+calls(MAIN exec execsimpletype,MAIN exec execconstant).
+calls(MAIN exec execsimpletype,MAIN exec execerror).
+calls(MAIN exec execsimpletype,MAIN runstack runkind).
+calls(MAIN exec execsimpletype,MAIN runstack runpop).
+calls(MAIN exec execsimpletype,MAIN runstack runpopint).
+calls(MAIN exec execsimpletype,MAIN runstack runpushboolean).
+calls(MAIN exec execsimpletype,MAIN runstack runpushdesc).
+calls(MAIN exec execsimpletype,MAIN runstack runpushint).
+calls(MAIN exec execsimpletype,MAIN runstack runpushstring).
+calls(MAIN exec execskiptoelseorendif,MAIN exec execerror).
+calls(MAIN exec execskiptoelseorendif,MAIN exec execskiptoend).
+calls(MAIN exec execskiptoend,MAIN exec execerror).
+calls(MAIN exec execskiptoend,MAIN exec execskiptoend).
+calls(MAIN exec execsubexpression,MAIN exec execoperand).
+calls(MAIN exec execsubexpression,MAIN exec execoperator).
+calls(MAIN exec exectype,MAIN exec execerror).
+calls(MAIN exec exectype,MAIN exec execsimpletype).
+calls(MAIN exec exectype,MAIN runstack runallocate).
+calls(MAIN exec exectype,MAIN runstack runlookup).
+calls(MAIN exec exectype,MAIN runstack runpop).
+calls(MAIN exec exectype,MAIN runstack runswap).
+calls(MAIN exec execvar,MAIN exec execarraytype).
+calls(MAIN exec execvar,MAIN exec execerror).
+calls(MAIN exec execvar,MAIN exec execexpression).
+calls(MAIN exec execvar,MAIN exec execsimpletype).
+calls(MAIN exec execvar,MAIN runstack runallocate).
+calls(MAIN exec execvar,MAIN runstack runallocatearray).
+calls(MAIN exec execvar,MAIN runstack runassign).
+calls(MAIN exec execvar,MAIN runstack runlookup).
+calls(MAIN exec execvar,MAIN runstack runpop).
+calls(MAIN exec execvar,MAIN runstack runpushdesc).
+calls(MAIN exec execvar,MAIN runstack runswap).
+calls(MAIN exec execvariable,MAIN exec execerror).
+calls(MAIN exec execvariable,MAIN exec execsubexpression).
+calls(MAIN exec execvariable,MAIN runstack runkind).
+calls(MAIN exec execvariable,MAIN runstack runpop).
+calls(MAIN exec execvariable,MAIN runstack runpushdesc).
+calls(MAIN exec execvariable,MAIN runstack runsubscript).
+calls(MAIN exec execvariable,MAIN runstack runtype).
+calls(MAIN execute,MAIN exec execline).
+calls(MAIN execute,MAIN parse parseline).
+calls(MAIN execute,MAIN scan expandline).
+calls(MAIN execute,MAIN scan scanline).
+calls(MAIN filename,LIBRARY index).
+calls(MAIN filename,LIBRARY length).
+calls(MAIN filename,MAIN error).
+calls(MAIN hasch,LIBRARY ioctl).
+calls(MAIN ident enterident,LIBRARY length).
+calls(MAIN ident enterident,MAIN error).
+calls(MAIN ident enterident,MAIN ident identindex).
+calls(MAIN ident,MAIN ident enterident).
+calls(MAIN list,LIBRARY length).
+calls(MAIN list,LIBRARY ord).
+calls(MAIN list,LIBRARY repeat).
+calls(MAIN list,MAIN scan expandline).
+calls(MAIN load,LIBRARY eof).
+calls(MAIN load,MAIN clear).
+calls(MAIN load,MAIN error).
+calls(MAIN load,MAIN filename).
+calls(MAIN load,MAIN parse parseline).
+calls(MAIN load,MAIN renum).
+calls(MAIN load,MAIN scan scanline).
+calls(MAIN new_,MAIN clear).
+calls(MAIN nocrmode,LIBRARY gtty).
+calls(MAIN nocrmode,LIBRARY stty).
+calls(MAIN noecho,LIBRARY gtty).
+calls(MAIN noecho,LIBRARY stty).
+calls(MAIN operator operatorcompare,MAIN runstack runpopboolean).
+calls(MAIN operator operatorcompare,MAIN runstack runpopint).
+calls(MAIN operator operatorcompare,MAIN runstack runpopstring).
+calls(MAIN operator operatorcompare,MAIN runstack runtype).
+calls(MAIN operator operatorexec,MAIN operator operatorpop).
+calls(MAIN operator operatorexec,MAIN operator operatorpush).
+calls(MAIN operator operatorexec,MAIN operator operatorrun).
+calls(MAIN operator operatorpush,MAIN runstack runerror).
+calls(MAIN operator operatorrun,MAIN operator operatorcompare).
+calls(MAIN operator operatorrun,MAIN runstack runerror).
+calls(MAIN operator operatorrun,MAIN runstack runpopboolean).
+calls(MAIN operator operatorrun,MAIN runstack runpopint).
+calls(MAIN operator operatorrun,MAIN runstack runpopstring).
+calls(MAIN operator operatorrun,MAIN runstack runpushboolean).
+calls(MAIN operator operatorrun,MAIN runstack runpushint).
+calls(MAIN operator operatorrun,MAIN runstack runpushstring).
+calls(MAIN operator operatorrun,MAIN runstack runtype).
+calls(MAIN parse parsearraybounds,MAIN parse parseconstant).
+calls(MAIN parse parsearraybounds,MAIN parse parsetoken).
+calls(MAIN parse parsearraytype,MAIN parse parsearraybounds).
+calls(MAIN parse parsearraytype,MAIN parse parsesimpletype).
+calls(MAIN parse parsearraytype,MAIN parse parsetoken).
+calls(MAIN parse parseassert,MAIN parse parseexpression).
+calls(MAIN parse parseassert,MAIN parse parsetoken).
+calls(MAIN parse parseassignment,MAIN parse parseexpression).
+calls(MAIN parse parseassignment,MAIN parse parsetoken).
+calls(MAIN parse parseconst,MAIN parse parseexpression).
+calls(MAIN parse parseconst,MAIN parse parsetoken).
+calls(MAIN parse parseconstant,MAIN parse parseerror).
+calls(MAIN parse parseconstant,MAIN parse parsetoken).
+calls(MAIN parse parseelsif,MAIN parse parseexpression).
+calls(MAIN parse parseelsif,MAIN parse parsetoken).
+calls(MAIN parse parseend,MAIN parse parseerror).
+calls(MAIN parse parseend,MAIN parse parseshift).
+calls(MAIN parse parseend,MAIN parse parsetoken).
+calls(MAIN parse parseerror,LIBRARY chr).
+calls(MAIN parse parseerror,LIBRARY intstr).
+calls(MAIN parse parseerror,LIBRARY length).
+calls(MAIN parse parseerror,MAIN error).
+calls(MAIN parse parseerror,MAIN ident identident).
+calls(MAIN parse parseexit,MAIN parse parseexpression).
+calls(MAIN parse parseexit,MAIN parse parseshift).
+calls(MAIN parse parseexit,MAIN parse parsetoken).
+calls(MAIN parse parseexpression,MAIN parse parsesubexpression).
+calls(MAIN parse parsefor,MAIN parse parseexpression).
+calls(MAIN parse parsefor,MAIN parse parsetoken).
+calls(MAIN parse parseget,MAIN parse parsetoken).
+calls(MAIN parse parseget,MAIN parse parsevariable).
+calls(MAIN parse parseident,MAIN parse parseassignment).
+calls(MAIN parse parseident,MAIN parse parsecall).
+calls(MAIN parse parseident,MAIN parse parseexpression).
+calls(MAIN parse parseident,MAIN parse parsetoken).
+calls(MAIN parse parseif,MAIN parse parseexpression).
+calls(MAIN parse parseif,MAIN parse parsetoken).
+calls(MAIN parse parseinvariant,MAIN parse parseassert).
+calls(MAIN parse parseline,MAIN parse parseassert).
+calls(MAIN parse parseline,MAIN parse parseconst).
+calls(MAIN parse parseline,MAIN parse parseelsif).
+calls(MAIN parse parseline,MAIN parse parseend).
+calls(MAIN parse parseline,MAIN parse parseerror).
+calls(MAIN parse parseline,MAIN parse parseexit).
+calls(MAIN parse parseline,MAIN parse parsefor).
+calls(MAIN parse parseline,MAIN parse parseget).
+calls(MAIN parse parseline,MAIN parse parseident).
+calls(MAIN parse parseline,MAIN parse parseif).
+calls(MAIN parse parseline,MAIN parse parseinvariant).
+calls(MAIN parse parseline,MAIN parse parseprocedure).
+calls(MAIN parse parseline,MAIN parse parseput).
+calls(MAIN parse parseline,MAIN parse parsetoken).
+calls(MAIN parse parseline,MAIN parse parsetype).
+calls(MAIN parse parseline,MAIN parse parsevar).
+calls(MAIN parse parseoperand,MAIN parse parseerror).
+calls(MAIN parse parseoperand,MAIN parse parsesubexpression).
+calls(MAIN parse parseoperand,MAIN parse parsetoken).
+calls(MAIN parse parseoperand,MAIN parse parsevariable).
+calls(MAIN parse parseoperator,MAIN parse parseerror).
+calls(MAIN parse parseoperator,MAIN parse parsetoken).
+calls(MAIN parse parseprocedure,MAIN parse parsesimpletype).
+calls(MAIN parse parseprocedure,MAIN parse parsetoken).
+calls(MAIN parse parseput,MAIN parse parseexpression).
+calls(MAIN parse parseput,MAIN parse parsetoken).
+calls(MAIN parse parsesimpletype,MAIN parse parseconstant).
+calls(MAIN parse parsesimpletype,MAIN parse parseerror).
+calls(MAIN parse parsesimpletype,MAIN parse parsetoken).
+calls(MAIN parse parsesubexpression,MAIN parse parseoperand).
+calls(MAIN parse parsesubexpression,MAIN parse parseoperator).
+calls(MAIN parse parsetoken,MAIN parse parseerror).
+calls(MAIN parse parsetype,MAIN parse parsesimpletype).
+calls(MAIN parse parsetype,MAIN parse parsetoken).
+calls(MAIN parse parsevar,MAIN parse parsearraytype).
+calls(MAIN parse parsevar,MAIN parse parseexpression).
+calls(MAIN parse parsevar,MAIN parse parsesimpletype).
+calls(MAIN parse parsevar,MAIN parse parsetoken).
+calls(MAIN parse parsevariable,MAIN parse parsesubexpression).
+calls(MAIN parse parsevariable,MAIN parse parsetoken).
+calls(MAIN renum,LIBRARY max).
+calls(MAIN renum,LIBRARY min).
+calls(MAIN run,LIBRARY intstr).
+calls(MAIN run,MAIN exec execline).
+calls(MAIN run,MAIN parse parseline).
+calls(MAIN run,MAIN runstack initscope).
+calls(MAIN run,MAIN runstack pushscope).
+calls(MAIN run,MAIN scan expandline).
+calls(MAIN runstack printvars,MAIN ident identident).
+calls(MAIN runstack printvars,MAIN runstack printvalue).
+calls(MAIN runstack pushscope,MAIN runstack runerror).
+calls(MAIN runstack runallocate,MAIN runstack runerror).
+calls(MAIN runstack runallocatearray,MAIN runstack runallocate).
+calls(MAIN runstack runallocatearray,MAIN runstack runerror).
+calls(MAIN runstack runallocatearray,MAIN runstack runtype).
+calls(MAIN runstack runassign,MAIN runstack runerror).
+calls(MAIN runstack runassign,MAIN runstack runpop).
+calls(MAIN runstack runassign,MAIN runstack runpopboolean).
+calls(MAIN runstack runassign,MAIN runstack runpopint).
+calls(MAIN runstack runassign,MAIN runstack runpopreal).
+calls(MAIN runstack runassign,MAIN runstack runpopstring).
+calls(MAIN runstack runerror,MAIN error).
+calls(MAIN runstack runevaluate,MAIN runstack runerror).
+calls(MAIN runstack runpopboolean,MAIN runstack runerror).
+calls(MAIN runstack runpopint,MAIN runstack runerror).
+calls(MAIN runstack runpopreal,MAIN runstack runerror).
+calls(MAIN runstack runpopstring,MAIN runstack runerror).
+calls(MAIN runstack runpushboolean,MAIN runstack runerror).
+calls(MAIN runstack runpushdesc,MAIN runstack runerror).
+calls(MAIN runstack runpushdesc,MAIN runstack runlookup).
+calls(MAIN runstack runpushint,MAIN runstack runerror).
+calls(MAIN runstack runpushreal,MAIN runstack runerror).
+calls(MAIN runstack runpushstring,LIBRARY length).
+calls(MAIN runstack runpushstring,MAIN runstack runerror).
+calls(MAIN runstack runsubscript,MAIN runstack runerror).
+calls(MAIN runstack runsubscript,MAIN runstack runpopint).
+calls(MAIN save,LIBRARY repeat).
+calls(MAIN save,MAIN error).
+calls(MAIN save,MAIN filename).
+calls(MAIN save,MAIN scan expandline).
+calls(MAIN scan expandline,LIBRARY chr).
+calls(MAIN scan expandline,LIBRARY intstr).
+calls(MAIN scan expandline,LIBRARY length).
+calls(MAIN scan expandline,MAIN ident identident).
+calls(MAIN scan scanline,LIBRARY index).
+calls(MAIN scan scanline,LIBRARY length).
+calls(MAIN scan scanline,LIBRARY min).
+calls(MAIN scan scanline,LIBRARY ord).
+calls(MAIN scan scanline,LIBRARY strint).
+calls(MAIN scan scanline,MAIN ident enterident).
+calls(MAIN scan scanline,MAIN ident identtoken).
+calls(MAIN scan,LIBRARY length).
+calls(MAIN scan,LIBRARY ord).
+calls(MAIN vars,MAIN runstack printvars).
+calls(MAIN,LIBRARY length).
+calls(MAIN,LIBRARY ord).
+calls(MAIN,MAIN edit).
+calls(MAIN,MAIN enter).
+calls(MAIN,MAIN execute).
+calls(MAIN,MAIN list).
+calls(MAIN,MAIN load).
+calls(MAIN,MAIN new_).
+calls(MAIN,MAIN renum).
+calls(MAIN,MAIN run).
+calls(MAIN,MAIN runstack initscope).
+calls(MAIN,MAIN runstack popscope).
+calls(MAIN,MAIN runstack pushscope).
+calls(MAIN,MAIN save).
+calls(MAIN,MAIN troff).
+calls(MAIN,MAIN tron).
+calls(MAIN,MAIN vars).
+const_argument(LIBRARY chr,MAIN runstack runpushstring value).
+const_argument(LIBRARY length,MAIN runstack runpushint value).
+const_argument(LIBRARY ord,MAIN runstack runpushint value).
+const_argument(LIBRARY strint,MAIN runstack runpushint value).
+const_argument(MAIN binaryoperator,MAIN operator operatorexec operator).
+const_argument(MAIN command,MAIN scan scanline linetext).
+const_argument(MAIN currentline,MAIN ident identident index_).
+const_argument(MAIN currentline,MAIN runstack runpushdesc identindex).
+const_argument(MAIN currentline,MAIN runstack runpushint value).
+const_argument(MAIN currentnum,MAIN runstack pushscope line).
+const_argument(MAIN exec execconst ident,MAIN runstack runallocate ident).
+const_argument(MAIN exec execconst ident,MAIN runstack runlookup ident).
+const_argument(MAIN exec execconst ident,MAIN runstack runpushdesc identindex).
+const_argument(MAIN exec execconstant stext,MAIN runstack runpushstring value).
+const_argument(MAIN exec execendfor ident,MAIN runstack runpushdesc identindex).
+const_argument(MAIN exec execfor ident,MAIN runstack pushscope ident).
+const_argument(MAIN exec execfor ident,MAIN runstack runallocate ident).
+const_argument(MAIN exec execfor ident,MAIN runstack runlookup ident).
+const_argument(MAIN exec execfor ident,MAIN runstack runpushdesc identindex).
+const_argument(MAIN exec execfor lowerbound,MAIN runstack runpushint value).
+const_argument(MAIN exec execfor upperbound,MAIN runstack pushscope value).
+const_argument(MAIN exec execget v 1,MAIN runstack runpushstring value).
+const_argument(MAIN exec execif ifcondition,MAIN runstack pushscope value).
+const_argument(MAIN exec execoperand stext,MAIN runstack runpushstring value).
+const_argument(MAIN exec execskiptoend begintoken,MAIN exec execskiptoend begintoken).
+const_argument(MAIN exec execskiptoend endtoken,MAIN exec execskiptoend endtoken).
+const_argument(MAIN exec exectype ident,MAIN runstack runallocate ident).
+const_argument(MAIN exec exectype ident,MAIN runstack runlookup ident).
+const_argument(MAIN exec execvar ident,MAIN runstack runallocate ident).
+const_argument(MAIN exec execvar ident,MAIN runstack runallocatearray ident).
+const_argument(MAIN exec execvar ident,MAIN runstack runlookup ident).
+const_argument(MAIN exec execvar ident,MAIN runstack runpushdesc identindex).
+const_argument(MAIN ident enterident ident,MAIN ident identindex ident).
+const_argument(MAIN ident keyword,MAIN ident enterident ident).
+const_argument(MAIN opadd,MAIN operator operatorexec operator).
+const_argument(MAIN opendexpression,MAIN operator operatorexec operator).
+const_argument(MAIN operator operatorexec operator,MAIN operator operatorpush operator).
+const_argument(MAIN operator operatorrun v1,MAIN runstack runpushint value).
+const_argument(MAIN operator operatorstack,MAIN operator operatorrun operator).
+const_argument(MAIN oplparen,MAIN operator operatorexec operator).
+const_argument(MAIN oplparen,MAIN operator operatorpush operator).
+const_argument(MAIN opnotequal,MAIN operator operatorexec operator).
+const_argument(MAIN oprparen,MAIN operator operatorexec operator).
+const_argument(MAIN parse parseerror value,MAIN ident identident index_).
+const_argument(MAIN runstack runallocatearray ident,MAIN runstack runallocate ident).
+const_argument(MAIN runstack runallocatearray kind,MAIN runstack runallocate kind).
+const_argument(MAIN runstack runpushdesc identindex,MAIN runstack runlookup ident).
+const_argument(MAIN runstack runstack,MAIN ident identident index_).
+const_argument(MAIN runstack runstack,MAIN runstack printvalue s).
+const_argument(MAIN scan scanline idindex,MAIN ident identtoken index_).
+const_argument(MAIN scan scanline idtext,MAIN ident enterident ident).
+const_argument(MAIN scan scanline sttext,MAIN ident enterident ident).
+const_argument(MAIN scan scanline text,MAIN ident enterident ident).
+const_argument(MAIN scelse,MAIN runstack pushscope kind).
+const_argument(MAIN scfor,MAIN runstack pushscope kind).
+const_argument(MAIN scif,MAIN runstack pushscope kind).
+const_argument(MAIN scloop,MAIN runstack pushscope kind).
+const_argument(MAIN scprocedure,MAIN runstack pushscope kind).
+const_argument(MAIN syconst,MAIN runstack runallocate kind).
+const_argument(MAIN sytype,MAIN runstack runallocate kind).
+const_argument(MAIN syvar,MAIN runstack runallocate kind).
+const_argument(MAIN syvar,MAIN runstack runallocatearray kind).
+const_argument(MAIN tany,MAIN parse parsetoken token).
+const_argument(MAIN tarray,MAIN parse parsetoken token).
+const_argument(MAIN tassert,MAIN parse parsetoken token).
+const_argument(MAIN tcolon,MAIN parse parsetoken token).
+const_argument(MAIN tcolonequal,MAIN parse parsetoken token).
+const_argument(MAIN tcomma,MAIN parse parsetoken token).
+const_argument(MAIN tcomment,MAIN parse parsetoken token).
+const_argument(MAIN tconst,MAIN parse parsetoken token).
+const_argument(MAIN tdotdot,MAIN parse parsetoken token).
+const_argument(MAIN telse,MAIN parse parsetoken token).
+const_argument(MAIN telsif,MAIN parse parsetoken token).
+const_argument(MAIN tend,MAIN parse parsetoken token).
+const_argument(MAIN tendfor,MAIN exec execskiptoend endtoken).
+const_argument(MAIN tendif,MAIN exec execskiptoend endtoken).
+const_argument(MAIN tendloop,MAIN exec execskiptoend endtoken).
+const_argument(MAIN tequal,MAIN parse parsetoken token).
+const_argument(MAIN texit,MAIN parse parsetoken token).
+const_argument(MAIN texitwhen,MAIN parse parsetoken token).
+const_argument(MAIN tfor,MAIN exec execskiptoend begintoken).
+const_argument(MAIN tfor,MAIN parse parsetoken token).
+const_argument(MAIN tget,MAIN parse parsetoken token).
+const_argument(MAIN tidentifier,MAIN parse parsetoken token).
+const_argument(MAIN tif,MAIN exec execskiptoend begintoken).
+const_argument(MAIN tif,MAIN parse parsetoken token).
+const_argument(MAIN tloop,MAIN exec execskiptoend begintoken).
+const_argument(MAIN tloop,MAIN parse parsetoken token).
+const_argument(MAIN tlparen,MAIN parse parsetoken token).
+const_argument(MAIN tnot,MAIN parse parsetoken token).
+const_argument(MAIN tof,MAIN parse parsetoken token).
+const_argument(MAIN tprocedure,MAIN parse parsetoken token).
+const_argument(MAIN tput,MAIN parse parsetoken token).
+const_argument(MAIN trparen,MAIN parse parsetoken token).
+const_argument(MAIN tsemicolon,MAIN parse parsetoken token).
+const_argument(MAIN tthen,MAIN parse parsetoken token).
+const_argument(MAIN ttype,MAIN parse parsetoken token).
+const_argument(MAIN tvar,MAIN parse parsetoken token).
+const_argument(MAIN twhen,MAIN parse parsetoken token).
+const_argument(MAIN unaryoperator,MAIN operator operatorexec operator).
+const_parameter(LIBRARY chr i).
+const_parameter(LIBRARY eof i).
+const_parameter(LIBRARY gtty l).
+const_parameter(LIBRARY index s).
+const_parameter(LIBRARY index s2).
+const_parameter(LIBRARY intstr i).
+const_parameter(LIBRARY intstr w).
+const_parameter(LIBRARY ioctl f).
+const_parameter(LIBRARY ioctl i).
+const_parameter(LIBRARY length s).
+const_parameter(LIBRARY max i).
+const_parameter(LIBRARY max i2).
+const_parameter(LIBRARY min i).
+const_parameter(LIBRARY min i2).
+const_parameter(LIBRARY ord c).
+const_parameter(LIBRARY realstr r).
+const_parameter(LIBRARY realstr w).
+const_parameter(LIBRARY repeat i).
+const_parameter(LIBRARY repeat s).
+const_parameter(LIBRARY size i).
+const_parameter(LIBRARY strint s).
+const_parameter(LIBRARY strreal s).
+const_parameter(LIBRARY stty l).
+const_parameter(MAIN error msg).
+const_parameter(MAIN exec execerror msg).
+const_parameter(MAIN exec execskiptoend begintoken).
+const_parameter(MAIN exec execskiptoend endtoken).
+const_parameter(MAIN ident enterident ident).
+const_parameter(MAIN ident identident index_).
+const_parameter(MAIN ident identindex ident).
+const_parameter(MAIN ident identtoken index_).
+const_parameter(MAIN operator operatorexec operator).
+const_parameter(MAIN operator operatorpush operator).
+const_parameter(MAIN operator operatorrun operator).
+const_parameter(MAIN parse parseerror msg).
+const_parameter(MAIN parse parsetoken token).
+const_parameter(MAIN runstack printvalue s).
+const_parameter(MAIN runstack pushscope ident).
+const_parameter(MAIN runstack pushscope kind).
+const_parameter(MAIN runstack pushscope line).
+const_parameter(MAIN runstack pushscope value).
+const_parameter(MAIN runstack runallocate ident).
+const_parameter(MAIN runstack runallocate kind).
+const_parameter(MAIN runstack runallocatearray ident).
+const_parameter(MAIN runstack runallocatearray kind).
+const_parameter(MAIN runstack runerror msg).
+const_parameter(MAIN runstack runlookup ident).
+const_parameter(MAIN runstack runpushboolean value).
+const_parameter(MAIN runstack runpushdesc identindex).
+const_parameter(MAIN runstack runpushint value).
+const_parameter(MAIN runstack runpushreal value).
+const_parameter(MAIN runstack runpushstring value).
+const_parameter(MAIN scan scanline linetext).
+constant(MAIN clear i).
+constant(MAIN edit i).
+constant(MAIN exec execassignment kind).
+constant(MAIN exec execconst ident).
+constant(MAIN exec execconstant token).
+constant(MAIN exec execendfor ident).
+constant(MAIN exec execendfor upperbound).
+constant(MAIN exec execfor ident).
+constant(MAIN exec execget i).
+constant(MAIN exec execoperand token).
+constant(MAIN exec execskiptoelseorendif oldnum).
+constant(MAIN exec execskiptoelseorendif token 1).
+constant(MAIN exec execskiptoelseorendif token).
+constant(MAIN exec execskiptoend oldnum).
+constant(MAIN exec execsubexpression token).
+constant(MAIN exec exectype ident).
+constant(MAIN exec execvar ident).
+constant(MAIN i).
+constant(MAIN ident enterident ix).
+constant(MAIN ident identindex ix).
+constant(MAIN ident ix 1).
+constant(MAIN ident keyword).
+constant(MAIN ident keywordtoken).
+constant(MAIN ident kw).
+constant(MAIN ident nkeywords).
+constant(MAIN ident reinitialize i).
+constant(MAIN list i).
+constant(MAIN load i).
+constant(MAIN parse parsecall i).
+constant(MAIN parse parseconstant token).
+constant(MAIN parse parseerror token).
+constant(MAIN parse parseerror value).
+constant(MAIN parse parseoperand token).
+constant(MAIN parse parseshift i).
+constant(MAIN parse parsesubexpression token).
+constant(MAIN renum i 1).
+constant(MAIN renum i 2).
+constant(MAIN renum i 3).
+constant(MAIN renum i 4).
+constant(MAIN renum i).
+constant(MAIN renum increment).
+constant(MAIN renum l).
+constant(MAIN renum token).
+constant(MAIN runstack arraytype).
+constant(MAIN runstack kindname).
+constant(MAIN runstack nullrunstackentry).
+constant(MAIN runstack printvars i).
+constant(MAIN runstack runallocatearray arraysize).
+constant(MAIN runstack runallocatearray elementtype).
+constant(MAIN runstack runallocatearray i).
+constant(MAIN runstack rundump i).
+constant(MAIN runstack runlookup ri 1).
+constant(MAIN runstack runlookup ri).
+constant(MAIN runstack runpushdesc index_).
+constant(MAIN runstack runsubscript typekind).
+constant(MAIN runstack runswap t).
+constant(MAIN runstack scalartype).
+constant(MAIN runstack typename).
+constant(MAIN runstack uninitint).
+constant(MAIN runstack uninitreal).
+constant(MAIN runstack uninitstring).
+constant(MAIN save i).
+constant(MAIN scan c 1).
+constant(MAIN scan c 2).
+constant(MAIN scan c 3).
+constant(MAIN scan c).
+constant(MAIN scan cblank).
+constant(MAIN scan ccomment).
+constant(MAIN scan cdigit).
+constant(MAIN scan cillegal).
+constant(MAIN scan cletter).
+constant(MAIN scan cquote).
+constant(MAIN scan cspecialchar).
+constant(MAIN scan expandline MAIN error).
+constant(MAIN scan expandline lineptr).
+constant(MAIN scan expandline token).
+constant(MAIN scan sc).
+constant(MAIN scan scanline c).
+constant(MAIN scan scanline cc).
+constant(MAIN scan scanline idtext).
+constant(MAIN scan scanline intext).
+constant(MAIN scan specialchars).
+constant(MAIN scan specialchartoken).
+contains(LIBRARY chr,LIBRARY chr i).
+contains(LIBRARY eof,LIBRARY eof i).
+contains(LIBRARY gtty,LIBRARY gtty l).
+contains(LIBRARY gtty,LIBRARY gtty t).
+contains(LIBRARY index,LIBRARY index s).
+contains(LIBRARY index,LIBRARY index s2).
+contains(LIBRARY intstr,LIBRARY intstr i).
+contains(LIBRARY intstr,LIBRARY intstr w).
+contains(LIBRARY ioctl,LIBRARY ioctl f).
+contains(LIBRARY ioctl,LIBRARY ioctl i).
+contains(LIBRARY ioctl,LIBRARY ioctl n).
+contains(LIBRARY length,LIBRARY length s).
+contains(LIBRARY max,LIBRARY max i).
+contains(LIBRARY max,LIBRARY max i2).
+contains(LIBRARY min,LIBRARY min i).
+contains(LIBRARY min,LIBRARY min i2).
+contains(LIBRARY ord,LIBRARY ord c).
+contains(LIBRARY realstr,LIBRARY realstr r).
+contains(LIBRARY realstr,LIBRARY realstr w).
+contains(LIBRARY repeat,LIBRARY repeat i).
+contains(LIBRARY repeat,LIBRARY repeat s).
+contains(LIBRARY size,LIBRARY size i).
+contains(LIBRARY strint,LIBRARY strint s).
+contains(LIBRARY strreal,LIBRARY strreal s).
+contains(LIBRARY stty,LIBRARY stty l).
+contains(LIBRARY stty,LIBRARY stty t).
+contains(LIBRARY,LIBRARY chr).
+contains(LIBRARY,LIBRARY eof).
+contains(LIBRARY,LIBRARY gtty).
+contains(LIBRARY,LIBRARY index).
+contains(LIBRARY,LIBRARY intstr).
+contains(LIBRARY,LIBRARY ioctl).
+contains(LIBRARY,LIBRARY length).
+contains(LIBRARY,LIBRARY max).
+contains(LIBRARY,LIBRARY min).
+contains(LIBRARY,LIBRARY ord).
+contains(LIBRARY,LIBRARY realstr).
+contains(LIBRARY,LIBRARY repeat).
+contains(LIBRARY,LIBRARY size).
+contains(LIBRARY,LIBRARY strint).
+contains(LIBRARY,LIBRARY strreal).
+contains(LIBRARY,LIBRARY stty).
+contains(MAIN clear,MAIN clear i).
+contains(MAIN edit,MAIN edit i).
+contains(MAIN edit,MAIN edit linenum).
+contains(MAIN edit,MAIN edit nextchar).
+contains(MAIN edit,MAIN edit position).
+contains(MAIN error,MAIN error msg).
+contains(MAIN exec execarraybounds,MAIN exec execarraybounds v).
+contains(MAIN exec execassert,MAIN exec execassert v).
+contains(MAIN exec execassignment,MAIN exec execassignment kind).
+contains(MAIN exec execconst,MAIN exec execconst ident).
+contains(MAIN exec execconstant,MAIN exec execconstant stext).
+contains(MAIN exec execconstant,MAIN exec execconstant token).
+contains(MAIN exec execendfor,MAIN exec execendfor ident).
+contains(MAIN exec execendfor,MAIN exec execendfor upperbound).
+contains(MAIN exec execendfor,MAIN exec execendfor value).
+contains(MAIN exec execerror,MAIN exec execerror msg).
+contains(MAIN exec execexit,MAIN exec execexit v).
+contains(MAIN exec execfor,MAIN exec execfor ident).
+contains(MAIN exec execfor,MAIN exec execfor lowerbound).
+contains(MAIN exec execfor,MAIN exec execfor upperbound).
+contains(MAIN exec execget,MAIN exec execget i).
+contains(MAIN exec execget,MAIN exec execget v 1).
+contains(MAIN exec execget,MAIN exec execget v 2).
+contains(MAIN exec execget,MAIN exec execget v).
+contains(MAIN exec execget,MAIN exec execget valid).
+contains(MAIN exec execif,MAIN exec execif ifcondition).
+contains(MAIN exec execoperand,MAIN exec execoperand stext).
+contains(MAIN exec execoperand,MAIN exec execoperand token).
+contains(MAIN exec execoperand,MAIN exec execoperand v 1).
+contains(MAIN exec execoperand,MAIN exec execoperand v 2).
+contains(MAIN exec execoperand,MAIN exec execoperand v).
+contains(MAIN exec execput,MAIN exec execput v 1).
+contains(MAIN exec execput,MAIN exec execput v 2).
+contains(MAIN exec execput,MAIN exec execput v).
+contains(MAIN exec execsimpletype,MAIN exec execsimpletype v 1).
+contains(MAIN exec execsimpletype,MAIN exec execsimpletype v).
+contains(MAIN exec execskiptoelseorendif,MAIN exec execskiptoelseorendif oldnum).
+contains(MAIN exec execskiptoelseorendif,MAIN exec execskiptoelseorendif token 1).
+contains(MAIN exec execskiptoelseorendif,MAIN exec execskiptoelseorendif token).
+contains(MAIN exec execskiptoend,MAIN exec execskiptoend begintoken).
+contains(MAIN exec execskiptoend,MAIN exec execskiptoend endtoken).
+contains(MAIN exec execskiptoend,MAIN exec execskiptoend oldnum).
+contains(MAIN exec execsubexpression,MAIN exec execsubexpression token).
+contains(MAIN exec exectype,MAIN exec exectype ident).
+contains(MAIN exec execvar,MAIN exec execvar ident).
+contains(MAIN exec,MAIN exec execarraybounds).
+contains(MAIN exec,MAIN exec execarraytype).
+contains(MAIN exec,MAIN exec execassert).
+contains(MAIN exec,MAIN exec execassignment).
+contains(MAIN exec,MAIN exec execcall).
+contains(MAIN exec,MAIN exec execconst).
+contains(MAIN exec,MAIN exec execconstant).
+contains(MAIN exec,MAIN exec execelse).
+contains(MAIN exec,MAIN exec execelsif).
+contains(MAIN exec,MAIN exec execend).
+contains(MAIN exec,MAIN exec execendfor).
+contains(MAIN exec,MAIN exec execendif).
+contains(MAIN exec,MAIN exec execendloop).
+contains(MAIN exec,MAIN exec execerror).
+contains(MAIN exec,MAIN exec execexit).
+contains(MAIN exec,MAIN exec execexpression).
+contains(MAIN exec,MAIN exec execfor).
+contains(MAIN exec,MAIN exec execget).
+contains(MAIN exec,MAIN exec execif).
+contains(MAIN exec,MAIN exec execinvariant).
+contains(MAIN exec,MAIN exec execline).
+contains(MAIN exec,MAIN exec execloop).
+contains(MAIN exec,MAIN exec execoperand).
+contains(MAIN exec,MAIN exec execoperator).
+contains(MAIN exec,MAIN exec execprocedure).
+contains(MAIN exec,MAIN exec execput).
+contains(MAIN exec,MAIN exec execsimpletype).
+contains(MAIN exec,MAIN exec execskiptoelseorendif).
+contains(MAIN exec,MAIN exec execskiptoend).
+contains(MAIN exec,MAIN exec execsubexpression).
+contains(MAIN exec,MAIN exec exectype).
+contains(MAIN exec,MAIN exec execvar).
+contains(MAIN exec,MAIN exec execvariable).
+contains(MAIN hasch,MAIN hasch nchars).
+contains(MAIN ident enterident,MAIN ident enterident ident).
+contains(MAIN ident enterident,MAIN ident enterident index_).
+contains(MAIN ident enterident,MAIN ident enterident ix).
+contains(MAIN ident identident,MAIN ident identident index_).
+contains(MAIN ident identindex,MAIN ident identindex ident).
+contains(MAIN ident identindex,MAIN ident identindex ix).
+contains(MAIN ident identtoken,MAIN ident identtoken index_).
+contains(MAIN ident reinitialize,MAIN ident reinitialize i).
+contains(MAIN ident,MAIN ident enterident).
+contains(MAIN ident,MAIN ident identident).
+contains(MAIN ident,MAIN ident identindex).
+contains(MAIN ident,MAIN ident identtable).
+contains(MAIN ident,MAIN ident identtoken).
+contains(MAIN ident,MAIN ident ix 1).
+contains(MAIN ident,MAIN ident ix).
+contains(MAIN ident,MAIN ident keyword).
+contains(MAIN ident,MAIN ident keywordtoken).
+contains(MAIN ident,MAIN ident kw).
+contains(MAIN ident,MAIN ident nkeywords).
+contains(MAIN ident,MAIN ident reinitialize).
+contains(MAIN list,MAIN list first).
+contains(MAIN list,MAIN list i).
+contains(MAIN list,MAIN list last).
+contains(MAIN load,MAIN load f).
+contains(MAIN load,MAIN load i).
+contains(MAIN operator operatorcompare,MAIN operator operatorcompare compareresult).
+contains(MAIN operator operatorcompare,MAIN operator operatorcompare v1 1).
+contains(MAIN operator operatorcompare,MAIN operator operatorcompare v1 2).
+contains(MAIN operator operatorcompare,MAIN operator operatorcompare v1).
+contains(MAIN operator operatorcompare,MAIN operator operatorcompare v2 1).
+contains(MAIN operator operatorcompare,MAIN operator operatorcompare v2 2).
+contains(MAIN operator operatorcompare,MAIN operator operatorcompare v2).
+contains(MAIN operator operatorexec,MAIN operator operatorexec operator).
+contains(MAIN operator operatorpush,MAIN operator operatorpush operator).
+contains(MAIN operator operatorrun,MAIN operator operatorrun compareresult).
+contains(MAIN operator operatorrun,MAIN operator operatorrun operator).
+contains(MAIN operator operatorrun,MAIN operator operatorrun s1).
+contains(MAIN operator operatorrun,MAIN operator operatorrun s2).
+contains(MAIN operator operatorrun,MAIN operator operatorrun v1).
+contains(MAIN operator operatorrun,MAIN operator operatorrun v2).
+contains(MAIN operator,MAIN operator operatorcompare).
+contains(MAIN operator,MAIN operator operatorexec).
+contains(MAIN operator,MAIN operator operatorpop).
+contains(MAIN operator,MAIN operator operatorpush).
+contains(MAIN operator,MAIN operator operatorrun).
+contains(MAIN operator,MAIN operator operatorstack).
+contains(MAIN operator,MAIN operator operatortop).
+contains(MAIN parse parsecall,MAIN parse parsecall i).
+contains(MAIN parse parseconstant,MAIN parse parseconstant token).
+contains(MAIN parse parseerror,MAIN parse parseerror msg).
+contains(MAIN parse parseerror,MAIN parse parseerror token).
+contains(MAIN parse parseerror,MAIN parse parseerror ttext).
+contains(MAIN parse parseerror,MAIN parse parseerror value).
+contains(MAIN parse parseident,MAIN parse parseident proccall).
+contains(MAIN parse parseoperand,MAIN parse parseoperand token).
+contains(MAIN parse parseshift,MAIN parse parseshift i).
+contains(MAIN parse parsesubexpression,MAIN parse parsesubexpression token).
+contains(MAIN parse parsetoken,MAIN parse parsetoken token).
+contains(MAIN parse,MAIN parse parsearraybounds).
+contains(MAIN parse,MAIN parse parsearraytype).
+contains(MAIN parse,MAIN parse parseassert).
+contains(MAIN parse,MAIN parse parseassignment).
+contains(MAIN parse,MAIN parse parsecall).
+contains(MAIN parse,MAIN parse parseconst).
+contains(MAIN parse,MAIN parse parseconstant).
+contains(MAIN parse,MAIN parse parseelsif).
+contains(MAIN parse,MAIN parse parseend).
+contains(MAIN parse,MAIN parse parseerror).
+contains(MAIN parse,MAIN parse parseexit).
+contains(MAIN parse,MAIN parse parseexpression).
+contains(MAIN parse,MAIN parse parsefor).
+contains(MAIN parse,MAIN parse parseget).
+contains(MAIN parse,MAIN parse parseident).
+contains(MAIN parse,MAIN parse parseif).
+contains(MAIN parse,MAIN parse parseinvariant).
+contains(MAIN parse,MAIN parse parseline).
+contains(MAIN parse,MAIN parse parseoperand).
+contains(MAIN parse,MAIN parse parseoperator).
+contains(MAIN parse,MAIN parse parseprocedure).
+contains(MAIN parse,MAIN parse parseput).
+contains(MAIN parse,MAIN parse parseshift).
+contains(MAIN parse,MAIN parse parsesimpletype).
+contains(MAIN parse,MAIN parse parsesubexpression).
+contains(MAIN parse,MAIN parse parsetoken).
+contains(MAIN parse,MAIN parse parsetype).
+contains(MAIN parse,MAIN parse parsevar).
+contains(MAIN parse,MAIN parse parsevariable).
+contains(MAIN renum,MAIN renum i 1).
+contains(MAIN renum,MAIN renum i 2).
+contains(MAIN renum,MAIN renum i 3).
+contains(MAIN renum,MAIN renum i 4).
+contains(MAIN renum,MAIN renum i).
+contains(MAIN renum,MAIN renum increment).
+contains(MAIN renum,MAIN renum indent).
+contains(MAIN renum,MAIN renum l).
+contains(MAIN renum,MAIN renum nlines).
+contains(MAIN renum,MAIN renum token).
+contains(MAIN run,MAIN run linenum).
+contains(MAIN runstack printvalue,MAIN runstack printvalue s).
+contains(MAIN runstack printvars,MAIN runstack printvars i).
+contains(MAIN runstack pushscope,MAIN runstack pushscope ident).
+contains(MAIN runstack pushscope,MAIN runstack pushscope kind).
+contains(MAIN runstack pushscope,MAIN runstack pushscope line).
+contains(MAIN runstack pushscope,MAIN runstack pushscope value).
+contains(MAIN runstack runallocate,MAIN runstack runallocate ident).
+contains(MAIN runstack runallocate,MAIN runstack runallocate kind).
+contains(MAIN runstack runallocatearray,MAIN runstack runallocatearray arraysize).
+contains(MAIN runstack runallocatearray,MAIN runstack runallocatearray elementtype).
+contains(MAIN runstack runallocatearray,MAIN runstack runallocatearray i).
+contains(MAIN runstack runallocatearray,MAIN runstack runallocatearray ident).
+contains(MAIN runstack runallocatearray,MAIN runstack runallocatearray kind).
+contains(MAIN runstack runallocatearray,MAIN runstack runallocatearray lowerbound).
+contains(MAIN runstack runallocatearray,MAIN runstack runallocatearray upperbound).
+contains(MAIN runstack runassign,MAIN runstack runassign v 1).
+contains(MAIN runstack runassign,MAIN runstack runassign v 2).
+contains(MAIN runstack runassign,MAIN runstack runassign v 3).
+contains(MAIN runstack runassign,MAIN runstack runassign v).
+contains(MAIN runstack rundump,MAIN runstack rundump i).
+contains(MAIN runstack runerror,MAIN runstack runerror msg).
+contains(MAIN runstack runlookup,MAIN runstack runlookup ident).
+contains(MAIN runstack runlookup,MAIN runstack runlookup proctop).
+contains(MAIN runstack runlookup,MAIN runstack runlookup ri 1).
+contains(MAIN runstack runlookup,MAIN runstack runlookup ri).
+contains(MAIN runstack runpopboolean,MAIN runstack runpopboolean value).
+contains(MAIN runstack runpopint,MAIN runstack runpopint value).
+contains(MAIN runstack runpopreal,MAIN runstack runpopreal value).
+contains(MAIN runstack runpopstring,MAIN runstack runpopstring value).
+contains(MAIN runstack runpushboolean,MAIN runstack runpushboolean value).
+contains(MAIN runstack runpushdesc,MAIN runstack runpushdesc identindex).
+contains(MAIN runstack runpushdesc,MAIN runstack runpushdesc index_).
+contains(MAIN runstack runpushint,MAIN runstack runpushint value).
+contains(MAIN runstack runpushreal,MAIN runstack runpushreal value).
+contains(MAIN runstack runpushstring,MAIN runstack runpushstring value).
+contains(MAIN runstack runsubscript,MAIN runstack runsubscript subscript).
+contains(MAIN runstack runsubscript,MAIN runstack runsubscript typekind).
+contains(MAIN runstack runswap,MAIN runstack runswap t).
+contains(MAIN runstack,MAIN runstack arraystack).
+contains(MAIN runstack,MAIN runstack arraytop).
+contains(MAIN runstack,MAIN runstack arraytype).
+contains(MAIN runstack,MAIN runstack initscope).
+contains(MAIN runstack,MAIN runstack kindname).
+contains(MAIN runstack,MAIN runstack nullrunstackentry).
+contains(MAIN runstack,MAIN runstack popscope).
+contains(MAIN runstack,MAIN runstack printvalue).
+contains(MAIN runstack,MAIN runstack printvars).
+contains(MAIN runstack,MAIN runstack pushscope).
+contains(MAIN runstack,MAIN runstack runallocate).
+contains(MAIN runstack,MAIN runstack runallocatearray).
+contains(MAIN runstack,MAIN runstack runassign).
+contains(MAIN runstack,MAIN runstack rundump).
+contains(MAIN runstack,MAIN runstack runerror).
+contains(MAIN runstack,MAIN runstack runevaluate).
+contains(MAIN runstack,MAIN runstack runident).
+contains(MAIN runstack,MAIN runstack runkind).
+contains(MAIN runstack,MAIN runstack runlookup).
+contains(MAIN runstack,MAIN runstack runpop).
+contains(MAIN runstack,MAIN runstack runpopboolean).
+contains(MAIN runstack,MAIN runstack runpopint).
+contains(MAIN runstack,MAIN runstack runpopreal).
+contains(MAIN runstack,MAIN runstack runpopstring).
+contains(MAIN runstack,MAIN runstack runpushboolean).
+contains(MAIN runstack,MAIN runstack runpushdesc).
+contains(MAIN runstack,MAIN runstack runpushint).
+contains(MAIN runstack,MAIN runstack runpushreal).
+contains(MAIN runstack,MAIN runstack runpushstring).
+contains(MAIN runstack,MAIN runstack runstack).
+contains(MAIN runstack,MAIN runstack runsubscript).
+contains(MAIN runstack,MAIN runstack runswap).
+contains(MAIN runstack,MAIN runstack runtop).
+contains(MAIN runstack,MAIN runstack runtype).
+contains(MAIN runstack,MAIN runstack scalartype).
+contains(MAIN runstack,MAIN runstack scopeident).
+contains(MAIN runstack,MAIN runstack scopekind).
+contains(MAIN runstack,MAIN runstack scopeline).
+contains(MAIN runstack,MAIN runstack scopestack).
+contains(MAIN runstack,MAIN runstack scopetop).
+contains(MAIN runstack,MAIN runstack scopevalue).
+contains(MAIN runstack,MAIN runstack typename).
+contains(MAIN runstack,MAIN runstack uninitint).
+contains(MAIN runstack,MAIN runstack uninitreal).
+contains(MAIN runstack,MAIN runstack uninitstring).
+contains(MAIN save,MAIN save f).
+contains(MAIN save,MAIN save i).
+contains(MAIN scan expandline,MAIN scan expandline MAIN error).
+contains(MAIN scan expandline,MAIN scan expandline lineptr).
+contains(MAIN scan expandline,MAIN scan expandline text).
+contains(MAIN scan expandline,MAIN scan expandline token).
+contains(MAIN scan scanline,MAIN scan scanline c).
+contains(MAIN scan scanline,MAIN scan scanline cc).
+contains(MAIN scan scanline,MAIN scan scanline coindex).
+contains(MAIN scan scanline,MAIN scan scanline currentptr).
+contains(MAIN scan scanline,MAIN scan scanline idindex).
+contains(MAIN scan scanline,MAIN scan scanline idlength).
+contains(MAIN scan scanline,MAIN scan scanline idtext).
+contains(MAIN scan scanline,MAIN scan scanline inlength).
+contains(MAIN scan scanline,MAIN scan scanline intext).
+contains(MAIN scan scanline,MAIN scan scanline linetext).
+contains(MAIN scan scanline,MAIN scan scanline stindex).
+contains(MAIN scan scanline,MAIN scan scanline stlength).
+contains(MAIN scan scanline,MAIN scan scanline sttext).
+contains(MAIN scan scanline,MAIN scan scanline text).
+contains(MAIN scan scanline,MAIN scan scanline tt).
+contains(MAIN scan,MAIN scan c 1).
+contains(MAIN scan,MAIN scan c 2).
+contains(MAIN scan,MAIN scan c 3).
+contains(MAIN scan,MAIN scan c).
+contains(MAIN scan,MAIN scan cblank).
+contains(MAIN scan,MAIN scan ccomment).
+contains(MAIN scan,MAIN scan cdigit).
+contains(MAIN scan,MAIN scan charclass).
+contains(MAIN scan,MAIN scan cillegal).
+contains(MAIN scan,MAIN scan cletter).
+contains(MAIN scan,MAIN scan cquote).
+contains(MAIN scan,MAIN scan cspecialchar).
+contains(MAIN scan,MAIN scan expandline).
+contains(MAIN scan,MAIN scan sc).
+contains(MAIN scan,MAIN scan scanline).
+contains(MAIN scan,MAIN scan specialchars).
+contains(MAIN scan,MAIN scan specialchartoken).
+contains(MAIN,MAIN CBREAKmode).
+contains(MAIN,MAIN ECHOmode).
+contains(MAIN,MAIN FIONREAD).
+contains(MAIN,MAIN binaryoperator).
+contains(MAIN,MAIN clear).
+contains(MAIN,MAIN command).
+contains(MAIN,MAIN crmode).
+contains(MAIN,MAIN currenterror).
+contains(MAIN,MAIN currentline).
+contains(MAIN,MAIN currentnum).
+contains(MAIN,MAIN currentptr).
+contains(MAIN,MAIN echo).
+contains(MAIN,MAIN edit).
+contains(MAIN,MAIN enter).
+contains(MAIN,MAIN error).
+contains(MAIN,MAIN exec).
+contains(MAIN,MAIN execute).
+contains(MAIN,MAIN filename).
+contains(MAIN,MAIN firstkeyword).
+contains(MAIN,MAIN firstoperator).
+contains(MAIN,MAIN firstscopekind).
+contains(MAIN,MAIN firstspecialsymbol).
+contains(MAIN,MAIN firststatement).
+contains(MAIN,MAIN firstsymbolkind).
+contains(MAIN,MAIN firsttoken).
+contains(MAIN,MAIN firsttypekind).
+contains(MAIN,MAIN hasch).
+contains(MAIN,MAIN i).
+contains(MAIN,MAIN ident).
+contains(MAIN,MAIN lastkeyword).
+contains(MAIN,MAIN lastoperator).
+contains(MAIN,MAIN lastscopekind).
+contains(MAIN,MAIN lastspecialsymbol).
+contains(MAIN,MAIN laststatement).
+contains(MAIN,MAIN lastsymbolkind).
+contains(MAIN,MAIN lasttoken).
+contains(MAIN,MAIN lasttypekind).
+contains(MAIN,MAIN lines).
+contains(MAIN,MAIN list).
+contains(MAIN,MAIN load).
+contains(MAIN,MAIN maxarraystackdepth).
+contains(MAIN,MAIN maxconstructstackdepth).
+contains(MAIN,MAIN maxidentlength).
+contains(MAIN,MAIN maxidents).
+contains(MAIN,MAIN maxindent).
+contains(MAIN,MAIN maxint).
+contains(MAIN,MAIN maxintegerlength).
+contains(MAIN,MAIN maxlines).
+contains(MAIN,MAIN maxlinetokens).
+contains(MAIN,MAIN maxoperatorstackdepth).
+contains(MAIN,MAIN maxreal).
+contains(MAIN,MAIN maxrunstackdepth).
+contains(MAIN,MAIN maxscopestackdepth).
+contains(MAIN,MAIN maxstringlength).
+contains(MAIN,MAIN maxstringstackdepth).
+contains(MAIN,MAIN new_).
+contains(MAIN,MAIN nocrmode).
+contains(MAIN,MAIN noecho).
+contains(MAIN,MAIN opadd).
+contains(MAIN,MAIN opand).
+contains(MAIN,MAIN opdiv).
+contains(MAIN,MAIN opendexpression).
+contains(MAIN,MAIN opequal).
+contains(MAIN,MAIN operator).
+contains(MAIN,MAIN operatorprecedence).
+contains(MAIN,MAIN opgreater).
+contains(MAIN,MAIN opgreaterequal).
+contains(MAIN,MAIN opless).
+contains(MAIN,MAIN oplessequal).
+contains(MAIN,MAIN oplparen).
+contains(MAIN,MAIN opminus).
+contains(MAIN,MAIN opmod).
+contains(MAIN,MAIN opmultiply).
+contains(MAIN,MAIN opnot).
+contains(MAIN,MAIN opnotequal).
+contains(MAIN,MAIN opor).
+contains(MAIN,MAIN opplus).
+contains(MAIN,MAIN oprparen).
+contains(MAIN,MAIN opsubtract).
+contains(MAIN,MAIN parse).
+contains(MAIN,MAIN renum).
+contains(MAIN,MAIN run).
+contains(MAIN,MAIN runstack).
+contains(MAIN,MAIN save).
+contains(MAIN,MAIN scan).
+contains(MAIN,MAIN scelse).
+contains(MAIN,MAIN scfor).
+contains(MAIN,MAIN scif).
+contains(MAIN,MAIN scloop).
+contains(MAIN,MAIN scmain).
+contains(MAIN,MAIN scprocedure).
+contains(MAIN,MAIN syconst).
+contains(MAIN,MAIN sydescriptor).
+contains(MAIN,MAIN syelementdescriptor).
+contains(MAIN,MAIN syprocedure).
+contains(MAIN,MAIN sytemp).
+contains(MAIN,MAIN sytype).
+contains(MAIN,MAIN syvar).
+contains(MAIN,MAIN tand).
+contains(MAIN,MAIN tany).
+contains(MAIN,MAIN tarray).
+contains(MAIN,MAIN tassert).
+contains(MAIN,MAIN tassign).
+contains(MAIN,MAIN tboolean).
+contains(MAIN,MAIN tcall).
+contains(MAIN,MAIN tchr).
+contains(MAIN,MAIN tcolon).
+contains(MAIN,MAIN tcolonequal).
+contains(MAIN,MAIN tcomma).
+contains(MAIN,MAIN tcomment).
+contains(MAIN,MAIN tconst).
+contains(MAIN,MAIN tdiv).
+contains(MAIN,MAIN tdotdot).
+contains(MAIN,MAIN telse).
+contains(MAIN,MAIN telseif).
+contains(MAIN,MAIN telsif).
+contains(MAIN,MAIN tend).
+contains(MAIN,MAIN tendfor).
+contains(MAIN,MAIN tendif).
+contains(MAIN,MAIN tendloop).
+contains(MAIN,MAIN teol).
+contains(MAIN,MAIN tequal).
+contains(MAIN,MAIN texit).
+contains(MAIN,MAIN texitwhen).
+contains(MAIN,MAIN tfalse).
+contains(MAIN,MAIN tfor).
+contains(MAIN,MAIN tget).
+contains(MAIN,MAIN tgreater).
+contains(MAIN,MAIN tgreaterequal).
+contains(MAIN,MAIN tidentifier).
+contains(MAIN,MAIN tif).
+contains(MAIN,MAIN tillegal).
+contains(MAIN,MAIN tint).
+contains(MAIN,MAIN tinteger).
+contains(MAIN,MAIN tinvariant).
+contains(MAIN,MAIN tlength).
+contains(MAIN,MAIN tless).
+contains(MAIN,MAIN tlessequal).
+contains(MAIN,MAIN tloop).
+contains(MAIN,MAIN tlparen).
+contains(MAIN,MAIN tminus).
+contains(MAIN,MAIN tmod).
+contains(MAIN,MAIN tnot).
+contains(MAIN,MAIN tnotequal).
+contains(MAIN,MAIN tof).
+contains(MAIN,MAIN tokentext).
+contains(MAIN,MAIN tor).
+contains(MAIN,MAIN tord).
+contains(MAIN,MAIN tplus).
+contains(MAIN,MAIN tprocedure).
+contains(MAIN,MAIN tput).
+contains(MAIN,MAIN trace).
+contains(MAIN,MAIN troff).
+contains(MAIN,MAIN tron).
+contains(MAIN,MAIN trparen).
+contains(MAIN,MAIN tsemicolon).
+contains(MAIN,MAIN tstar).
+contains(MAIN,MAIN tstring).
+contains(MAIN,MAIN tstringlit).
+contains(MAIN,MAIN tthen).
+contains(MAIN,MAIN ttrue).
+contains(MAIN,MAIN tty).
+contains(MAIN,MAIN ttyinput).
+contains(MAIN,MAIN ttype).
+contains(MAIN,MAIN tvar).
+contains(MAIN,MAIN twhen).
+contains(MAIN,MAIN tyboolean).
+contains(MAIN,MAIN tybooleanarray).
+contains(MAIN,MAIN tyint).
+contains(MAIN,MAIN tyintarray).
+contains(MAIN,MAIN typrocedure).
+contains(MAIN,MAIN tyreal).
+contains(MAIN,MAIN tyrealarray).
+contains(MAIN,MAIN tystring).
+contains(MAIN,MAIN tystringarray).
+contains(MAIN,MAIN unaryoperator).
+contains(MAIN,MAIN vars).
+exports(MAIN exec,MAIN exec execline).
+exports(MAIN ident,MAIN ident enterident).
+exports(MAIN ident,MAIN ident identident).
+exports(MAIN ident,MAIN ident identindex).
+exports(MAIN ident,MAIN ident identtoken).
+exports(MAIN ident,MAIN ident reinitialize).
+exports(MAIN operator,MAIN operator operatorexec).
+exports(MAIN parse,MAIN parse parseline).
+exports(MAIN runstack,MAIN runstack initscope).
+exports(MAIN runstack,MAIN runstack popscope).
+exports(MAIN runstack,MAIN runstack printvars).
+exports(MAIN runstack,MAIN runstack pushscope).
+exports(MAIN runstack,MAIN runstack runallocate).
+exports(MAIN runstack,MAIN runstack runallocatearray).
+exports(MAIN runstack,MAIN runstack runassign).
+exports(MAIN runstack,MAIN runstack runerror).
+exports(MAIN runstack,MAIN runstack runevaluate).
+exports(MAIN runstack,MAIN runstack runident).
+exports(MAIN runstack,MAIN runstack runkind).
+exports(MAIN runstack,MAIN runstack runlookup).
+exports(MAIN runstack,MAIN runstack runpop).
+exports(MAIN runstack,MAIN runstack runpopboolean).
+exports(MAIN runstack,MAIN runstack runpopint).
+exports(MAIN runstack,MAIN runstack runpopstring).
+exports(MAIN runstack,MAIN runstack runpushboolean).
+exports(MAIN runstack,MAIN runstack runpushdesc).
+exports(MAIN runstack,MAIN runstack runpushint).
+exports(MAIN runstack,MAIN runstack runpushstring).
+exports(MAIN runstack,MAIN runstack runsubscript).
+exports(MAIN runstack,MAIN runstack runswap).
+exports(MAIN runstack,MAIN runstack runtype).
+exports(MAIN runstack,MAIN runstack scopeident).
+exports(MAIN runstack,MAIN runstack scopekind).
+exports(MAIN runstack,MAIN runstack scopeline).
+exports(MAIN runstack,MAIN runstack scopevalue).
+exports(MAIN scan,MAIN scan expandline).
+exports(MAIN scan,MAIN scan scanline).
+function(LIBRARY chr).
+function(LIBRARY eof).
+function(LIBRARY index).
+function(LIBRARY intstr).
+function(LIBRARY length).
+function(LIBRARY max).
+function(LIBRARY min).
+function(LIBRARY ord).
+function(LIBRARY realstr).
+function(LIBRARY repeat).
+function(LIBRARY size).
+function(LIBRARY strint).
+function(LIBRARY strreal).
+function(MAIN hasch).
+function(MAIN ident identident).
+function(MAIN ident identindex).
+function(MAIN ident identtoken).
+function(MAIN runstack runident).
+function(MAIN runstack runkind).
+function(MAIN runstack runlookup).
+function(MAIN runstack runtype).
+function(MAIN runstack scopeident).
+function(MAIN runstack scopekind).
+function(MAIN runstack scopeline).
+function(MAIN runstack scopevalue).
+imports(MAIN exec,MAIN error).
+imports(MAIN ident,MAIN error).
+imports(MAIN parse,MAIN error).
+imports(MAIN runstack,MAIN error).
+imports_var(MAIN exec,MAIN currentline).
+imports_var(MAIN exec,MAIN currentnum).
+imports_var(MAIN exec,MAIN currentptr).
+imports_var(MAIN exec,MAIN ident).
+imports_var(MAIN exec,MAIN lines).
+imports_var(MAIN exec,MAIN operator).
+imports_var(MAIN exec,MAIN runstack).
+imports_var(MAIN operator,MAIN runstack).
+imports_var(MAIN parse,MAIN currentline).
+imports_var(MAIN parse,MAIN currentptr).
+imports_var(MAIN parse,MAIN ident).
+imports_var(MAIN runstack,MAIN currentptr).
+imports_var(MAIN runstack,MAIN ident).
+imports_var(MAIN scan,MAIN currentline).
+imports_var(MAIN scan,MAIN currentptr).
+imports_var(MAIN scan,MAIN ident).
+library(LIBRARY).
+module(MAIN exec).
+module(MAIN ident).
+module(MAIN operator).
+module(MAIN parse).
+module(MAIN runstack).
+module(MAIN scan).
+pervasive_constant(MAIN CBREAKmode).
+pervasive_constant(MAIN ECHOmode).
+pervasive_constant(MAIN FIONREAD).
+pervasive_constant(MAIN binaryoperator).
+pervasive_constant(MAIN firstkeyword).
+pervasive_constant(MAIN firstoperator).
+pervasive_constant(MAIN firstscopekind).
+pervasive_constant(MAIN firstspecialsymbol).
+pervasive_constant(MAIN firststatement).
+pervasive_constant(MAIN firstsymbolkind).
+pervasive_constant(MAIN firsttoken).
+pervasive_constant(MAIN firsttypekind).
+pervasive_constant(MAIN lastkeyword).
+pervasive_constant(MAIN lastoperator).
+pervasive_constant(MAIN lastscopekind).
+pervasive_constant(MAIN lastspecialsymbol).
+pervasive_constant(MAIN laststatement).
+pervasive_constant(MAIN lastsymbolkind).
+pervasive_constant(MAIN lasttoken).
+pervasive_constant(MAIN lasttypekind).
+pervasive_constant(MAIN maxarraystackdepth).
+pervasive_constant(MAIN maxconstructstackdepth).
+pervasive_constant(MAIN maxidentlength).
+pervasive_constant(MAIN maxidents).
+pervasive_constant(MAIN maxindent).
+pervasive_constant(MAIN maxint).
+pervasive_constant(MAIN maxintegerlength).
+pervasive_constant(MAIN maxlines).
+pervasive_constant(MAIN maxlinetokens).
+pervasive_constant(MAIN maxoperatorstackdepth).
+pervasive_constant(MAIN maxreal).
+pervasive_constant(MAIN maxrunstackdepth).
+pervasive_constant(MAIN maxscopestackdepth).
+pervasive_constant(MAIN maxstringlength).
+pervasive_constant(MAIN maxstringstackdepth).
+pervasive_constant(MAIN opadd).
+pervasive_constant(MAIN opand).
+pervasive_constant(MAIN opdiv).
+pervasive_constant(MAIN opendexpression).
+pervasive_constant(MAIN opequal).
+pervasive_constant(MAIN operatorprecedence).
+pervasive_constant(MAIN opgreater).
+pervasive_constant(MAIN opgreaterequal).
+pervasive_constant(MAIN opless).
+pervasive_constant(MAIN oplessequal).
+pervasive_constant(MAIN oplparen).
+pervasive_constant(MAIN opminus).
+pervasive_constant(MAIN opmod).
+pervasive_constant(MAIN opmultiply).
+pervasive_constant(MAIN opnot).
+pervasive_constant(MAIN opnotequal).
+pervasive_constant(MAIN opor).
+pervasive_constant(MAIN opplus).
+pervasive_constant(MAIN oprparen).
+pervasive_constant(MAIN opsubtract).
+pervasive_constant(MAIN scelse).
+pervasive_constant(MAIN scfor).
+pervasive_constant(MAIN scif).
+pervasive_constant(MAIN scloop).
+pervasive_constant(MAIN scmain).
+pervasive_constant(MAIN scprocedure).
+pervasive_constant(MAIN syconst).
+pervasive_constant(MAIN sydescriptor).
+pervasive_constant(MAIN syelementdescriptor).
+pervasive_constant(MAIN syprocedure).
+pervasive_constant(MAIN sytemp).
+pervasive_constant(MAIN sytype).
+pervasive_constant(MAIN syvar).
+pervasive_constant(MAIN tand).
+pervasive_constant(MAIN tany).
+pervasive_constant(MAIN tarray).
+pervasive_constant(MAIN tassert).
+pervasive_constant(MAIN tassign).
+pervasive_constant(MAIN tboolean).
+pervasive_constant(MAIN tcall).
+pervasive_constant(MAIN tchr).
+pervasive_constant(MAIN tcolon).
+pervasive_constant(MAIN tcolonequal).
+pervasive_constant(MAIN tcomma).
+pervasive_constant(MAIN tcomment).
+pervasive_constant(MAIN tconst).
+pervasive_constant(MAIN tdiv).
+pervasive_constant(MAIN tdotdot).
+pervasive_constant(MAIN telse).
+pervasive_constant(MAIN telseif).
+pervasive_constant(MAIN telsif).
+pervasive_constant(MAIN tend).
+pervasive_constant(MAIN tendfor).
+pervasive_constant(MAIN tendif).
+pervasive_constant(MAIN tendloop).
+pervasive_constant(MAIN teol).
+pervasive_constant(MAIN tequal).
+pervasive_constant(MAIN texit).
+pervasive_constant(MAIN texitwhen).
+pervasive_constant(MAIN tfalse).
+pervasive_constant(MAIN tfor).
+pervasive_constant(MAIN tget).
+pervasive_constant(MAIN tgreater).
+pervasive_constant(MAIN tgreaterequal).
+pervasive_constant(MAIN tidentifier).
+pervasive_constant(MAIN tif).
+pervasive_constant(MAIN tillegal).
+pervasive_constant(MAIN tint).
+pervasive_constant(MAIN tinteger).
+pervasive_constant(MAIN tinvariant).
+pervasive_constant(MAIN tlength).
+pervasive_constant(MAIN tless).
+pervasive_constant(MAIN tlessequal).
+pervasive_constant(MAIN tloop).
+pervasive_constant(MAIN tlparen).
+pervasive_constant(MAIN tminus).
+pervasive_constant(MAIN tmod).
+pervasive_constant(MAIN tnot).
+pervasive_constant(MAIN tnotequal).
+pervasive_constant(MAIN tof).
+pervasive_constant(MAIN tokentext).
+pervasive_constant(MAIN tor).
+pervasive_constant(MAIN tord).
+pervasive_constant(MAIN tplus).
+pervasive_constant(MAIN tprocedure).
+pervasive_constant(MAIN tput).
+pervasive_constant(MAIN trparen).
+pervasive_constant(MAIN tsemicolon).
+pervasive_constant(MAIN tstar).
+pervasive_constant(MAIN tstring).
+pervasive_constant(MAIN tstringlit).
+pervasive_constant(MAIN tthen).
+pervasive_constant(MAIN ttrue).
+pervasive_constant(MAIN ttyinput).
+pervasive_constant(MAIN ttype).
+pervasive_constant(MAIN tvar).
+pervasive_constant(MAIN twhen).
+pervasive_constant(MAIN tyboolean).
+pervasive_constant(MAIN tybooleanarray).
+pervasive_constant(MAIN tyint).
+pervasive_constant(MAIN tyintarray).
+pervasive_constant(MAIN typrocedure).
+pervasive_constant(MAIN tyreal).
+pervasive_constant(MAIN tyrealarray).
+pervasive_constant(MAIN tystring).
+pervasive_constant(MAIN tystringarray).
+pervasive_constant(MAIN unaryoperator).
+procedure(LIBRARY gtty).
+procedure(LIBRARY ioctl).
+procedure(LIBRARY stty).
+procedure(MAIN clear).
+procedure(MAIN crmode).
+procedure(MAIN echo).
+procedure(MAIN edit).
+procedure(MAIN enter).
+procedure(MAIN error).
+procedure(MAIN exec execarraybounds).
+procedure(MAIN exec execarraytype).
+procedure(MAIN exec execassert).
+procedure(MAIN exec execassignment).
+procedure(MAIN exec execcall).
+procedure(MAIN exec execconst).
+procedure(MAIN exec execconstant).
+procedure(MAIN exec execelse).
+procedure(MAIN exec execelsif).
+procedure(MAIN exec execend).
+procedure(MAIN exec execendfor).
+procedure(MAIN exec execendif).
+procedure(MAIN exec execendloop).
+procedure(MAIN exec execerror).
+procedure(MAIN exec execexit).
+procedure(MAIN exec execexpression).
+procedure(MAIN exec execfor).
+procedure(MAIN exec execget).
+procedure(MAIN exec execif).
+procedure(MAIN exec execinvariant).
+procedure(MAIN exec execline).
+procedure(MAIN exec execloop).
+procedure(MAIN exec execoperand).
+procedure(MAIN exec execoperator).
+procedure(MAIN exec execprocedure).
+procedure(MAIN exec execput).
+procedure(MAIN exec execsimpletype).
+procedure(MAIN exec execskiptoelseorendif).
+procedure(MAIN exec execskiptoend).
+procedure(MAIN exec execsubexpression).
+procedure(MAIN exec exectype).
+procedure(MAIN exec execvar).
+procedure(MAIN exec execvariable).
+procedure(MAIN execute).
+procedure(MAIN filename).
+procedure(MAIN ident enterident).
+procedure(MAIN ident reinitialize).
+procedure(MAIN list).
+procedure(MAIN load).
+procedure(MAIN new_).
+procedure(MAIN nocrmode).
+procedure(MAIN noecho).
+procedure(MAIN operator operatorcompare).
+procedure(MAIN operator operatorexec).
+procedure(MAIN operator operatorpop).
+procedure(MAIN operator operatorpush).
+procedure(MAIN operator operatorrun).
+procedure(MAIN parse parsearraybounds).
+procedure(MAIN parse parsearraytype).
+procedure(MAIN parse parseassert).
+procedure(MAIN parse parseassignment).
+procedure(MAIN parse parsecall).
+procedure(MAIN parse parseconst).
+procedure(MAIN parse parseconstant).
+procedure(MAIN parse parseelsif).
+procedure(MAIN parse parseend).
+procedure(MAIN parse parseerror).
+procedure(MAIN parse parseexit).
+procedure(MAIN parse parseexpression).
+procedure(MAIN parse parsefor).
+procedure(MAIN parse parseget).
+procedure(MAIN parse parseident).
+procedure(MAIN parse parseif).
+procedure(MAIN parse parseinvariant).
+procedure(MAIN parse parseline).
+procedure(MAIN parse parseoperand).
+procedure(MAIN parse parseoperator).
+procedure(MAIN parse parseprocedure).
+procedure(MAIN parse parseput).
+procedure(MAIN parse parseshift).
+procedure(MAIN parse parsesimpletype).
+procedure(MAIN parse parsesubexpression).
+procedure(MAIN parse parsetoken).
+procedure(MAIN parse parsetype).
+procedure(MAIN parse parsevar).
+procedure(MAIN parse parsevariable).
+procedure(MAIN renum).
+procedure(MAIN run).
+procedure(MAIN runstack initscope).
+procedure(MAIN runstack popscope).
+procedure(MAIN runstack printvalue).
+procedure(MAIN runstack printvars).
+procedure(MAIN runstack pushscope).
+procedure(MAIN runstack runallocate).
+procedure(MAIN runstack runallocatearray).
+procedure(MAIN runstack runassign).
+procedure(MAIN runstack rundump).
+procedure(MAIN runstack runerror).
+procedure(MAIN runstack runevaluate).
+procedure(MAIN runstack runpop).
+procedure(MAIN runstack runpopboolean).
+procedure(MAIN runstack runpopint).
+procedure(MAIN runstack runpopreal).
+procedure(MAIN runstack runpopstring).
+procedure(MAIN runstack runpushboolean).
+procedure(MAIN runstack runpushdesc).
+procedure(MAIN runstack runpushint).
+procedure(MAIN runstack runpushreal).
+procedure(MAIN runstack runpushstring).
+procedure(MAIN runstack runsubscript).
+procedure(MAIN runstack runswap).
+procedure(MAIN save).
+procedure(MAIN scan expandline).
+procedure(MAIN scan scanline).
+procedure(MAIN troff).
+procedure(MAIN tron).
+procedure(MAIN vars).
+program(MAIN).
+read_ref(MAIN clear,MAIN clear i).
+read_ref(MAIN clear,MAIN maxlines).
+read_ref(MAIN clear,MAIN scprocedure).
+read_ref(MAIN clear,MAIN teol).
+read_ref(MAIN crmode,MAIN CBREAKmode).
+read_ref(MAIN crmode,MAIN tty).
+read_ref(MAIN echo,MAIN ECHOmode).
+read_ref(MAIN echo,MAIN tty).
+read_ref(MAIN edit,MAIN command).
+read_ref(MAIN edit,MAIN currentline).
+read_ref(MAIN edit,MAIN currentnum).
+read_ref(MAIN edit,MAIN edit i).
+read_ref(MAIN edit,MAIN edit linenum).
+read_ref(MAIN edit,MAIN edit nextchar).
+read_ref(MAIN edit,MAIN edit position).
+read_ref(MAIN edit,MAIN lines).
+read_ref(MAIN edit,MAIN maxlines).
+read_ref(MAIN edit,MAIN maxlinetokens).
+read_ref(MAIN edit,MAIN teol).
+read_ref(MAIN enter,MAIN command).
+read_ref(MAIN enter,MAIN currenterror).
+read_ref(MAIN enter,MAIN currentline).
+read_ref(MAIN enter,MAIN currentnum).
+read_ref(MAIN enter,MAIN lines).
+read_ref(MAIN enter,MAIN maxlines).
+read_ref(MAIN enter,MAIN teol).
+read_ref(MAIN error,MAIN currentline).
+read_ref(MAIN error,MAIN currentptr).
+read_ref(MAIN error,MAIN error msg).
+read_ref(MAIN exec execassert,MAIN exec execassert v).
+read_ref(MAIN exec execassignment,MAIN exec execassignment kind).
+read_ref(MAIN exec execassignment,MAIN syvar).
+read_ref(MAIN exec execcall,MAIN currentline).
+read_ref(MAIN exec execcall,MAIN currentptr).
+read_ref(MAIN exec execconst,MAIN currentline).
+read_ref(MAIN exec execconst,MAIN currentptr).
+read_ref(MAIN exec execconst,MAIN exec execconst ident).
+read_ref(MAIN exec execconst,MAIN syconst).
+read_ref(MAIN exec execconstant,MAIN currentline).
+read_ref(MAIN exec execconstant,MAIN currentptr).
+read_ref(MAIN exec execconstant,MAIN exec execconstant stext).
+read_ref(MAIN exec execconstant,MAIN exec execconstant token).
+read_ref(MAIN exec execconstant,MAIN syconst).
+read_ref(MAIN exec execconstant,MAIN tfalse).
+read_ref(MAIN exec execconstant,MAIN tidentifier).
+read_ref(MAIN exec execconstant,MAIN tinteger).
+read_ref(MAIN exec execconstant,MAIN tstringlit).
+read_ref(MAIN exec execconstant,MAIN ttrue).
+read_ref(MAIN exec execelse,MAIN scelse).
+read_ref(MAIN exec execelse,MAIN scif).
+read_ref(MAIN exec execelse,MAIN tendif).
+read_ref(MAIN exec execelse,MAIN tif).
+read_ref(MAIN exec execelsif,MAIN scif).
+read_ref(MAIN exec execelsif,MAIN tendif).
+read_ref(MAIN exec execelsif,MAIN tif).
+read_ref(MAIN exec execendfor,MAIN exec execendfor ident).
+read_ref(MAIN exec execendfor,MAIN exec execendfor upperbound).
+read_ref(MAIN exec execendfor,MAIN exec execendfor value).
+read_ref(MAIN exec execendfor,MAIN scfor).
+read_ref(MAIN exec execendif,MAIN scelse).
+read_ref(MAIN exec execendif,MAIN scif).
+read_ref(MAIN exec execendloop,MAIN scloop).
+read_ref(MAIN exec execerror,MAIN currentptr).
+read_ref(MAIN exec execerror,MAIN exec execerror msg).
+read_ref(MAIN exec execexit,MAIN currentnum).
+read_ref(MAIN exec execexit,MAIN exec execexit v).
+read_ref(MAIN exec execexit,MAIN scloop).
+read_ref(MAIN exec execexit,MAIN tendloop).
+read_ref(MAIN exec execexit,MAIN tloop).
+read_ref(MAIN exec execexpression,MAIN opendexpression).
+read_ref(MAIN exec execfor,MAIN currentline).
+read_ref(MAIN exec execfor,MAIN currentnum).
+read_ref(MAIN exec execfor,MAIN currentptr).
+read_ref(MAIN exec execfor,MAIN exec execfor ident).
+read_ref(MAIN exec execfor,MAIN exec execfor lowerbound).
+read_ref(MAIN exec execfor,MAIN exec execfor upperbound).
+read_ref(MAIN exec execfor,MAIN scfor).
+read_ref(MAIN exec execfor,MAIN syconst).
+read_ref(MAIN exec execfor,MAIN tendfor).
+read_ref(MAIN exec execfor,MAIN tfor).
+read_ref(MAIN exec execget,MAIN currentline).
+read_ref(MAIN exec execget,MAIN currentptr).
+read_ref(MAIN exec execget,MAIN exec execget i).
+read_ref(MAIN exec execget,MAIN exec execget v 1).
+read_ref(MAIN exec execget,MAIN exec execget v 2).
+read_ref(MAIN exec execget,MAIN exec execget v).
+read_ref(MAIN exec execget,MAIN exec execget valid).
+read_ref(MAIN exec execget,MAIN tcomma).
+read_ref(MAIN exec execget,MAIN tyboolean).
+read_ref(MAIN exec execget,MAIN tyint).
+read_ref(MAIN exec execget,MAIN tystring).
+read_ref(MAIN exec execif,MAIN currentnum).
+read_ref(MAIN exec execif,MAIN exec execif ifcondition).
+read_ref(MAIN exec execif,MAIN scif).
+read_ref(MAIN exec execline,MAIN currentline).
+read_ref(MAIN exec execline,MAIN currentptr).
+read_ref(MAIN exec execline,MAIN tassert).
+read_ref(MAIN exec execline,MAIN tcall).
+read_ref(MAIN exec execline,MAIN tcomment).
+read_ref(MAIN exec execline,MAIN tconst).
+read_ref(MAIN exec execline,MAIN telse).
+read_ref(MAIN exec execline,MAIN telsif).
+read_ref(MAIN exec execline,MAIN tend).
+read_ref(MAIN exec execline,MAIN tendfor).
+read_ref(MAIN exec execline,MAIN tendif).
+read_ref(MAIN exec execline,MAIN tendloop).
+read_ref(MAIN exec execline,MAIN teol).
+read_ref(MAIN exec execline,MAIN texitwhen).
+read_ref(MAIN exec execline,MAIN tfor).
+read_ref(MAIN exec execline,MAIN tget).
+read_ref(MAIN exec execline,MAIN tidentifier).
+read_ref(MAIN exec execline,MAIN tif).
+read_ref(MAIN exec execline,MAIN tinvariant).
+read_ref(MAIN exec execline,MAIN tloop).
+read_ref(MAIN exec execline,MAIN tprocedure).
+read_ref(MAIN exec execline,MAIN tput).
+read_ref(MAIN exec execline,MAIN tsemicolon).
+read_ref(MAIN exec execline,MAIN ttype).
+read_ref(MAIN exec execline,MAIN tvar).
+read_ref(MAIN exec execloop,MAIN currentnum).
+read_ref(MAIN exec execloop,MAIN scloop).
+read_ref(MAIN exec execoperand,MAIN currentline).
+read_ref(MAIN exec execoperand,MAIN currentptr).
+read_ref(MAIN exec execoperand,MAIN exec execoperand stext).
+read_ref(MAIN exec execoperand,MAIN exec execoperand token).
+read_ref(MAIN exec execoperand,MAIN exec execoperand v 1).
+read_ref(MAIN exec execoperand,MAIN exec execoperand v 2).
+read_ref(MAIN exec execoperand,MAIN exec execoperand v).
+read_ref(MAIN exec execoperand,MAIN oplparen).
+read_ref(MAIN exec execoperand,MAIN oprparen).
+read_ref(MAIN exec execoperand,MAIN tchr).
+read_ref(MAIN exec execoperand,MAIN tfalse).
+read_ref(MAIN exec execoperand,MAIN tidentifier).
+read_ref(MAIN exec execoperand,MAIN tinteger).
+read_ref(MAIN exec execoperand,MAIN tlength).
+read_ref(MAIN exec execoperand,MAIN tlparen).
+read_ref(MAIN exec execoperand,MAIN tminus).
+read_ref(MAIN exec execoperand,MAIN tnot).
+read_ref(MAIN exec execoperand,MAIN tord).
+read_ref(MAIN exec execoperand,MAIN tplus).
+read_ref(MAIN exec execoperand,MAIN tstringlit).
+read_ref(MAIN exec execoperand,MAIN ttrue).
+read_ref(MAIN exec execoperand,MAIN unaryoperator).
+read_ref(MAIN exec execoperator,MAIN binaryoperator).
+read_ref(MAIN exec execoperator,MAIN currentline).
+read_ref(MAIN exec execoperator,MAIN currentptr).
+read_ref(MAIN exec execoperator,MAIN opadd).
+read_ref(MAIN exec execoperator,MAIN opnotequal).
+read_ref(MAIN exec execoperator,MAIN tand).
+read_ref(MAIN exec execoperator,MAIN tdiv).
+read_ref(MAIN exec execoperator,MAIN tequal).
+read_ref(MAIN exec execoperator,MAIN tgreater).
+read_ref(MAIN exec execoperator,MAIN tgreaterequal).
+read_ref(MAIN exec execoperator,MAIN tless).
+read_ref(MAIN exec execoperator,MAIN tlessequal).
+read_ref(MAIN exec execoperator,MAIN tminus).
+read_ref(MAIN exec execoperator,MAIN tmod).
+read_ref(MAIN exec execoperator,MAIN tnot).
+read_ref(MAIN exec execoperator,MAIN tor).
+read_ref(MAIN exec execoperator,MAIN tplus).
+read_ref(MAIN exec execoperator,MAIN tstar).
+read_ref(MAIN exec execprocedure,MAIN currentline).
+read_ref(MAIN exec execprocedure,MAIN currentptr).
+read_ref(MAIN exec execprocedure,MAIN teol).
+read_ref(MAIN exec execprocedure,MAIN tlparen).
+read_ref(MAIN exec execprocedure,MAIN trparen).
+read_ref(MAIN exec execprocedure,MAIN tvar).
+read_ref(MAIN exec execput,MAIN currentline).
+read_ref(MAIN exec execput,MAIN currentptr).
+read_ref(MAIN exec execput,MAIN exec execput v 1).
+read_ref(MAIN exec execput,MAIN exec execput v 2).
+read_ref(MAIN exec execput,MAIN exec execput v).
+read_ref(MAIN exec execput,MAIN tcomma).
+read_ref(MAIN exec execput,MAIN tdotdot).
+read_ref(MAIN exec execput,MAIN tyboolean).
+read_ref(MAIN exec execput,MAIN tyint).
+read_ref(MAIN exec execput,MAIN tystring).
+read_ref(MAIN exec execsimpletype,MAIN currentline).
+read_ref(MAIN exec execsimpletype,MAIN currentptr).
+read_ref(MAIN exec execsimpletype,MAIN sytype).
+read_ref(MAIN exec execsimpletype,MAIN tboolean).
+read_ref(MAIN exec execsimpletype,MAIN tdotdot).
+read_ref(MAIN exec execsimpletype,MAIN tidentifier).
+read_ref(MAIN exec execsimpletype,MAIN tint).
+read_ref(MAIN exec execsimpletype,MAIN tinteger).
+read_ref(MAIN exec execsimpletype,MAIN tstring).
+read_ref(MAIN exec execskiptoelseorendif,MAIN currentnum).
+read_ref(MAIN exec execskiptoelseorendif,MAIN exec execskiptoelseorendif oldnum).
+read_ref(MAIN exec execskiptoelseorendif,MAIN exec execskiptoelseorendif token 1).
+read_ref(MAIN exec execskiptoelseorendif,MAIN exec execskiptoelseorendif token).
+read_ref(MAIN exec execskiptoelseorendif,MAIN lines).
+read_ref(MAIN exec execskiptoelseorendif,MAIN maxlines).
+read_ref(MAIN exec execskiptoelseorendif,MAIN telse).
+read_ref(MAIN exec execskiptoelseorendif,MAIN telsif).
+read_ref(MAIN exec execskiptoelseorendif,MAIN tendif).
+read_ref(MAIN exec execskiptoelseorendif,MAIN tif).
+read_ref(MAIN exec execskiptoend,MAIN currentnum).
+read_ref(MAIN exec execskiptoend,MAIN exec execskiptoend begintoken).
+read_ref(MAIN exec execskiptoend,MAIN exec execskiptoend endtoken).
+read_ref(MAIN exec execskiptoend,MAIN exec execskiptoend oldnum).
+read_ref(MAIN exec execskiptoend,MAIN lines).
+read_ref(MAIN exec execskiptoend,MAIN maxlines).
+read_ref(MAIN exec execskiptoend,MAIN tokentext).
+read_ref(MAIN exec execsubexpression,MAIN currentline).
+read_ref(MAIN exec execsubexpression,MAIN currentptr).
+read_ref(MAIN exec execsubexpression,MAIN exec execsubexpression token).
+read_ref(MAIN exec execsubexpression,MAIN tcomma).
+read_ref(MAIN exec execsubexpression,MAIN tcomment).
+read_ref(MAIN exec execsubexpression,MAIN tdotdot).
+read_ref(MAIN exec execsubexpression,MAIN teol).
+read_ref(MAIN exec execsubexpression,MAIN trparen).
+read_ref(MAIN exec execsubexpression,MAIN tsemicolon).
+read_ref(MAIN exec execsubexpression,MAIN tthen).
+read_ref(MAIN exec exectype,MAIN currentline).
+read_ref(MAIN exec exectype,MAIN currentptr).
+read_ref(MAIN exec exectype,MAIN exec exectype ident).
+read_ref(MAIN exec exectype,MAIN sytype).
+read_ref(MAIN exec execvar,MAIN currentline).
+read_ref(MAIN exec execvar,MAIN currentptr).
+read_ref(MAIN exec execvar,MAIN exec execvar ident).
+read_ref(MAIN exec execvar,MAIN syvar).
+read_ref(MAIN exec execvar,MAIN tarray).
+read_ref(MAIN exec execvar,MAIN tcolonequal).
+read_ref(MAIN exec execvariable,MAIN currentline).
+read_ref(MAIN exec execvariable,MAIN currentptr).
+read_ref(MAIN exec execvariable,MAIN syconst).
+read_ref(MAIN exec execvariable,MAIN syvar).
+read_ref(MAIN exec execvariable,MAIN tlparen).
+read_ref(MAIN exec execvariable,MAIN tybooleanarray).
+read_ref(MAIN exec execvariable,MAIN tyintarray).
+read_ref(MAIN exec execvariable,MAIN tystringarray).
+read_ref(MAIN execute,MAIN command).
+read_ref(MAIN execute,MAIN currenterror).
+read_ref(MAIN execute,MAIN currentline).
+read_ref(MAIN filename,MAIN command).
+read_ref(MAIN filename,MAIN currenterror).
+read_ref(MAIN hasch,MAIN FIONREAD).
+read_ref(MAIN hasch,MAIN hasch nchars).
+read_ref(MAIN hasch,MAIN ttyinput).
+read_ref(MAIN ident enterident,MAIN ident enterident ident).
+read_ref(MAIN ident enterident,MAIN ident enterident index_).
+read_ref(MAIN ident enterident,MAIN ident enterident ix).
+read_ref(MAIN ident enterident,MAIN ident identtable).
+read_ref(MAIN ident enterident,MAIN maxidents).
+read_ref(MAIN ident enterident,MAIN maxstringlength).
+read_ref(MAIN ident identident,MAIN ident identident index_).
+read_ref(MAIN ident identident,MAIN ident identtable).
+read_ref(MAIN ident identindex,MAIN ident identindex ident).
+read_ref(MAIN ident identindex,MAIN ident identindex ix).
+read_ref(MAIN ident identindex,MAIN ident identtable).
+read_ref(MAIN ident identindex,MAIN maxidents).
+read_ref(MAIN ident identtoken,MAIN ident identtable).
+read_ref(MAIN ident identtoken,MAIN ident identtoken index_).
+read_ref(MAIN ident reinitialize,MAIN ident identtable).
+read_ref(MAIN ident reinitialize,MAIN ident reinitialize i).
+read_ref(MAIN ident reinitialize,MAIN maxidents).
+read_ref(MAIN ident reinitialize,MAIN tidentifier).
+read_ref(MAIN ident,MAIN ident ix 1).
+read_ref(MAIN ident,MAIN ident ix).
+read_ref(MAIN ident,MAIN ident keyword).
+read_ref(MAIN ident,MAIN ident keywordtoken).
+read_ref(MAIN ident,MAIN ident kw).
+read_ref(MAIN ident,MAIN ident nkeywords).
+read_ref(MAIN ident,MAIN maxidents).
+read_ref(MAIN ident,MAIN maxstringlength).
+read_ref(MAIN ident,MAIN tand).
+read_ref(MAIN ident,MAIN tarray).
+read_ref(MAIN ident,MAIN tassert).
+read_ref(MAIN ident,MAIN tboolean).
+read_ref(MAIN ident,MAIN tchr).
+read_ref(MAIN ident,MAIN tconst).
+read_ref(MAIN ident,MAIN tdiv).
+read_ref(MAIN ident,MAIN telse).
+read_ref(MAIN ident,MAIN telseif).
+read_ref(MAIN ident,MAIN telsif).
+read_ref(MAIN ident,MAIN tend).
+read_ref(MAIN ident,MAIN tendfor).
+read_ref(MAIN ident,MAIN tendif).
+read_ref(MAIN ident,MAIN tendloop).
+read_ref(MAIN ident,MAIN texit).
+read_ref(MAIN ident,MAIN texitwhen).
+read_ref(MAIN ident,MAIN tfalse).
+read_ref(MAIN ident,MAIN tfor).
+read_ref(MAIN ident,MAIN tget).
+read_ref(MAIN ident,MAIN tidentifier).
+read_ref(MAIN ident,MAIN tif).
+read_ref(MAIN ident,MAIN tint).
+read_ref(MAIN ident,MAIN tinvariant).
+read_ref(MAIN ident,MAIN tlength).
+read_ref(MAIN ident,MAIN tloop).
+read_ref(MAIN ident,MAIN tmod).
+read_ref(MAIN ident,MAIN tnot).
+read_ref(MAIN ident,MAIN tof).
+read_ref(MAIN ident,MAIN tor).
+read_ref(MAIN ident,MAIN tord).
+read_ref(MAIN ident,MAIN tprocedure).
+read_ref(MAIN ident,MAIN tput).
+read_ref(MAIN ident,MAIN tstring).
+read_ref(MAIN ident,MAIN tthen).
+read_ref(MAIN ident,MAIN ttrue).
+read_ref(MAIN ident,MAIN ttype).
+read_ref(MAIN ident,MAIN tvar).
+read_ref(MAIN ident,MAIN twhen).
+read_ref(MAIN list,MAIN command).
+read_ref(MAIN list,MAIN currentline).
+read_ref(MAIN list,MAIN lines).
+read_ref(MAIN list,MAIN list first).
+read_ref(MAIN list,MAIN list i).
+read_ref(MAIN list,MAIN list last).
+read_ref(MAIN list,MAIN maxlines).
+read_ref(MAIN list,MAIN teol).
+read_ref(MAIN load,MAIN command).
+read_ref(MAIN load,MAIN currenterror).
+read_ref(MAIN load,MAIN currentline).
+read_ref(MAIN load,MAIN load f).
+read_ref(MAIN load,MAIN load i).
+read_ref(MAIN load,MAIN maxlines).
+read_ref(MAIN nocrmode,MAIN CBREAKmode).
+read_ref(MAIN nocrmode,MAIN tty).
+read_ref(MAIN noecho,MAIN ECHOmode).
+read_ref(MAIN noecho,MAIN tty).
+read_ref(MAIN operator operatorcompare,MAIN opequal).
+read_ref(MAIN operator operatorcompare,MAIN operator operatorcompare v1 1).
+read_ref(MAIN operator operatorcompare,MAIN operator operatorcompare v1 2).
+read_ref(MAIN operator operatorcompare,MAIN operator operatorcompare v1).
+read_ref(MAIN operator operatorcompare,MAIN operator operatorcompare v2 1).
+read_ref(MAIN operator operatorcompare,MAIN operator operatorcompare v2 2).
+read_ref(MAIN operator operatorcompare,MAIN operator operatorcompare v2).
+read_ref(MAIN operator operatorcompare,MAIN opgreater).
+read_ref(MAIN operator operatorcompare,MAIN opless).
+read_ref(MAIN operator operatorcompare,MAIN tyboolean).
+read_ref(MAIN operator operatorcompare,MAIN tyint).
+read_ref(MAIN operator operatorcompare,MAIN tystring).
+read_ref(MAIN operator operatorexec,MAIN opendexpression).
+read_ref(MAIN operator operatorexec,MAIN operator operatorexec operator).
+read_ref(MAIN operator operatorexec,MAIN operator operatorstack).
+read_ref(MAIN operator operatorexec,MAIN operator operatortop).
+read_ref(MAIN operator operatorexec,MAIN operatorprecedence).
+read_ref(MAIN operator operatorexec,MAIN oplparen).
+read_ref(MAIN operator operatorexec,MAIN oprparen).
+read_ref(MAIN operator operatorpush,MAIN maxoperatorstackdepth).
+read_ref(MAIN operator operatorpush,MAIN operator operatorpush operator).
+read_ref(MAIN operator operatorpush,MAIN operator operatortop).
+read_ref(MAIN operator operatorrun,MAIN maxint).
+read_ref(MAIN operator operatorrun,MAIN opadd).
+read_ref(MAIN operator operatorrun,MAIN opand).
+read_ref(MAIN operator operatorrun,MAIN opdiv).
+read_ref(MAIN operator operatorrun,MAIN opequal).
+read_ref(MAIN operator operatorrun,MAIN operator operatorrun compareresult).
+read_ref(MAIN operator operatorrun,MAIN operator operatorrun operator).
+read_ref(MAIN operator operatorrun,MAIN operator operatorrun s1).
+read_ref(MAIN operator operatorrun,MAIN operator operatorrun s2).
+read_ref(MAIN operator operatorrun,MAIN operator operatorrun v1).
+read_ref(MAIN operator operatorrun,MAIN operator operatorrun v2).
+read_ref(MAIN operator operatorrun,MAIN opgreater).
+read_ref(MAIN operator operatorrun,MAIN opgreaterequal).
+read_ref(MAIN operator operatorrun,MAIN opless).
+read_ref(MAIN operator operatorrun,MAIN oplessequal).
+read_ref(MAIN operator operatorrun,MAIN opminus).
+read_ref(MAIN operator operatorrun,MAIN opmod).
+read_ref(MAIN operator operatorrun,MAIN opmultiply).
+read_ref(MAIN operator operatorrun,MAIN opnot).
+read_ref(MAIN operator operatorrun,MAIN opnotequal).
+read_ref(MAIN operator operatorrun,MAIN opor).
+read_ref(MAIN operator operatorrun,MAIN opplus).
+read_ref(MAIN operator operatorrun,MAIN opsubtract).
+read_ref(MAIN operator operatorrun,MAIN tystring).
+read_ref(MAIN operator,MAIN maxoperatorstackdepth).
+read_ref(MAIN parse parsearraybounds,MAIN tdotdot).
+read_ref(MAIN parse parsearraytype,MAIN tarray).
+read_ref(MAIN parse parsearraytype,MAIN tof).
+read_ref(MAIN parse parseassert,MAIN tassert).
+read_ref(MAIN parse parseassignment,MAIN tcolonequal).
+read_ref(MAIN parse parsecall,MAIN currentline).
+read_ref(MAIN parse parsecall,MAIN maxlinetokens).
+read_ref(MAIN parse parsecall,MAIN parse parsecall i).
+read_ref(MAIN parse parsecall,MAIN tcall).
+read_ref(MAIN parse parsecall,MAIN teol).
+read_ref(MAIN parse parseconst,MAIN currentline).
+read_ref(MAIN parse parseconst,MAIN currentptr).
+read_ref(MAIN parse parseconst,MAIN tcolonequal).
+read_ref(MAIN parse parseconst,MAIN tconst).
+read_ref(MAIN parse parseconst,MAIN tidentifier).
+read_ref(MAIN parse parseconstant,MAIN currentline).
+read_ref(MAIN parse parseconstant,MAIN currentptr).
+read_ref(MAIN parse parseconstant,MAIN parse parseconstant token).
+read_ref(MAIN parse parseconstant,MAIN tany).
+read_ref(MAIN parse parseconstant,MAIN tfalse).
+read_ref(MAIN parse parseconstant,MAIN tidentifier).
+read_ref(MAIN parse parseconstant,MAIN tinteger).
+read_ref(MAIN parse parseconstant,MAIN tstringlit).
+read_ref(MAIN parse parseconstant,MAIN ttrue).
+read_ref(MAIN parse parseelsif,MAIN currentline).
+read_ref(MAIN parse parseelsif,MAIN currentptr).
+read_ref(MAIN parse parseelsif,MAIN telseif).
+read_ref(MAIN parse parseelsif,MAIN telsif).
+read_ref(MAIN parse parseelsif,MAIN tthen).
+read_ref(MAIN parse parseend,MAIN currentline).
+read_ref(MAIN parse parseend,MAIN currentptr).
+read_ref(MAIN parse parseend,MAIN tany).
+read_ref(MAIN parse parseend,MAIN tend).
+read_ref(MAIN parse parseend,MAIN tendfor).
+read_ref(MAIN parse parseend,MAIN tendif).
+read_ref(MAIN parse parseend,MAIN tendloop).
+read_ref(MAIN parse parseend,MAIN tfor).
+read_ref(MAIN parse parseend,MAIN tidentifier).
+read_ref(MAIN parse parseend,MAIN tif).
+read_ref(MAIN parse parseend,MAIN tloop).
+read_ref(MAIN parse parseerror,MAIN currentline).
+read_ref(MAIN parse parseerror,MAIN currentptr).
+read_ref(MAIN parse parseerror,MAIN parse parseerror msg).
+read_ref(MAIN parse parseerror,MAIN parse parseerror token).
+read_ref(MAIN parse parseerror,MAIN parse parseerror ttext).
+read_ref(MAIN parse parseerror,MAIN parse parseerror value).
+read_ref(MAIN parse parseerror,MAIN tcomment).
+read_ref(MAIN parse parseerror,MAIN tidentifier).
+read_ref(MAIN parse parseerror,MAIN tillegal).
+read_ref(MAIN parse parseerror,MAIN tinteger).
+read_ref(MAIN parse parseerror,MAIN tokentext).
+read_ref(MAIN parse parseerror,MAIN tstringlit).
+read_ref(MAIN parse parseexit,MAIN currentline).
+read_ref(MAIN parse parseexit,MAIN currentptr).
+read_ref(MAIN parse parseexit,MAIN texit).
+read_ref(MAIN parse parseexit,MAIN texitwhen).
+read_ref(MAIN parse parseexit,MAIN twhen).
+read_ref(MAIN parse parsefor,MAIN tcolon).
+read_ref(MAIN parse parsefor,MAIN tdotdot).
+read_ref(MAIN parse parsefor,MAIN tfor).
+read_ref(MAIN parse parsefor,MAIN tidentifier).
+read_ref(MAIN parse parseget,MAIN currentline).
+read_ref(MAIN parse parseget,MAIN currentptr).
+read_ref(MAIN parse parseget,MAIN tcomma).
+read_ref(MAIN parse parseget,MAIN tget).
+read_ref(MAIN parse parseident,MAIN currentline).
+read_ref(MAIN parse parseident,MAIN currentptr).
+read_ref(MAIN parse parseident,MAIN parse parseident proccall).
+read_ref(MAIN parse parseident,MAIN tcolonequal).
+read_ref(MAIN parse parseident,MAIN tcomma).
+read_ref(MAIN parse parseident,MAIN tidentifier).
+read_ref(MAIN parse parseident,MAIN tlparen).
+read_ref(MAIN parse parseident,MAIN trparen).
+read_ref(MAIN parse parseif,MAIN tif).
+read_ref(MAIN parse parseif,MAIN tthen).
+read_ref(MAIN parse parseline,MAIN currentline).
+read_ref(MAIN parse parseline,MAIN currentptr).
+read_ref(MAIN parse parseline,MAIN tassert).
+read_ref(MAIN parse parseline,MAIN tcomment).
+read_ref(MAIN parse parseline,MAIN tconst).
+read_ref(MAIN parse parseline,MAIN telse).
+read_ref(MAIN parse parseline,MAIN telseif).
+read_ref(MAIN parse parseline,MAIN telsif).
+read_ref(MAIN parse parseline,MAIN tend).
+read_ref(MAIN parse parseline,MAIN tendfor).
+read_ref(MAIN parse parseline,MAIN tendif).
+read_ref(MAIN parse parseline,MAIN tendloop).
+read_ref(MAIN parse parseline,MAIN teol).
+read_ref(MAIN parse parseline,MAIN texit).
+read_ref(MAIN parse parseline,MAIN texitwhen).
+read_ref(MAIN parse parseline,MAIN tfor).
+read_ref(MAIN parse parseline,MAIN tget).
+read_ref(MAIN parse parseline,MAIN tidentifier).
+read_ref(MAIN parse parseline,MAIN tif).
+read_ref(MAIN parse parseline,MAIN tinvariant).
+read_ref(MAIN parse parseline,MAIN tloop).
+read_ref(MAIN parse parseline,MAIN tprocedure).
+read_ref(MAIN parse parseline,MAIN tput).
+read_ref(MAIN parse parseline,MAIN tsemicolon).
+read_ref(MAIN parse parseline,MAIN ttype).
+read_ref(MAIN parse parseline,MAIN tvar).
+read_ref(MAIN parse parseoperand,MAIN currentline).
+read_ref(MAIN parse parseoperand,MAIN currentptr).
+read_ref(MAIN parse parseoperand,MAIN parse parseoperand token).
+read_ref(MAIN parse parseoperand,MAIN tany).
+read_ref(MAIN parse parseoperand,MAIN tchr).
+read_ref(MAIN parse parseoperand,MAIN tfalse).
+read_ref(MAIN parse parseoperand,MAIN tidentifier).
+read_ref(MAIN parse parseoperand,MAIN tinteger).
+read_ref(MAIN parse parseoperand,MAIN tlength).
+read_ref(MAIN parse parseoperand,MAIN tlparen).
+read_ref(MAIN parse parseoperand,MAIN tminus).
+read_ref(MAIN parse parseoperand,MAIN tnot).
+read_ref(MAIN parse parseoperand,MAIN tord).
+read_ref(MAIN parse parseoperand,MAIN tplus).
+read_ref(MAIN parse parseoperand,MAIN trparen).
+read_ref(MAIN parse parseoperand,MAIN tstringlit).
+read_ref(MAIN parse parseoperand,MAIN ttrue).
+read_ref(MAIN parse parseoperator,MAIN currentline).
+read_ref(MAIN parse parseoperator,MAIN currentptr).
+read_ref(MAIN parse parseoperator,MAIN tand).
+read_ref(MAIN parse parseoperator,MAIN tany).
+read_ref(MAIN parse parseoperator,MAIN tdiv).
+read_ref(MAIN parse parseoperator,MAIN tequal).
+read_ref(MAIN parse parseoperator,MAIN tgreater).
+read_ref(MAIN parse parseoperator,MAIN tgreaterequal).
+read_ref(MAIN parse parseoperator,MAIN tless).
+read_ref(MAIN parse parseoperator,MAIN tlessequal).
+read_ref(MAIN parse parseoperator,MAIN tminus).
+read_ref(MAIN parse parseoperator,MAIN tmod).
+read_ref(MAIN parse parseoperator,MAIN tnot).
+read_ref(MAIN parse parseoperator,MAIN tor).
+read_ref(MAIN parse parseoperator,MAIN tplus).
+read_ref(MAIN parse parseoperator,MAIN tstar).
+read_ref(MAIN parse parseprocedure,MAIN currentline).
+read_ref(MAIN parse parseprocedure,MAIN currentptr).
+read_ref(MAIN parse parseprocedure,MAIN tcolon).
+read_ref(MAIN parse parseprocedure,MAIN teol).
+read_ref(MAIN parse parseprocedure,MAIN tidentifier).
+read_ref(MAIN parse parseprocedure,MAIN tlparen).
+read_ref(MAIN parse parseprocedure,MAIN tprocedure).
+read_ref(MAIN parse parseprocedure,MAIN trparen).
+read_ref(MAIN parse parseprocedure,MAIN tvar).
+read_ref(MAIN parse parseput,MAIN currentline).
+read_ref(MAIN parse parseput,MAIN currentptr).
+read_ref(MAIN parse parseput,MAIN tcomma).
+read_ref(MAIN parse parseput,MAIN tdotdot).
+read_ref(MAIN parse parseput,MAIN tput).
+read_ref(MAIN parse parseshift,MAIN currentline).
+read_ref(MAIN parse parseshift,MAIN currentptr).
+read_ref(MAIN parse parseshift,MAIN maxlinetokens).
+read_ref(MAIN parse parseshift,MAIN parse parseshift i).
+read_ref(MAIN parse parsesimpletype,MAIN currentline).
+read_ref(MAIN parse parsesimpletype,MAIN currentptr).
+read_ref(MAIN parse parsesimpletype,MAIN tany).
+read_ref(MAIN parse parsesimpletype,MAIN tboolean).
+read_ref(MAIN parse parsesimpletype,MAIN tdotdot).
+read_ref(MAIN parse parsesimpletype,MAIN tidentifier).
+read_ref(MAIN parse parsesimpletype,MAIN tint).
+read_ref(MAIN parse parsesimpletype,MAIN tinteger).
+read_ref(MAIN parse parsesimpletype,MAIN tstring).
+read_ref(MAIN parse parsesubexpression,MAIN currentline).
+read_ref(MAIN parse parsesubexpression,MAIN currentptr).
+read_ref(MAIN parse parsesubexpression,MAIN parse parsesubexpression token).
+read_ref(MAIN parse parsesubexpression,MAIN tcomma).
+read_ref(MAIN parse parsesubexpression,MAIN tcomment).
+read_ref(MAIN parse parsesubexpression,MAIN tdotdot).
+read_ref(MAIN parse parsesubexpression,MAIN teol).
+read_ref(MAIN parse parsesubexpression,MAIN trparen).
+read_ref(MAIN parse parsesubexpression,MAIN tsemicolon).
+read_ref(MAIN parse parsesubexpression,MAIN tthen).
+read_ref(MAIN parse parsetoken,MAIN currentline).
+read_ref(MAIN parse parsetoken,MAIN currentptr).
+read_ref(MAIN parse parsetoken,MAIN parse parsetoken token).
+read_ref(MAIN parse parsetoken,MAIN tany).
+read_ref(MAIN parse parsetoken,MAIN teol).
+read_ref(MAIN parse parsetoken,MAIN tokentext).
+read_ref(MAIN parse parsetype,MAIN tcolon).
+read_ref(MAIN parse parsetype,MAIN tidentifier).
+read_ref(MAIN parse parsetype,MAIN ttype).
+read_ref(MAIN parse parsevar,MAIN currentline).
+read_ref(MAIN parse parsevar,MAIN currentptr).
+read_ref(MAIN parse parsevar,MAIN tarray).
+read_ref(MAIN parse parsevar,MAIN tcolon).
+read_ref(MAIN parse parsevar,MAIN tcolonequal).
+read_ref(MAIN parse parsevar,MAIN tidentifier).
+read_ref(MAIN parse parsevar,MAIN tvar).
+read_ref(MAIN parse parsevariable,MAIN currentline).
+read_ref(MAIN parse parsevariable,MAIN currentptr).
+read_ref(MAIN parse parsevariable,MAIN tidentifier).
+read_ref(MAIN parse parsevariable,MAIN tlparen).
+read_ref(MAIN parse parsevariable,MAIN trparen).
+read_ref(MAIN renum,MAIN lines).
+read_ref(MAIN renum,MAIN maxindent).
+read_ref(MAIN renum,MAIN maxlines).
+read_ref(MAIN renum,MAIN renum i 1).
+read_ref(MAIN renum,MAIN renum i 2).
+read_ref(MAIN renum,MAIN renum i 3).
+read_ref(MAIN renum,MAIN renum i 4).
+read_ref(MAIN renum,MAIN renum i).
+read_ref(MAIN renum,MAIN renum increment).
+read_ref(MAIN renum,MAIN renum indent).
+read_ref(MAIN renum,MAIN renum l).
+read_ref(MAIN renum,MAIN renum nlines).
+read_ref(MAIN renum,MAIN renum token).
+read_ref(MAIN renum,MAIN telse).
+read_ref(MAIN renum,MAIN telsif).
+read_ref(MAIN renum,MAIN tend).
+read_ref(MAIN renum,MAIN tendfor).
+read_ref(MAIN renum,MAIN tendif).
+read_ref(MAIN renum,MAIN tendloop).
+read_ref(MAIN renum,MAIN teol).
+read_ref(MAIN renum,MAIN tfor).
+read_ref(MAIN renum,MAIN tif).
+read_ref(MAIN renum,MAIN tloop).
+read_ref(MAIN renum,MAIN tprocedure).
+read_ref(MAIN run,MAIN command).
+read_ref(MAIN run,MAIN currenterror).
+read_ref(MAIN run,MAIN currentline).
+read_ref(MAIN run,MAIN currentnum).
+read_ref(MAIN run,MAIN lines).
+read_ref(MAIN run,MAIN maxlines).
+read_ref(MAIN run,MAIN run linenum).
+read_ref(MAIN run,MAIN scprocedure).
+read_ref(MAIN run,MAIN teol).
+read_ref(MAIN run,MAIN trace).
+read_ref(MAIN runstack popscope,MAIN runstack scopestack).
+read_ref(MAIN runstack popscope,MAIN runstack scopetop).
+read_ref(MAIN runstack printvalue,MAIN runstack printvalue s).
+read_ref(MAIN runstack printvalue,MAIN runstack uninitint).
+read_ref(MAIN runstack printvalue,MAIN runstack uninitstring).
+read_ref(MAIN runstack printvalue,MAIN tyboolean).
+read_ref(MAIN runstack printvalue,MAIN tyint).
+read_ref(MAIN runstack printvalue,MAIN tystring).
+read_ref(MAIN runstack printvars,MAIN runstack kindname).
+read_ref(MAIN runstack printvars,MAIN runstack printvars i).
+read_ref(MAIN runstack printvars,MAIN runstack runstack).
+read_ref(MAIN runstack printvars,MAIN runstack runtop).
+read_ref(MAIN runstack printvars,MAIN runstack typename).
+read_ref(MAIN runstack printvars,MAIN syprocedure).
+read_ref(MAIN runstack pushscope,MAIN maxscopestackdepth).
+read_ref(MAIN runstack pushscope,MAIN runstack arraytop).
+read_ref(MAIN runstack pushscope,MAIN runstack pushscope ident).
+read_ref(MAIN runstack pushscope,MAIN runstack pushscope kind).
+read_ref(MAIN runstack pushscope,MAIN runstack pushscope line).
+read_ref(MAIN runstack pushscope,MAIN runstack pushscope value).
+read_ref(MAIN runstack pushscope,MAIN runstack runtop).
+read_ref(MAIN runstack pushscope,MAIN runstack scopetop).
+read_ref(MAIN runstack runallocate,MAIN maxrunstackdepth).
+read_ref(MAIN runstack runallocate,MAIN runstack nullrunstackentry).
+read_ref(MAIN runstack runallocate,MAIN runstack runallocate ident).
+read_ref(MAIN runstack runallocate,MAIN runstack runallocate kind).
+read_ref(MAIN runstack runallocate,MAIN runstack runstack).
+read_ref(MAIN runstack runallocate,MAIN runstack runtop).
+read_ref(MAIN runstack runallocatearray,MAIN maxarraystackdepth).
+read_ref(MAIN runstack runallocatearray,MAIN runstack arraytop).
+read_ref(MAIN runstack runallocatearray,MAIN runstack arraytype).
+read_ref(MAIN runstack runallocatearray,MAIN runstack nullrunstackentry).
+read_ref(MAIN runstack runallocatearray,MAIN runstack runallocatearray arraysize).
+read_ref(MAIN runstack runallocatearray,MAIN runstack runallocatearray elementtype).
+read_ref(MAIN runstack runallocatearray,MAIN runstack runallocatearray ident).
+read_ref(MAIN runstack runallocatearray,MAIN runstack runallocatearray kind).
+read_ref(MAIN runstack runallocatearray,MAIN runstack runallocatearray lowerbound).
+read_ref(MAIN runstack runallocatearray,MAIN runstack runallocatearray upperbound).
+read_ref(MAIN runstack runallocatearray,MAIN runstack runstack).
+read_ref(MAIN runstack runallocatearray,MAIN runstack runtop).
+read_ref(MAIN runstack runallocatearray,MAIN syvar).
+read_ref(MAIN runstack runallocatearray,MAIN tyint).
+read_ref(MAIN runstack runassign,MAIN runstack runassign v 1).
+read_ref(MAIN runstack runassign,MAIN runstack runassign v 2).
+read_ref(MAIN runstack runassign,MAIN runstack runassign v 3).
+read_ref(MAIN runstack runassign,MAIN runstack runassign v).
+read_ref(MAIN runstack runassign,MAIN runstack runstack).
+read_ref(MAIN runstack runassign,MAIN runstack runtop).
+read_ref(MAIN runstack runassign,MAIN sydescriptor).
+read_ref(MAIN runstack runassign,MAIN syelementdescriptor).
+read_ref(MAIN runstack runassign,MAIN tyboolean).
+read_ref(MAIN runstack runassign,MAIN tyint).
+read_ref(MAIN runstack runassign,MAIN tyreal).
+read_ref(MAIN runstack runassign,MAIN tystring).
+read_ref(MAIN runstack rundump,MAIN runstack rundump i).
+read_ref(MAIN runstack rundump,MAIN runstack runstack).
+read_ref(MAIN runstack rundump,MAIN runstack runtop).
+read_ref(MAIN runstack rundump,MAIN syconst).
+read_ref(MAIN runstack rundump,MAIN sytemp).
+read_ref(MAIN runstack rundump,MAIN syvar).
+read_ref(MAIN runstack rundump,MAIN tybooleanarray).
+read_ref(MAIN runstack rundump,MAIN tyint).
+read_ref(MAIN runstack rundump,MAIN tyintarray).
+read_ref(MAIN runstack rundump,MAIN tyreal).
+read_ref(MAIN runstack rundump,MAIN tyrealarray).
+read_ref(MAIN runstack rundump,MAIN tystring).
+read_ref(MAIN runstack rundump,MAIN tystringarray).
+read_ref(MAIN runstack runerror,MAIN currentptr).
+read_ref(MAIN runstack runerror,MAIN runstack runerror msg).
+read_ref(MAIN runstack runevaluate,MAIN runstack arraystack).
+read_ref(MAIN runstack runevaluate,MAIN runstack nullrunstackentry).
+read_ref(MAIN runstack runevaluate,MAIN runstack runstack).
+read_ref(MAIN runstack runevaluate,MAIN runstack runtop).
+read_ref(MAIN runstack runevaluate,MAIN sydescriptor).
+read_ref(MAIN runstack runevaluate,MAIN syelementdescriptor).
+read_ref(MAIN runstack runevaluate,MAIN sytemp).
+read_ref(MAIN runstack runident,MAIN runstack runstack).
+read_ref(MAIN runstack runident,MAIN runstack runtop).
+read_ref(MAIN runstack runkind,MAIN runstack runstack).
+read_ref(MAIN runstack runkind,MAIN runstack runtop).
+read_ref(MAIN runstack runkind,MAIN sydescriptor).
+read_ref(MAIN runstack runkind,MAIN syelementdescriptor).
+read_ref(MAIN runstack runkind,MAIN syvar).
+read_ref(MAIN runstack runlookup,MAIN runstack runlookup ident).
+read_ref(MAIN runstack runlookup,MAIN runstack runlookup proctop).
+read_ref(MAIN runstack runlookup,MAIN runstack runlookup ri 1).
+read_ref(MAIN runstack runlookup,MAIN runstack runlookup ri).
+read_ref(MAIN runstack runlookup,MAIN runstack runstack).
+read_ref(MAIN runstack runlookup,MAIN runstack runtop).
+read_ref(MAIN runstack runlookup,MAIN runstack scopestack).
+read_ref(MAIN runstack runlookup,MAIN runstack scopetop).
+read_ref(MAIN runstack runlookup,MAIN scprocedure).
+read_ref(MAIN runstack runpopboolean,MAIN runstack runpopboolean value).
+read_ref(MAIN runstack runpopboolean,MAIN runstack runstack).
+read_ref(MAIN runstack runpopboolean,MAIN runstack runtop).
+read_ref(MAIN runstack runpopboolean,MAIN runstack uninitint).
+read_ref(MAIN runstack runpopboolean,MAIN sytemp).
+read_ref(MAIN runstack runpopboolean,MAIN tyboolean).
+read_ref(MAIN runstack runpopint,MAIN runstack runpopint value).
+read_ref(MAIN runstack runpopint,MAIN runstack runstack).
+read_ref(MAIN runstack runpopint,MAIN runstack runtop).
+read_ref(MAIN runstack runpopint,MAIN runstack uninitint).
+read_ref(MAIN runstack runpopint,MAIN sytemp).
+read_ref(MAIN runstack runpopint,MAIN tyint).
+read_ref(MAIN runstack runpopreal,MAIN runstack runpopreal value).
+read_ref(MAIN runstack runpopreal,MAIN runstack runstack).
+read_ref(MAIN runstack runpopreal,MAIN runstack runtop).
+read_ref(MAIN runstack runpopreal,MAIN runstack uninitreal).
+read_ref(MAIN runstack runpopreal,MAIN sytemp).
+read_ref(MAIN runstack runpopreal,MAIN tyreal).
+read_ref(MAIN runstack runpopstring,MAIN runstack runpopstring value).
+read_ref(MAIN runstack runpopstring,MAIN runstack runstack).
+read_ref(MAIN runstack runpopstring,MAIN runstack runtop).
+read_ref(MAIN runstack runpopstring,MAIN runstack uninitstring).
+read_ref(MAIN runstack runpopstring,MAIN sytemp).
+read_ref(MAIN runstack runpopstring,MAIN tystring).
+read_ref(MAIN runstack runpushboolean,MAIN maxrunstackdepth).
+read_ref(MAIN runstack runpushboolean,MAIN runstack runpushboolean value).
+read_ref(MAIN runstack runpushboolean,MAIN runstack runtop).
+read_ref(MAIN runstack runpushboolean,MAIN sytemp).
+read_ref(MAIN runstack runpushboolean,MAIN tyboolean).
+read_ref(MAIN runstack runpushdesc,MAIN maxrunstackdepth).
+read_ref(MAIN runstack runpushdesc,MAIN runstack runpushdesc identindex).
+read_ref(MAIN runstack runpushdesc,MAIN runstack runpushdesc index_).
+read_ref(MAIN runstack runpushdesc,MAIN runstack runstack).
+read_ref(MAIN runstack runpushdesc,MAIN runstack runtop).
+read_ref(MAIN runstack runpushdesc,MAIN sydescriptor).
+read_ref(MAIN runstack runpushint,MAIN maxint).
+read_ref(MAIN runstack runpushint,MAIN maxrunstackdepth).
+read_ref(MAIN runstack runpushint,MAIN runstack runpushint value).
+read_ref(MAIN runstack runpushint,MAIN runstack runtop).
+read_ref(MAIN runstack runpushint,MAIN sytemp).
+read_ref(MAIN runstack runpushint,MAIN tyint).
+read_ref(MAIN runstack runpushreal,MAIN maxreal).
+read_ref(MAIN runstack runpushreal,MAIN maxrunstackdepth).
+read_ref(MAIN runstack runpushreal,MAIN runstack runpushreal value).
+read_ref(MAIN runstack runpushreal,MAIN runstack runtop).
+read_ref(MAIN runstack runpushreal,MAIN sytemp).
+read_ref(MAIN runstack runpushreal,MAIN tyreal).
+read_ref(MAIN runstack runpushstring,MAIN maxrunstackdepth).
+read_ref(MAIN runstack runpushstring,MAIN maxstringlength).
+read_ref(MAIN runstack runpushstring,MAIN runstack runpushstring value).
+read_ref(MAIN runstack runpushstring,MAIN runstack runtop).
+read_ref(MAIN runstack runpushstring,MAIN sytemp).
+read_ref(MAIN runstack runpushstring,MAIN tystring).
+read_ref(MAIN runstack runsubscript,MAIN runstack runstack).
+read_ref(MAIN runstack runsubscript,MAIN runstack runsubscript subscript).
+read_ref(MAIN runstack runsubscript,MAIN runstack runsubscript typekind).
+read_ref(MAIN runstack runsubscript,MAIN runstack runtop).
+read_ref(MAIN runstack runsubscript,MAIN runstack scalartype).
+read_ref(MAIN runstack runsubscript,MAIN sydescriptor).
+read_ref(MAIN runstack runsubscript,MAIN syelementdescriptor).
+read_ref(MAIN runstack runsubscript,MAIN tybooleanarray).
+read_ref(MAIN runstack runsubscript,MAIN tyintarray).
+read_ref(MAIN runstack runsubscript,MAIN tyrealarray).
+read_ref(MAIN runstack runsubscript,MAIN tystringarray).
+read_ref(MAIN runstack runswap,MAIN runstack runstack).
+read_ref(MAIN runstack runswap,MAIN runstack runswap t).
+read_ref(MAIN runstack runswap,MAIN runstack runtop).
+read_ref(MAIN runstack runtype,MAIN runstack runstack).
+read_ref(MAIN runstack runtype,MAIN runstack runtop).
+read_ref(MAIN runstack scopeident,MAIN runstack scopestack).
+read_ref(MAIN runstack scopeident,MAIN runstack scopetop).
+read_ref(MAIN runstack scopekind,MAIN runstack scopestack).
+read_ref(MAIN runstack scopekind,MAIN runstack scopetop).
+read_ref(MAIN runstack scopeline,MAIN runstack scopestack).
+read_ref(MAIN runstack scopeline,MAIN runstack scopetop).
+read_ref(MAIN runstack scopevalue,MAIN runstack scopestack).
+read_ref(MAIN runstack scopevalue,MAIN runstack scopetop).
+read_ref(MAIN runstack,MAIN maxarraystackdepth).
+read_ref(MAIN runstack,MAIN maxrunstackdepth).
+read_ref(MAIN runstack,MAIN maxscopestackdepth).
+read_ref(MAIN runstack,MAIN runstack nullrunstackentry).
+read_ref(MAIN runstack,MAIN runstack uninitint).
+read_ref(MAIN runstack,MAIN runstack uninitreal).
+read_ref(MAIN runstack,MAIN runstack uninitstring).
+read_ref(MAIN runstack,MAIN syconst).
+read_ref(MAIN runstack,MAIN tyboolean).
+read_ref(MAIN runstack,MAIN tybooleanarray).
+read_ref(MAIN runstack,MAIN tyint).
+read_ref(MAIN runstack,MAIN tyintarray).
+read_ref(MAIN runstack,MAIN tyreal).
+read_ref(MAIN runstack,MAIN tyrealarray).
+read_ref(MAIN runstack,MAIN tystring).
+read_ref(MAIN runstack,MAIN tystringarray).
+read_ref(MAIN save,MAIN command).
+read_ref(MAIN save,MAIN currenterror).
+read_ref(MAIN save,MAIN currentline).
+read_ref(MAIN save,MAIN lines).
+read_ref(MAIN save,MAIN maxlines).
+read_ref(MAIN save,MAIN save f).
+read_ref(MAIN save,MAIN save i).
+read_ref(MAIN save,MAIN teol).
+read_ref(MAIN scan expandline,MAIN currentline).
+read_ref(MAIN scan expandline,MAIN lastkeyword).
+read_ref(MAIN scan expandline,MAIN lastspecialsymbol).
+read_ref(MAIN scan expandline,MAIN maxlinetokens).
+read_ref(MAIN scan expandline,MAIN scan expandline MAIN error).
+read_ref(MAIN scan expandline,MAIN scan expandline lineptr).
+read_ref(MAIN scan expandline,MAIN scan expandline text).
+read_ref(MAIN scan expandline,MAIN scan expandline token).
+read_ref(MAIN scan expandline,MAIN tcall).
+read_ref(MAIN scan expandline,MAIN tcomma).
+read_ref(MAIN scan expandline,MAIN tcomment).
+read_ref(MAIN scan expandline,MAIN tidentifier).
+read_ref(MAIN scan expandline,MAIN tillegal).
+read_ref(MAIN scan expandline,MAIN tinteger).
+read_ref(MAIN scan expandline,MAIN tlparen).
+read_ref(MAIN scan expandline,MAIN tokentext).
+read_ref(MAIN scan expandline,MAIN trparen).
+read_ref(MAIN scan expandline,MAIN tstringlit).
+read_ref(MAIN scan scanline,MAIN maxidentlength).
+read_ref(MAIN scan scanline,MAIN maxintegerlength).
+read_ref(MAIN scan scanline,MAIN maxlinetokens).
+read_ref(MAIN scan scanline,MAIN maxstringlength).
+read_ref(MAIN scan scanline,MAIN scan cblank).
+read_ref(MAIN scan scanline,MAIN scan ccomment).
+read_ref(MAIN scan scanline,MAIN scan cdigit).
+read_ref(MAIN scan scanline,MAIN scan charclass).
+read_ref(MAIN scan scanline,MAIN scan cletter).
+read_ref(MAIN scan scanline,MAIN scan cquote).
+read_ref(MAIN scan scanline,MAIN scan cspecialchar).
+read_ref(MAIN scan scanline,MAIN scan scanline c).
+read_ref(MAIN scan scanline,MAIN scan scanline cc).
+read_ref(MAIN scan scanline,MAIN scan scanline coindex).
+read_ref(MAIN scan scanline,MAIN scan scanline currentptr).
+read_ref(MAIN scan scanline,MAIN scan scanline idindex).
+read_ref(MAIN scan scanline,MAIN scan scanline idlength).
+read_ref(MAIN scan scanline,MAIN scan scanline idtext).
+read_ref(MAIN scan scanline,MAIN scan scanline inlength).
+read_ref(MAIN scan scanline,MAIN scan scanline intext).
+read_ref(MAIN scan scanline,MAIN scan scanline linetext).
+read_ref(MAIN scan scanline,MAIN scan scanline stindex).
+read_ref(MAIN scan scanline,MAIN scan scanline stlength).
+read_ref(MAIN scan scanline,MAIN scan scanline sttext).
+read_ref(MAIN scan scanline,MAIN scan scanline text).
+read_ref(MAIN scan scanline,MAIN scan scanline tt).
+read_ref(MAIN scan scanline,MAIN scan specialchars).
+read_ref(MAIN scan scanline,MAIN scan specialchartoken).
+read_ref(MAIN scan scanline,MAIN tcolon).
+read_ref(MAIN scan scanline,MAIN tcolonequal).
+read_ref(MAIN scan scanline,MAIN tcomment).
+read_ref(MAIN scan scanline,MAIN tdotdot).
+read_ref(MAIN scan scanline,MAIN teol).
+read_ref(MAIN scan scanline,MAIN tgreater).
+read_ref(MAIN scan scanline,MAIN tgreaterequal).
+read_ref(MAIN scan scanline,MAIN tillegal).
+read_ref(MAIN scan scanline,MAIN tinteger).
+read_ref(MAIN scan scanline,MAIN tless).
+read_ref(MAIN scan scanline,MAIN tlessequal).
+read_ref(MAIN scan scanline,MAIN tstringlit).
+read_ref(MAIN scan,MAIN scan c 1).
+read_ref(MAIN scan,MAIN scan c 2).
+read_ref(MAIN scan,MAIN scan c 3).
+read_ref(MAIN scan,MAIN scan c).
+read_ref(MAIN scan,MAIN scan cblank).
+read_ref(MAIN scan,MAIN scan ccomment).
+read_ref(MAIN scan,MAIN scan cdigit).
+read_ref(MAIN scan,MAIN scan cillegal).
+read_ref(MAIN scan,MAIN scan cletter).
+read_ref(MAIN scan,MAIN scan cquote).
+read_ref(MAIN scan,MAIN scan cspecialchar).
+read_ref(MAIN scan,MAIN scan sc).
+read_ref(MAIN scan,MAIN scan specialchars).
+read_ref(MAIN scan,MAIN tcolon).
+read_ref(MAIN scan,MAIN tcomma).
+read_ref(MAIN scan,MAIN tequal).
+read_ref(MAIN scan,MAIN tgreater).
+read_ref(MAIN scan,MAIN tillegal).
+read_ref(MAIN scan,MAIN tless).
+read_ref(MAIN scan,MAIN tlparen).
+read_ref(MAIN scan,MAIN tminus).
+read_ref(MAIN scan,MAIN tplus).
+read_ref(MAIN scan,MAIN trparen).
+read_ref(MAIN scan,MAIN tsemicolon).
+read_ref(MAIN scan,MAIN tstar).
+read_ref(MAIN,MAIN command).
+read_ref(MAIN,MAIN firstoperator).
+read_ref(MAIN,MAIN firstscopekind).
+read_ref(MAIN,MAIN firstsymbolkind).
+read_ref(MAIN,MAIN firsttoken).
+read_ref(MAIN,MAIN firsttypekind).
+read_ref(MAIN,MAIN i).
+read_ref(MAIN,MAIN lastoperator).
+read_ref(MAIN,MAIN lastscopekind).
+read_ref(MAIN,MAIN lastsymbolkind).
+read_ref(MAIN,MAIN lasttoken).
+read_ref(MAIN,MAIN lasttypekind).
+read_ref(MAIN,MAIN maxlines).
+read_ref(MAIN,MAIN maxlinetokens).
+read_ref(MAIN,MAIN opadd).
+read_ref(MAIN,MAIN opand).
+read_ref(MAIN,MAIN opdiv).
+read_ref(MAIN,MAIN opequal).
+read_ref(MAIN,MAIN opgreater).
+read_ref(MAIN,MAIN opgreaterequal).
+read_ref(MAIN,MAIN opless).
+read_ref(MAIN,MAIN oplessequal).
+read_ref(MAIN,MAIN opminus).
+read_ref(MAIN,MAIN opmod).
+read_ref(MAIN,MAIN opmultiply).
+read_ref(MAIN,MAIN opnot).
+read_ref(MAIN,MAIN opnotequal).
+read_ref(MAIN,MAIN opor).
+read_ref(MAIN,MAIN opplus).
+read_ref(MAIN,MAIN opsubtract).
+read_ref(MAIN,MAIN scprocedure).
+read_ref(MAIN,MAIN tdiv).
+read_ref(MAIN,MAIN teol).
+read_ref(MAIN,MAIN tillegal).
+read_ref(MAIN,MAIN tminus).
+read_ref(MAIN,MAIN tnot).
+read_ref(MAIN,MAIN tnotequal).
+read_ref(MAIN,TTYSET).
+var_argument(MAIN command,MAIN scan expandline text).
+var_argument(MAIN exec execassert v,MAIN runstack runpopboolean value).
+var_argument(MAIN exec execendfor value,MAIN runstack runpopint value).
+var_argument(MAIN exec execexit v,MAIN runstack runpopboolean value).
+var_argument(MAIN exec execfor lowerbound,MAIN runstack runpopint value).
+var_argument(MAIN exec execfor upperbound,MAIN runstack runpopint value).
+var_argument(MAIN exec execif ifcondition,MAIN runstack runpopboolean value).
+var_argument(MAIN exec execoperand v 1,MAIN runstack runpopstring value).
+var_argument(MAIN exec execoperand v 2,MAIN runstack runpopstring value).
+var_argument(MAIN exec execoperand v,MAIN runstack runpopint value).
+var_argument(MAIN exec execput v 1,MAIN runstack runpopstring value).
+var_argument(MAIN exec execput v 2,MAIN runstack runpopboolean value).
+var_argument(MAIN exec execput v,MAIN runstack runpopint value).
+var_argument(MAIN exec execsimpletype v 1,MAIN runstack runpopint value).
+var_argument(MAIN exec execsimpletype v,MAIN runstack runpopint value).
+var_argument(MAIN ident ix,MAIN ident enterident index_).
+var_argument(MAIN operator operatorcompare v1 1,MAIN runstack runpopboolean value).
+var_argument(MAIN operator operatorcompare v1 2,MAIN runstack runpopstring value).
+var_argument(MAIN operator operatorcompare v1,MAIN runstack runpopint value).
+var_argument(MAIN operator operatorcompare v2 1,MAIN runstack runpopboolean value).
+var_argument(MAIN operator operatorcompare v2 2,MAIN runstack runpopstring value).
+var_argument(MAIN operator operatorcompare v2,MAIN runstack runpopint value).
+var_argument(MAIN operator operatorrun compareresult,MAIN operator operatorcompare compareresult).
+var_argument(MAIN operator operatorrun s1,MAIN runstack runpopstring value).
+var_argument(MAIN operator operatorrun s2,MAIN runstack runpopstring value).
+var_argument(MAIN operator operatorrun v1,MAIN runstack runpopboolean value).
+var_argument(MAIN operator operatorrun v1,MAIN runstack runpopint value).
+var_argument(MAIN operator operatorrun v2,MAIN runstack runpopboolean value).
+var_argument(MAIN operator operatorrun v2,MAIN runstack runpopint value).
+var_argument(MAIN runstack runassign v 1,MAIN runstack runpopreal value).
+var_argument(MAIN runstack runassign v 2,MAIN runstack runpopboolean value).
+var_argument(MAIN runstack runassign v 3,MAIN runstack runpopstring value).
+var_argument(MAIN runstack runassign v,MAIN runstack runpopint value).
+var_argument(MAIN runstack runsubscript subscript,MAIN runstack runpopint value).
+var_argument(MAIN scan scanline coindex,MAIN ident enterident index_).
+var_argument(MAIN scan scanline idindex,MAIN ident enterident index_).
+var_argument(MAIN scan scanline stindex,MAIN ident enterident index_).
+var_argument_ref(MAIN edit,MAIN command).
+var_argument_ref(MAIN enter,MAIN command).
+var_argument_ref(MAIN exec execassert,MAIN exec execassert v).
+var_argument_ref(MAIN exec execendfor,MAIN exec execendfor value).
+var_argument_ref(MAIN exec execexit,MAIN exec execexit v).
+var_argument_ref(MAIN exec execfor,MAIN exec execfor lowerbound).
+var_argument_ref(MAIN exec execfor,MAIN exec execfor upperbound).
+var_argument_ref(MAIN exec execif,MAIN exec execif ifcondition).
+var_argument_ref(MAIN exec execoperand,MAIN exec execoperand v 1).
+var_argument_ref(MAIN exec execoperand,MAIN exec execoperand v 2).
+var_argument_ref(MAIN exec execoperand,MAIN exec execoperand v).
+var_argument_ref(MAIN exec execput,MAIN exec execput v 1).
+var_argument_ref(MAIN exec execput,MAIN exec execput v 2).
+var_argument_ref(MAIN exec execput,MAIN exec execput v).
+var_argument_ref(MAIN exec execsimpletype,MAIN exec execsimpletype v 1).
+var_argument_ref(MAIN exec execsimpletype,MAIN exec execsimpletype v).
+var_argument_ref(MAIN execute,MAIN command).
+var_argument_ref(MAIN ident,MAIN ident ix).
+var_argument_ref(MAIN list,MAIN command).
+var_argument_ref(MAIN operator operatorcompare,MAIN operator operatorcompare v1 1).
+var_argument_ref(MAIN operator operatorcompare,MAIN operator operatorcompare v1 2).
+var_argument_ref(MAIN operator operatorcompare,MAIN operator operatorcompare v1).
+var_argument_ref(MAIN operator operatorcompare,MAIN operator operatorcompare v2 1).
+var_argument_ref(MAIN operator operatorcompare,MAIN operator operatorcompare v2 2).
+var_argument_ref(MAIN operator operatorcompare,MAIN operator operatorcompare v2).
+var_argument_ref(MAIN operator operatorrun,MAIN operator operatorrun compareresult).
+var_argument_ref(MAIN operator operatorrun,MAIN operator operatorrun s1).
+var_argument_ref(MAIN operator operatorrun,MAIN operator operatorrun s2).
+var_argument_ref(MAIN operator operatorrun,MAIN operator operatorrun v1).
+var_argument_ref(MAIN operator operatorrun,MAIN operator operatorrun v2).
+var_argument_ref(MAIN run,MAIN command).
+var_argument_ref(MAIN runstack runassign,MAIN runstack runassign v 1).
+var_argument_ref(MAIN runstack runassign,MAIN runstack runassign v 2).
+var_argument_ref(MAIN runstack runassign,MAIN runstack runassign v 3).
+var_argument_ref(MAIN runstack runassign,MAIN runstack runassign v).
+var_argument_ref(MAIN runstack runsubscript,MAIN runstack runsubscript subscript).
+var_argument_ref(MAIN save,MAIN command).
+var_argument_ref(MAIN scan scanline,MAIN scan scanline coindex).
+var_argument_ref(MAIN scan scanline,MAIN scan scanline idindex).
+var_argument_ref(MAIN scan scanline,MAIN scan scanline stindex).
+var_parameter(LIBRARY gtty t).
+var_parameter(LIBRARY ioctl n).
+var_parameter(LIBRARY stty t).
+var_parameter(MAIN ident enterident index_).
+var_parameter(MAIN operator operatorcompare compareresult).
+var_parameter(MAIN runstack runpopboolean value).
+var_parameter(MAIN runstack runpopint value).
+var_parameter(MAIN runstack runpopreal value).
+var_parameter(MAIN runstack runpopstring value).
+var_parameter(MAIN scan expandline text).
+variable(MAIN command).
+variable(MAIN currenterror).
+variable(MAIN currentline).
+variable(MAIN currentnum).
+variable(MAIN currentptr).
+variable(MAIN edit linenum).
+variable(MAIN edit nextchar).
+variable(MAIN edit position).
+variable(MAIN exec execarraybounds v).
+variable(MAIN exec execassert v).
+variable(MAIN exec execconstant stext).
+variable(MAIN exec execendfor value).
+variable(MAIN exec execexit v).
+variable(MAIN exec execfor lowerbound).
+variable(MAIN exec execfor upperbound).
+variable(MAIN exec execget v 1).
+variable(MAIN exec execget v 2).
+variable(MAIN exec execget v).
+variable(MAIN exec execget valid).
+variable(MAIN exec execif ifcondition).
+variable(MAIN exec execoperand stext).
+variable(MAIN exec execoperand v 1).
+variable(MAIN exec execoperand v 2).
+variable(MAIN exec execoperand v).
+variable(MAIN exec execput v 1).
+variable(MAIN exec execput v 2).
+variable(MAIN exec execput v).
+variable(MAIN exec execsimpletype v 1).
+variable(MAIN exec execsimpletype v).
+variable(MAIN hasch nchars).
+variable(MAIN ident identtable).
+variable(MAIN ident ix).
+variable(MAIN lines).
+variable(MAIN list first).
+variable(MAIN list last).
+variable(MAIN load f).
+variable(MAIN operator operatorcompare v1 1).
+variable(MAIN operator operatorcompare v1 2).
+variable(MAIN operator operatorcompare v1).
+variable(MAIN operator operatorcompare v2 1).
+variable(MAIN operator operatorcompare v2 2).
+variable(MAIN operator operatorcompare v2).
+variable(MAIN operator operatorrun compareresult).
+variable(MAIN operator operatorrun s1).
+variable(MAIN operator operatorrun s2).
+variable(MAIN operator operatorrun v1).
+variable(MAIN operator operatorrun v2).
+variable(MAIN operator operatorstack).
+variable(MAIN operator operatortop).
+variable(MAIN parse parseerror ttext).
+variable(MAIN parse parseident proccall).
+variable(MAIN renum indent).
+variable(MAIN renum nlines).
+variable(MAIN run linenum).
+variable(MAIN runstack arraystack).
+variable(MAIN runstack arraytop).
+variable(MAIN runstack runallocatearray lowerbound).
+variable(MAIN runstack runallocatearray upperbound).
+variable(MAIN runstack runassign v 1).
+variable(MAIN runstack runassign v 2).
+variable(MAIN runstack runassign v 3).
+variable(MAIN runstack runassign v).
+variable(MAIN runstack runlookup proctop).
+variable(MAIN runstack runstack).
+variable(MAIN runstack runsubscript subscript).
+variable(MAIN runstack runtop).
+variable(MAIN runstack scopestack).
+variable(MAIN runstack scopetop).
+variable(MAIN save f).
+variable(MAIN scan charclass).
+variable(MAIN scan scanline coindex).
+variable(MAIN scan scanline currentptr).
+variable(MAIN scan scanline idindex).
+variable(MAIN scan scanline idlength).
+variable(MAIN scan scanline inlength).
+variable(MAIN scan scanline stindex).
+variable(MAIN scan scanline stlength).
+variable(MAIN scan scanline sttext).
+variable(MAIN scan scanline text).
+variable(MAIN scan scanline tt).
+variable(MAIN trace).
+variable(MAIN tty).
+write_ref(MAIN clear,MAIN currentline).
+write_ref(MAIN clear,MAIN currentnum).
+write_ref(MAIN clear,MAIN lines).
+write_ref(MAIN crmode,MAIN tty).
+write_ref(MAIN echo,MAIN tty).
+write_ref(MAIN edit,MAIN command).
+write_ref(MAIN edit,MAIN currentline).
+write_ref(MAIN edit,MAIN currentnum).
+write_ref(MAIN edit,MAIN edit linenum).
+write_ref(MAIN edit,MAIN edit nextchar).
+write_ref(MAIN edit,MAIN edit position).
+write_ref(MAIN enter,MAIN command).
+write_ref(MAIN enter,MAIN currentline).
+write_ref(MAIN enter,MAIN currentnum).
+write_ref(MAIN enter,MAIN lines).
+write_ref(MAIN error,MAIN currenterror).
+write_ref(MAIN error,MAIN currentline).
+write_ref(MAIN exec execarraybounds,MAIN currentptr).
+write_ref(MAIN exec execarraytype,MAIN currentptr).
+write_ref(MAIN exec execassert,MAIN currentptr).
+write_ref(MAIN exec execassignment,MAIN currentptr).
+write_ref(MAIN exec execcall,MAIN currentptr).
+write_ref(MAIN exec execconst,MAIN currentptr).
+write_ref(MAIN exec execconstant,MAIN currentptr).
+write_ref(MAIN exec execconstant,MAIN exec execconstant stext).
+write_ref(MAIN exec execelse,MAIN currentptr).
+write_ref(MAIN exec execend,MAIN currentptr).
+write_ref(MAIN exec execendfor,MAIN currentnum).
+write_ref(MAIN exec execendfor,MAIN currentptr).
+write_ref(MAIN exec execendif,MAIN currentptr).
+write_ref(MAIN exec execendloop,MAIN currentnum).
+write_ref(MAIN exec execendloop,MAIN currentptr).
+write_ref(MAIN exec execerror,MAIN currentptr).
+write_ref(MAIN exec execexit,MAIN currentptr).
+write_ref(MAIN exec execfor,MAIN currentptr).
+write_ref(MAIN exec execget,MAIN currentptr).
+write_ref(MAIN exec execget,MAIN exec execget valid).
+write_ref(MAIN exec execif,MAIN currentptr).
+write_ref(MAIN exec execline,MAIN currentline).
+write_ref(MAIN exec execline,MAIN currentptr).
+write_ref(MAIN exec execloop,MAIN currentptr).
+write_ref(MAIN exec execoperand,MAIN currentptr).
+write_ref(MAIN exec execoperand,MAIN exec execoperand stext).
+write_ref(MAIN exec execoperator,MAIN currentptr).
+write_ref(MAIN exec execprocedure,MAIN currentptr).
+write_ref(MAIN exec execput,MAIN currentptr).
+write_ref(MAIN exec execsimpletype,MAIN currentptr).
+write_ref(MAIN exec execskiptoelseorendif,MAIN currentnum).
+write_ref(MAIN exec execskiptoelseorendif,MAIN currentptr).
+write_ref(MAIN exec execskiptoend,MAIN currentnum).
+write_ref(MAIN exec execskiptoend,MAIN currentptr).
+write_ref(MAIN exec exectype,MAIN currentptr).
+write_ref(MAIN exec execvar,MAIN currentptr).
+write_ref(MAIN exec execvariable,MAIN currentptr).
+write_ref(MAIN execute,MAIN currentnum).
+write_ref(MAIN filename,MAIN command).
+write_ref(MAIN ident enterident,MAIN ident enterident index_).
+write_ref(MAIN ident enterident,MAIN ident identtable).
+write_ref(MAIN ident reinitialize,MAIN ident identtable).
+write_ref(MAIN ident,MAIN ident identtable).
+write_ref(MAIN list,MAIN command).
+write_ref(MAIN list,MAIN currentline).
+write_ref(MAIN list,MAIN list first).
+write_ref(MAIN list,MAIN list last).
+write_ref(MAIN load,MAIN lines).
+write_ref(MAIN nocrmode,MAIN tty).
+write_ref(MAIN noecho,MAIN tty).
+write_ref(MAIN operator operatorcompare,MAIN operator operatorcompare compareresult).
+write_ref(MAIN operator operatorpop,MAIN operator operatortop).
+write_ref(MAIN operator operatorpush,MAIN operator operatorstack).
+write_ref(MAIN operator operatorpush,MAIN operator operatortop).
+write_ref(MAIN parse parsecall,MAIN currentline).
+write_ref(MAIN parse parsecall,MAIN currentptr).
+write_ref(MAIN parse parseelsif,MAIN currentline).
+write_ref(MAIN parse parseend,MAIN currentline).
+write_ref(MAIN parse parseerror,MAIN parse parseerror ttext).
+write_ref(MAIN parse parseexit,MAIN currentline).
+write_ref(MAIN parse parseident,MAIN parse parseident proccall).
+write_ref(MAIN parse parseline,MAIN currentptr).
+write_ref(MAIN parse parseshift,MAIN currentline).
+write_ref(MAIN parse parsetoken,MAIN currentptr).
+write_ref(MAIN renum,MAIN lines).
+write_ref(MAIN renum,MAIN renum indent).
+write_ref(MAIN renum,MAIN renum nlines).
+write_ref(MAIN run,MAIN currentline).
+write_ref(MAIN run,MAIN currentnum).
+write_ref(MAIN run,MAIN run linenum).
+write_ref(MAIN runstack initscope,MAIN runstack arraytop).
+write_ref(MAIN runstack initscope,MAIN runstack runtop).
+write_ref(MAIN runstack initscope,MAIN runstack scopetop).
+write_ref(MAIN runstack popscope,MAIN runstack arraytop).
+write_ref(MAIN runstack popscope,MAIN runstack runtop).
+write_ref(MAIN runstack popscope,MAIN runstack scopetop).
+write_ref(MAIN runstack pushscope,MAIN runstack scopestack).
+write_ref(MAIN runstack pushscope,MAIN runstack scopetop).
+write_ref(MAIN runstack runallocate,MAIN runstack runstack).
+write_ref(MAIN runstack runallocate,MAIN runstack runtop).
+write_ref(MAIN runstack runallocatearray,MAIN runstack arraystack).
+write_ref(MAIN runstack runallocatearray,MAIN runstack arraytop).
+write_ref(MAIN runstack runallocatearray,MAIN runstack runallocatearray lowerbound).
+write_ref(MAIN runstack runallocatearray,MAIN runstack runallocatearray upperbound).
+write_ref(MAIN runstack runallocatearray,MAIN runstack runstack).
+write_ref(MAIN runstack runassign,MAIN runstack arraystack).
+write_ref(MAIN runstack runassign,MAIN runstack runstack).
+write_ref(MAIN runstack runerror,MAIN currentptr).
+write_ref(MAIN runstack runevaluate,MAIN runstack runstack).
+write_ref(MAIN runstack runlookup,MAIN runstack runlookup proctop).
+write_ref(MAIN runstack runpop,MAIN runstack runtop).
+write_ref(MAIN runstack runpopboolean,MAIN runstack runpopboolean value).
+write_ref(MAIN runstack runpopboolean,MAIN runstack runtop).
+write_ref(MAIN runstack runpopint,MAIN runstack runpopint value).
+write_ref(MAIN runstack runpopint,MAIN runstack runtop).
+write_ref(MAIN runstack runpopreal,MAIN runstack runpopreal value).
+write_ref(MAIN runstack runpopreal,MAIN runstack runtop).
+write_ref(MAIN runstack runpopstring,MAIN runstack runpopstring value).
+write_ref(MAIN runstack runpopstring,MAIN runstack runtop).
+write_ref(MAIN runstack runpushboolean,MAIN runstack runstack).
+write_ref(MAIN runstack runpushboolean,MAIN runstack runtop).
+write_ref(MAIN runstack runpushdesc,MAIN runstack runstack).
+write_ref(MAIN runstack runpushdesc,MAIN runstack runtop).
+write_ref(MAIN runstack runpushint,MAIN runstack runstack).
+write_ref(MAIN runstack runpushint,MAIN runstack runtop).
+write_ref(MAIN runstack runpushreal,MAIN runstack runstack).
+write_ref(MAIN runstack runpushreal,MAIN runstack runtop).
+write_ref(MAIN runstack runpushstring,MAIN runstack runstack).
+write_ref(MAIN runstack runpushstring,MAIN runstack runtop).
+write_ref(MAIN runstack runsubscript,MAIN runstack runstack).
+write_ref(MAIN runstack runswap,MAIN runstack runstack).
+write_ref(MAIN runstack,MAIN runstack arraystack).
+write_ref(MAIN runstack,MAIN runstack runstack).
+write_ref(MAIN save,MAIN currentline).
+write_ref(MAIN scan expandline,MAIN scan expandline text).
+write_ref(MAIN scan scanline,MAIN currentline).
+write_ref(MAIN scan scanline,MAIN scan scanline currentptr).
+write_ref(MAIN scan scanline,MAIN scan scanline idlength).
+write_ref(MAIN scan scanline,MAIN scan scanline inlength).
+write_ref(MAIN scan scanline,MAIN scan scanline stlength).
+write_ref(MAIN scan scanline,MAIN scan scanline sttext).
+write_ref(MAIN scan scanline,MAIN scan scanline text).
+write_ref(MAIN scan scanline,MAIN scan scanline tt).
+write_ref(MAIN scan,MAIN scan charclass).
+write_ref(MAIN troff,MAIN trace).
+write_ref(MAIN tron,MAIN trace).
+write_ref(MAIN,MAIN currentline).
+write_ref(MAIN,MAIN lines).

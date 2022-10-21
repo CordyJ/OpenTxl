@@ -1,0 +1,27 @@
+#USE "snglmath.lib" @ 0
+#USE "trig.lib"  @ 0
+PROC test (REAL32 G, H, VAL BYTE test, INT w, VAL REAL32 in, BOOL initialise) @ 0
+  VAL REAL32 dat IS 3.0(REAL32) :  @ 2
+  REAL32 Z, A, B : @ 2
+  IF @ 2
+    initialise @ 4
+      SEQ i = 0 FOR 10  @ 6
+        array[i] := 0.0 (REAL32) @ 8
+    TRUE @ 4
+      SEQ @ 6
+        d := (a / s) + (b * c) @ 8
+        IF @ 8
+          Z > 10  @ 10
+            SEQ @ 12
+              d := (a - s) + (b - c) @ 14
+          TRUE  @ 10
+            SEQ   @ 12
+              d := (a - s) + (b * c) @ 14
+              Z := (a + b) / (INT TRUNC (dat + 101.05(REAL32))) @ 14
+        IF  @ 8
+          Z <> 5   @ 10
+            SEQ @ 12
+              d := (a / s) + (b * c) @ 14
+          TRUE @ 10
+            SKIP @ 12
+: @ 0

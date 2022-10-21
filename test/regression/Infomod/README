@@ -1,0 +1,24 @@
+TXL Example Specification
+-------------------------
+
+Name:	
+	inf.Txl
+
+Description:
+	Semantic analyzer for INFOMOD information modelling language
+	designed at Philips Labs, Brussels, Belgium.  INFOMOD is a general
+	purpose logic-based modelling language designed for expressing
+	and validating organization, database and software designs.
+	transformations from limited imperative to pure functional form.
+
+Author:
+   	D.A. Jardine
+
+Affiliation:
+	Queen's University
+
+Date:
+	July 1991
+
+Example:
+	txl model39.inf

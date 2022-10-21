@@ -1,0 +1,423 @@
+%==============================================================
+% Checks for presence of the argument informationModelStatement in the 
+% scope supplied in the where clause, which must be of type 
+% [repeat informationModelStatement_48].
+
+rule contains
+            test1 [informationModelStatement_48]
+    match [informationModelStatement_48]
+        test1 
+end rule
+
+%==============================================================
+
+rule containsSharedVariable
+            test1 [entityVariableName_80]
+
+    % Checks for presence of the argument entityVariableName in the 
+    % scope supplied in the where clause.
+
+    match [entityVariableName_80]
+        test1 
+end rule
+
+%==============================================================
+
+function convertSAP1_to_SAPD
+            sAP [simpleAttributePhrase_129]
+
+    % converts type 1 simpleAttributePhrase_129 to a 
+    % singleAttributePhraseDeclaration_82
+
+    deconstruct sAP
+        aN [associationName_94]
+        rNEVN [repeat roleNameEntityVariableName_130]
+
+    construct new_sAPD [singleAttributePhraseDeclaration_82]
+        aN rNEVN 
+
+    replace [singleAttributePhraseDeclaration_82]
+        sAPD [singleAttributePhraseDeclaration_82]
+    by
+        new_sAPD 
+end function
+
+%==============================================================
+
+function convertSAP2_to_SAPD
+            sAP [simpleAttributePhrase_129]
+
+    % converts type 2 simpleAttributePhrase_129 to a 
+    % singleAttributePhraseDeclaration_82
+
+    deconstruct sAP
+        eVN [entityVariableName_80]
+        rNEVN [repeat roleNameEntityVariableName_130]
+
+    construct new_sAPD [singleAttributePhraseDeclaration_82]
+        eVN rNEVN 
+
+    replace [singleAttributePhraseDeclaration_82]
+        sAPD [singleAttributePhraseDeclaration_82]
+    by
+        new_sAPD 
+end function
+
+%==============================================================
+
+define tokenOrKey
+        [token] 
+    |   [key] 
+end define
+
+%=================================================================
+
+rule removeSimpleSelExpr_1
+
+    % This rule looks through assocEntitySelection_417 and deletes the
+    % expressions that are not involved in matching entities and attributes
+    % against  Pattern statements or assertions.
+
+    replace [opt assocEntitySelection_417]
+        sAS [simpleEntitySelection_225]
+    by
+        % nul 
+end rule
+
+% =================================================================
+
+rule removeSimpleSelExpr_2
+
+    % This rule looks  for optSelectedEntity_120 and deletes the
+    % expressions that are not involved in matching entities and attributes
+    % against  Pattern statements or assertions. 
+
+    replace [optSelectedEntity_120]
+        eVN [entityVariableName_80]
+        sES [simpleEntitySelection_225]
+    by
+        eVN 
+end rule
+
+%=================================================================
+
+rule promoteThatClauses
+    replace [associatedEntityReference_416]
+        aER [associatedEntityReference_416]
+
+    deconstruct aER
+        rN [roleNames_98]
+        eVN [entityVariableName_80]
+        ', 
+        pCI [pronounCriterionIndicator_662]
+        aLE [attributeLogicalExpression_402]
+        ', 
+
+    % Two commas
+
+    construct new_aER [associatedEntityReference_416]
+        rN eVN ', 'such 'that eVN aLE ', 
+
+    construct debug [associatedEntityReference_416]
+        new_aER 
+
+    %       [message '"  promoted Clause "][print]
+
+    by
+        new_aER 
+end rule
+
+%=================================================================
+
+rule promoteOneCommaEntityThatClauses
+    replace [optSelectedEntity_220]
+        eVN [entityVariableName_80]
+        ', 
+        pCI [pronounCriterionIndicator_662]
+        aLE [attributeLogicalExpression_402]
+
+    % one comma
+
+    by
+        eVN ', 'such 'that eVN aLE 
+end rule
+
+%=================================================================
+
+rule promoteTwoCommaEntityThatClauses
+    replace [optSelectedEntity_120]
+        eVN [entityVariableName_80]
+        ', 
+        pCI [pronounCriterionIndicator_662]
+        aLE [attributeLogicalExpression_402]
+        ', 
+
+    % two commas
+
+    by
+        eVN ', 'such 'that eVN aLE ', 
+end rule
+
+%=================================================================
+
+rule promoteFinalThatClauses
+    replace [finalAssociatedEntityReference_416]
+        fAER [finalAssociatedEntityReference_416]
+
+    deconstruct fAER
+        rN [roleNames_98]
+        eVN [entityVariableName_80]
+        ', 
+        pCI [pronounCriterionIndicator_662]
+        aLE [attributeLogicalExpression_402]
+
+    % one comma
+
+    construct new_fAER [finalAssociatedEntityReference_416]
+        rN eVN ', 'such 'that eVN aLE 
+
+    construct debug [finalAssociatedEntityReference_416]
+        new_fAER 
+
+    %      [message '"  promoted Clause "][print]
+
+    by
+        new_fAER 
+end rule
+
+%=================================================================
+
+function extractAtomicSentences
+    replace [repeat informationModelStatement_48]
+        statements [repeat informationModelStatement_48]
+
+    construct nullAtomicSentence [repeat atomicSentence_119]
+        % ( empty ) 
+
+    construct atomicSentences [repeat atomicSentence_119]
+        nullAtomicSentence [^ statements]
+            %      [message '" atomic Sentences"][print]
+            [deleteDependentClauses_1]
+            [deleteDependentClauses_2]
+            [deleteDependentClauses_2a]
+            [deleteDependentClauses_3]
+            [deleteDependentClauses_4]
+
+    construct nulStatements [repeat informationModelStatement_48]
+        % ( empty ) 
+
+    construct newStatements [repeat informationModelStatement_48]
+        nulStatements [promoteAtomicSentences each atomicSentences]
+
+    %      [message '" atomic Sentences after cleanup "][print]
+
+    by
+        newStatements 
+end function
+
+%=========================================================== 
+
+function promoteAtomicSentences
+            aS [atomicSentence_119]
+    replace [repeat informationModelStatement_48]
+        newStatements [repeat informationModelStatement_48]
+
+    construct atomicStatement [informationModelStatement_48]
+        aS '. 
+    by
+        newStatements [. atomicStatement]
+end function
+
+%===========================================================       
+
+rule deleteDependentClauses_1
+    replace [associatedEntityReference_416]
+        rN [roleNames_98]
+        eVN [entityVariableName_80]
+        oaES [assocEntitySelection_417]
+    by
+        rN eVN 
+end rule
+
+%===========================================================       
+
+rule deleteDependentClauses_2
+    replace [finalAssociatedEntityReference_416]
+        rN [roleNames_98]
+        eVN [entityVariableName_80]
+        oaES [finalAssocEntitySelection_417]
+    by
+        rN eVN 
+end rule
+
+%===========================================================       
+
+rule deleteDependentClauses_2a
+    replace [attributeReference_414]
+        eVN [entityVariableName_80]
+        oAES [assocEntitySelection_417]
+        raER [repeat associatedEntityReference_416]
+        oaES [opt finalAssociatedEntityReference_416]
+    by
+        eVN raER oaES 
+end rule
+
+%===========================================================    
+
+rule deleteDependentClauses_3
+    replace [optSelectedEntity_120]
+        eVN [entityVariableName_80]
+        eS [entitySelector_121]
+    by
+        eVN 
+end rule
+
+%===========================================================       
+
+rule deleteDependentClauses_4
+    replace [optSelectedEntity_220]
+        eVN [entityVariableName_80]
+        sE [selectionExpression_224]
+    by
+        eVN 
+end rule
+
+%=========================================================== 
+
+function decomposeALE
+            atomicStatement [informationModelStatement_48]
+
+    % is called with scope nul_patterns [repeat informationModelStatement_48] with
+    % parameter of an atomic statement at a time.
+    % Converts atomic sentences to declarations (patterns).
+    % First, get the individual attributeLogicalPrimary_412 subtrees
+
+    deconstruct atomicStatement
+        eVN [entityVariableName_80]
+        aLE [attributeLogicalExpression_402]
+        sT [statementTerminator_22]
+
+    construct nul_aR [repeat attributeReference_414]
+        % ( empty ) 
+
+    construct aRs [repeat attributeReference_414]
+        nul_aR [^ aLE]
+
+    % Convert each aR to the declaration subtree of type 
+    % [repeat roleNameEntityVariableDeclarator_86]
+
+    construct nul_patterns [repeat informationModelStatement_48]
+        % ( empty ) 
+
+    construct patterns [repeat informationModelStatement_48]
+        nul_patterns [buildPatterns_1 eVN each aRs]
+            [buildPatterns_2 eVN each aRs]
+
+    replace [repeat informationModelStatement_48]
+        statements [repeat informationModelStatement_48]
+    by
+        statements [. patterns]
+end function
+
+%=========================================================== 
+
+function buildPatterns_1
+            eVN [entityVariableName_80]
+            aR [attributeReference_414]
+
+    % converts a attributeLogicalPrimary_412 to a
+    % roleNameEntityVariableDeclarator_86 and then builds a 
+    % pattern declaration from it
+
+    construct pEV [primeEntityVariable_79]
+        eVN 
+
+    deconstruct aR
+        aN [associationName_94]
+        raER [repeat associatedEntityReference_416]
+
+    construct nul_rNEVN [repeat roleNameEntityVariableName_130]
+        % ( empty ) 
+
+    % (empty)
+
+    construct new_rNEVN [repeat roleNameEntityVariableName_130]
+        nul_rNEVN [buildRNEVN each raER]
+
+    % Build the new format of the attribute and go see if we have an atomic
+    % declaration that exactly matches it.
+
+    construct sAPD [singleAttributePhraseDeclaration_82]
+        aN new_rNEVN 
+
+    construct desiredPattern [informationModelStatement_48]
+        'Pattern ': pEV '( sAPD ') '. 
+
+    replace [repeat informationModelStatement_48]
+        patterns [repeat informationModelStatement_48]
+    by
+        patterns [. desiredPattern]
+end function
+
+%=========================================================== 
+
+function buildPatterns_2
+            eVN [entityVariableName_80]
+            aR [attributeReference_414]
+
+    % converts a type 2 attributeReference_414 to a 
+    % roleNameEntityVariableDeclarator_86 and then builds a 
+    % pattern declaration from it
+
+    construct pEV [primeEntityVariable_79]
+        eVN 
+
+    deconstruct aR
+        aeVN [entityVariableName_80]
+        raER [repeat associatedEntityReference_416]
+
+    construct nul_rNEVN [repeat roleNameEntityVariableName_130]
+        % ( empty ) 
+
+    % (empty)
+
+    construct new_rNEVN [repeat roleNameEntityVariableName_130]
+        nul_rNEVN [buildRNEVN each raER]
+
+    % Build the new format of the attribute and go see if we have an atomic
+    % declaration that exactly matches it.
+
+    construct sAPD [singleAttributePhraseDeclaration_82]
+        aeVN new_rNEVN 
+
+    construct desiredPattern [informationModelStatement_48]
+        'Pattern ': pEV '( sAPD ') '. 
+
+    replace [repeat informationModelStatement_48]
+        patterns [repeat informationModelStatement_48]
+    by
+        patterns [. desiredPattern]
+end function
+
+%=========================================================== 
+
+function buildRNEVN
+            aER [associatedEntityReference_416]
+
+    % This function extracts the roleName entityVariable name
+    % pairs and appends them to the previous collection
+
+    deconstruct aER
+        rN [roleNames_98]
+        eVN [entityVariableName_80]
+
+    construct rNEVN [roleNameEntityVariableName_130]
+        rN eVN 
+
+    replace [repeat roleNameEntityVariableName_130]
+        previous [repeat roleNameEntityVariableName_130]
+    by
+        previous [. rNEVN]
+end function
+
+

@@ -1,0 +1,3424 @@
+% Fake declarations for Turing built-in functions
+external function chr (i : int) : string 
+external function ord (c : string) : int
+external function strint (s : string) : int
+external function intstr (i : int, w : int) : string
+external function strreal (s : string) : real
+external function realstr (r : real, w : int) : string
+external function length (s : string) : int
+external function eof (i : int) : boolean
+external function index (s : string, s2 : string) : int
+external function max (i : int, i2 : int) : int
+external function min (i : int, i2 : int) : int
+external function repeat (s : string, i : int) : string
+external function size (i : int) : int
+put "/e[;H/e[JMicro-Turing Monitor  V1.00"
+put skip, "Wait ..."
+
+% include "limits.i"
+% uTuring Limits  V1.00
+% Copyright (c) 1984   James R. Cordy
+
+const *maxlines := 99
+const *maxlinetokens := 50
+const *maxidents := 100
+const *maxindent := 24
+const *maxrunstackdepth := 50
+const *maxstringstackdepth := 50
+const *maxarraystackdepth := 50
+const *maxscopestackdepth := 5
+const *maxoperatorstackdepth := 5
+const *maxconstructstackdepth := 5
+const *maxidentlength := 50
+const *maxstringlength := 127
+const *maxintegerlength := 9
+const *maxint := 999999999
+const *maxreal := 0.9999999e19
+
+% include "tokens.i"
+% uTuring Token Definitions  V1.00
+% Copyright (c) 1984   James R. Cordy
+
+const *firsttoken := 0
+const *tillegal := 0
+const *tany := tillegal
+
+% Literals and Identifiers
+const *tinteger := 1
+const *tstringlit := 2
+const *tidentifier := 3
+
+% Statement Keywords
+const *firstkeyword := 4
+const *firststatement := 4
+const *tvar := 4
+const *tconst := 5
+const *ttype := 6
+const *tassign := 7
+const *tcall := 8
+const *tassert := 9
+const *tif := 10
+const *tloop := 11
+const *tfor := 12
+const *tput := 13
+const *tget := 14
+const *tprocedure := 15
+const *tend := 16
+const *tendif := 17
+const *tendloop := 18
+const *tendfor := 19
+const *telsif := 20
+const *telseif := 21
+const *telse := 22
+const *tinvariant := 23
+const *texit := 24
+const *texitwhen := 25
+const *laststatement := 25
+
+% Other Keywords
+const *tarray := 26
+const *tof := 27
+const *tint := 28
+const *tboolean := 29
+const *tstring := 30
+const *tthen := 31
+const *twhen := 32
+const *tnot := 33
+const *tdiv := 34
+const *tmod := 35
+const *tand := 36
+const *tor := 37
+const *ttrue := 38
+const *tfalse := 39
+const *tchr := 40
+const *tord := 41
+const *tlength := 42
+const *lastkeyword := 42
+
+% Special Symbols
+const *firstspecialsymbol := 43
+const *tlparen := 43
+const *trparen := 44
+const *tcomma := 45
+const *tcolon := 46
+const *tcolonequal := 47
+const *tdotdot := 48
+const *tplus := 49
+const *tminus := 50
+const *tstar := 51
+const *tgreater := 52
+const *tless := 53
+const *tequal := 54
+const *tgreaterequal := 55
+const *tlessequal := 56
+const *tnotequal := 57
+const *tsemicolon := 58
+const *lastspecialsymbol := 58
+
+% Comments
+const *tcomment := 59
+
+% End of Line Token
+const *teol := 60
+
+const *lasttoken := teol
+
+
+% Representation of Tokens
+
+%	  token		     value
+%	  -----		     ----
+%	tidentifier	identifier table index
+%	tstring		identifier table index
+%	tcomment	identifier table index
+%	tinteger	integer value
+%	tillegal	ord of illegal char
+
+type *tokentype :
+    record
+	token : firsttoken .. lasttoken
+	value : int
+	error : boolean
+    end record
+
+
+% Text of Tokens
+const *tokentext : array firsttoken .. lasttoken of string (15) :=
+    init ("illegal", "integer", "stringlit", "identifier", "var", "const",
+	"type", "assign", "call", "assert", "if", "loop", "for", "put", "get",
+	"procedure", "end", "end if", "end loop", "end for", "elsif", "elseif",
+	"else", "invariant", "exit", "exit when", "array", "of", "int", 
+	"boolean", "string", "then", "when", "not", "div", "mod", "and", 
+	"or", "true", "false", "chr", "ord", "length", "(", ")", ",", ":",
+	":=", "..", "+", "-", "*", ">", "<", "=", ">=", "<=", "not=", ";",
+	"%", "end-of-line")
+
+% include "lines.i"
+% uTuring Line Table Definitions  V1.00
+% Copyright (c) 1984   James R. Cordy
+
+type *linetype :
+    record
+	tokens : array 1 .. maxlinetokens of tokentype
+	error : boolean
+	indent : int
+    end record
+
+var lines : array 1 .. maxlines of linetype
+
+var currentline : linetype
+var currentptr := 1
+var currentnum := 0
+var currenterror := ""
+
+currentline.tokens (1).token := teol
+currentline.tokens (1).error := false
+currentline.error := false
+currentline.indent := 0
+
+for i : 1 .. maxlines
+    bind var l to lines (i)
+    l.tokens (1).token := teol
+    l.tokens (1).error := false
+    l.error := false
+    l.indent := 0
+end for
+
+% include "error.i"
+procedure error (msg : string)
+    if not currentline.error then
+	currentline.error := true
+	currentline.tokens (currentptr).error := true
+	currenterror := msg
+    end if
+end error
+
+% include "ident.i"
+% uTuring Identifier Table  V1.00
+% Copyright (c) 1984   James R. Cordy
+
+module ident
+    import
+	error		% error message printer
+    export
+	identindex,	% find index of identifier
+	identtoken,	% token associated with index
+	identident,	% ident associated with index
+	enterident,	% enter identifier in table
+	reinitialize	% re-initialize identifier table
+
+    var identtable : array 1 .. maxidents of 
+	record
+	    ident : string (maxstringlength)
+	    token : int
+	end record
+
+    for ix : 1 .. maxidents
+       identtable (ix).token := tidentifier
+       identtable (ix).ident := ""
+    end for
+
+
+    function identindex (ident : string) : int
+	for ix : 1 .. maxidents
+	    if identtable (ix).ident = ident then
+		result ix
+	    end if
+	end for
+
+	result 0
+    end identindex
+
+    function identident (index_ : int) : string
+	result identtable (index_).ident
+    end identident
+
+    function identtoken (index_ : int) : int
+	result identtable (index_).token
+    end identtoken
+
+    procedure enterident (var index_: int, ident : string)
+	pre length (ident) <= maxstringlength
+
+	index_ := identindex (ident)
+
+	if index_ = 0 then
+	    for ix : 1 .. maxidents
+		if identtable (ix).ident = "" then 
+		    index_ := ix
+		    identtable (ix).ident := ident
+		    exit
+		end if
+	    end for
+
+	    if index_ = 0 then
+		error ("too many identifiers and strings")
+		index_ := maxidents
+	    end if
+	end if
+    end enterident
+
+    procedure reinitialize
+	for i : 1 .. maxidents
+	    if identtable (i).token = tidentifier then
+		identtable (i).ident := ""
+	    end if
+	end for
+    end reinitialize
+
+
+    % Keywords
+    const nkeywords := 37
+
+    const keyword : array 1 .. nkeywords of string(10) :=
+	init ("var", "const", "type", "assert", "if", "loop", "for", "put", "get",
+	    "procedure", "end", "endif", "endloop", "endfor", "elsif", "elseif",
+	    "else", "invariant", "exit", "exitwhen", "array", "of", "int", 
+	    "boolean", "string", "then", "when", "not", "div", "mod", "and", 
+	    "or", "true", "false", "chr", "ord", "length")
+
+    const keywordtoken : array 1 .. nkeywords of int :=
+	init (tvar, tconst, ttype, tassert, tif, tloop, tfor, tput, tget,
+	    tprocedure, tend, tendif, tendloop, tendfor, telsif, telseif,
+	    telse, tinvariant, texit, texitwhen, tarray, tof, tint,
+	    tboolean, tstring, tthen, twhen, tnot, tdiv, tmod, tand,
+	    tor, ttrue, tfalse, tchr, tord, tlength)
+
+    for kw : 1 .. nkeywords
+	var ix : int
+	enterident (ix, keyword (kw))
+	identtable (ix).token := keywordtoken (kw)
+    end for
+
+end ident
+
+% include "scan.i"
+% uTuring Scanner/Expander  V1.00
+% Copyright (c) 1984   James R. Cordy
+
+module scan
+    import 
+	var currentline,% current line of interest
+	var currentptr,	% pointer to current token in currentline
+	var ident	% identifier table
+
+    export
+	scanline,	% tokenize a line of text
+	expandline	% untokenize a line of text
+
+    % Character classes
+    const cblank := 0
+    const cletter := 1
+    const cdigit := 2
+    const cspecialchar := 3
+    const cquote := 4
+    const ccomment := 5
+    const cillegal := 6
+
+    var charclass : array 0 .. 255 of int
+
+    for c : 0 .. 255
+	charclass (c) := cillegal
+    end for
+
+    charclass (ord (" ")) := cblank
+    charclass (ord ("/t")) := cblank
+
+    charclass (ord ("%")) := ccomment
+
+    for c : ord ("a") .. ord ("z")
+	charclass (c) := cletter
+    end for
+
+    for c : ord ("A") .. ord ("Z")
+	charclass (c) := cletter
+    end for
+
+    for c : ord ("0") .. ord ("9")
+	charclass (c) := cdigit
+    end for
+
+    charclass (ord ("\"")) := cquote
+
+    const specialchars := "():,.+-*><=;"
+    const specialchartoken : array 1 .. 12 of int :=
+	init (tlparen, trparen, tcolon, tcomma, tillegal, tplus, tminus,
+	    tstar, tgreater, tless, tequal, tsemicolon)
+
+    for sc : 1 .. length (specialchars)
+	charclass (ord (specialchars (sc))) := cspecialchar
+    end for
+
+
+    procedure scanline (linetext : string)
+	var text := linetext
+	var currentptr := 1
+
+	loop
+	    loop
+		exit when length (text) = 0 or 
+		    charclass (ord (text (1))) not = cblank
+		text := text (2 .. *)
+	    end loop
+
+	    exit when length (text) = 0 
+
+	    var tt : tokentype 
+	    tt.error := false
+
+	    case charclass (ord (text (1))) of
+		label cletter :
+		    % identifier or keyword
+		    var idlength := 1
+		    loop
+			idlength += 1
+			exit when idlength > length (text) 
+			const cc := charclass (ord (text (idlength)))
+			exit when cc not = cletter and cc not = cdigit
+		    end loop
+
+		    const idtext := 
+			text (1 .. min (maxidentlength, idlength-1))
+		    text := text (idlength .. *)
+
+		    % enter in ident table
+		    var idindex : int
+		    ident.enterident (idindex, idtext)
+
+		    tt.token := ident.identtoken (idindex)
+		    tt.value := idindex
+
+		label cdigit :
+		    % integer
+		    var inlength := 1
+		    loop
+			inlength += 1
+			exit when inlength > length (text)
+			exit when charclass (ord (text (inlength))) not = cdigit
+		    end loop
+
+		    const intext := 
+			text (1 .. min (maxintegerlength, inlength-1)) 
+		    text := text (inlength .. *)
+
+		    tt.token := tinteger
+		    tt.value := strint (intext)
+
+		label cquote :
+		    % string
+		    var stlength := 1
+		    loop
+			exit when stlength = length (text)
+			stlength += 1
+			exit when charclass (ord (text (stlength))) = cquote
+		    end loop
+
+		    var sttext := 
+			text (1 .. min (maxstringlength, stlength))
+		    text := text (stlength + 1 .. *)
+
+		    if length (sttext) = 1 or sttext (stlength) not = "\"" then
+			loop
+			    exit when length (sttext) = 1 
+				or sttext (length (sttext)) not = " "
+			    sttext := sttext (1 .. length (sttext) - 1)
+			end loop
+			sttext := sttext + "\""
+		    end if
+
+		    % enter in ident table
+		    var stindex : int
+		    ident.enterident (stindex, sttext)
+
+		    tt.token := tstringlit
+		    tt.value := stindex
+
+		label cspecialchar :
+		    % special symbols
+		    const c := text (1)
+		    text := text (2 .. *)
+
+		    if length (text) > 0 and
+			    (c = ">" or c = "<" or c = ":" or c = ".") then
+
+			if c = ">" then
+			    if text (1) = "=" then
+				tt.token := tgreaterequal
+				text := text (2 .. *)
+			    else
+				tt.token := tgreater
+			    end if
+
+			elsif c = "<" then
+			    if text (1) = "=" then
+				tt.token := tlessequal
+				text := text (2 .. *)
+			    else
+				tt.token := tless
+			    end if
+
+			elsif c = ":" then
+			    if text (1) = "=" then
+				tt.token := tcolonequal
+				text := text (2 .. *)
+			    else
+				tt.token := tcolon
+			    end if
+
+			else % "."
+			    if text (1) = "." then
+				tt.token := tdotdot
+				text := text (2 .. *)
+			    else
+				tt.token := tillegal
+			    end if
+			end if
+
+		    else
+			tt.token := specialchartoken (index (specialchars, c))
+		    end if
+
+		    if tt.token = tillegal then
+			tt.value := ord (c)
+		    else
+			tt.value := 0
+		    end if
+
+		label ccomment :
+		    var coindex : int
+		    text := text (1 .. min (length (text), maxstringlength))
+		    ident.enterident (coindex, text)
+		    text := ""
+
+		    tt.token := tcomment
+		    tt.value := coindex
+
+		label :
+		    tt.token := tillegal
+		    tt.value := ord (text (1))
+		    text := text (2 .. *)
+	    end case
+
+	    currentline.tokens (currentptr) := tt
+
+	    exit when currentptr = maxlinetokens
+
+	    currentptr += 1
+	end loop
+
+	currentline.tokens (currentptr).token := teol
+	currentline.tokens (currentptr).value := 0
+	currentline.tokens (currentptr).error := false
+
+	currentline.error := false
+	currentptr := 1
+    end scanline
+
+
+    procedure expandline (var text : string)
+	text := ""
+
+	for lineptr : 1 .. maxlinetokens
+	    const token := currentline.tokens (lineptr).token
+	    const error := currentline.tokens (lineptr).error
+
+	    if token <= lastkeyword then
+		% Keyword, identifier or literal
+
+		if length (text) > 0 and text (length (text)) not = " " and
+			text (length (text)) not = "(" then
+		    text := text + " "
+		end if
+
+		if error then
+		    text := text + "/e[7m"
+		end if
+
+		case token of
+		    label tidentifier, tstringlit :
+			text := text +
+			    ident.identident (currentline.tokens (lineptr).value)
+		    label tinteger :
+			text := text + intstr (currentline.tokens (lineptr).value, 1)
+		    label tillegal :
+			text := text + chr (currentline.tokens (lineptr).value)
+		    label tcall :
+			% delete
+		    label :
+			text := text + tokentext (token)
+		end case
+
+		if error then
+		    text := text + "/e[m"
+		end if
+
+	    elsif token <= lastspecialsymbol then
+		% Special symbol
+
+		if token not = trparen and token not = tcomma and
+			length (text) > 0 and 
+			text (length (text)) not = " " and
+			text (length (text)) not = "(" then
+		    text := text + " "
+		end if
+
+		if error then
+		    text := text + "/e[7m"
+		end if
+
+		text := text + tokentext (token)
+
+		if error then
+		    text := text + "/e[m"
+		end if
+
+		if token not = tlparen and token not = trparen then
+		    text := text + " "
+		end if
+
+	    elsif token = tcomment then
+		% Comment
+		if length (text) > 0 and text (length (text)) not = " " then
+		    text := text + " "
+		end if
+
+		if currentline.tokens (lineptr).error then
+		    text := text + "/e[7m /e[m "
+		end if
+
+		text := text + ident.identident (currentline.tokens (lineptr).value)
+	    
+	    else
+		% End of line
+		if length (text) > 0 and text (length (text)) not = " " then
+		    text := text + " "
+		end if
+
+		if currentline.tokens (lineptr).error then
+		    text := text + "/e[7m /e[m"
+		end if
+
+		exit
+	    end if
+	end for
+
+    end expandline
+
+end scan
+
+% include "parse.i"
+% uTuring Line Parser  V1.00
+% Copyright (c) 1984  James R. Cordy
+
+module parse
+    import
+	var currentline,% current line of interest
+	var currentptr,	% pointer to current token in currentline
+	error,		% error message printer
+	var ident	% identifier table
+
+    export
+	parseline	% parse one line
+
+    procedure parseerror (msg : string)
+	if not currentline.error then
+	    const token := currentline.tokens (currentptr).token
+	    const value := currentline.tokens (currentptr).value
+
+	    var ttext := tokentext (token)
+
+	    if token = tidentifier then
+		ttext := ident.identident (value)
+	    elsif token = tstringlit then
+		ttext := ident.identident (value)
+		ttext := ttext (2 .. length (ttext) - 1)
+	    elsif token = tinteger then
+		ttext := intstr (value,1)
+	    elsif token = tcomment then
+		ttext := "%"
+	    elsif token = tillegal then
+		ttext := chr (value)
+	    end if
+		   
+	    error ("SYNTAX ERROR : " + msg)
+	end if
+    end parseerror
+
+    procedure parsetoken (token : firsttoken .. lasttoken)
+	if currentline.tokens (currentptr).token = token then
+	    currentptr += 1
+	elsif token = tany then
+	    if currentline.tokens (currentptr).token not = teol then
+		currentptr += 1
+	    end if
+	else
+	    parseerror ("'" + tokentext (token) + "' expected")
+
+	    if currentline.tokens (currentptr).token not = teol then
+		currentptr += 1
+	    end if
+	end if
+    end parsetoken
+
+    procedure parseshift
+	for i : currentptr .. maxlinetokens - 1
+	    currentline.tokens (i) := currentline.tokens (i + 1)
+	end for
+    end parseshift
+
+    forward procedure parseoperand
+	import currentline, var currentptr, parsetoken, parseerror,
+	    forward parsesubexpression, forward parsevariable,
+	    var ident
+
+    forward procedure parseoperator
+	import currentline, var currentptr, parsetoken, parseerror
+
+    forward procedure parsesubexpression
+	import currentline, var currentptr, parsetoken, parseoperand, 
+	parseoperator
+
+    procedure parsevariable
+	parsetoken (tidentifier)
+
+	if currentline.tokens (currentptr).token = tlparen then
+	    parsetoken (tlparen)
+	    parsesubexpression
+	    parsetoken (trparen)
+	end if
+    end parsevariable
+
+    procedure parseconstant
+	const token := currentline.tokens (currentptr).token
+
+	case token of
+	    label tidentifier, tinteger, tstringlit, ttrue, tfalse :
+		parsetoken (tany)
+	    label :
+		parseerror ("constant value expected")
+		parsetoken (tany)
+	end case
+    end parseconstant
+
+    body procedure parseoperand
+	const token := currentline.tokens (currentptr).token
+
+	if token = tplus or token = tminus or token = tnot then
+	    parsetoken (tany)
+	end if
+
+	case currentline.tokens (currentptr).token of
+	    label tinteger, tstringlit, ttrue, tfalse :
+		parsetoken (tany)
+	    label tlparen :
+		parsetoken (tlparen)
+		parsesubexpression
+		parsetoken (trparen)
+	    label tchr, tord, tlength :
+		parsetoken (tany)
+		parsetoken (tlparen)
+		parsesubexpression
+		parsetoken (trparen)
+	    label tidentifier :
+		parsevariable
+	    label :
+		parseerror ("expression expected")
+	end case
+    end parseoperand
+
+    body procedure parseoperator
+	case currentline.tokens (currentptr).token of
+	    label tplus, tminus, tstar, tdiv, tmod, 
+		    tgreater, tless, tequal, tgreaterequal, tlessequal,
+		    tand, tor :
+		parsetoken (tany)
+	    label tnot :
+		parsetoken (tnot)
+		parsetoken (tequal)
+	    label :
+		parseerror ("operator expected")
+		parsetoken (tany)
+	end case
+    end parseoperator
+	   
+    body procedure parsesubexpression
+	loop
+	    parseoperand
+	    const token := currentline.tokens (currentptr).token
+
+	    exit when token = teol or token = tsemicolon or token = tcomma or
+		token = trparen or token = tthen or token = tdotdot or 
+		token = tcomment
+
+	    parseoperator
+	end loop
+    end parsesubexpression
+
+    procedure parseexpression
+	parsesubexpression
+    end parseexpression
+
+    procedure parsesimpletype
+	case currentline.tokens (currentptr).token of
+	    label tint, tboolean, tstring :
+		parsetoken (tany)
+	    label tidentifier :
+		if currentline.tokens (currentptr + 1).token = tdotdot then
+		    parseconstant
+		    parsetoken (tdotdot)
+		    parseconstant
+		else
+		    parsetoken (tidentifier)
+		end if
+	    label tinteger :
+		parseconstant
+		parsetoken (tdotdot)
+		parseconstant
+	    label :
+		parseerror ("simple type expected")
+		parsetoken (tany)
+	end case
+    end parsesimpletype
+
+    procedure parsearraybounds
+	parseconstant
+	parsetoken (tdotdot)
+	parseconstant
+    end parsearraybounds
+
+    procedure parsearraytype
+	parsetoken (tarray)
+	parsearraybounds
+	parsetoken (tof)
+	parsesimpletype
+    end parsearraytype
+	    
+    procedure parsevar
+	parsetoken (tvar)
+	parsetoken (tidentifier)
+
+	if currentline.tokens (currentptr).token = tcolonequal then
+	    parsetoken (tcolonequal)
+	    parseexpression
+	else
+	    parsetoken (tcolon)
+
+	    if currentline.tokens (currentptr).token = tarray then
+		parsearraytype
+	    else
+		parsesimpletype
+	    end if
+
+	    if currentline.tokens (currentptr).token = tcolonequal then
+		parsetoken (tcolonequal)
+		parseexpression
+	    end if
+	end if
+    end parsevar
+
+    procedure parseconst
+	parsetoken (tconst)
+
+	if currentline.tokens (currentptr).token = tidentifier then
+	    parsetoken (tidentifier)
+	    parsetoken (tcolonequal)
+	    parseexpression
+	else
+	    parsetoken (tidentifier)
+	end if
+    end parseconst
+
+    procedure parsetype 
+	parsetoken (ttype)
+	parsetoken (tidentifier)
+	parsetoken (tcolon)
+	parsesimpletype
+    end parsetype
+
+    procedure parsecall
+	for decreasing i : maxlinetokens .. 2
+	    currentline.tokens (i) := currentline.tokens (i - 1)
+	end for
+
+	currentline.tokens (1).token := tcall
+	currentline.tokens (maxlinetokens).token := teol
+	currentptr += 1
+    end parsecall
+
+    procedure parseassignment
+	parsetoken (tcolonequal)
+	parseexpression
+    end parseassignment
+
+    procedure parseident
+	parsetoken (tidentifier)
+
+	var proccall := false
+
+	if currentline.tokens (currentptr).token = tlparen then
+	    parsetoken (tlparen)
+	    loop
+		parseexpression
+		exit when currentline.tokens (currentptr).token not = tcomma
+		parsetoken (tcomma)
+		proccall := true
+	    end loop
+	    parsetoken (trparen)
+	end if
+
+	if currentline.tokens (currentptr).token = tcolonequal and not proccall then
+	    parseassignment
+	else
+	    parsecall
+	end if
+    end parseident
+
+    procedure parseassert 
+	parsetoken (tassert)
+	parseexpression
+    end parseassert
+
+    procedure parsefor
+	parsetoken (tfor)
+	parsetoken (tidentifier)
+	parsetoken (tcolon)
+	parseexpression
+	parsetoken (tdotdot)
+	parseexpression
+    end parsefor
+
+    procedure parseif 
+	parsetoken (tif)
+	parseexpression
+	parsetoken (tthen)
+    end parseif
+
+    procedure parseput 
+	parsetoken (tput)
+
+	loop
+	    parseexpression
+	    exit when currentline.tokens (currentptr).token not = tcomma
+	    parsetoken (tcomma)
+	end loop
+
+	if currentline.tokens (currentptr).token = tdotdot then
+	    parsetoken (tdotdot)
+	end if
+    end parseput
+
+    procedure parseget 
+	parsetoken (tget)
+
+	loop
+	    parsevariable
+	    exit when currentline.tokens (currentptr).token not = tcomma
+	    parsetoken (tcomma)
+	end loop
+    end parseget
+
+    procedure parseprocedure 
+	parsetoken (tprocedure)
+	parsetoken (tidentifier)
+
+	if currentline.tokens (currentptr).token = tlparen then
+	    parsetoken (tlparen)
+
+	    loop
+		if currentline.tokens (currentptr).token = tvar then
+		    parsetoken (tvar)
+		end if
+
+		parsetoken (tidentifier)
+		parsetoken (tcolon)
+		parsesimpletype
+
+		exit when currentline.tokens (currentptr).token = trparen
+		    or currentline.tokens (currentptr).token = teol
+	    end loop
+
+	    parsetoken (trparen)
+	end if
+    end parseprocedure
+
+    procedure parseend 
+	case currentline.tokens (currentptr).token of
+	    label tendloop, tendif, tendfor :
+		parsetoken (tany)
+	    label tend :
+		parsetoken (tend)
+
+		case currentline.tokens (currentptr).token of
+		    label tidentifier :
+			parsetoken (tidentifier)
+		    label tloop :
+			currentline.tokens (currentptr - 1).token := tendloop
+			parseshift
+		    label tfor :
+			currentline.tokens (currentptr - 1).token := tendfor
+			parseshift
+		    label tif :
+			currentline.tokens (currentptr - 1).token := tendif
+			parseshift
+		    label :
+			parseerror ("missing end label")
+			parsetoken (tany)
+		end case
+	end case
+    end parseend
+
+    procedure parseelsif 
+	if currentline.tokens (currentptr).token = telseif then
+	    currentline.tokens (currentptr).token := telsif
+	end if
+
+	parsetoken (telsif)
+	parseexpression
+	parsetoken (tthen)
+    end parseelsif
+
+    procedure parseinvariant 
+	parseassert
+    end parseinvariant
+
+    procedure parseexit 
+	if currentline.tokens (currentptr).token = texit then
+	    parsetoken (texit)
+
+	    if currentline.tokens (currentptr).token = twhen then
+		currentline.tokens (currentptr-1).token := texitwhen
+		parseshift
+	    else
+		parsetoken (twhen)
+	    end if
+	else
+	    parsetoken (texitwhen)
+	end if
+
+	parseexpression
+    end parseexit
+
+
+    procedure parseline
+	if currentline.error then
+	    return
+	end if
+
+	currentptr := 1
+
+	loop
+	    case currentline.tokens (currentptr).token of
+		label tvar :
+		    parsevar
+		label tconst :
+		    parseconst
+		label ttype :
+		    parsetype
+		label tidentifier :
+		    parseident
+		label tassert :
+		    parseassert
+		label tif :
+		    parseif
+		label tloop :
+		    parsetoken (tloop)
+		label tfor :
+		    parsefor
+		label tput :
+		    parseput
+		label tget :
+		    parseget
+		label tprocedure :
+		    parseprocedure
+		label tend, tendif, tendloop, tendfor :
+		    parseend
+		label telsif, telseif :
+		    parseelsif
+		label telse :
+		    parsetoken (telse)
+		label tinvariant :
+		    parseinvariant
+		label texit, texitwhen :
+		    parseexit
+		label tcomment :
+		    parsetoken (tcomment)
+		label teol, tsemicolon :
+		    % null statement
+		label :
+		    % bad statement
+		    parseerror ("statement expected")
+	    end case
+
+	    exit when currentline.tokens (currentptr).token not = tsemicolon
+		or currentline.error
+
+	    parsetoken (tsemicolon)
+	end loop
+
+	if currentline.tokens (currentptr).token not = teol then
+	    parseerror ("end-of-line expected")
+	end if
+
+    end parseline
+
+end parse
+
+% include "runstack.i"
+% uTuring Execution Stack  V2.00
+% Copyright (c) 1984   James R. Cordy
+
+% Symbol Kinds
+const *firstsymbolkind := 0
+const *syconst := 0
+const *syvar := 1
+const *sytype := 2
+const *syprocedure := 3
+const *sytemp := 4
+const *sydescriptor := 5
+const *syelementdescriptor := 6
+const *lastsymbolkind := 6
+
+type *symbolkinds : firstsymbolkind .. lastsymbolkind
+
+% Type Kinds
+const *firsttypekind := 0
+const *tyint := 0
+const *tyreal := 1
+const *tyboolean := 2
+const *tystring := 3
+const *tyintarray := 4
+const *tyrealarray := 5
+const *tybooleanarray := 6
+const *tystringarray := 7
+const *typrocedure := 8
+const *lasttypekind := 8
+
+type *typekinds : firsttypekind .. lasttypekind
+
+% Scope Kinds
+const *firstscopekind := 0
+const *scmain := 0
+const *scprocedure := 1
+const *scfor := 2
+const *scloop := 3
+const *scif := 4
+const *scelse := 5
+const *lastscopekind := 5
+
+type *scopekinds : firstscopekind .. lastscopekind
+
+
+module runstack
+    import
+	var currentptr,
+	var ident,
+	error
+    export 
+	initscope,
+	scopekind,
+	scopeline, 
+	scopeident,
+	scopevalue,
+	pushscope,
+	popscope,
+	printvars,
+	runerror,
+	runkind,
+	runtype,
+	runident,
+	runlookup,
+	runpop,
+	runswap,
+	runpopint,
+	runpopboolean,
+	runpopstring,
+	runpushint,
+	runpushboolean,
+	runpushstring,
+	runpushdesc,
+	runsubscript,
+	runevaluate,
+	runassign,
+	runallocate,
+	runallocatearray
+
+    const scalartype : array tyintarray .. tystringarray of typekinds :=
+	init (tyint, tyreal, tyboolean, tystring)
+
+    const arraytype : array tyint .. tystring of typekinds :=
+	init (tyintarray, tyrealarray, tybooleanarray, tystringarray)
+
+
+    % Uninitialized Values
+    const uninitint := -2147483647
+    const uninitreal := 1e-38
+    const uninitstring := "XXX"
+
+
+    % Run Stack
+    type runstacktype :
+	record
+	    ident : int
+	    kind : symbolkinds
+	    typekind : typekinds
+	    upperbound, lowerbound : int
+	    intvalue : int
+	    realvalue : real
+	    stringvalue : string
+	    indirect : int
+	end record
+
+    var runstack : array 0 .. maxrunstackdepth of runstacktype
+    var runtop := 0
+
+    const nullrunstackentry : runstacktype :=
+	init (0, syconst, tyint, 0, 0, uninitint, uninitreal, uninitstring, 0)
+
+    runstack (0) := nullrunstackentry
+
+
+    % Array Stack
+    var arraystack : array 0 .. maxarraystackdepth of runstacktype
+
+    var arraytop := 0
+    arraystack (0) := nullrunstackentry
+
+
+    % Scope Stack
+
+    var scopestack : array 1 .. maxscopestackdepth of
+	record
+	    kind : scopekinds
+	    line : int
+	    ident : int
+	    value : int
+	    runbase, arraybase : int
+	end record
+
+    var scopetop := 0
+
+
+    % Execution Error Handling
+
+    procedure runerror (msg : string)
+	if currentptr > 1 then
+	    currentptr -= 1
+	    error ("RUN ERROR : " + msg)
+	    currentptr += 1
+	else
+	    error ("RUN ERROR : " + msg)
+	end if
+    end runerror
+
+
+    % Scope Operations
+
+    procedure initscope
+	runtop := 0
+	arraytop := 0
+	scopetop := 0
+    end initscope
+
+    procedure pushscope (kind : scopekinds, line, ident, value : int)
+	if scopetop < maxscopestackdepth then
+	    scopetop += 1
+	    bind var s to scopestack (scopetop)
+	    s.kind := kind
+	    s.line := line
+	    s.ident := ident
+	    s.value := value
+	    s.runbase := runtop
+	    s.arraybase := arraytop
+	else
+	    runerror ("nesting too deep")
+	end if
+    end pushscope
+
+    function scopekind : scopekinds
+	result scopestack (scopetop).kind
+    end scopekind
+
+    function scopeline : int
+	result scopestack (scopetop).line
+    end scopeline
+
+    function scopeident : int
+	result scopestack (scopetop).ident
+    end scopeident
+
+    function scopevalue : int
+	result scopestack (scopetop).value
+    end scopevalue
+
+    procedure popscope
+	bind var s to scopestack (scopetop)
+	runtop := s.runbase
+	arraytop := s.arraybase
+	scopetop -= 1
+    end popscope
+
+
+    % Run Stack Operations
+
+    %% 
+    procedure rundump
+	put "run stack dump"
+	for decreasing i : runtop .. 1
+	    bind var r to runstack (i)
+	    put "ident ",r.ident,"  kind ",r.kind, "  type ",r.typekind,"  value "..
+	    case r.kind of
+		label syvar, syconst, sytemp:
+		    case r.typekind of
+			label tyint :
+			    put r.intvalue
+			label tyreal :
+			    put r.realvalue
+			label tystring :
+			    put "\"",r.stringvalue,"\""
+			label tyintarray, tyrealarray, tybooleanarray, tystringarray:
+			    put r.indirect, "  lower ", r.lowerbound, "  upper ", r.upperbound
+			label :
+			    put ""
+		    end case
+		label :
+		    put r.indirect
+	    end case
+	end for
+	put "end dump"
+    end rundump
+    %%
+
+    function runlookup (ident : int) : int
+	%% put "lookup ",ident ..
+	var proctop := scopetop
+	loop
+	    exit when scopestack (proctop).kind = scprocedure
+	    proctop -= 1
+	end loop
+
+	for decreasing ri : runtop .. scopestack (proctop).runbase + 1
+	    if runstack (ri).ident = ident then
+		%% put "  result ",ri
+		result ri
+	    end if
+	end for
+
+	if scopetop > 1 then
+	    for ri : 1 .. scopestack (2).runbase
+		if runstack (ri).ident = ident then
+		    %% put "  result ",ri
+		    result ri
+		end if
+	    end for
+	end if
+
+	%% put "  result ",0
+	result 0
+    end runlookup
+
+    function runtype : int
+	result runstack (runtop).typekind
+    end runtype
+
+    function runkind : int
+	if runstack (runtop).kind = sydescriptor then
+	    result runstack (runstack (runtop).indirect).kind
+	elsif runstack (runtop).kind = syelementdescriptor then
+	    result syvar
+	else
+	    result runstack (runtop).kind
+	end if
+    end runkind
+
+    function runident : int
+	result runstack (runtop).ident
+    end runident
+
+    procedure runpop
+	runtop -= 1
+	%% rundump
+    end runpop
+
+    procedure runswap
+	%% begin
+	bind var r1 to runstack (runtop), var r2 to runstack (runtop -1)
+	const t := r1
+	r1 := r2
+	r2 := t
+	%% end
+	%% rundump
+    end runswap
+
+    procedure runpopint (var value : int)
+	assert runstack (runtop).kind = sytemp
+
+	if runstack (runtop).typekind = tyint then
+	    value := runstack (runtop).intvalue
+
+	    if value = uninitint then
+		runerror ("uninitialized integer variable")
+		value := 1
+	    end if
+	else
+	    runerror ("integer value required")
+	    value := 1
+	end if
+
+	runtop -= 1
+	%% rundump
+    end runpopint
+
+    procedure runpopreal (var value : real)
+	assert runstack (runtop).kind = sytemp
+
+	if runstack (runtop).typekind = tyreal then
+	    value := runstack (runtop).realvalue
+
+	    if value = uninitreal then
+		runerror ("uninitialized real variable")
+		value := 1
+	    end if
+	else
+	    runerror ("real value required")
+	    value := 1
+	end if
+
+	runtop -= 1
+	%% rundump
+    end runpopreal
+
+    procedure runpopboolean (var value : int)
+	assert runstack (runtop).kind = sytemp
+
+	if runstack (runtop).typekind = tyboolean then
+	    value := runstack (runtop).intvalue
+
+	    if value = uninitint then
+		runerror ("uninitialized boolean variable")
+		value := 1
+	    end if
+	else
+	    runerror ("boolean value required")
+	    value := 1
+	end if
+
+	runtop -= 1
+	%% rundump
+    end runpopboolean
+
+    procedure runpopstring (var value : string)
+	assert runstack (runtop).kind = sytemp
+
+	if runstack (runtop).typekind = tystring then
+	    value := runstack (runtop).stringvalue
+
+	    if value = uninitstring then
+		runerror ("uninitialized string variable")
+		value := "?"
+	    end if
+	else
+	    runerror ("string value required")
+	    value := "?"
+	end if
+
+	runtop -= 1
+	%% rundump
+    end runpopstring
+
+    procedure runpushint (value : int)
+	if runtop < maxrunstackdepth then
+	    runtop += 1
+	    bind var r to runstack (runtop)
+	    r.ident := 0
+	    r.kind := sytemp
+	    r.typekind := tyint
+
+	    if value >= -maxint and value <= maxint then
+		r.intvalue := value
+	    else
+		runerror ("integer overflow")
+		r.intvalue := 1
+	    end if
+	else
+	    runerror ("out of memory")
+	end if
+	%% rundump
+    end runpushint
+
+    procedure runpushreal (value : real)
+	if runtop < maxrunstackdepth then
+	    runtop += 1
+	    bind var r to runstack (runtop)
+	    r.ident := 0
+	    r.kind := sytemp
+	    r.typekind := tyreal
+
+	    if value >= -maxreal and value <= maxreal then
+		r.realvalue := value
+	    else
+		runerror ("real overflow")
+		r.realvalue := 1
+	    end if
+	else
+	    runerror ("out of memory")
+	end if
+	%% rundump
+    end runpushreal
+
+    procedure runpushboolean (value : int)
+	if runtop < maxrunstackdepth then
+	    runtop += 1
+	    bind var r to runstack (runtop)
+	    r.ident := 0
+	    r.kind := sytemp
+	    r.typekind := tyboolean
+	    r.intvalue := value
+	else
+	    runerror ("out of memory")
+	end if
+	%% rundump
+    end runpushboolean
+
+    procedure runpushstring (value : string)
+	if runtop < maxrunstackdepth then
+	    runtop += 1
+	    bind var r to runstack (runtop)
+	    r.ident := 0
+	    r.kind := sytemp
+	    r.typekind := tystring
+
+	    if length (value) <= maxstringlength then
+		r.stringvalue := value
+	    else
+		runerror ("string length overflow")
+		r.stringvalue := "?"
+	    end if
+	else
+	    runerror ("out of memory")
+	end if
+	%% rundump
+    end runpushstring
+
+    procedure runpushdesc (identindex : int)
+	if runtop < maxrunstackdepth then
+	    const index_ := runlookup (identindex)
+
+	    if index_ = 0 then
+		runerror ("undeclared identifier")
+	    end if
+
+	    runtop += 1
+	    runstack (runtop) := runstack (index_)
+
+	    bind var r to runstack (runtop)
+	    r.ident := 0
+	    r.kind := sydescriptor
+	    r.indirect := index_
+	else
+	    runerror ("out of memory")
+	end if
+	%% rundump
+    end runpushdesc
+
+    procedure runsubscript
+	var subscript : int
+	runpopint (subscript)
+
+	const typekind := runstack (runtop).typekind
+
+	if typekind = tyintarray or typekind = tyrealarray or
+		typekind = tybooleanarray or typekind = tystringarray then
+	    bind var r to runstack (runtop)
+	    r.kind := syelementdescriptor
+	    r.typekind := scalartype (typekind)
+
+	    if subscript >= r.lowerbound and subscript <= r.upperbound then
+		r.indirect := r.indirect + subscript - r.lowerbound
+	    else
+		runerror ("subscript out of range")
+		r.indirect := 0
+	    end if
+	else
+	    runerror ("illegal subscript")
+	    bind var r to runstack (runtop)
+	    r.kind := sydescriptor
+	    r.typekind := scalartype (typekind)
+	    r.indirect := 0
+	end if
+    end runsubscript
+
+    procedure runevaluate
+	if runstack (runtop).kind = sydescriptor then
+	    runstack (runtop) := runstack (runstack (runtop).indirect)
+	elsif runstack (runtop).kind = syelementdescriptor then
+	    runstack (runtop) := arraystack (runstack (runtop).indirect)
+	else
+	    runerror ("variable reference required")
+	    runstack (runtop) := nullrunstackentry
+	end if
+
+	runstack (runtop).kind := sytemp
+	%% rundump
+    end runevaluate
+
+    procedure runassign
+	assert runtop >= 2
+
+	case runstack (runtop - 1).typekind of
+	    label tyint :
+		var v : int
+		runpopint (v)
+
+		if runstack (runtop).kind = sydescriptor then
+		    runstack (runstack (runtop).indirect).intvalue := v
+		elsif runstack (runtop).kind = syelementdescriptor then
+		    arraystack (runstack (runtop).indirect).intvalue := v
+		else
+		    runerror ("illegal assignment")
+		end if
+
+		runpop
+
+	    label tyreal :
+		var v : real
+		runpopreal (v)
+
+		if runstack (runtop).kind = sydescriptor then
+		    runstack (runstack (runtop).indirect).realvalue := v
+		elsif runstack (runtop).kind = syelementdescriptor then
+		    arraystack (runstack (runtop).indirect).realvalue := v
+		else
+		    runerror ("illegal assignment")
+		end if
+
+		runpop
+
+	    label tyboolean :
+		var v : int
+		runpopboolean (v)
+
+		if runstack (runtop).kind = sydescriptor then
+		    runstack (runstack (runtop).indirect).intvalue := v
+		elsif runstack (runtop).kind = syelementdescriptor then
+		    arraystack (runstack (runtop).indirect).intvalue := v
+		else
+		    runerror ("illegal assignment")
+		end if
+
+		runpop
+
+	    label tystring :
+		var v : string
+		runpopstring (v)
+
+		if runstack (runtop).kind = sydescriptor then
+		    runstack (runstack (runtop).indirect).stringvalue := v
+		elsif runstack (runtop).kind = syelementdescriptor then
+		    arraystack (runstack (runtop).indirect).stringvalue := v
+		else
+		    runerror ("illegal assignment")
+		end if
+
+		runpop
+
+	    label :
+		runerror ("illegal assignment")
+		runpop
+		runpop
+	end case
+
+	%% rundump
+    end runassign
+	
+    procedure runallocate (ident : int, kind : int)
+	% top element of stack is type
+	if runtop < maxrunstackdepth then
+	    runtop += 1
+	    bind var ra to runstack (runtop), var rt to runstack (runtop-1)
+	    ra := nullrunstackentry
+	    ra.ident := ident
+	    ra.kind := kind
+	    ra.typekind := rt.typekind
+	else
+	    runerror ("out of memory")
+	end if
+	%% rundump
+    end runallocate
+
+    procedure runallocatearray (ident : int, kind : int)
+	%% rundump
+
+	% stack is ... lower, upper, elementtype
+	const elementtype := runtype
+	runallocate (ident, kind)
+	runstack (runtop).typekind := arraytype (elementtype)
+
+	% ... lower, upper, elementtype, array
+	var lowerbound, upperbound : int
+
+	if runstack (runtop - 3).typekind = tyint and
+		runstack (runtop - 2).typekind = tyint then
+	    lowerbound := runstack (runtop - 3).intvalue
+	    upperbound := runstack (runtop - 2).intvalue
+	else
+            runerror ("array bounds must be integers")
+	    lowerbound := 1
+	    upperbound := 10
+	end if
+
+	if lowerbound > upperbound then
+	    runerror ("array lower bound exceeds upper")
+	    lowerbound := 1
+	    upperbound := 10
+	end if
+
+	runstack (runtop).lowerbound := lowerbound
+	runstack (runtop).upperbound := upperbound
+
+	const arraysize := upperbound - lowerbound + 1
+
+	if arraytop + arraysize <= maxarraystackdepth then
+	    for i : 1 .. arraysize
+		arraytop += 1
+		bind var a to arraystack (arraytop)
+		a := nullrunstackentry
+		a.kind := syvar
+		a.typekind := elementtype
+	    end for
+	else
+	    runerror ("out of array memory")
+	end if
+
+	%% rundump
+    end runallocatearray
+
+    procedure printvalue (s : runstacktype)
+	case s.typekind of
+	    label tyint :
+		if s.intvalue = uninitint then
+		    put "uninitialized" ..
+		else
+		    put s.intvalue ..
+		end if
+	    label tyboolean :
+		if s.intvalue = uninitint then
+		    put "uninitialized" ..
+		elsif s.intvalue = 1 then
+		    put "true" ..
+		else
+		    put "false" ..
+		end if
+	    label tystring :
+		if s.stringvalue = uninitstring then
+		    put "uninitialized" ..
+		else
+		    put "\"", s.stringvalue, "\"" ..
+		end if
+	    label :
+	end case
+    end printvalue
+
+    const kindname : array symbolkinds of string (10) := 
+	init ("const", "var", "type", "procedure", "", "", "")
+
+    const typename : array typekinds of string (20) := 
+	init ("int", "real", "boolean", "string",
+	    "array of int", "array of real", "array of boolean",
+	    "array of string", "")
+
+    procedure printvars
+	for decreasing i : runtop .. 1
+	    bind s to runstack (i)
+
+	    if s.ident not = 0 and s.kind <= syprocedure then
+		put kindname (s.kind),
+		    " ", ident.identident (s.ident),
+		    " : ", typename (s.typekind), "/t" ..
+		printvalue (s)
+		put ""
+	    end if
+	end for
+    end printvars
+
+end runstack
+
+% include "operator.i"
+% uTuring Operator Stack  V1.00
+% Copyright (c) 1984  James R. Cordy
+
+% uTuring Operators
+const *firstoperator := 0
+const *opendexpression := 0
+const *oplparen := 1
+const *oprparen := 2
+const *opor := 3
+const *opand := 4
+const *opnot := 5
+const *opgreater := 6
+const *opequal := 7
+const *opless := 8
+const *opgreaterequal := 9
+const *oplessequal := 10
+const *opnotequal := 11
+const *opadd := 12
+const *opsubtract := 13
+const *opmultiply := 14
+const *opdiv := 15
+const *opmod := 16
+const *opplus := 17
+const *opminus := 18
+const *lastoperator := 18
+
+type *operators : firstoperator .. lastoperator
+
+% Operator Precedence
+const *operatorprecedence : array operators of int :=
+    init (0, 1, 1, 2, 3, 4, 5, 5, 5, 5, 5, 5, 6, 6, 7, 7, 7, 8, 8)
+
+% Token to Operator Maps
+const *binaryoperator : array tdiv .. tnotequal of operators :=
+    init (opdiv, opmod, opand, opor, 0, 0, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, opadd, opsubtract, opmultiply, opgreater, opless,
+	opequal, opgreaterequal, oplessequal, opnotequal)
+
+const *unaryoperator : array tnot .. tminus of operators :=
+    init (opnot, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, opplus, opminus)
+
+module operator
+    import
+	var runstack
+    export
+	operatorexec
+
+    % Operator Stack
+    var operatorstack : array 1 .. maxoperatorstackdepth of operators
+    var operatortop := 0
+
+    procedure operatorpush (operator : operators)
+	if operatortop < maxoperatorstackdepth then
+	    operatortop += 1
+	    operatorstack (operatortop) := operator
+	else
+	    runstack.runerror ("expression too complex")
+	end if
+    end operatorpush
+
+    procedure operatorpop
+	operatortop -= 1
+    end operatorpop
+
+    procedure operatorcompare (var compareresult : operators)
+	case runstack.runtype of
+	    label tyint :
+		var v1, v2 : int
+		runstack.runpopint (v1)
+		runstack.runpopint (v2)
+
+		if v2 = v1 then
+		    compareresult := opequal
+		elsif v2 > v1 then
+		    compareresult := opgreater
+		else
+		    compareresult := opless
+		end if
+
+	    label tyboolean :
+		var v1, v2 : int
+		runstack.runpopboolean (v1)
+		runstack.runpopboolean (v2)
+
+		if v2 = v1 then
+		    compareresult := opequal
+		elsif v2 > v1 then
+		    compareresult := opgreater
+		else
+		    compareresult := opless
+		end if
+
+	    label tystring :
+		var v1, v2 : string
+		runstack.runpopstring (v1)
+		runstack.runpopstring (v2)
+
+		if v2 = v1 then
+		    compareresult := opequal
+		elsif v2 > v1 then
+		    compareresult := opgreater
+		else
+		    compareresult := opless
+		end if
+	end case
+    end operatorcompare
+
+    procedure operatorrun (operator : operators)
+	var v1, v2 : int
+	var s1, s2 : string
+	var compareresult : operators
+
+	case operator of
+	    label opor :
+		runstack.runpopboolean (v1)
+		runstack.runpopboolean (v2)
+
+		if v1 = 1 or v2 = 1 then
+		    runstack.runpushboolean (1)
+		else
+		    runstack.runpushboolean (0)
+		end if
+
+	    label opand :
+		runstack.runpopboolean (v1)
+		runstack.runpopboolean (v2)
+
+		if v1 = 1 and v2 = 1 then
+		    runstack.runpushboolean (1)
+		else
+		    runstack.runpushboolean (0)
+		end if
+
+	    label opnot :
+		runstack.runpopboolean (v1)
+
+		if v1 = 1 then
+		    runstack.runpushboolean (0)
+		else
+		    runstack.runpushboolean (1)
+		end if
+
+	    label opgreater, opless, opequal :
+		operatorcompare (compareresult)
+
+		if compareresult = operator then
+		    runstack.runpushboolean (1)
+		else
+		    runstack.runpushboolean (0)
+		end if
+
+	    label opgreaterequal :
+		operatorcompare (compareresult)
+
+		if compareresult not= opless then
+		    runstack.runpushboolean (1)
+		else
+		    runstack.runpushboolean (0)
+		end if
+
+	    label oplessequal :
+		operatorcompare (compareresult)
+
+		if compareresult not= opgreater then
+		    runstack.runpushboolean (1)
+		else
+		    runstack.runpushboolean (0)
+		end if
+
+	    label opnotequal :
+		operatorcompare (compareresult)
+
+		if compareresult not= opequal then
+		    runstack.runpushboolean (1)
+		else
+		    runstack.runpushboolean (0)
+		end if
+
+	    label opadd :
+		if runstack.runtype = tystring then
+		    runstack.runpopstring (s1)
+		    runstack.runpopstring (s2)
+		    runstack.runpushstring (s2 + s1)
+		else
+		    runstack.runpopint (v1)
+		    runstack.runpopint (v2)
+		    runstack.runpushint (v2 + v1)
+		end if
+
+	    label opsubtract :
+		runstack.runpopint (v1)
+		runstack.runpopint (v2)
+		runstack.runpushint (v2 - v1)
+
+	    label opmultiply :
+		runstack.runpopint (v1)
+		runstack.runpopint (v2)
+		 
+		if v1 not = 0 and v2 < maxint div v1 then
+		    runstack.runpushint (v2 * v1)
+		else
+		    runstack.runerror ("integer multiply overflow")
+		    runstack.runpushint (1)
+		end if
+
+	    label opdiv :
+		runstack.runpopint (v1)
+		runstack.runpopint (v2)
+
+		if v1 not = 0 then
+		    runstack.runpushint (v2 div v1)
+		else
+		    runstack.runerror ("integer div by zero")
+		    runstack.runpushint (1)
+		end if
+
+	    label opmod :
+		runstack.runpopint (v1)
+		runstack.runpopint (v2)
+
+		if v1 not = 0 then
+		    runstack.runpushint (v2 mod v1)
+		else
+		    runstack.runerror ("integer mod by zero")
+		    runstack.runpushint (1)
+		end if
+
+	    label opplus :
+		runstack.runpopint (v1)
+		runstack.runpushint (v1)
+
+	    label opminus :
+		runstack.runpopint (v1)
+		runstack.runpushint (- v1)
+	    label :
+		put "assertion failure with operatorrun of ", operator
+	end case
+    end operatorrun
+
+    procedure operatorexec (operator : operators)
+	case operator of
+	    label oplparen :
+		operatorpush (oplparen)
+	    label oprparen :
+		loop
+		    exit when operatorstack (operatortop) = oplparen
+		    operatorrun (operatorstack (operatortop))
+		    operatorpop
+		end loop
+		operatorpop
+	    label opendexpression :
+		loop
+		    exit when operatortop = 0
+		    operatorrun (operatorstack (operatortop))
+		    operatorpop
+		end loop
+	    label :
+		loop
+		    exit when operatortop = 0 or
+			operatorprecedence (operatorstack (operatortop))
+			    < operatorprecedence (operator)
+		    operatorrun (operatorstack (operatortop))
+		    operatorpop
+		end loop
+		operatorpush (operator)
+	end case
+    end operatorexec
+
+end operator
+
+% include "exec.i"
+% uTuring Line Execution  V1.00
+% Copyright (c) 1984  James R. Cordy
+
+module exec
+    import
+	var lines,	% lines in program
+	var currentnum,	% line number of current line
+	var currentline,% current line of interest
+	var currentptr,	% pointer to current token in currentline
+	error,		% error message printer
+	var ident,	% identifier table
+	var runstack,	% execution stack
+	var operator 	% operator stack
+
+    export
+	execline	% execute one line
+
+    procedure execerror (msg : string)
+	if currentptr > 1 then 
+	    currentptr -= 1
+	    error ("RUN ERROR : " + msg)
+	    currentptr += 1
+	else
+	    error ("RUN ERROR : " + msg)
+	end if
+    end execerror
+
+    forward procedure execoperand
+	import currentline, var currentptr, execerror,
+	    forward execsubexpression, forward execvariable,
+	    var runstack, var operator, var ident
+
+    forward procedure execoperator
+	import currentline, var currentptr, execerror, var operator
+
+    forward procedure execsubexpression
+	import currentline, var currentptr, execoperand, execoperator,
+	    var runstack, var operator
+
+    procedure execvariable
+	currentptr += 1 % (tidentifier)
+	runstack.runpushdesc (currentline.tokens (currentptr-1).value)
+
+	if runstack.runkind = syvar or runstack.runkind = syconst then
+
+	    if currentline.tokens (currentptr).token = tlparen then
+		currentptr += 1 % (tlparen)
+
+		if runstack.runkind = syvar and
+			(runstack.runtype = tyintarray or 
+			 runstack.runtype = tystringarray or
+			 runstack.runtype = tybooleanarray) then
+		    execsubexpression
+		    runstack.runsubscript
+		else
+		    execerror ("subscripted identifier is not an array")
+		    execsubexpression
+		    runstack.runpop
+		end if
+
+		currentptr += 1 % (trparen)
+	    end if
+
+	else
+	    execerror ("variable reference expected")
+	    runstack.runpop
+	    runstack.runpushdesc (0)
+	end if
+    end execvariable
+
+    procedure execconstant
+	const token := currentline.tokens (currentptr).token
+
+	case token of
+	    label tidentifier :
+		currentptr += 1 % (tidentifier)
+		runstack.runpushdesc (currentline.tokens (currentptr-1).value)
+
+		if runstack.runkind = syconst then
+		    runstack.runevaluate
+		else
+		    execerror ("constant expected")
+		    runstack.runpop
+		    runstack.runpushint (1)
+		end if
+	    label tinteger :
+		currentptr += 1 % (tinteger)
+		runstack.runpushint (currentline.tokens (currentptr-1).value)
+	    label tstringlit :
+		currentptr += 1 % (tstringlit)
+		var stext := 
+		    ident.identident (currentline.tokens (currentptr-1).value)
+		stext := stext (2 .. length (stext) - 1)
+		runstack.runpushstring (stext)
+	    label ttrue :
+		currentptr += 1 % (ttrue)
+		runstack.runpushboolean (1)
+	    label tfalse :
+		currentptr += 1 % (tfalse)
+		runstack.runpushboolean (0)
+	    label :
+		currentptr += 1 % (tany)
+		execerror ("constant value expected")
+		runstack.runpushint (1)
+	end case
+    end execconstant
+
+    body procedure execoperand
+	const token := currentline.tokens (currentptr).token
+
+	if token = tplus or token = tminus or token = tnot then
+	    currentptr += 1 % (tany)
+	    operator.operatorexec
+		(unaryoperator (currentline.tokens (currentptr-1).token))
+	end if
+
+	case currentline.tokens (currentptr).token of
+	    label tinteger :
+		currentptr += 1 % (tinteger)
+		runstack.runpushint (currentline.tokens (currentptr-1).value)
+	    label tstringlit :
+		currentptr += 1 % (tstringlit)
+		var stext :=
+		    ident.identident (currentline.tokens (currentptr-1).value)
+		stext := stext (2 .. length (stext) - 1)
+		runstack.runpushstring (stext)
+	    label ttrue :
+		currentptr += 1 % (ttrue)
+		runstack.runpushboolean (1)
+	    label tfalse :
+		currentptr += 1 % (tfalse)
+		runstack.runpushboolean (0)
+	    label tlparen :
+		currentptr += 1 % (tlparen)
+		operator.operatorexec (oplparen)
+		execsubexpression
+		currentptr += 1 % (trparen)
+		operator.operatorexec (oprparen)
+	    label tchr :
+		currentptr += 1 % (tchr)
+		currentptr += 1 % (tlparen)
+		execsubexpression
+		var v : int
+		runstack.runpopint (v)
+		runstack.runpushstring (chr(v))
+		currentptr += 1 % (trparen)
+	    label tord :
+		currentptr += 1 % (tord)
+		currentptr += 1 % (tlparen)
+		execsubexpression
+		var v : string
+		runstack.runpopstring (v)
+
+		if length (v) = 1 then
+		    runstack.runpushint (ord (v))
+		else
+		    execerror ("length of string passed to ord is not 1")
+		    runstack.runpushint (1)
+		end if
+		currentptr += 1 % (trparen)
+	    label tlength :
+		currentptr += 1 % (tlength)
+		currentptr += 1 % (tlparen)
+		execsubexpression
+		var v : string
+		runstack.runpopstring (v)
+		runstack.runpushint (length (v))
+		currentptr += 1 % (trparen)
+	    label tidentifier :
+		execvariable
+		runstack.runevaluate
+	end case
+    end execoperand
+
+    body procedure execoperator
+	case currentline.tokens (currentptr).token of
+	    label tplus, tminus, tstar, tdiv, tmod, 
+		    tgreater, tless, tequal, tgreaterequal, tlessequal,
+		    tand, tor :
+		currentptr += 1 % (tany)
+		operator.operatorexec 
+		    (binaryoperator (currentline.tokens (currentptr-1).token))
+	    label tnot :
+		currentptr += 1 % (tnot)
+		currentptr += 1 % (tequal)
+		operator.operatorexec (opnotequal)
+	    label :
+		currentptr += 1 % (tany)
+		execerror ("operator expected")
+		operator.operatorexec (opadd)
+	end case
+    end execoperator
+	   
+    body procedure execsubexpression
+	loop
+	    execoperand
+	    const token := currentline.tokens (currentptr).token
+
+	    exit when token = teol or token = tsemicolon or token = tcomma or
+		token = trparen or token = tthen or token = tdotdot or 
+		token = tcomment
+
+	    execoperator
+	end loop
+    end execsubexpression
+
+    procedure execexpression
+	execsubexpression
+	operator.operatorexec (opendexpression)
+    end execexpression
+
+    procedure execsimpletype
+	case currentline.tokens (currentptr).token of
+	    label tint :
+		currentptr += 1 % (tint)
+		runstack.runpushint (1)
+	    label tboolean :
+		currentptr += 1 % (tboolean)
+		runstack.runpushboolean (1)
+	    label tstring :
+		currentptr += 1 % (tstring)
+		runstack.runpushstring ("?")
+	    label tidentifier :
+		currentptr += 1 % (tidentifier)
+
+		if currentline.tokens (currentptr).token = tdotdot then
+		    currentptr -= 1 % (put back tidentifier)
+		    var v : int
+		    execconstant
+		    runstack.runpopint (v)
+		    currentptr += 1 % (tdotdot)
+		    execconstant
+		    runstack.runpopint (v)
+		    runstack.runpushint (1)
+		else
+		    runstack.runpushdesc
+			(currentline.tokens (currentptr-1).value)
+
+		    if runstack.runkind not = sytype then
+			execerror ("type name expected")
+			runstack.runpop
+			runstack.runpushint (1)
+		    end if
+		end if
+	    label tinteger :
+		var v : int
+		execconstant
+		runstack.runpopint (v)
+		currentptr += 1 % (tdotdot)
+		execconstant
+		runstack.runpopint (v)
+		runstack.runpushint (1)
+	    label :
+		currentptr += 1 % (tany)
+		execerror ("simple type expected")
+		runstack.runpushint (1)
+	end case
+    end execsimpletype
+
+    procedure execarraybounds
+	var v : int
+	execconstant
+	currentptr += 1 % (tdotdot)
+	execconstant
+    end execarraybounds
+
+    procedure execarraytype
+	currentptr += 1 % (tarray)
+	execarraybounds
+	currentptr += 1 % (tof)
+	execsimpletype
+    end execarraytype
+	    
+    procedure execvar
+	currentptr += 1 % (tvar)
+	const ident := currentline.tokens (currentptr).value
+	currentptr += 1 % (tidentifier)
+
+	if runstack.runlookup (ident) not = 0 then
+	    execerror ("identifier previously declared")
+
+	else
+	    if currentline.tokens (currentptr).token = tcolonequal then
+		currentptr += 1 % (tcolonequal)
+		execexpression
+		runstack.runallocate (ident, syvar)
+		runstack.runswap
+		runstack.runpushdesc (ident)
+		runstack.runswap
+		runstack.runassign
+	    else
+		currentptr += 1 % (tcolon)
+
+		if currentline.tokens (currentptr).token = tarray then
+		    execarraytype
+		    runstack.runallocatearray (ident, syvar)
+		    runstack.runswap
+		    runstack.runpop	% type
+		    runstack.runswap
+		    runstack.runpop	% upper
+		    runstack.runswap
+		    runstack.runpop	% lower
+		else
+		    execsimpletype
+		    runstack.runallocate (ident, syvar)
+		    runstack.runswap
+		    runstack.runpop	% type
+		end if
+
+		if currentline.tokens (currentptr).token = tcolonequal then
+		    currentptr += 1 % (tcolonequal)
+		    runstack.runpushdesc (ident)
+		    execexpression
+		    runstack.runassign
+		end if
+	    end if
+	end if
+    end execvar
+
+    procedure execconst
+	currentptr += 1 % (tconst)
+	const ident := currentline.tokens (currentptr).value
+	currentptr += 1 % (tidentifier)
+
+	if runstack.runlookup (ident) not = 0 then
+	    execerror ("identifier previously declared")
+	else
+	    currentptr += 1 % (tcolonequal)
+	    execexpression
+	    runstack.runallocate (ident, syconst)
+	    runstack.runswap
+	    runstack.runpushdesc (ident)
+	    runstack.runswap
+	    runstack.runassign
+	end if
+    end execconst
+
+    procedure exectype 
+	currentptr += 1 % (ttype)
+	const ident := currentline.tokens (currentptr).value
+	currentptr += 1 % (tidentifier)
+
+	if runstack.runlookup (ident) not = 0 then
+	    execerror ("identifier previously declared")
+	else
+	    currentptr += 1 % (tcolon)
+	    execsimpletype
+	    runstack.runallocate (ident, sytype)
+	    runstack.runswap
+	    runstack.runpop
+	end if
+    end exectype
+
+    procedure execcall
+	currentptr += 1 % (tcall)
+	currentptr += 1 % (tidentifier)
+	execerror ("procedures not yet implemented")
+	runstack.runpushdesc (currentline.tokens (currentptr).value)
+	runstack.runpop
+	%% runstack.runpushint (execlinenum)
+	%% execlinenum := runstack.runupper
+	%% const nparms := runstack.runlower
+	%% pushscope
+
+	%% if nparms > 0 then
+	    %% currentptr += 1 % (tlparen)
+
+	    %% var parm := 1
+	    %% loop
+		%% runstack.runpushparameter (i)
+		%% runstack.runpushdesc (runstack.runident)
+		%% execexpression
+		%% runstack.runassign
+		%% exit when parm = nparms
+		%% currentptr += 1 % (tcomma)
+		%% parm += 1
+	    %% end loop
+
+	    %% currentptr += 1 % (trparen)
+	%% end if
+    end execcall
+
+    procedure execassignment
+	execvariable
+	const kind := runstack.runkind
+	currentptr += 1 % (tcolonequal)
+	execexpression
+
+	if kind = syvar then
+	    runstack.runassign
+	else
+	    execerror ("assignment target is not a variable")
+	end if
+    end execassignment
+
+    procedure execassert 
+	currentptr += 1 % (tassert)
+	execexpression
+
+	var v : int
+	runstack.runpopboolean (v)
+
+	if v not = 1 then
+	    execerror ("assertion failed")
+	end if
+    end execassert
+
+    procedure execloop
+	currentptr += 1 % (tloop)
+
+	if currentnum = 0 then
+	    execerror ("immediate loop")
+	else
+	    runstack.pushscope (scloop, currentnum, 0, 0)
+	end if
+    end execloop
+
+    procedure execskiptoend (begintoken, endtoken : int)
+	const oldnum := currentnum
+	loop
+	    exit when currentnum = maxlines
+	    currentnum += 1
+	    exit when lines (currentnum).tokens (1).token = endtoken
+
+	    if lines (currentnum).tokens (1).token = begintoken then
+		execskiptoend (begintoken, endtoken)
+	    end if
+	end loop
+
+	if lines (currentnum).tokens (1).token not = endtoken then
+	    currentnum := oldnum
+	    currentptr := 1
+	    execerror ("missing " + tokentext (endtoken))
+	end if
+    end execskiptoend
+
+    procedure execexit 
+	currentptr += 1 % (texitwhen)
+
+	if currentnum = 0 then
+	    execerror ("immediate loop")
+	elsif runstack.scopekind not = scloop then
+	    execerror ("exit without loop")
+	else
+	    execexpression
+	    var v : int
+	    runstack.runpopboolean (v)
+
+	    if v = 1 then
+		execskiptoend (tloop, tendloop)
+		runstack.popscope
+	    end if
+	end if
+    end execexit
+
+    procedure execendloop
+	currentptr += 1 % (tendloop)
+
+	if runstack.scopekind not = scloop then
+	    execerror ("end loop without loop")
+	else
+	    currentnum := runstack.scopeline
+	end if
+    end execendloop
+
+    procedure execfor
+	currentptr += 1 % (tfor)
+
+	if currentnum = 0 then
+	    execerror ("immediate for")
+	else
+	    const ident := currentline.tokens (currentptr).value
+	    currentptr += 1 % (tidentifier)
+
+	    if runstack.runlookup (ident) not = 0 then
+		execerror ("identifier previously declared")
+	    else
+		currentptr += 1 % (tcolon)
+		execexpression
+		var lowerbound : int
+		runstack.runpopint (lowerbound)
+		currentptr += 1 % (tdotdot)
+		execexpression
+		var upperbound : int
+		runstack.runpopint (upperbound)
+
+		if upperbound >= lowerbound then
+		    runstack.pushscope (scfor, currentnum, ident, upperbound)
+		    runstack.runpushint (lowerbound)
+		    runstack.runallocate (ident, syconst)
+		    runstack.runswap
+		    runstack.runpushdesc (ident)
+		    runstack.runswap
+		    runstack.runassign
+		else
+		    execskiptoend (tfor, tendfor)
+		end if
+	    end if
+	end if
+    end execfor
+
+    procedure execendfor
+	currentptr += 1 % (tendfor)
+
+	if runstack.scopekind = scfor then
+	    const upperbound := runstack.scopevalue
+	    const ident := runstack.scopeident
+	    runstack.runpushdesc (ident)
+	    runstack.runevaluate
+	    var value : int
+	    runstack.runpopint (value)
+
+	    if value = upperbound then
+		runstack.popscope
+	    else
+		runstack.runpushdesc (ident)
+		runstack.runpushint (value + 1)
+		runstack.runassign
+		currentnum := runstack.scopeline 
+	    end if
+	else
+	    execerror ("end for with no for")
+	end if
+    end execendfor
+
+    procedure execskiptoelseorendif
+	const oldnum := currentnum
+	loop
+	    exit when currentnum = maxlines
+	    currentnum += 1
+	    const token := lines (currentnum).tokens (1).token
+	    exit when token = telsif or token = telse or token = tendif
+
+	    if token = tif then
+		execskiptoend (tif, tendif)
+	    end if
+	end loop
+
+	const token := lines (currentnum).tokens (1).token
+
+	if token not = telsif and token not = telse and token not = tendif then
+	    currentnum := oldnum
+	    currentptr := 1
+	    execerror ("missing end if")
+	else
+	    currentnum -= 1
+	end if
+    end execskiptoelseorendif
+
+    procedure execif 
+	currentptr += 1 % (tif)
+
+	if currentnum = 0 then
+	    execerror ("immediate if")
+	else
+	    execexpression
+	    var ifcondition : int
+	    runstack.runpopboolean (ifcondition)
+	    currentptr += 1 % (tthen)
+
+	    runstack.pushscope (scif, 0, 0, ifcondition)
+
+	    if ifcondition not = 1 then
+		execskiptoelseorendif
+	    end if
+	end if
+    end execif
+
+    procedure execelsif 
+	if runstack.scopekind = scif then
+	    if runstack.scopevalue = 1 then
+		runstack.popscope
+		execskiptoend (tif, tendif)
+	    else
+		runstack.popscope
+		execif
+	    end if
+	else
+	    execerror ("elsif without if")
+	end if
+    end execelsif
+
+    procedure execelse
+	currentptr += 1 % (tendif)
+
+	if runstack.scopekind = scif then
+	    if runstack.scopevalue = 1 then
+		runstack.popscope
+		execskiptoend (tif, tendif)
+	    else
+		runstack.popscope
+		runstack.pushscope (scelse, 0, 0, 1)
+	    end if
+	else
+	    execerror ("else without if")
+	end if
+    end execelse
+
+    procedure execendif
+	currentptr += 1 % (tendif)
+
+	if runstack.scopekind = scif or runstack.scopekind = scelse then
+	    assert runstack.scopevalue = 1
+	    runstack.popscope
+	else
+	    execerror ("end if without if")
+	end if
+    end execendif
+
+    procedure execput 
+	currentptr += 1 % (tput)
+
+	loop
+	    execexpression
+
+	    case runstack.runtype of
+		label tyint :
+		    var v : int
+		    runstack.runpopint (v)
+
+		    if not currentline.error then
+			put v ..
+		    end if
+		label tystring :
+		    var v : string
+		    runstack.runpopstring (v)
+
+		    if not currentline.error then
+			put v ..
+		    end if
+		label tyboolean :
+		    var v : int
+		    runstack.runpopboolean (v)
+
+		    if not currentline.error then
+			if v = 1 then
+			    put "true" ..
+			else
+			    put "false" ..
+			end if
+		    end if
+		label :
+		    currentptr += 1 % (tany)
+		    execerror ("bad put expression")
+	    end case
+
+	    exit when currentline.tokens (currentptr).token not = tcomma
+	    currentptr += 1 % (tcomma)
+	end loop
+
+	if currentline.tokens (currentptr).token = tdotdot then
+	    currentptr += 1 % (tdotdot)
+	elsif not currentline.error then
+	    put ""
+	end if
+    end execput
+
+    procedure execget 
+	currentptr += 1 % (tget)
+
+	loop
+	    execvariable
+
+	    exit when currentline.error
+
+	    case runstack.runtype of
+		label tyint :
+		    var v : string
+		    get v
+
+		    var valid := length (v) <= 9
+
+		    for i : 1 .. length (v)
+			valid := valid and (
+			    (v (i) >= "0" and v (i) <= "9") or
+			    (i = 1 and (v (i) = "-" or v (i) = "+")) 
+			    )
+		    end for
+
+		    if valid then
+			runstack.runpushint (strint (v))
+		    else
+			execerror ("invalid integer input")
+			runstack.runpushint (1)
+		    end if
+		label tystring :
+		    var v : string
+		    get v
+		    runstack.runpushstring (v)
+		label tyboolean :
+		    var v : string
+		    get v
+		    if v = "true" then
+			runstack.runpushboolean (1)
+		    elsif v = "false" then
+			runstack.runpushboolean (0)
+		    else
+			execerror ("invalid boolean input")
+			runstack.runpushboolean (1)
+		    end if
+	    end case
+
+	    runstack.runassign
+
+	    exit when currentline.tokens (currentptr).token not = tcomma
+	    currentptr += 1 % (tcomma)
+	end loop
+    end execget
+
+    procedure execprocedure 
+	execerror ("procedures not yet implemented")
+	currentptr += 1 % (tprocedure)
+	currentptr += 1 % (tidentifier)
+
+	if currentline.tokens (currentptr).token = tlparen then
+	    currentptr += 1 % (tlparen)
+
+	    loop
+		if currentline.tokens (currentptr).token = tvar then
+		    currentptr += 1 % (tvar)
+		end if
+
+		currentptr += 1 % (tidentifier)
+		currentptr += 1 % (tcolon)
+		execsimpletype
+
+		exit when currentline.tokens (currentptr).token = trparen
+		    or currentline.tokens (currentptr).token = teol
+	    end loop
+
+	    currentptr += 1 % (trparen)
+	end if
+    end execprocedure
+
+    procedure execend 
+	execerror ("procedures not yet implemented")
+	currentptr += 1 % (tend)
+	currentptr += 1 % (tidentifier)
+    end execend
+
+    procedure execinvariant 
+	execassert
+    end execinvariant
+
+    procedure execline
+	currentline.error := false
+	currentptr := 1
+
+	loop
+	    case currentline.tokens (currentptr).token of
+		label tvar :
+		    execvar
+		label tconst :
+		    execconst
+		label ttype :
+		    exectype
+		label tidentifier :
+		    execassignment
+		label tcall :
+		    execcall
+		label tassert :
+		    execassert
+		label tif :
+		    execif
+		label telsif :
+		    execelsif
+		label telse :
+		    execelse
+		label tendif :
+		    execendif
+		label tloop :
+		    execloop
+		label texitwhen :
+		    execexit
+		label tendloop :
+		    execendloop
+		label tfor :
+		    execfor
+		label tendfor :
+		    execendfor
+		label tput :
+		    execput
+		label tget :
+		    execget
+		label tprocedure :
+		    execprocedure
+		label tend :
+		    execend
+		label tinvariant :
+		    execinvariant
+		label tcomment :
+		    currentptr += 1 % (tcomment)
+		label teol, tsemicolon :
+		    % null statement
+		label :
+		    % bad statement
+		    execerror ("statement expected")
+	    end case
+
+	    exit when currentline.tokens (currentptr).token not = tsemicolon
+
+	    currentptr += 1 % (tsemicolon)
+	end loop
+
+    end execline
+
+end exec
+
+var command : string
+% include "command.i"
+% uTuring Commands  V1.01
+% Copyright (c) 1984   James R. Cordy
+
+procedure list
+    command := command (5..*)
+    loop
+	exit when length (command) = 0 or command (1) not = " "
+	command := command (2 .. *)
+    end loop
+
+    var first := 1
+    var last := maxlines
+
+    if length (command) > 0 and ((command (1) >= "0" and command (1) <= "9") 
+	    or command (1) = "-") then
+	if command (1) not = "-" then
+	    first := 0
+	    loop
+		exit when length (command) = 0 or
+		    command (1) < "0" or command (1) > "9"
+		first := first * 10 + ord (command (1)) - ord ("0")
+		command := command (2 .. *)
+	    end loop
+
+	    last := first
+	end if
+
+	if length (command) > 1 and command (1) = "-" then
+	    command := command (2 .. *)
+	    last := 0
+	    loop
+		exit when length (command) = 0 or
+		    command (1) < "0" or command (1) > "9"
+		last := last * 10 + ord (command (1)) - ord ("0")
+		command := command (2 .. *)
+	    end loop
+	elsif length (command) = 1 and command (1) = "-" then
+	    last := maxlines
+	end if
+    end if
+
+    for i : first .. last
+	if lines (i).tokens (1).token not = teol then
+	    currentline := lines (i)
+	    scan.expandline (command)
+	    put i : 2, " ", repeat (" ", currentline.indent), command
+	end if
+    end for
+
+    put "Ok"
+end list
+
+procedure renum
+    var nlines := 0
+
+    for i : 1 .. maxlines
+	if lines (i).tokens (1).token not = teol then
+	    nlines += 1
+	    lines (nlines) := lines (i)
+	end if
+    end for
+
+    for i : nlines + 1 .. maxlines
+	lines (i).tokens (1).token := teol
+    end for
+
+    var indent := 0
+
+    for i : 1 .. nlines
+	const token := lines (i).tokens (1).token
+
+	case token of
+	    label tif, tloop, tfor, tprocedure :
+		lines (i).indent := indent
+		indent := min (indent + 4, maxindent)
+	    label telsif, telse :
+		lines (i).indent := max (indent - 4, 0)
+	    label tendif, tendloop, tendfor, tend :
+		indent := max (indent - 4, 0)
+		lines (i).indent := indent
+	    label :
+		lines (i).indent := indent
+	end case
+    end for
+
+    const increment := min (10, maxlines div (nlines + 1))
+
+    for decreasing i : nlines .. 1
+	const l := i * increment
+	lines (l) := lines (i)
+    end for
+
+    for i : 1 .. maxlines
+	if i mod increment not = 0 then
+	    lines (i).tokens (1).token := teol
+	    lines (i).indent := 0
+	end if
+    end for
+
+    put "Ok"
+end renum
+
+var trace := false
+
+procedure tron
+    trace := true
+    put "Ok"
+end tron
+
+procedure troff
+    trace := false
+    put "Ok"
+end troff
+
+procedure run
+    runstack.initscope
+    runstack.pushscope (scprocedure, 0, 0, 0)
+
+    var linenum := 1
+    loop
+	if lines (linenum).tokens (1).token not = teol then
+	    currentnum := linenum
+	    currentline := lines (currentnum)
+
+	    if not currentline.error then
+		if trace then
+		    scan.expandline (command)
+		    put intstr (currentnum, 3) + " " + command
+		end if
+
+		exec.execline
+
+		linenum := currentnum
+	    else
+		parse.parseline
+	    end if
+	end if
+
+	exit when currentline.error or linenum = maxlines
+
+	linenum += 1
+    end loop
+
+    if currentline.error then
+	scan.expandline (command)
+	put intstr (currentnum, 3) + " " + command
+	put currenterror
+    else
+	put "Ok"
+    end if
+end run
+
+procedure clear
+    currentline.tokens (1).token := teol
+    currentline.tokens (1).error := false
+    currentline.error := false
+    currentnum := 1
+
+    for i : 1 .. maxlines
+	bind var l to lines (i)
+	l.tokens (1).token := teol
+	l.tokens (1).error := false
+	l.error := false
+	l.indent := 0
+    end for
+
+    ident.reinitialize
+    runstack.initscope
+    runstack.pushscope (scprocedure, 0, 0, 0)
+end clear
+
+procedure filename
+    command := command (5 .. *)
+    loop
+	exit when length (command) = 0 or command (1) not = " "
+	command := command (2 .. *)
+    end loop
+
+    if index (command, " ") not = 0 or command = "" then
+	error ("ERROR : illegal filename")
+	put currenterror
+	command := ""
+    end if
+end filename
+
+procedure load
+    clear
+    filename
+
+    if command not = "" then
+	var f : int
+	open (f, command, "r")
+
+	if f = 0 then
+	    error ("ERROR : can't open file")
+	    put currenterror
+	else
+
+	    for i : 1 .. maxlines
+		exit when eof (f)
+		get : f, command : *
+		scan.scanline (command)
+		parse.parseline
+		lines (i) := currentline
+	    end for
+
+	    close (f)
+	    renum
+	end if
+    end if
+end load
+
+procedure save
+    filename
+
+    if command not = "" then
+	var f : int
+	open (f, command, "w")
+
+	if f = 0 then
+	    error ("ERROR : can't write file")
+	    put currenterror
+	else
+
+	    for i : 1 .. maxlines
+		currentline := lines (i)
+
+		if currentline.tokens (1).token not = teol then
+		    scan.expandline (command)
+		    put : f, repeat (" ", currentline.indent), command
+		end if
+	    end for
+
+	    close (f)
+	    put "Ok"
+	end if
+    end if
+end save
+
+procedure new_
+    clear
+    put "Ok"
+end new_
+    
+procedure enter
+    currentnum := 0
+
+    loop
+	exit when length (command) = 0 or
+	    command (1) < "0" or command (1) > "9"
+	currentnum := currentnum * 10 + ord (command (1)) - ord ("0")
+	command := command (2 .. *)
+    end loop
+
+    if currentnum > maxlines then
+	currentnum := maxlines
+    elsif currentnum < 1 then
+	currentnum := 1
+    end if
+
+    scan.scanline (command)
+    parse.parseline
+
+    if not currentline.error then
+	if lines (currentnum).tokens (1).token not = teol then
+	    % it's a replace, so keep indent
+	    currentline.indent := lines (currentnum).indent
+	end if
+
+	lines (currentnum) := currentline
+    else
+	scan.expandline (command)
+	command := intstr (currentnum, 3) + " " + command
+	put currenterror
+	put "/e[2A/e[K", command, "/n"
+    end if
+end enter
+
+procedure execute 
+    currentnum := 0
+    scan.scanline (command)
+    parse.parseline
+
+    if not currentline.error then
+	exec.execline
+    end if
+
+    if currentline.error then
+	scan.expandline (command)
+	put currenterror
+	put "/e[2A/e[K", command, "/n"
+    end if
+end execute
+
+procedure vars
+    runstack.printvars
+    put "Ok"
+end vars
+
+% include "%rtio"
+%
+%	Computer Systems Research Group
+%   	University of Toronto
+  
+% 	Turing Plus Unbuffered Terminal Input Package  V1.00
+%   	Author:	Jim Cordy
+%   	Date:	January 1984
+
+% Copyright (C) 1984  The University of Toronto
+
+% This module provides unbuffered real-time terminal input
+% with or without echo.
+% This module should be included in the user's program
+% using the include statement:
+
+%	include "%rtio"
+
+% and compiled with the production Turing compiler (pttc).
+
+% Unbuffered input terminal in Turing only makes good
+% sense in single character mode.  Thus, once nobuffer
+% has been called, only get statements with 
+% explicit length specifiers are truly meaningful.
+% Get statements should be of the form "get variable:length".
+% For true real-time interaction, the length should be
+% restricted to 1.
+
+% If you insist on using token or line-oriented input
+% while in unbuffered mode, you should understand the
+% following details: 
+
+% A token-oriented get will not complete until the blank
+% or newline character following the input is typed by
+% the user.  This character will not be read as part
+% of the token, and will be the first character read by
+% the next get.  The only exception to this rule is
+% quoted string input, which will be completed as soon
+% as the ending quote (") is typed by the user,
+% and which will absorb the quote as part of the input.
+
+% A line-oriented get will not complete until the newline
+% character following the input is typed by the user.
+% This character will not be read as part of the input line,
+% but will also be skipped before the next get.
+
+% Facilities provided are as follows:
+
+%	procedure crmode	- put the input terminal in
+%				  no buffer mode;  should be
+%				  called before using hasch
+
+%	procedure nocrmode	- put the input terminal back in
+%				  buffer mode;  should be called
+%				  before program exit if crmode
+%				  was used
+
+%	procedure noecho	- put the input terminal in
+%				  no echo mode
+
+%	procedure echo		- put the input terminal back in
+%				  echo mode;  should be called
+%				  before program exit if noecho
+%				  was used
+
+%	function hasch: boolean	- returns true if there is a 
+%				  character ready from the 
+%				  input terminal;  not meaningful
+%				  unless crmode has been called
+
+type TTYSET : set of 0 .. 31
+type TTYtype :
+    record
+	filler : int
+	flags : TTYSET
+    end record
+
+const *ECHOmode := TTYSET (3,19)
+const *CBREAKmode := TTYSET (1,17)
+
+var tty : TTYtype
+
+external procedure gtty (l: int, var t : TTYtype)
+external procedure stty (l: int, var t : TTYtype) 
+
+procedure crmode 
+    % set the input terminal to unbuffered mode
+    gtty (1, tty)
+    tty.flags += CBREAKmode
+    stty (1, tty)
+end crmode
+
+procedure nocrmode 
+    % reset the input terminal to buffered mode
+    gtty (1, tty)
+    tty.flags -= CBREAKmode
+    stty (1, tty)
+end nocrmode
+ 
+procedure noecho 
+    % set the input terminal to no echo mode
+    gtty (1, tty)
+    tty.flags -= ECHOmode 
+    stty (1, tty)
+end noecho
+
+procedure echo 
+    % reset the input terminal to echo mode
+    gtty (1, tty)
+    tty.flags += ECHOmode 
+    stty (1, tty)
+end echo
+
+external procedure ioctl(f, i : int, var n : int) 
+const *FIONREAD := 16#40000000 + /* int.size */ 4 shl 16 + ord ('f') shl 8 + 127
+const *ttyinput := 0
+
+function hasch : boolean 
+    var nchars := 0
+
+    ioctl (ttyinput, FIONREAD, nchars)
+    result nchars > 0
+end hasch
+
+procedure edit
+    command := command (5..*)
+    loop
+	exit when length (command) = 0 or command (1) not = " "
+	command := command (2 .. *)
+    end loop
+
+    var linenum := 0
+
+    if length (command) > 0 and
+	    (command (1) >= "0" and command (1) <= "9") then
+	loop
+	    exit when length (command) = 0 or
+		command (1) < "0" or command (1) > "9"
+	    linenum := linenum * 10 + ord (command (1)) - ord ("0")
+	    command := command (2 .. *)
+	end loop
+    end if
+
+    if linenum < 1 or linenum > maxlines then
+	linenum := currentnum
+    end if
+
+    if linenum not = currentnum then
+	currentnum := linenum
+	currentline := lines (linenum)
+    end if
+
+    currentline.error := false
+
+    for i : 1 .. maxlinetokens
+	currentline.tokens (i).error := false
+	exit when currentline.tokens (i).token = teol
+    end for
+
+    scan.expandline (command)
+
+    if linenum not = 0 then
+	command := intstr (linenum, 3) +  " " + command
+    end if
+
+    crmode
+    noecho
+
+    command := command (1 .. min (length (command), 80))
+    command := command + repeat (" ", 80 - length (command))
+
+    put command, "/r" ..
+    var position : int  := 1
+
+    loop
+	var nextchar: string (1)
+	get nextchar : 1
+
+	exit when nextchar = "/n"
+
+	if nextchar = "/e" then
+	    get nextchar : 1
+	    if nextchar = "[" then
+		get nextchar : 1
+
+		if nextchar = "A" then
+		    % insert
+		    put "/e[4h /e[4l/e[D" ..
+		    command :=
+			command (1 .. position-1) + " " + 
+			command (position .. length (command) - 1)
+		elsif nextchar = "B" then
+		    % delete
+		    put "/e[P" ..
+		    command := 
+			command (1 .. position-1) + 
+			command (position+1 .. *) + " "
+		elsif nextchar = "C" and position < 80 then
+		    put "/e[C" ..
+		    position += 1
+		elsif nextchar = "D" and position > 1 then
+		    put "/e[D" ..
+		    position -= 1
+		end if
+
+		nextchar := "/e"
+
+	    elsif nextchar = "O" then
+		get nextchar : 1
+
+		if nextchar = "P" then
+		    scan.expandline (command)
+		    command := intstr (linenum, 3) +  " " + command
+		    put "/r/e[K", command, "/r" ..
+		    position := 1
+		end if
+
+		nextchar := "/e"
+	    end if
+	end if
+
+	if nextchar >= " " then
+	    put nextchar ..
+	    command := 
+		command (1 .. position-1) + nextchar + command (position+1 .. *)
+	    position += 1
+	end if
+    end loop
+
+    echo
+    nocrmode
+
+    put ""
+
+    loop
+	exit when length (command) = 0 or command (1) not = " "
+	command := command (2 .. *)
+    end loop
+
+    if length (command) > 0 and
+	    command (1) >= "1" and command (1) <= "9" then
+	enter
+    else
+	execute
+    end if
+end edit
+
+runstack.initscope
+runstack.pushscope (scprocedure, 0, 0, 0)
+
+put "/e[A/rOk      "
+
+loop
+    get : 1, skip, command : *
+
+    if length (command) >= 4 and command (1..4) = "quit" then
+	put "Bye"
+	exit
+
+    elsif length (command) >= 4 and command (1..4) = "list" then
+	list
+
+    elsif length (command) >= 4 and command (1..4) = "edit" then
+	edit
+
+    elsif command = "renum" then
+	renum 
+
+    elsif command = "run" then
+	run
+
+    elsif command = "tron" then
+	tron
+
+    elsif command = "troff" then
+	troff
+
+    elsif command = "vars" then
+	vars
+
+    elsif command = "new" then
+	new_
+
+    elsif length (command) >= 4 and command (1..4) = "load" then
+	load
+
+    elsif length (command) >= 4 and command (1..4) = "save" then
+	save
+
+    elsif length (command) > 0 and
+	    command (1) >= "1" and command (1) <= "9" then
+	enter
+
+    else
+	execute
+    end if
+end loop
+
+runstack.popscope

@@ -1,0 +1,10 @@
+% This is the factbase
+(a,b) (a,d)
+(b,c) (b,e)
+(c,f) (c,a)
+(d,e) (d,b) 
+(e,f) (e,a)
+(f,c) (f,e)
+
+% This is the query
+?(e,b)

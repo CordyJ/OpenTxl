@@ -1,0 +1,116 @@
+From Vaucher@IRO.UMontreal.CA Fri Nov 11 11:26 EST 1994
+From: "Jean Vaucher" <Vaucher@IRO.UMontreal.CA>
+Subject: Txl ambiguity
+To: "James R. Cordy" <cordy@qucis.queensu.ca>
+
+Hi Jim,
+
+    I am aware of the problems of supporting starting users.  But this
+apparent BUG should be easy to answer and any comments will be appreciated.
+Thanks in advance. Furthermore, copy of your YACC -> Txl translator would be
+appreciated.
+
+You said that TXL "thrives" on ambiguous grammars and the BNF -> TXL
+application I'm trying does contain one.  Since in BNF there is no
+END-OF-RULE delimiter (save the visual clue of a blank line) the HEAD of a
+rule could be taken as part of the body of the preceding one.  Below, is
+"test_suite" part of the "bbb" rule or the start of the next rule?
+
+bbb ::=
+   toto
+|  jack
+|  marie
+
+test_suite  ::= systemdef
+
+Here is the text being processed; then the error message by the MAC 7.7
+version.... I haven't tried UNIX on this,  and finally the TXL program:
+============================
+/* commentaire */
+
+bbb ::=
+   toto
+|  jack
+|  marie
+
+test_suite  ::= systemdef
+
+aaa ::=  fred and harry
+
+=============================
+> txldb ex1.BNF
+TXL v7.7a3 (3.11/94) (c)1988-94 Queen's University at Kingston
+Compiling BNF.Txl ... 
+Parsing ex1.BNF ...
+TXL ERROR : Syntax error near line 8 of ex1.BNF, at or near:
+ | jack | marie test_suite >>> ::= <<< systemdef aaa ::= fred and 
+Exit code 1
+1.03333 secs
+
+> txldb 
+========================== and my Txl grammar ==================
+%  BNF Grammar
+%
+
+comments
+  /*  */
+end comments
+
+compounds
+  '::=
+end compounds
+
+keys
+   'define 'end
+end keys
+
+define program
+   [repeat regle]
+end define
+
+define regle
+    [bnfRule]
+ |  [txlRule]
+end define
+
+define bnfRule
+   [id] ::= [elements]    
+      [repeat alternative]
+end define
+
+define txlRule
+   'define [id]               [NL][IN]
+       [elements]
+       [repeat alternative]   [EX]
+   'end 'define               [NL][NL]
+end define
+
+define alternative
+  '|  [elements]     
+end define
+
+define elements
+  [repeat element]  
+end define
+
+define element
+    [terminal]
+ |  [nonTerminal]
+end define
+
+define terminal
+   [charlit]
+end define
+
+define nonTerminal
+   [id]
+end define
+
+% transformation rules
+
+function mainRule
+   replace [program]
+      P [program]
+   by
+     P
+end function

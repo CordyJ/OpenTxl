@@ -1,0 +1,4 @@
+The runaway parser bug.
+This is an example of a bug in the handling of
+repeats of things that derive [empty].
+The parse stack overflows, resulting in a segmentation violation.

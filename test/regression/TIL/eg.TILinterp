@@ -1,0 +1,15 @@
+// Factor an input number
+var n;
+write "Input n please";
+// read n;
+n := 3276;
+write "The factors of n are";
+var f;
+f := 2;
+while n != 1 do
+    while (n / f) * f = n do
+	write f;
+	n := n / f;
+    end
+    f := f + 1;
+end

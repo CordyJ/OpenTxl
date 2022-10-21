@@ -1,0 +1,3 @@
+		% for i : 0 .. count
+		    turtle_point (turtle_x, turtle_y)
+		% end for

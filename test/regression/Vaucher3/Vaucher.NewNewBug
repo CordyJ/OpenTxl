@@ -1,0 +1,293 @@
+From vaucher@IRO.UMontreal.CA Sun Nov 27 17:29 EST 1994
+From: "Jean Vaucher" <vaucher@IRO.UMontreal.CA>
+Subject: Txl Bugs (?)
+To: "James R. Cordy" <cordy@qucis.queensu.ca>
+Content-Type: text
+Content-Length: 6174
+
+Hi Jim,
+
+First thanks for the LIST <=> REPEAT tricks.  In
+
+>            construct SortedList [list number]
+>                _ [, each SortedSequence]
+
+The " _ [, each XXX] " is especially elegant.
+However, this confirms my suspicions that though one can write a REPEAT
+pattern (with a tail) to access the first element(s), one can't write the
+analogous LIST pattern.
+
+Now a couple of BUGS for the Mac version.  It's the one I use most.
+ TXL v7.7a4 (10.11/94) (c)1988-94 Queen's University at Kingston
+
+1) the command line format is too brittle.  Putting 2 or more blanks between
+ the tokens gives the HELP message instead of processing, ie:
+ 
+  txldb fred dialect   <is good>
+  txldb  fred dialect   <is rejected>
+  txldb fred  dialect   <is rejected> 
+ 
+ I would expect txl to acdcept blankS between these tokens.
+ 
+2) I've been having trouble building up new identifiers (GENSYM type stuff).
+Assuming that I already have an [id] variable ID and that I want to build a
+new ID with "xxx" as a prefix, I would expect the following to work:
+ 
+  construct NewID [id]
+   xxx [_ ID]
+    or
+    
+     construct NewID [id]
+      xxx [+ ID]
+    
+    but it appears that "xxx" must be explicitly typed by an extra
+CONSTRUCT.  The following works but seems a bit combersome:
+    
+     construct XS [id]
+      xxx
+  construct NewID [id]
+      XS [_ ID]
+
+3) I mentioned before that I had seen special characters like ";" or "[" 
+treated as identifiers with strange results.  Here is an example (initially
+BNF --> DCG) where the character "|" is strangely handled.  I noticed the
+problem because the pretty printing was off.  In the example, I will read a
+production rule with a "|" and it will have the type [literal], then I will
+CONSTRUCT two rules containing "|" and  in both cases "|" will be taken as
+an [id] and the tree built will be different and unexpected in both cases:
+
+Data:
+=====
+fred ::=
+  red
+ | blue
+;
+
+
+grammar:
+========
+%-----------------------------------------------------------
+% Production rule grammars  (nov 1994)
+%-----------------------------------------------------------
+
+compounds
+  '::=
+end compounds
+
+keys 
+ EMPTY
+end keys
+
+define program
+ [production]
+end define
+
+define production
+  [id] '::=        [NL][IN]             % BNF
+            [body]
+             ';          [NL][EX]
+end define
+
+define body  
+ [SP] [terms] [NL]
+      [repeat Alternative] 
+end define
+
+define terms
+  [repeat term]
+ | [list   term]
+end define
+
+define Alternative
+  '|  [terms]      [NL]
+ | ';  [list term]    [NL]
+ | 'EMPTY           [NL]
+end define
+
+define term
+          [id]
+        | [charlit]
+end define
+
+%  Now for a MAIN RULE
+
+function mainRule
+ replace [program]
+  ID [id] '::=  Body [body] ';   
+ construct ID2 [id]
+  ID [!]
+ construct PR [production]
+  ID '::= ID2 '|  'EMPTY ';
+ construct PR2 [production]
+  ID '::= rouge '|  noir ';
+
+ by
+  PR  
+end function
+
+
+RESULTS:  I GIVE HERE THE FULLY TRACE:
+=========
+
+> txldb d2 g2
+TXL v7.7a4 (10.11/94) (c)1988-94 Queen's University at Kingston
+Compiling g2 ... 
+Parsing d2 ...
+Transforming ...
+
+                TXL Debugger Commands
+
+  rules                 list names of all rules 
+ etc.....
+  quit                  exit TXL
+
+TXLDB >> 
+  Applying rule mainRule
+TXLDB >> 
+  Matched main pattern of rule mainRule
+TXLDB >> tree match
+[program]
+. [production]
+. . [id] fred
+. . [literal] ::=
+. . [NL]
+. . [IN]
+. . [body]
+. . . [SP]
+. . . [terms]
+. . . . [repeat__term]
+. . . . . [repeat_1_term]
+. . . . . . [term]
+. . . . . . . [id] red
+. . . . . . [repeat__term]
+. . . . . . . [empty]
+. . . [NL]
+. . . [repeat__Alternative]
+. . . . [repeat_1_Alternative]
+. . . . . [Alternative]
+. . . . . . [__Alternative_1__]
+. . . . . . . [literal] |                    % <<<<<<< handled OK here
+. . . . . . . [terms]
+. . . . . . . . [repeat__term]
+. . . . . . . . . [repeat_1_term]
+. . . . . . . . . . [term]
+X . [id] blue
+. . . . . . . . . . [repeat__term]
+X . [empty]
+. . . . . . . [NL]
+. . . . . [repeat__Alternative]
+. . . . . . [empty]
+. . [literal] ;
+. . [NL]
+. . [EX]
+
+TXLDB >> 
+  Entering construct of ID2, in rule mainRule
+TXLDB >> 
+  Applying rule !
+TXLDB >> 
+  Exiting rule ! (succeeded)
+TXLDB >> 
+  Exiting construct of ID2, in rule mainRule
+TXLDB >> 
+  Entering construct of PR, in rule mainRule
+TXLDB >> 
+  Exiting construct of PR, in rule mainRule
+TXLDB >> tree PR
+[production]
+. [id] fred
+. [literal] ::=
+. [NL]
+. [IN]
+. [body]
+. . [SP]
+. . [terms]
+. . . [repeat__term]
+. . . . [repeat_1_term]
+. . . . . [term]
+. . . . . . [id] fred1
+. . . . . [repeat__term]
+. . . . . . [repeat_1_term]
+. . . . . . . [term]
+. . . . . . . . [id] |                % <<<<<<< WOOPS, an ID
+. . . . . . . [repeat__term]
+. . . . . . . . [empty]
+. . [NL]
+. . [repeat__Alternative]               % <<<<<<< double WOOPS? How can I have
+. . . [repeat_1_Alternative]            %   an ALTERNATIVE HERE if "|" is an ID
+. . . . [Alternative]
+. . . . . [__Alternative_3__]
+. . . . . . [literal] EMPTY
+. . . . . . [NL]
+. . . . [repeat__Alternative]
+. . . . . [empty]
+. [literal] ;
+. [NL]
+. [EX]
+
+TXLDB >> 
+  Entering construct of PR2, in rule mainRule
+TXLDB >> 
+  Exiting construct of PR2, in rule mainRule
+TXLDB >> tree PR2
+[production]
+. [id] fred
+. [literal] ::=
+. [NL]
+. [IN]
+. [body]
+. . [SP]
+. . [terms]
+. . . [repeat__term]
+. . . . [repeat_1_term]
+. . . . . [term]
+. . . . . . [id] rouge
+. . . . . [repeat__term]
+. . . . . . [repeat_1_term]
+. . . . . . . [term]
+. . . . . . . . [id] |             % <<<<<<< WOOPS, again an ID but the tree
+. . . . . . . [repeat__term]       %  is consistent with a repetition of terms
+. . . . . . . . [repeat_1_term]
+. . . . . . . . . [term]
+. . . . . . . . . . [id] noir
+. . . . . . . . . [repeat__term]
+. . . . . . . . . . [empty]
+. . [NL]
+. . [repeat__Alternative]
+. . . [empty]
+. [literal] ;
+. [NL]
+. [EX]
+
+TXLDB >> PR2
+fred ::=
+     rouge | noir
+    ;
+
+TXLDB >> PR
+fred ::=
+     fred1 |
+    EMPTY
+    ;
+
+TXLDB >> 
+  Done replacement of pattern match of rule mainRule (succeeded)
+TXLDB >> 
+  Exiting rule mainRule (succeeded)
+TXLDB >> 
+  Exiting main rule
+TXLDB >> 
+fred ::=
+     fred1 |
+    EMPTY
+    ;
+
+102.267 secs
+
+
+V.
+Jean Vaucher
+Professeur Titulaire
+Dep. informatique et ro
+Universite de Montreal
+

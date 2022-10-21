@@ -1,0 +1,22 @@
+
+% Compile this with txl using cascade.basis
+
+% Cascaded expressions are expanded to be acceptable as
+% input to abacus 1.1.
+
+True	= true ! True
+	+ setFalse ? False
+	+ setTrue ? True
+
+False	= false ! False
+	+ setTrue ? True
+	+ setFalse ? False
+
+% Cascaded behaviour expressions:
+Negate	= false ? setTrue ! nil
+	+ true ? setFalse ! nil
+
+[ True & Negate ]
+
+[ False & Negate ]
+

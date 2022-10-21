@@ -1,0 +1,384 @@
+% Function Block Syntax.  Restricted Occam 2 Grammar.
+% By:  Mitch Webster,  Electrical Engineering,  University of Natal
+% Date: 23 - 3 - 93
+%
+% NOTE:  THis version of the grammar does not insist on [list element+]
+%
+% NOTE:  This version has the full FB syntax of the form:
+%        #USE filenames
+%        PROC name ([list formal parameters], BOOL initialise)
+%        ... declarations
+%        IF
+%          initialise
+%            ... setup phase
+%          TRUE
+%            ... run phase
+%        :
+%
+%   Where:  the run phase syntax is heavily restricted as before but the
+%           setup phase can have function calls and looping in the form of
+%           replicated SEQ.
+%
+%
+% Note: nested IFs allowed
+%       array variables are allowed but no array slices
+%       No tables
+%       Optional keywords have been inserted into the grammar to help with
+%       the detection of real32 arithmetic etc.
+%       Rigid format.  Declarations in body of function not allowed.
+%                      This will have to be detected.
+%                      this is because they cause workspace adjustments
+%                      and hence consume processing time
+%       STOP not allowed.
+%       The use of . in a variable name is not allowed
+%       The abbreviations are limited to the form :
+%                 VAL [type] [id] IS [expression] :
+%
+%       The definition of the operand has been modified to make nested
+%       expression detection easier
+%
+compounds
+    +' -- := <> <= >=
+end compounds
+
+keys
+   BOOL BYTE INT16 INT INT32 REAL32 SEQ IF TRUE FALSE ROUND TRUNC
+   STOP SKIP NOT PLUS MINUS OR AND MOD ? ! PROC PLACE AT IS
+   REAL32OP USE FOR FOUND REAL32VAR initialise @ BranchTests
+end keys
+
+define program
+  [proc]
+end define
+
+define process
+        SKIP [SP] @ [number] [EX] [NL]
+      | [action] [SP] @ [number] [NL]
+      | [construction]
+end define
+
+comments
+       --
+end comments
+
+define specification
+        [declaration] [SP] @ [number]    [NL]
+      | [abbreviation] [SP] @ [number]  [NL]
+end define
+
+define allocation
+       PLACE [variable] AT [expression] :
+end define
+
+define booltest
+  ','[']'BranchTests
+end define
+
+define proc
+        [repeat usedeclarations]
+        PROC [id] ([list formal], BOOL initialise [opt booltest]) [SP] @ [number] [IN] [NL]
+        [repeat specification]       [NL]
+        IF [SP] @ [number]          [NL] [IN]
+          initialise [SP] @ [number]  [NL] [IN]
+            [setupphase]             [EX]
+          TRUE [SP] @ [number]      [NL] [IN]
+            [runphase]               [EX] [EX]
+        : [SP] @ [number]
+end define
+
+define usedeclarations
+       '#USE [stringlit] [SP] @ [number] [NL]
+end define
+
+define formal
+        [simpledeclaration]
+      | VAL [simpledeclaration]
+end define
+
+define simpledeclaration
+       [primitivetype] [list element]
+end define
+
+define abbreviation
+       VAL [primitivetype] [id] IS [expression] :
+end define
+
+define runphase
+       [repeat process]
+end define
+
+define indexedrunphase
+  [runphase] [number]
+end define
+
+define setupphase
+       [repeat setupprocess]
+end define
+
+define setupprocess
+        SKIP [SP] @ [number] [EX] [NL]
+      | [setupaction] [SP] @ [number] [NL]
+      | [setupconstruction]
+      | [instance] [SP] @ [number]
+      | [allocation] [SP] @ [number]     [NL]
+        [setupprocess]
+      | [specification]   [NL]
+        [setupprocess]
+end define
+
+define setupaction
+        [setupassignment]
+end define
+
+define setupassignment
+  [variable] := [setupexpression]
+end define
+
+define setupconstruction
+       [setupsequence]
+       | [setupconditional]
+end define
+
+define setupconditional
+        IF [SP] @ [number]    [IN] [NL]
+         [repeat setupchoice]  [EX] [NL]
+end define
+
+define setupchoice
+       [setupguardedchoice]
+       | [setupconditional]
+end define
+
+define setupguardedchoice
+       [setupboolean]  [SP] @ [number] [IN] [NL]
+       [setupprocess]                   [EX] [NL]
+end define
+
+define setupboolean
+        [setupexpression]
+end define
+
+define setupsequence
+       SEQ [SP] @ [number]         [IN] [NL]
+         [repeat setupprocess]           [EX] [NL]
+     | SEQ [replicator] [SP] @ [number] [IN] [NL]
+         [repeat setupprocess]           [EX] [NL]
+end define
+
+define replicator
+       [id] = [base] FOR [count]
+end define
+
+define base
+       [setupexpression]
+end define
+
+define count
+       [setupexpression]
+end define
+
+
+% Allow function calls in setup phase
+
+define setupoperand
+        [simpleoperand]
+      | [id] ([setupexpression])
+      | ([setupexpression])
+end define
+
+define setupexpression
+        [monadicoperator] [operand]
+      | [operand] [dyadicoperator] [operand]
+      | [conversion]
+      | [setupoperand]
+      | MOSTPOS [type]
+      | MOSTNEG [type]
+end define
+
+
+% Allow procedure calls in setup phase,  these would typically
+% be library procedures
+
+define instance
+       [id] ([list actual])
+end define
+
+define actual
+       [element]
+     | [setupexpression]
+end define
+
+define action
+        [assignment]
+end define
+
+define assignment
+  [opt 'REAL32VAR] [variable] := [expression]
+end define
+
+% NOTE : Array slices are NOT allowed as these are not compile time
+%        constants.  This does imply that bandwidth is affected.
+
+define input
+        [port] ? [variable]
+end define
+
+define output
+        [port] ! [variable]
+end define
+
+define construction
+        [sequence]
+      | [conditional]
+end define
+
+define sequence
+      SEQ [SP] @ [number]                     [IN] [NL]
+         [repeat process]                     [EX] [NL]
+    | SEQ [runtimereplicator] [SP] @ [number] [IN] [NL]
+         [repeat process]                     [EX] [NL]
+end define
+
+define runtimereplicator
+  [id] = [number] FOR [number]
+end define
+
+define conditional
+        IF [SP] @ [number]    [IN] [NL]
+         [repeat indexedchoice]      [EX] [NL]
+end define
+
+%  The optional number is used as a counting scheme for the branches
+
+define choice
+       [boolean] [SP] @ [number] [opt number]  [IN] [NL]
+       [process]                               [EX] [NL]
+end define
+
+define indexedchoice
+  [choice] [opt number]
+end define
+
+define boolean
+        [expression]
+end define
+
+define type
+       [primitivetype]
+       | [arraytype]
+end define
+
+define primitivetype
+       [opt 'FOUND] BOOL
+     | [opt 'FOUND] BYTE
+     | [opt 'FOUND] INT16
+     | [opt 'FOUND] INT
+     | [opt 'FOUND] INT32
+     | [opt 'FOUND] REAL32
+     | [opt 'FOUND] OPTIME
+     | [opt 'FOUND] FOPTIME
+end define
+
+define arraytype
+  [opt 'FOUND] '[[expression]'] [primitivetype]
+end define
+
+define literal
+        [number]
+      | [byte]
+      | [number]([type])
+      | [byte]([type])
+      | [real]([type])
+      | [stringlit]
+      | TRUE | FALSE
+end define
+
+define integer
+        [integernumber]
+      | #[hexdigits]
+end define
+
+define byte
+        '[stringlit]'
+      | [integernumber]
+end define
+
+define real
+        [number]
+end define
+
+define exponent
+        +[digits] | -[digits]
+end define
+
+define digits
+        [integernumber]
+end define
+
+define hexdigits
+        [digits]|A|B|C|D|E|F
+end define
+
+define declaration
+        [simpledeclaration] :
+       | [arraytype] [list element] :
+end define
+
+%  NOTE : No array slices as these are not compile time constants
+%         single array elements are allowed.
+
+define element
+       [opt 'REAL32VAR] [id]
+       | [element] '[[subscript]']
+end define
+
+define subscript
+       [expression]
+end define
+
+define variable
+        [element]
+end define
+
+define simpleoperand
+       [element]
+      | [literal]
+end define
+
+define operand
+        [simpleoperand]
+      | ([expression])
+end define
+
+define expression
+        [monadicoperator] [operand]
+      | [operand] [dyadicoperator] [operand]
+      | [conversion]
+      | [operand]
+end define
+
+define conversion
+        [primitivetype][operand]
+      | [primitivetype] ROUND ([expression])
+      | [primitivetype] TRUNC ([expression])
+end define
+
+define monadicoperator
+       NOT
+end define
+
+define dyadicoperator
+       PLUS | MINUS
+     | OR | AND
+     |  < |  > |  <=
+     |  >= | <> | =
+     |  + |  -
+     |  * |  /
+     |  +'  %  +' is used to avoid pattern clash
+     | MOD
+end define
+
+define port
+        [variable]
+end define
+

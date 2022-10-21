@@ -1,0 +1,22 @@
+type stringof (elementype, maxlength) :
+    record
+	length : int
+	elements : array 1 .. maxlength of elementype
+    end record
+
+var stuff : stringof (real, 5)
+
+var stuffarray : array 1 .. 100 of stringof (int, 10)
+
+const minsize := 12
+var stuffarray2 : array 1 .. 100 of stringof (int, minsize+1)
+
+type stringofstring : stringof (string, 5)
+type recordstring : 
+    record 
+	f1: array 1 .. 100 of stringof (stringofstring, 10)
+	test1 : string (5)
+	f2: stringof (string (5), 2)
+    end record
+
+var junk : recordstring

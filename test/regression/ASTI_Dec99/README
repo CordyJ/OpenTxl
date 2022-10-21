@@ -1,0 +1,5 @@
+
+This is code which was written on 1/31/00 to demonstrate a bug in
+TXL 1.3r4 and 2.2r1b.  To reproduce the bug, run 'txl test.min'.
+
+See the comments in 'min.Txl' for more details.

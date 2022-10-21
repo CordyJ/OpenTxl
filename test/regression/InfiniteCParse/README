@@ -1,0 +1,11 @@
+A real beauty.
+
+The hack for [constant] in the grammar is misordered, which causes
+[list expression] to backtrack a billion times when parsing
+lists of hex constants.
+
+Eventually it gives up and reports a bogus syntax error.
+
+This is a problem with our C grammar, not with TXL per se.
+
+Jim

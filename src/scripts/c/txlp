@@ -1,0 +1,62 @@
+#!/bin/sh
+# FreeTXL Profiler
+
+# Rev 9.5.20 JRC - added clean exit code
+
+# Where's FreeTXL?
+if [ "unset$TXLLIB" = "unset" ]
+then
+    TXLLIB=/usr/local/lib/txl
+fi
+
+# Check we have arguments
+if [ "$1" = "" ]
+then
+    echo "Usage:  txlp [-parse] [-time] [-space] [-calls] [-cycles] [-eff] [-percall] [txloptions] inputfile [txlfile]" 1>&2
+    exit 99
+fi
+
+# Decode TXL program name and options
+TXLFILES=""
+TXLOPTIONS=""
+PROFOPTIONS=""
+while [ "$1" != "" ]
+do
+    case "$1" in
+	-help)
+		echo "Usage:  txlp [-parse] [-time] [-space] [-calls] [-cycles] [-eff] [-percall] [txloptions] inputfile [txlfile]" 1>&2
+		exit 99
+		;;
+	-parse|-time|-space|-calls|-cycles|-eff|-percall)
+		PROFOPTIONS="$PROFOPTIONS $1"
+		;;
+	*) 
+		break
+		;;
+    esac
+    shift
+done
+
+# Run the TXL command, using txlpf
+if [ "$1" != "" ]
+then
+if  ! $TXLLIB/txlpf.x $* > /dev/null 2> /tmp/txlp$$ 
+then
+	echo "txlp:  TXL program failed" 2>&1
+	cat /tmp/txlp$$ 2>&1
+	exit 91
+    fi
+#else
+    # We're reanalyzing a previous profile
+fi
+
+# Analyze the results
+$TXLLIB/txlapr.x $PROFOPTIONS
+
+# Clean up
+/bin/rm -f /tmp/txlp$$
+
+# Finish clean
+exit 0
+
+# Rev 22.7.22

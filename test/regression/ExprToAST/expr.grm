@@ -1,0 +1,39 @@
+% Simple expression precedence grammar
+
+define program
+        [expression]
+end define
+
+define expression
+        [term]
+    |   [addition]
+    |   [subtraction]
+end define
+
+define addition
+    [expression] + [term]
+end define
+
+define subtraction
+    [expression] - [term]
+end define
+
+define term
+        [primary]
+    |	[multiplication]
+    |	[division]
+end define
+
+define multiplication
+    [term] * [primary]
+end define
+
+define division
+    [term] / [primary]
+end define
+
+define primary 
+        [number]
+    |   ( [expression] )
+end define
+

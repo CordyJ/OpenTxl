@@ -1,0 +1,14 @@
+% Example input for preliminary prototype type inferencer for the T'Nial 
+% programming language inclusion polymorphism type system.
+
+var x : int;
+var y : any;
+y := true;
+x := y;
+x := 42;
+y := x;
+z := y;
+x := z;
+a := true;
+b := a;
+x := b

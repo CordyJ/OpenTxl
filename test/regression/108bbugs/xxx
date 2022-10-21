@@ -1,0 +1,3990 @@
+OpenTxl v11.0 (20.10.22) (c) 2022 James R. Cordy and others
+Bootstrapping TXL ... 
+  ... used 395 trees and 250 kids.
+Scanning the TXL program bug.txl
+Parsing the TXL program
+
+First try
+
+First try
+
+First try
+
+First try
+
+First try
+
+First try
+
+
+Parse tree
+name = TXL_defineOrRedefine_
+kind = *choose
+count = 1
+<TXL_defineOrRedefine_> define</TXL_defineOrRedefine_>
+
+First try
+
+Parse tree
+name = id
+kind = id
+count = 0
+<id>program</id>
+
+First try
+
+First try
+
+
+Parse tree
+name = TXL_dotDotDotBar_
+kind = *order
+count = 0
+
+
+Parse tree
+name = TXL_optDotDotDotBar_
+kind = *choose
+count = 2
+<TXL_optDotDotDotBar_>
+ <empty/>
+</TXL_optDotDotDotBar_>
+
+First try
+
+First try
+
+First try
+
+First try
+
+
+First try
+
+First try
+
+Parse tree
+name = id
+kind = id
+count = 0
+<id>pat</id>
+
+Parse tree
+name = TXL_description_
+kind = *choose
+count = 1
+<TXL_description_>
+ <id>pat</id>
+</TXL_description_>
+
+
+Parse tree
+name = TXL_bracketedDescription_
+kind = *order
+count = 3
+<TXL_bracketedDescription_> [
+ <TXL_description_><id>pat</id></TXL_description_> ]
+</TXL_bracketedDescription_>
+
+Parse tree
+name = TXL_literalOrBracketedDescription_
+kind = *choose
+count = 1
+<TXL_literalOrBracketedDescription_>
+ <TXL_bracketedDescription_> [
+  <TXL_description_><id>pat</id></TXL_description_> ]
+ </TXL_bracketedDescription_>
+</TXL_literalOrBracketedDescription_>
+
+First try
+
+First try
+
+First try
+
+First try
+
+
+Parse tree
+name = TXL_bracketedDescription_
+kind = *order
+count = 0
+
+First try
+
+First try
+
+
+Parse tree
+name = TXL_quotedLiteral_
+kind = *order
+count = 0
+
+First try
+
+Parse tree
+name = token
+kind = *order
+count = 0
+
+Parse tree
+name = TXL_literal_
+kind = *order
+count = 0
+
+Parse tree
+name = TXL_literalOrBracketedDescription_
+kind = *order
+count = 0
+
+Parse tree
+name = TXL_indLiteralsAndBracketedDescriptions_
+kind = *order
+count = 0
+
+
+Parse tree
+name = TXL_literalsAndBracketedDescriptions_
+kind = *choose
+count = 2
+<TXL_literalsAndBracketedDescriptions_>
+ <empty/>
+</TXL_literalsAndBracketedDescriptions_>
+
+Parse tree
+name = TXL_indLiteralsAndBracketedDescriptions_
+kind = *order
+count = 2
+<TXL_indLiteralsAndBracketedDescriptions_>
+ <TXL_literalOrBracketedDescription_><TXL_bracketedDescription_> [
+   <TXL_description_><id>pat</id></TXL_description_> ]
+  </TXL_bracketedDescription_>
+ </TXL_literalOrBracketedDescription_>
+ <TXL_literalsAndBracketedDescriptions_><empty/></TXL_literalsAndBracketedDescriptions_>
+</TXL_indLiteralsAndBracketedDescriptions_>
+
+Parse tree
+name = TXL_literalsAndBracketedDescriptions_
+kind = *choose
+count = 1
+<TXL_literalsAndBracketedDescriptions_>
+ <TXL_indLiteralsAndBracketedDescriptions_>
+  <TXL_literalOrBracketedDescription_><TXL_bracketedDescription_> [
+    <TXL_description_><id>pat</id></TXL_description_> ]
+   </TXL_bracketedDescription_>
+  </TXL_literalOrBracketedDescription_>
+  <TXL_literalsAndBracketedDescriptions_><empty/></TXL_literalsAndBracketedDescriptions_>
+ </TXL_indLiteralsAndBracketedDescriptions_>
+</TXL_literalsAndBracketedDescriptions_>
+
+First try
+
+First try
+
+
+Parse tree
+name = TXL_indRepBarLiteralsAndBracketedDescriptions_
+kind = *order
+count = 0
+
+
+Parse tree
+name = TXL_repBarLiteralsAndBracketedDescriptions_
+kind = *choose
+count = 2
+<TXL_repBarLiteralsAndBracketedDescriptions_>
+ <empty/>
+</TXL_repBarLiteralsAndBracketedDescriptions_>
+
+First try
+
+First try
+
+First try
+
+
+
+Parse tree
+name = TXL_optBar_
+kind = *choose
+count = 2
+<TXL_optBar_>
+ <empty/>
+</TXL_optBar_>
+
+
+Backtrack
+
+
+Parse tree
+name = TXL_optBar_
+kind = *order
+count = 0
+
+Parse tree
+name = TXL_barDotDotDot_
+kind = *order
+count = 0
+
+
+Parse tree
+name = TXL_optBarDotDotDot_
+kind = *choose
+count = 2
+<TXL_optBarDotDotDot_>
+ <empty/>
+</TXL_optBarDotDotDot_>
+
+
+First try
+
+
+Parse tree
+name = TXL_defineOrRedefine_
+kind = *choose
+count = 1
+<TXL_defineOrRedefine_> define</TXL_defineOrRedefine_>
+
+
+Parse tree
+name = TXL_defineStatement_
+kind = *order
+count = 9
+<TXL_defineStatement_>
+ <TXL_defineOrRedefine_>define</TXL_defineOrRedefine_>
+ <id>program</id>
+ <TXL_optDotDotDotBar_><empty/></TXL_optDotDotDotBar_>
+ <TXL_literalsAndBracketedDescriptions_><TXL_indLiteralsAndBracketedDescriptions_>
+   <TXL_literalOrBracketedDescription_><TXL_bracketedDescription_> [
+     <TXL_description_><id>pat</id></TXL_description_> ]
+    </TXL_bracketedDescription_>
+   </TXL_literalOrBracketedDescription_>
+   <TXL_literalsAndBracketedDescriptions_><empty/></TXL_literalsAndBracketedDescriptions_>
+  </TXL_indLiteralsAndBracketedDescriptions_>
+ </TXL_literalsAndBracketedDescriptions_>
+ <TXL_repBarLiteralsAndBracketedDescriptions_><empty/></TXL_repBarLiteralsAndBracketedDescriptions_>
+ <TXL_optBarDotDotDot_><empty/></TXL_optBarDotDotDot_> end
+ <TXL_defineOrRedefine_>define</TXL_defineOrRedefine_>
+ <KEEP/>
+</TXL_defineStatement_>
+
+Parse tree
+name = TXL_statement_
+kind = *choose
+count = 1
+<TXL_statement_>
+ <TXL_defineStatement_>
+  <TXL_defineOrRedefine_>define</TXL_defineOrRedefine_>
+  <id>program</id>
+  <TXL_optDotDotDotBar_><empty/></TXL_optDotDotDotBar_>
+  <TXL_literalsAndBracketedDescriptions_><TXL_indLiteralsAndBracketedDescriptions_>
+    <TXL_literalOrBracketedDescription_><TXL_bracketedDescription_> [
+      <TXL_description_><id>pat</id></TXL_description_> ]
+     </TXL_bracketedDescription_>
+    </TXL_literalOrBracketedDescription_>
+    <TXL_literalsAndBracketedDescriptions_><empty/></TXL_literalsAndBracketedDescriptions_>
+   </TXL_indLiteralsAndBracketedDescriptions_>
+  </TXL_literalsAndBracketedDescriptions_>
+  <TXL_repBarLiteralsAndBracketedDescriptions_><empty/></TXL_repBarLiteralsAndBracketedDescriptions_>
+  <TXL_optBarDotDotDot_><empty/></TXL_optBarDotDotDot_> end
+  <TXL_defineOrRedefine_>define</TXL_defineOrRedefine_>
+  <KEEP/>
+ </TXL_defineStatement_>
+</TXL_statement_>
+
+First try
+
+First try
+
+First try
+
+First try
+
+First try
+
+
+Parse tree
+name = TXL_defineOrRedefine_
+kind = *choose
+count = 1
+<TXL_defineOrRedefine_> define</TXL_defineOrRedefine_>
+
+First try
+
+Parse tree
+name = id
+kind = id
+count = 0
+<id>formal</id>
+
+First try
+
+First try
+
+
+Parse tree
+name = TXL_dotDotDotBar_
+kind = *order
+count = 0
+
+
+Parse tree
+name = TXL_optDotDotDotBar_
+kind = *choose
+count = 2
+<TXL_optDotDotDotBar_>
+ <empty/>
+</TXL_optDotDotDotBar_>
+
+First try
+
+First try
+
+First try
+
+First try
+
+
+Parse tree
+name = TXL_bracketedDescription_
+kind = *order
+count = 0
+
+First try
+
+First try
+
+
+Parse tree
+name = TXL_quotedLiteral_
+kind = *order
+count = 0
+
+First try
+
+Parse tree
+name = token
+kind = *literal
+count = 0
+(
+
+Parse tree
+name = TXL_literal_
+kind = *choose
+count = 2
+<TXL_literal_> (</TXL_literal_>
+
+Parse tree
+name = TXL_literalOrBracketedDescription_
+kind = *choose
+count = 2
+<TXL_literalOrBracketedDescription_>
+ <TXL_literal_>(</TXL_literal_>
+</TXL_literalOrBracketedDescription_>
+
+First try
+
+First try
+
+First try
+
+First try
+
+
+First try
+
+First try
+
+Parse tree
+name = id
+kind = *order
+count = 0
+
+First try
+
+
+First try
+
+First try
+
+Parse tree
+name = id
+kind = *order
+count = 0
+
+First try
+
+First try
+
+
+Parse tree
+name = TXL_quotedLiteral_
+kind = *order
+count = 0
+
+First try
+
+Parse tree
+name = token
+kind = *order
+count = 0
+
+Parse tree
+name = TXL_literal_
+kind = *order
+count = 0
+
+Parse tree
+name = TXL_idOrLiteral_
+kind = *order
+count = 0
+
+
+Parse tree
+name = TXL_newoptDescription_
+kind = *order
+count = 0
+
+First try
+
+
+First try
+
+First try
+
+Parse tree
+name = id
+kind = *order
+count = 0
+
+First try
+
+First try
+
+
+Parse tree
+name = TXL_quotedLiteral_
+kind = *order
+count = 0
+
+First try
+
+Parse tree
+name = token
+kind = *order
+count = 0
+
+Parse tree
+name = TXL_literal_
+kind = *order
+count = 0
+
+Parse tree
+name = TXL_idOrLiteral_
+kind = *order
+count = 0
+
+
+Parse tree
+name = TXL_newrepeatDescription_
+kind = *order
+count = 0
+
+First try
+
+
+First try
+
+First try
+
+Parse tree
+name = id
+kind = *order
+count = 0
+
+First try
+
+First try
+
+
+Parse tree
+name = TXL_quotedLiteral_
+kind = *order
+count = 0
+
+First try
+
+Parse tree
+name = token
+kind = *order
+count = 0
+
+Parse tree
+name = TXL_literal_
+kind = *order
+count = 0
+
+Parse tree
+name = TXL_idOrLiteral_
+kind = *order
+count = 0
+
+
+Parse tree
+name = TXL_newlistDescription_
+kind = *order
+count = 0
+
+First try
+
+
+First try
+
+First try
+
+Parse tree
+name = id
+kind = *order
+count = 0
+
+First try
+
+First try
+
+
+Parse tree
+name = TXL_quotedLiteral_
+kind = *order
+count = 0
+
+First try
+
+Parse tree
+name = token
+kind = *order
+count = 0
+
+Parse tree
+name = TXL_literal_
+kind = *order
+count = 0
+
+Parse tree
+name = TXL_idOrLiteral_
+kind = *order
+count = 0
+
+
+Parse tree
+name = TXL_newrepeat1Description_
+kind = *order
+count = 0
+
+First try
+
+
+First try
+
+First try
+
+Parse tree
+name = id
+kind = *order
+count = 0
+
+First try
+
+First try
+
+
+Parse tree
+name = TXL_quotedLiteral_
+kind = *order
+count = 0
+
+First try
+
+Parse tree
+name = token
+kind = *order
+count = 0
+
+Parse tree
+name = TXL_literal_
+kind = *order
+count = 0
+
+Parse tree
+name = TXL_idOrLiteral_
+kind = *order
+count = 0
+
+
+Parse tree
+name = TXL_newlist1Description_
+kind = *order
+count = 0
+
+First try
+
+
+Parse tree
+name = TXL_attrDescription_
+kind = *order
+count = 0
+
+First try
+
+
+Parse tree
+name = TXL_optDescription_
+kind = *order
+count = 0
+
+First try
+
+
+Parse tree
+name = TXL_repeatDescription_
+kind = *order
+count = 0
+
+First try
+
+
+First try
+
+First try
+
+Parse tree
+name = id
+kind = id
+count = 0
+<id>pat</id>
+
+Parse tree
+name = TXL_idOrLiteral_
+kind = *choose
+count = 1
+<TXL_idOrLiteral_>
+ <id>pat</id>
+</TXL_idOrLiteral_>
+
+First try
+
+
+
+Parse tree
+name = TXL_optStar_
+kind = *choose
+count = 2
+<TXL_optStar_>
+ <empty/>
+</TXL_optStar_>
+
+Parse tree
+name = TXL_listDescription_
+kind = *order
+count = 3
+<TXL_listDescription_> list
+ <TXL_idOrLiteral_><id>pat</id></TXL_idOrLiteral_>
+ <TXL_optStar_><empty/></TXL_optStar_>
+</TXL_listDescription_>
+
+Parse tree
+name = TXL_description_
+kind = *choose
+count = 10
+<TXL_description_>
+ <TXL_listDescription_> list
+  <TXL_idOrLiteral_><id>pat</id></TXL_idOrLiteral_>
+  <TXL_optStar_><empty/></TXL_optStar_>
+ </TXL_listDescription_>
+</TXL_description_>
+
+
+Parse tree
+name = TXL_bracketedDescription_
+kind = *order
+count = 3
+<TXL_bracketedDescription_> [
+ <TXL_description_><TXL_listDescription_> list
+   <TXL_idOrLiteral_><id>pat</id></TXL_idOrLiteral_>
+   <TXL_optStar_><empty/></TXL_optStar_>
+  </TXL_listDescription_>
+ </TXL_description_> ]
+</TXL_bracketedDescription_>
+
+Parse tree
+name = TXL_literalOrBracketedDescription_
+kind = *choose
+count = 1
+<TXL_literalOrBracketedDescription_>
+ <TXL_bracketedDescription_> [
+  <TXL_description_><TXL_listDescription_> list
+    <TXL_idOrLiteral_><id>pat</id></TXL_idOrLiteral_>
+    <TXL_optStar_><empty/></TXL_optStar_>
+   </TXL_listDescription_>
+  </TXL_description_> ]
+ </TXL_bracketedDescription_>
+</TXL_literalOrBracketedDescription_>
+
+First try
+
+First try
+
+First try
+
+First try
+
+
+Parse tree
+name = TXL_bracketedDescription_
+kind = *order
+count = 0
+
+First try
+
+First try
+
+
+Parse tree
+name = TXL_quotedLiteral_
+kind = *order
+count = 0
+
+First try
+
+Parse tree
+name = token
+kind = *literal
+count = 0
+)
+
+Parse tree
+name = TXL_literal_
+kind = *choose
+count = 2
+<TXL_literal_> )</TXL_literal_>
+
+Parse tree
+name = TXL_literalOrBracketedDescription_
+kind = *choose
+count = 2
+<TXL_literalOrBracketedDescription_>
+ <TXL_literal_>)</TXL_literal_>
+</TXL_literalOrBracketedDescription_>
+
+First try
+
+First try
+
+First try
+
+First try
+
+
+Parse tree
+name = TXL_bracketedDescription_
+kind = *order
+count = 0
+
+First try
+
+First try
+
+
+Parse tree
+name = TXL_quotedLiteral_
+kind = *order
+count = 0
+
+First try
+
+Parse tree
+name = token
+kind = *order
+count = 0
+
+Parse tree
+name = TXL_literal_
+kind = *order
+count = 0
+
+Parse tree
+name = TXL_literalOrBracketedDescription_
+kind = *order
+count = 0
+
+Parse tree
+name = TXL_indLiteralsAndBracketedDescriptions_
+kind = *order
+count = 0
+
+
+Parse tree
+name = TXL_literalsAndBracketedDescriptions_
+kind = *choose
+count = 2
+<TXL_literalsAndBracketedDescriptions_>
+ <empty/>
+</TXL_literalsAndBracketedDescriptions_>
+
+Parse tree
+name = TXL_indLiteralsAndBracketedDescriptions_
+kind = *order
+count = 2
+<TXL_indLiteralsAndBracketedDescriptions_>
+ <TXL_literalOrBracketedDescription_><TXL_literal_>)</TXL_literal_></TXL_literalOrBracketedDescription_>
+ <TXL_literalsAndBracketedDescriptions_><empty/></TXL_literalsAndBracketedDescriptions_>
+</TXL_indLiteralsAndBracketedDescriptions_>
+
+Parse tree
+name = TXL_literalsAndBracketedDescriptions_
+kind = *choose
+count = 1
+<TXL_literalsAndBracketedDescriptions_>
+ <TXL_indLiteralsAndBracketedDescriptions_>
+  <TXL_literalOrBracketedDescription_><TXL_literal_>)</TXL_literal_></TXL_literalOrBracketedDescription_>
+  <TXL_literalsAndBracketedDescriptions_><empty/></TXL_literalsAndBracketedDescriptions_>
+ </TXL_indLiteralsAndBracketedDescriptions_>
+</TXL_literalsAndBracketedDescriptions_>
+
+Parse tree
+name = TXL_indLiteralsAndBracketedDescriptions_
+kind = *order
+count = 2
+<TXL_indLiteralsAndBracketedDescriptions_>
+ <TXL_literalOrBracketedDescription_><TXL_bracketedDescription_> [
+   <TXL_description_><TXL_listDescription_> list
+     <TXL_idOrLiteral_><id>pat</id></TXL_idOrLiteral_>
+     <TXL_optStar_><empty/></TXL_optStar_>
+    </TXL_listDescription_>
+   </TXL_description_> ]
+  </TXL_bracketedDescription_>
+ </TXL_literalOrBracketedDescription_>
+ <TXL_literalsAndBracketedDescriptions_><TXL_indLiteralsAndBracketedDescriptions_>
+   <TXL_literalOrBracketedDescription_><TXL_literal_>)</TXL_literal_></TXL_literalOrBracketedDescription_>
+   <TXL_literalsAndBracketedDescriptions_><empty/></TXL_literalsAndBracketedDescriptions_>
+  </TXL_indLiteralsAndBracketedDescriptions_>
+ </TXL_literalsAndBracketedDescriptions_>
+</TXL_indLiteralsAndBracketedDescriptions_>
+
+Parse tree
+name = TXL_literalsAndBracketedDescriptions_
+kind = *choose
+count = 1
+<TXL_literalsAndBracketedDescriptions_>
+ <TXL_indLiteralsAndBracketedDescriptions_>
+  <TXL_literalOrBracketedDescription_><TXL_bracketedDescription_> [
+    <TXL_description_><TXL_listDescription_> list
+      <TXL_idOrLiteral_><id>pat</id></TXL_idOrLiteral_>
+      <TXL_optStar_><empty/></TXL_optStar_>
+     </TXL_listDescription_>
+    </TXL_description_> ]
+   </TXL_bracketedDescription_>
+  </TXL_literalOrBracketedDescription_>
+  <TXL_literalsAndBracketedDescriptions_><TXL_indLiteralsAndBracketedDescriptions_>
+    <TXL_literalOrBracketedDescription_><TXL_literal_>)</TXL_literal_></TXL_literalOrBracketedDescription_>
+    <TXL_literalsAndBracketedDescriptions_><empty/></TXL_literalsAndBracketedDescriptions_>
+   </TXL_indLiteralsAndBracketedDescriptions_>
+  </TXL_literalsAndBracketedDescriptions_>
+ </TXL_indLiteralsAndBracketedDescriptions_>
+</TXL_literalsAndBracketedDescriptions_>
+
+Parse tree
+name = TXL_indLiteralsAndBracketedDescriptions_
+kind = *order
+count = 2
+<TXL_indLiteralsAndBracketedDescriptions_>
+ <TXL_literalOrBracketedDescription_><TXL_literal_>(</TXL_literal_></TXL_literalOrBracketedDescription_>
+ <TXL_literalsAndBracketedDescriptions_><TXL_indLiteralsAndBracketedDescriptions_>
+   <TXL_literalOrBracketedDescription_><TXL_bracketedDescription_> [
+     <TXL_description_><TXL_listDescription_> list
+       <TXL_idOrLiteral_><id>pat</id></TXL_idOrLiteral_>
+       <TXL_optStar_><empty/></TXL_optStar_>
+      </TXL_listDescription_>
+     </TXL_description_> ]
+    </TXL_bracketedDescription_>
+   </TXL_literalOrBracketedDescription_>
+   <TXL_literalsAndBracketedDescriptions_><TXL_indLiteralsAndBracketedDescriptions_>
+     <TXL_literalOrBracketedDescription_><TXL_literal_>)</TXL_literal_></TXL_literalOrBracketedDescription_>
+     <TXL_literalsAndBracketedDescriptions_><empty/></TXL_literalsAndBracketedDescriptions_>
+    </TXL_indLiteralsAndBracketedDescriptions_>
+   </TXL_literalsAndBracketedDescriptions_>
+  </TXL_indLiteralsAndBracketedDescriptions_>
+ </TXL_literalsAndBracketedDescriptions_>
+</TXL_indLiteralsAndBracketedDescriptions_>
+
+Parse tree
+name = TXL_literalsAndBracketedDescriptions_
+kind = *choose
+count = 1
+<TXL_literalsAndBracketedDescriptions_>
+ <TXL_indLiteralsAndBracketedDescriptions_>
+  <TXL_literalOrBracketedDescription_><TXL_literal_>(</TXL_literal_></TXL_literalOrBracketedDescription_>
+  <TXL_literalsAndBracketedDescriptions_><TXL_indLiteralsAndBracketedDescriptions_>
+    <TXL_literalOrBracketedDescription_><TXL_bracketedDescription_> [
+      <TXL_description_><TXL_listDescription_> list
+        <TXL_idOrLiteral_><id>pat</id></TXL_idOrLiteral_>
+        <TXL_optStar_><empty/></TXL_optStar_>
+       </TXL_listDescription_>
+      </TXL_description_> ]
+     </TXL_bracketedDescription_>
+    </TXL_literalOrBracketedDescription_>
+    <TXL_literalsAndBracketedDescriptions_><TXL_indLiteralsAndBracketedDescriptions_>
+      <TXL_literalOrBracketedDescription_><TXL_literal_>)</TXL_literal_></TXL_literalOrBracketedDescription_>
+      <TXL_literalsAndBracketedDescriptions_><empty/></TXL_literalsAndBracketedDescriptions_>
+     </TXL_indLiteralsAndBracketedDescriptions_>
+    </TXL_literalsAndBracketedDescriptions_>
+   </TXL_indLiteralsAndBracketedDescriptions_>
+  </TXL_literalsAndBracketedDescriptions_>
+ </TXL_indLiteralsAndBracketedDescriptions_>
+</TXL_literalsAndBracketedDescriptions_>
+
+First try
+
+First try
+
+
+First try
+
+First try
+
+First try
+
+First try
+
+
+First try
+
+First try
+
+Parse tree
+name = id
+kind = id
+count = 0
+<id>id</id>
+
+Parse tree
+name = TXL_description_
+kind = *choose
+count = 1
+<TXL_description_>
+ <id>id</id>
+</TXL_description_>
+
+
+Parse tree
+name = TXL_bracketedDescription_
+kind = *order
+count = 3
+<TXL_bracketedDescription_> [
+ <TXL_description_><id>id</id></TXL_description_> ]
+</TXL_bracketedDescription_>
+
+Parse tree
+name = TXL_literalOrBracketedDescription_
+kind = *choose
+count = 1
+<TXL_literalOrBracketedDescription_>
+ <TXL_bracketedDescription_> [
+  <TXL_description_><id>id</id></TXL_description_> ]
+ </TXL_bracketedDescription_>
+</TXL_literalOrBracketedDescription_>
+
+First try
+
+First try
+
+First try
+
+First try
+
+
+Parse tree
+name = TXL_bracketedDescription_
+kind = *order
+count = 0
+
+First try
+
+First try
+
+
+Parse tree
+name = TXL_quotedLiteral_
+kind = *order
+count = 0
+
+First try
+
+Parse tree
+name = token
+kind = *order
+count = 0
+
+Parse tree
+name = TXL_literal_
+kind = *order
+count = 0
+
+Parse tree
+name = TXL_literalOrBracketedDescription_
+kind = *order
+count = 0
+
+Parse tree
+name = TXL_indLiteralsAndBracketedDescriptions_
+kind = *order
+count = 0
+
+
+Parse tree
+name = TXL_literalsAndBracketedDescriptions_
+kind = *choose
+count = 2
+<TXL_literalsAndBracketedDescriptions_>
+ <empty/>
+</TXL_literalsAndBracketedDescriptions_>
+
+Parse tree
+name = TXL_indLiteralsAndBracketedDescriptions_
+kind = *order
+count = 2
+<TXL_indLiteralsAndBracketedDescriptions_>
+ <TXL_literalOrBracketedDescription_><TXL_bracketedDescription_> [
+   <TXL_description_><id>id</id></TXL_description_> ]
+  </TXL_bracketedDescription_>
+ </TXL_literalOrBracketedDescription_>
+ <TXL_literalsAndBracketedDescriptions_><empty/></TXL_literalsAndBracketedDescriptions_>
+</TXL_indLiteralsAndBracketedDescriptions_>
+
+Parse tree
+name = TXL_literalsAndBracketedDescriptions_
+kind = *choose
+count = 1
+<TXL_literalsAndBracketedDescriptions_>
+ <TXL_indLiteralsAndBracketedDescriptions_>
+  <TXL_literalOrBracketedDescription_><TXL_bracketedDescription_> [
+    <TXL_description_><id>id</id></TXL_description_> ]
+   </TXL_bracketedDescription_>
+  </TXL_literalOrBracketedDescription_>
+  <TXL_literalsAndBracketedDescriptions_><empty/></TXL_literalsAndBracketedDescriptions_>
+ </TXL_indLiteralsAndBracketedDescriptions_>
+</TXL_literalsAndBracketedDescriptions_>
+
+First try
+
+First try
+
+
+First try
+
+First try
+
+First try
+
+First try
+
+
+First try
+
+First try
+
+Parse tree
+name = id
+kind = id
+count = 0
+<id>number</id>
+
+Parse tree
+name = TXL_description_
+kind = *choose
+count = 1
+<TXL_description_>
+ <id>number</id>
+</TXL_description_>
+
+
+Parse tree
+name = TXL_bracketedDescription_
+kind = *order
+count = 3
+<TXL_bracketedDescription_> [
+ <TXL_description_><id>number</id></TXL_description_> ]
+</TXL_bracketedDescription_>
+
+Parse tree
+name = TXL_literalOrBracketedDescription_
+kind = *choose
+count = 1
+<TXL_literalOrBracketedDescription_>
+ <TXL_bracketedDescription_> [
+  <TXL_description_><id>number</id></TXL_description_> ]
+ </TXL_bracketedDescription_>
+</TXL_literalOrBracketedDescription_>
+
+First try
+
+First try
+
+First try
+
+First try
+
+
+Parse tree
+name = TXL_bracketedDescription_
+kind = *order
+count = 0
+
+First try
+
+First try
+
+
+Parse tree
+name = TXL_quotedLiteral_
+kind = *order
+count = 0
+
+First try
+
+Parse tree
+name = token
+kind = *order
+count = 0
+
+Parse tree
+name = TXL_literal_
+kind = *order
+count = 0
+
+Parse tree
+name = TXL_literalOrBracketedDescription_
+kind = *order
+count = 0
+
+Parse tree
+name = TXL_indLiteralsAndBracketedDescriptions_
+kind = *order
+count = 0
+
+
+Parse tree
+name = TXL_literalsAndBracketedDescriptions_
+kind = *choose
+count = 2
+<TXL_literalsAndBracketedDescriptions_>
+ <empty/>
+</TXL_literalsAndBracketedDescriptions_>
+
+Parse tree
+name = TXL_indLiteralsAndBracketedDescriptions_
+kind = *order
+count = 2
+<TXL_indLiteralsAndBracketedDescriptions_>
+ <TXL_literalOrBracketedDescription_><TXL_bracketedDescription_> [
+   <TXL_description_><id>number</id></TXL_description_> ]
+  </TXL_bracketedDescription_>
+ </TXL_literalOrBracketedDescription_>
+ <TXL_literalsAndBracketedDescriptions_><empty/></TXL_literalsAndBracketedDescriptions_>
+</TXL_indLiteralsAndBracketedDescriptions_>
+
+Parse tree
+name = TXL_literalsAndBracketedDescriptions_
+kind = *choose
+count = 1
+<TXL_literalsAndBracketedDescriptions_>
+ <TXL_indLiteralsAndBracketedDescriptions_>
+  <TXL_literalOrBracketedDescription_><TXL_bracketedDescription_> [
+    <TXL_description_><id>number</id></TXL_description_> ]
+   </TXL_bracketedDescription_>
+  </TXL_literalOrBracketedDescription_>
+  <TXL_literalsAndBracketedDescriptions_><empty/></TXL_literalsAndBracketedDescriptions_>
+ </TXL_indLiteralsAndBracketedDescriptions_>
+</TXL_literalsAndBracketedDescriptions_>
+
+First try
+
+First try
+
+
+Parse tree
+name = TXL_indRepBarLiteralsAndBracketedDescriptions_
+kind = *order
+count = 0
+
+
+Parse tree
+name = TXL_repBarLiteralsAndBracketedDescriptions_
+kind = *choose
+count = 2
+<TXL_repBarLiteralsAndBracketedDescriptions_>
+ <empty/>
+</TXL_repBarLiteralsAndBracketedDescriptions_>
+
+Parse tree
+name = TXL_indRepBarLiteralsAndBracketedDescriptions_
+kind = *order
+count = 3
+<TXL_indRepBarLiteralsAndBracketedDescriptions_> |
+ <TXL_literalsAndBracketedDescriptions_><TXL_indLiteralsAndBracketedDescriptions_>
+   <TXL_literalOrBracketedDescription_><TXL_bracketedDescription_> [
+     <TXL_description_><id>number</id></TXL_description_> ]
+    </TXL_bracketedDescription_>
+   </TXL_literalOrBracketedDescription_>
+   <TXL_literalsAndBracketedDescriptions_><empty/></TXL_literalsAndBracketedDescriptions_>
+  </TXL_indLiteralsAndBracketedDescriptions_>
+ </TXL_literalsAndBracketedDescriptions_>
+ <TXL_repBarLiteralsAndBracketedDescriptions_><empty/></TXL_repBarLiteralsAndBracketedDescriptions_>
+</TXL_indRepBarLiteralsAndBracketedDescriptions_>
+
+Parse tree
+name = TXL_repBarLiteralsAndBracketedDescriptions_
+kind = *choose
+count = 1
+<TXL_repBarLiteralsAndBracketedDescriptions_>
+ <TXL_indRepBarLiteralsAndBracketedDescriptions_> |
+  <TXL_literalsAndBracketedDescriptions_><TXL_indLiteralsAndBracketedDescriptions_>
+    <TXL_literalOrBracketedDescription_><TXL_bracketedDescription_> [
+      <TXL_description_><id>number</id></TXL_description_> ]
+     </TXL_bracketedDescription_>
+    </TXL_literalOrBracketedDescription_>
+    <TXL_literalsAndBracketedDescriptions_><empty/></TXL_literalsAndBracketedDescriptions_>
+   </TXL_indLiteralsAndBracketedDescriptions_>
+  </TXL_literalsAndBracketedDescriptions_>
+  <TXL_repBarLiteralsAndBracketedDescriptions_><empty/></TXL_repBarLiteralsAndBracketedDescriptions_>
+ </TXL_indRepBarLiteralsAndBracketedDescriptions_>
+</TXL_repBarLiteralsAndBracketedDescriptions_>
+
+Parse tree
+name = TXL_indRepBarLiteralsAndBracketedDescriptions_
+kind = *order
+count = 3
+<TXL_indRepBarLiteralsAndBracketedDescriptions_> |
+ <TXL_literalsAndBracketedDescriptions_><TXL_indLiteralsAndBracketedDescriptions_>
+   <TXL_literalOrBracketedDescription_><TXL_bracketedDescription_> [
+     <TXL_description_><id>id</id></TXL_description_> ]
+    </TXL_bracketedDescription_>
+   </TXL_literalOrBracketedDescription_>
+   <TXL_literalsAndBracketedDescriptions_><empty/></TXL_literalsAndBracketedDescriptions_>
+  </TXL_indLiteralsAndBracketedDescriptions_>
+ </TXL_literalsAndBracketedDescriptions_>
+ <TXL_repBarLiteralsAndBracketedDescriptions_><TXL_indRepBarLiteralsAndBracketedDescriptions_> |
+   <TXL_literalsAndBracketedDescriptions_><TXL_indLiteralsAndBracketedDescriptions_>
+     <TXL_literalOrBracketedDescription_><TXL_bracketedDescription_> [
+       <TXL_description_><id>number</id></TXL_description_> ]
+      </TXL_bracketedDescription_>
+     </TXL_literalOrBracketedDescription_>
+     <TXL_literalsAndBracketedDescriptions_><empty/></TXL_literalsAndBracketedDescriptions_>
+    </TXL_indLiteralsAndBracketedDescriptions_>
+   </TXL_literalsAndBracketedDescriptions_>
+   <TXL_repBarLiteralsAndBracketedDescriptions_><empty/></TXL_repBarLiteralsAndBracketedDescriptions_>
+  </TXL_indRepBarLiteralsAndBracketedDescriptions_>
+ </TXL_repBarLiteralsAndBracketedDescriptions_>
+</TXL_indRepBarLiteralsAndBracketedDescriptions_>
+
+Parse tree
+name = TXL_repBarLiteralsAndBracketedDescriptions_
+kind = *choose
+count = 1
+<TXL_repBarLiteralsAndBracketedDescriptions_>
+ <TXL_indRepBarLiteralsAndBracketedDescriptions_> |
+  <TXL_literalsAndBracketedDescriptions_><TXL_indLiteralsAndBracketedDescriptions_>
+    <TXL_literalOrBracketedDescription_><TXL_bracketedDescription_> [
+      <TXL_description_><id>id</id></TXL_description_> ]
+     </TXL_bracketedDescription_>
+    </TXL_literalOrBracketedDescription_>
+    <TXL_literalsAndBracketedDescriptions_><empty/></TXL_literalsAndBracketedDescriptions_>
+   </TXL_indLiteralsAndBracketedDescriptions_>
+  </TXL_literalsAndBracketedDescriptions_>
+  <TXL_repBarLiteralsAndBracketedDescriptions_><TXL_indRepBarLiteralsAndBracketedDescriptions_> |
+    <TXL_literalsAndBracketedDescriptions_><TXL_indLiteralsAndBracketedDescriptions_>
+      <TXL_literalOrBracketedDescription_><TXL_bracketedDescription_> [
+        <TXL_description_><id>number</id></TXL_description_> ]
+       </TXL_bracketedDescription_>
+      </TXL_literalOrBracketedDescription_>
+      <TXL_literalsAndBracketedDescriptions_><empty/></TXL_literalsAndBracketedDescriptions_>
+     </TXL_indLiteralsAndBracketedDescriptions_>
+    </TXL_literalsAndBracketedDescriptions_>
+    <TXL_repBarLiteralsAndBracketedDescriptions_><empty/></TXL_repBarLiteralsAndBracketedDescriptions_>
+   </TXL_indRepBarLiteralsAndBracketedDescriptions_>
+  </TXL_repBarLiteralsAndBracketedDescriptions_>
+ </TXL_indRepBarLiteralsAndBracketedDescriptions_>
+</TXL_repBarLiteralsAndBracketedDescriptions_>
+
+First try
+
+First try
+
+First try
+
+
+
+Parse tree
+name = TXL_optBar_
+kind = *choose
+count = 2
+<TXL_optBar_>
+ <empty/>
+</TXL_optBar_>
+
+
+Backtrack
+
+
+Parse tree
+name = TXL_optBar_
+kind = *order
+count = 0
+
+Parse tree
+name = TXL_barDotDotDot_
+kind = *order
+count = 0
+
+
+Parse tree
+name = TXL_optBarDotDotDot_
+kind = *choose
+count = 2
+<TXL_optBarDotDotDot_>
+ <empty/>
+</TXL_optBarDotDotDot_>
+
+
+First try
+
+
+Parse tree
+name = TXL_defineOrRedefine_
+kind = *choose
+count = 1
+<TXL_defineOrRedefine_> define</TXL_defineOrRedefine_>
+
+
+Parse tree
+name = TXL_defineStatement_
+kind = *order
+count = 9
+<TXL_defineStatement_>
+ <TXL_defineOrRedefine_>define</TXL_defineOrRedefine_>
+ <id>formal</id>
+ <TXL_optDotDotDotBar_><empty/></TXL_optDotDotDotBar_>
+ <TXL_literalsAndBracketedDescriptions_><TXL_indLiteralsAndBracketedDescriptions_>
+   <TXL_literalOrBracketedDescription_><TXL_literal_>(</TXL_literal_></TXL_literalOrBracketedDescription_>
+   <TXL_literalsAndBracketedDescriptions_><TXL_indLiteralsAndBracketedDescriptions_>
+     <TXL_literalOrBracketedDescription_><TXL_bracketedDescription_> [
+       <TXL_description_><TXL_listDescription_> list
+         <TXL_idOrLiteral_><id>pat</id></TXL_idOrLiteral_>
+         <TXL_optStar_><empty/></TXL_optStar_>
+        </TXL_listDescription_>
+       </TXL_description_> ]
+      </TXL_bracketedDescription_>
+     </TXL_literalOrBracketedDescription_>
+     <TXL_literalsAndBracketedDescriptions_><TXL_indLiteralsAndBracketedDescriptions_>
+       <TXL_literalOrBracketedDescription_><TXL_literal_>)</TXL_literal_></TXL_literalOrBracketedDescription_>
+       <TXL_literalsAndBracketedDescriptions_><empty/></TXL_literalsAndBracketedDescriptions_>
+      </TXL_indLiteralsAndBracketedDescriptions_>
+     </TXL_literalsAndBracketedDescriptions_>
+    </TXL_indLiteralsAndBracketedDescriptions_>
+   </TXL_literalsAndBracketedDescriptions_>
+  </TXL_indLiteralsAndBracketedDescriptions_>
+ </TXL_literalsAndBracketedDescriptions_>
+ <TXL_repBarLiteralsAndBracketedDescriptions_><TXL_indRepBarLiteralsAndBracketedDescriptions_> |
+   <TXL_literalsAndBracketedDescriptions_><TXL_indLiteralsAndBracketedDescriptions_>
+     <TXL_literalOrBracketedDescription_><TXL_bracketedDescription_> [
+       <TXL_description_><id>id</id></TXL_description_> ]
+      </TXL_bracketedDescription_>
+     </TXL_literalOrBracketedDescription_>
+     <TXL_literalsAndBracketedDescriptions_><empty/></TXL_literalsAndBracketedDescriptions_>
+    </TXL_indLiteralsAndBracketedDescriptions_>
+   </TXL_literalsAndBracketedDescriptions_>
+   <TXL_repBarLiteralsAndBracketedDescriptions_><TXL_indRepBarLiteralsAndBracketedDescriptions_> |
+     <TXL_literalsAndBracketedDescriptions_><TXL_indLiteralsAndBracketedDescriptions_>
+       <TXL_literalOrBracketedDescription_><TXL_bracketedDescription_> [
+         <TXL_description_><id>number</id></TXL_description_> ]
+        </TXL_bracketedDescription_>
+       </TXL_literalOrBracketedDescription_>
+       <TXL_literalsAndBracketedDescriptions_><empty/></TXL_literalsAndBracketedDescriptions_>
+      </TXL_indLiteralsAndBracketedDescriptions_>
+     </TXL_literalsAndBracketedDescriptions_>
+     <TXL_repBarLiteralsAndBracketedDescriptions_><empty/></TXL_repBarLiteralsAndBracketedDescriptions_>
+    </TXL_indRepBarLiteralsAndBracketedDescriptions_>
+   </TXL_repBarLiteralsAndBracketedDescriptions_>
+  </TXL_indRepBarLiteralsAndBracketedDescriptions_>
+ </TXL_repBarLiteralsAndBracketedDescriptions_>
+ <TXL_optBarDotDotDot_><empty/></TXL_optBarDotDotDot_> end
+ <TXL_defineOrRedefine_>define</TXL_defineOrRedefine_>
+ <KEEP/>
+</TXL_defineStatement_>
+
+Parse tree
+name = TXL_statement_
+kind = *choose
+count = 1
+<TXL_statement_>
+ <TXL_defineStatement_>
+  <TXL_defineOrRedefine_>define</TXL_defineOrRedefine_>
+  <id>formal</id>
+  <TXL_optDotDotDotBar_><empty/></TXL_optDotDotDotBar_>
+  <TXL_literalsAndBracketedDescriptions_><TXL_indLiteralsAndBracketedDescriptions_>
+    <TXL_literalOrBracketedDescription_><TXL_literal_>(</TXL_literal_></TXL_literalOrBracketedDescription_>
+    <TXL_literalsAndBracketedDescriptions_><TXL_indLiteralsAndBracketedDescriptions_>
+      <TXL_literalOrBracketedDescription_><TXL_bracketedDescription_> [
+        <TXL_description_><TXL_listDescription_> list
+          <TXL_idOrLiteral_><id>pat</id></TXL_idOrLiteral_>
+          <TXL_optStar_><empty/></TXL_optStar_>
+         </TXL_listDescription_>
+        </TXL_description_> ]
+       </TXL_bracketedDescription_>
+      </TXL_literalOrBracketedDescription_>
+      <TXL_literalsAndBracketedDescriptions_><TXL_indLiteralsAndBracketedDescriptions_>
+        <TXL_literalOrBracketedDescription_><TXL_literal_>)</TXL_literal_></TXL_literalOrBracketedDescription_>
+        <TXL_literalsAndBracketedDescriptions_><empty/></TXL_literalsAndBracketedDescriptions_>
+       </TXL_indLiteralsAndBracketedDescriptions_>
+      </TXL_literalsAndBracketedDescriptions_>
+     </TXL_indLiteralsAndBracketedDescriptions_>
+    </TXL_literalsAndBracketedDescriptions_>
+   </TXL_indLiteralsAndBracketedDescriptions_>
+  </TXL_literalsAndBracketedDescriptions_>
+  <TXL_repBarLiteralsAndBracketedDescriptions_><TXL_indRepBarLiteralsAndBracketedDescriptions_> |
+    <TXL_literalsAndBracketedDescriptions_><TXL_indLiteralsAndBracketedDescriptions_>
+      <TXL_literalOrBracketedDescription_><TXL_bracketedDescription_> [
+        <TXL_description_><id>id</id></TXL_description_> ]
+       </TXL_bracketedDescription_>
+      </TXL_literalOrBracketedDescription_>
+      <TXL_literalsAndBracketedDescriptions_><empty/></TXL_literalsAndBracketedDescriptions_>
+     </TXL_indLiteralsAndBracketedDescriptions_>
+    </TXL_literalsAndBracketedDescriptions_>
+    <TXL_repBarLiteralsAndBracketedDescriptions_><TXL_indRepBarLiteralsAndBracketedDescriptions_> |
+      <TXL_literalsAndBracketedDescriptions_><TXL_indLiteralsAndBracketedDescriptions_>
+        <TXL_literalOrBracketedDescription_><TXL_bracketedDescription_> [
+          <TXL_description_><id>number</id></TXL_description_> ]
+         </TXL_bracketedDescription_>
+        </TXL_literalOrBracketedDescription_>
+        <TXL_literalsAndBracketedDescriptions_><empty/></TXL_literalsAndBracketedDescriptions_>
+       </TXL_indLiteralsAndBracketedDescriptions_>
+      </TXL_literalsAndBracketedDescriptions_>
+      <TXL_repBarLiteralsAndBracketedDescriptions_><empty/></TXL_repBarLiteralsAndBracketedDescriptions_>
+     </TXL_indRepBarLiteralsAndBracketedDescriptions_>
+    </TXL_repBarLiteralsAndBracketedDescriptions_>
+   </TXL_indRepBarLiteralsAndBracketedDescriptions_>
+  </TXL_repBarLiteralsAndBracketedDescriptions_>
+  <TXL_optBarDotDotDot_><empty/></TXL_optBarDotDotDot_> end
+  <TXL_defineOrRedefine_>define</TXL_defineOrRedefine_>
+  <KEEP/>
+ </TXL_defineStatement_>
+</TXL_statement_>
+
+First try
+
+First try
+
+First try
+
+First try
+
+First try
+
+
+Parse tree
+name = TXL_defineOrRedefine_
+kind = *choose
+count = 1
+<TXL_defineOrRedefine_> define</TXL_defineOrRedefine_>
+
+First try
+
+Parse tree
+name = id
+kind = id
+count = 0
+<id>pat</id>
+
+First try
+
+First try
+
+
+Parse tree
+name = TXL_dotDotDotBar_
+kind = *order
+count = 0
+
+
+Parse tree
+name = TXL_optDotDotDotBar_
+kind = *choose
+count = 2
+<TXL_optDotDotDotBar_>
+ <empty/>
+</TXL_optDotDotDotBar_>
+
+First try
+
+First try
+
+First try
+
+First try
+
+
+First try
+
+First try
+
+Parse tree
+name = id
+kind = id
+count = 0
+<id>formal</id>
+
+Parse tree
+name = TXL_description_
+kind = *choose
+count = 1
+<TXL_description_>
+ <id>formal</id>
+</TXL_description_>
+
+
+Parse tree
+name = TXL_bracketedDescription_
+kind = *order
+count = 3
+<TXL_bracketedDescription_> [
+ <TXL_description_><id>formal</id></TXL_description_> ]
+</TXL_bracketedDescription_>
+
+Parse tree
+name = TXL_literalOrBracketedDescription_
+kind = *choose
+count = 1
+<TXL_literalOrBracketedDescription_>
+ <TXL_bracketedDescription_> [
+  <TXL_description_><id>formal</id></TXL_description_> ]
+ </TXL_bracketedDescription_>
+</TXL_literalOrBracketedDescription_>
+
+First try
+
+First try
+
+First try
+
+First try
+
+
+Parse tree
+name = TXL_bracketedDescription_
+kind = *order
+count = 0
+
+First try
+
+First try
+
+
+Parse tree
+name = TXL_quotedLiteral_
+kind = *order
+count = 0
+
+First try
+
+Parse tree
+name = token
+kind = *order
+count = 0
+
+Parse tree
+name = TXL_literal_
+kind = *order
+count = 0
+
+Parse tree
+name = TXL_literalOrBracketedDescription_
+kind = *order
+count = 0
+
+Parse tree
+name = TXL_indLiteralsAndBracketedDescriptions_
+kind = *order
+count = 0
+
+
+Parse tree
+name = TXL_literalsAndBracketedDescriptions_
+kind = *choose
+count = 2
+<TXL_literalsAndBracketedDescriptions_>
+ <empty/>
+</TXL_literalsAndBracketedDescriptions_>
+
+Parse tree
+name = TXL_indLiteralsAndBracketedDescriptions_
+kind = *order
+count = 2
+<TXL_indLiteralsAndBracketedDescriptions_>
+ <TXL_literalOrBracketedDescription_><TXL_bracketedDescription_> [
+   <TXL_description_><id>formal</id></TXL_description_> ]
+  </TXL_bracketedDescription_>
+ </TXL_literalOrBracketedDescription_>
+ <TXL_literalsAndBracketedDescriptions_><empty/></TXL_literalsAndBracketedDescriptions_>
+</TXL_indLiteralsAndBracketedDescriptions_>
+
+Parse tree
+name = TXL_literalsAndBracketedDescriptions_
+kind = *choose
+count = 1
+<TXL_literalsAndBracketedDescriptions_>
+ <TXL_indLiteralsAndBracketedDescriptions_>
+  <TXL_literalOrBracketedDescription_><TXL_bracketedDescription_> [
+    <TXL_description_><id>formal</id></TXL_description_> ]
+   </TXL_bracketedDescription_>
+  </TXL_literalOrBracketedDescription_>
+  <TXL_literalsAndBracketedDescriptions_><empty/></TXL_literalsAndBracketedDescriptions_>
+ </TXL_indLiteralsAndBracketedDescriptions_>
+</TXL_literalsAndBracketedDescriptions_>
+
+First try
+
+First try
+
+
+First try
+
+First try
+
+First try
+
+First try
+
+
+First try
+
+First try
+
+Parse tree
+name = id
+kind = id
+count = 0
+<id>pat</id>
+
+Parse tree
+name = TXL_description_
+kind = *choose
+count = 1
+<TXL_description_>
+ <id>pat</id>
+</TXL_description_>
+
+
+Parse tree
+name = TXL_bracketedDescription_
+kind = *order
+count = 3
+<TXL_bracketedDescription_> [
+ <TXL_description_><id>pat</id></TXL_description_> ]
+</TXL_bracketedDescription_>
+
+Parse tree
+name = TXL_literalOrBracketedDescription_
+kind = *choose
+count = 1
+<TXL_literalOrBracketedDescription_>
+ <TXL_bracketedDescription_> [
+  <TXL_description_><id>pat</id></TXL_description_> ]
+ </TXL_bracketedDescription_>
+</TXL_literalOrBracketedDescription_>
+
+First try
+
+First try
+
+First try
+
+First try
+
+
+Parse tree
+name = TXL_bracketedDescription_
+kind = *order
+count = 0
+
+First try
+
+First try
+
+
+Parse tree
+name = TXL_quotedLiteral_
+kind = *order
+count = 0
+
+First try
+
+Parse tree
+name = token
+kind = *literal
+count = 0
++
+
+Parse tree
+name = TXL_literal_
+kind = *choose
+count = 2
+<TXL_literal_> +</TXL_literal_>
+
+Parse tree
+name = TXL_literalOrBracketedDescription_
+kind = *choose
+count = 2
+<TXL_literalOrBracketedDescription_>
+ <TXL_literal_>+</TXL_literal_>
+</TXL_literalOrBracketedDescription_>
+
+First try
+
+First try
+
+First try
+
+First try
+
+
+First try
+
+First try
+
+Parse tree
+name = id
+kind = id
+count = 0
+<id>number</id>
+
+Parse tree
+name = TXL_description_
+kind = *choose
+count = 1
+<TXL_description_>
+ <id>number</id>
+</TXL_description_>
+
+
+Parse tree
+name = TXL_bracketedDescription_
+kind = *order
+count = 3
+<TXL_bracketedDescription_> [
+ <TXL_description_><id>number</id></TXL_description_> ]
+</TXL_bracketedDescription_>
+
+Parse tree
+name = TXL_literalOrBracketedDescription_
+kind = *choose
+count = 1
+<TXL_literalOrBracketedDescription_>
+ <TXL_bracketedDescription_> [
+  <TXL_description_><id>number</id></TXL_description_> ]
+ </TXL_bracketedDescription_>
+</TXL_literalOrBracketedDescription_>
+
+First try
+
+First try
+
+First try
+
+First try
+
+
+Parse tree
+name = TXL_bracketedDescription_
+kind = *order
+count = 0
+
+First try
+
+First try
+
+
+Parse tree
+name = TXL_quotedLiteral_
+kind = *order
+count = 0
+
+First try
+
+Parse tree
+name = token
+kind = *order
+count = 0
+
+Parse tree
+name = TXL_literal_
+kind = *order
+count = 0
+
+Parse tree
+name = TXL_literalOrBracketedDescription_
+kind = *order
+count = 0
+
+Parse tree
+name = TXL_indLiteralsAndBracketedDescriptions_
+kind = *order
+count = 0
+
+
+Parse tree
+name = TXL_literalsAndBracketedDescriptions_
+kind = *choose
+count = 2
+<TXL_literalsAndBracketedDescriptions_>
+ <empty/>
+</TXL_literalsAndBracketedDescriptions_>
+
+Parse tree
+name = TXL_indLiteralsAndBracketedDescriptions_
+kind = *order
+count = 2
+<TXL_indLiteralsAndBracketedDescriptions_>
+ <TXL_literalOrBracketedDescription_><TXL_bracketedDescription_> [
+   <TXL_description_><id>number</id></TXL_description_> ]
+  </TXL_bracketedDescription_>
+ </TXL_literalOrBracketedDescription_>
+ <TXL_literalsAndBracketedDescriptions_><empty/></TXL_literalsAndBracketedDescriptions_>
+</TXL_indLiteralsAndBracketedDescriptions_>
+
+Parse tree
+name = TXL_literalsAndBracketedDescriptions_
+kind = *choose
+count = 1
+<TXL_literalsAndBracketedDescriptions_>
+ <TXL_indLiteralsAndBracketedDescriptions_>
+  <TXL_literalOrBracketedDescription_><TXL_bracketedDescription_> [
+    <TXL_description_><id>number</id></TXL_description_> ]
+   </TXL_bracketedDescription_>
+  </TXL_literalOrBracketedDescription_>
+  <TXL_literalsAndBracketedDescriptions_><empty/></TXL_literalsAndBracketedDescriptions_>
+ </TXL_indLiteralsAndBracketedDescriptions_>
+</TXL_literalsAndBracketedDescriptions_>
+
+Parse tree
+name = TXL_indLiteralsAndBracketedDescriptions_
+kind = *order
+count = 2
+<TXL_indLiteralsAndBracketedDescriptions_>
+ <TXL_literalOrBracketedDescription_><TXL_literal_>+</TXL_literal_></TXL_literalOrBracketedDescription_>
+ <TXL_literalsAndBracketedDescriptions_><TXL_indLiteralsAndBracketedDescriptions_>
+   <TXL_literalOrBracketedDescription_><TXL_bracketedDescription_> [
+     <TXL_description_><id>number</id></TXL_description_> ]
+    </TXL_bracketedDescription_>
+   </TXL_literalOrBracketedDescription_>
+   <TXL_literalsAndBracketedDescriptions_><empty/></TXL_literalsAndBracketedDescriptions_>
+  </TXL_indLiteralsAndBracketedDescriptions_>
+ </TXL_literalsAndBracketedDescriptions_>
+</TXL_indLiteralsAndBracketedDescriptions_>
+
+Parse tree
+name = TXL_literalsAndBracketedDescriptions_
+kind = *choose
+count = 1
+<TXL_literalsAndBracketedDescriptions_>
+ <TXL_indLiteralsAndBracketedDescriptions_>
+  <TXL_literalOrBracketedDescription_><TXL_literal_>+</TXL_literal_></TXL_literalOrBracketedDescription_>
+  <TXL_literalsAndBracketedDescriptions_><TXL_indLiteralsAndBracketedDescriptions_>
+    <TXL_literalOrBracketedDescription_><TXL_bracketedDescription_> [
+      <TXL_description_><id>number</id></TXL_description_> ]
+     </TXL_bracketedDescription_>
+    </TXL_literalOrBracketedDescription_>
+    <TXL_literalsAndBracketedDescriptions_><empty/></TXL_literalsAndBracketedDescriptions_>
+   </TXL_indLiteralsAndBracketedDescriptions_>
+  </TXL_literalsAndBracketedDescriptions_>
+ </TXL_indLiteralsAndBracketedDescriptions_>
+</TXL_literalsAndBracketedDescriptions_>
+
+Parse tree
+name = TXL_indLiteralsAndBracketedDescriptions_
+kind = *order
+count = 2
+<TXL_indLiteralsAndBracketedDescriptions_>
+ <TXL_literalOrBracketedDescription_><TXL_bracketedDescription_> [
+   <TXL_description_><id>pat</id></TXL_description_> ]
+  </TXL_bracketedDescription_>
+ </TXL_literalOrBracketedDescription_>
+ <TXL_literalsAndBracketedDescriptions_><TXL_indLiteralsAndBracketedDescriptions_>
+   <TXL_literalOrBracketedDescription_><TXL_literal_>+</TXL_literal_></TXL_literalOrBracketedDescription_>
+   <TXL_literalsAndBracketedDescriptions_><TXL_indLiteralsAndBracketedDescriptions_>
+     <TXL_literalOrBracketedDescription_><TXL_bracketedDescription_> [
+       <TXL_description_><id>number</id></TXL_description_> ]
+      </TXL_bracketedDescription_>
+     </TXL_literalOrBracketedDescription_>
+     <TXL_literalsAndBracketedDescriptions_><empty/></TXL_literalsAndBracketedDescriptions_>
+    </TXL_indLiteralsAndBracketedDescriptions_>
+   </TXL_literalsAndBracketedDescriptions_>
+  </TXL_indLiteralsAndBracketedDescriptions_>
+ </TXL_literalsAndBracketedDescriptions_>
+</TXL_indLiteralsAndBracketedDescriptions_>
+
+Parse tree
+name = TXL_literalsAndBracketedDescriptions_
+kind = *choose
+count = 1
+<TXL_literalsAndBracketedDescriptions_>
+ <TXL_indLiteralsAndBracketedDescriptions_>
+  <TXL_literalOrBracketedDescription_><TXL_bracketedDescription_> [
+    <TXL_description_><id>pat</id></TXL_description_> ]
+   </TXL_bracketedDescription_>
+  </TXL_literalOrBracketedDescription_>
+  <TXL_literalsAndBracketedDescriptions_><TXL_indLiteralsAndBracketedDescriptions_>
+    <TXL_literalOrBracketedDescription_><TXL_literal_>+</TXL_literal_></TXL_literalOrBracketedDescription_>
+    <TXL_literalsAndBracketedDescriptions_><TXL_indLiteralsAndBracketedDescriptions_>
+      <TXL_literalOrBracketedDescription_><TXL_bracketedDescription_> [
+        <TXL_description_><id>number</id></TXL_description_> ]
+       </TXL_bracketedDescription_>
+      </TXL_literalOrBracketedDescription_>
+      <TXL_literalsAndBracketedDescriptions_><empty/></TXL_literalsAndBracketedDescriptions_>
+     </TXL_indLiteralsAndBracketedDescriptions_>
+    </TXL_literalsAndBracketedDescriptions_>
+   </TXL_indLiteralsAndBracketedDescriptions_>
+  </TXL_literalsAndBracketedDescriptions_>
+ </TXL_indLiteralsAndBracketedDescriptions_>
+</TXL_literalsAndBracketedDescriptions_>
+
+First try
+
+First try
+
+
+Parse tree
+name = TXL_indRepBarLiteralsAndBracketedDescriptions_
+kind = *order
+count = 0
+
+
+Parse tree
+name = TXL_repBarLiteralsAndBracketedDescriptions_
+kind = *choose
+count = 2
+<TXL_repBarLiteralsAndBracketedDescriptions_>
+ <empty/>
+</TXL_repBarLiteralsAndBracketedDescriptions_>
+
+Parse tree
+name = TXL_indRepBarLiteralsAndBracketedDescriptions_
+kind = *order
+count = 3
+<TXL_indRepBarLiteralsAndBracketedDescriptions_> |
+ <TXL_literalsAndBracketedDescriptions_><TXL_indLiteralsAndBracketedDescriptions_>
+   <TXL_literalOrBracketedDescription_><TXL_bracketedDescription_> [
+     <TXL_description_><id>pat</id></TXL_description_> ]
+    </TXL_bracketedDescription_>
+   </TXL_literalOrBracketedDescription_>
+   <TXL_literalsAndBracketedDescriptions_><TXL_indLiteralsAndBracketedDescriptions_>
+     <TXL_literalOrBracketedDescription_><TXL_literal_>+</TXL_literal_></TXL_literalOrBracketedDescription_>
+     <TXL_literalsAndBracketedDescriptions_><TXL_indLiteralsAndBracketedDescriptions_>
+       <TXL_literalOrBracketedDescription_><TXL_bracketedDescription_> [
+         <TXL_description_><id>number</id></TXL_description_> ]
+        </TXL_bracketedDescription_>
+       </TXL_literalOrBracketedDescription_>
+       <TXL_literalsAndBracketedDescriptions_><empty/></TXL_literalsAndBracketedDescriptions_>
+      </TXL_indLiteralsAndBracketedDescriptions_>
+     </TXL_literalsAndBracketedDescriptions_>
+    </TXL_indLiteralsAndBracketedDescriptions_>
+   </TXL_literalsAndBracketedDescriptions_>
+  </TXL_indLiteralsAndBracketedDescriptions_>
+ </TXL_literalsAndBracketedDescriptions_>
+ <TXL_repBarLiteralsAndBracketedDescriptions_><empty/></TXL_repBarLiteralsAndBracketedDescriptions_>
+</TXL_indRepBarLiteralsAndBracketedDescriptions_>
+
+Parse tree
+name = TXL_repBarLiteralsAndBracketedDescriptions_
+kind = *choose
+count = 1
+<TXL_repBarLiteralsAndBracketedDescriptions_>
+ <TXL_indRepBarLiteralsAndBracketedDescriptions_> |
+  <TXL_literalsAndBracketedDescriptions_><TXL_indLiteralsAndBracketedDescriptions_>
+    <TXL_literalOrBracketedDescription_><TXL_bracketedDescription_> [
+      <TXL_description_><id>pat</id></TXL_description_> ]
+     </TXL_bracketedDescription_>
+    </TXL_literalOrBracketedDescription_>
+    <TXL_literalsAndBracketedDescriptions_><TXL_indLiteralsAndBracketedDescriptions_>
+      <TXL_literalOrBracketedDescription_><TXL_literal_>+</TXL_literal_></TXL_literalOrBracketedDescription_>
+      <TXL_literalsAndBracketedDescriptions_><TXL_indLiteralsAndBracketedDescriptions_>
+        <TXL_literalOrBracketedDescription_><TXL_bracketedDescription_> [
+          <TXL_description_><id>number</id></TXL_description_> ]
+         </TXL_bracketedDescription_>
+        </TXL_literalOrBracketedDescription_>
+        <TXL_literalsAndBracketedDescriptions_><empty/></TXL_literalsAndBracketedDescriptions_>
+       </TXL_indLiteralsAndBracketedDescriptions_>
+      </TXL_literalsAndBracketedDescriptions_>
+     </TXL_indLiteralsAndBracketedDescriptions_>
+    </TXL_literalsAndBracketedDescriptions_>
+   </TXL_indLiteralsAndBracketedDescriptions_>
+  </TXL_literalsAndBracketedDescriptions_>
+  <TXL_repBarLiteralsAndBracketedDescriptions_><empty/></TXL_repBarLiteralsAndBracketedDescriptions_>
+ </TXL_indRepBarLiteralsAndBracketedDescriptions_>
+</TXL_repBarLiteralsAndBracketedDescriptions_>
+
+First try
+
+First try
+
+First try
+
+
+
+Parse tree
+name = TXL_optBar_
+kind = *choose
+count = 2
+<TXL_optBar_>
+ <empty/>
+</TXL_optBar_>
+
+
+Backtrack
+
+
+Parse tree
+name = TXL_optBar_
+kind = *order
+count = 0
+
+Parse tree
+name = TXL_barDotDotDot_
+kind = *order
+count = 0
+
+
+Parse tree
+name = TXL_optBarDotDotDot_
+kind = *choose
+count = 2
+<TXL_optBarDotDotDot_>
+ <empty/>
+</TXL_optBarDotDotDot_>
+
+
+First try
+
+
+Parse tree
+name = TXL_defineOrRedefine_
+kind = *choose
+count = 1
+<TXL_defineOrRedefine_> define</TXL_defineOrRedefine_>
+
+
+Parse tree
+name = TXL_defineStatement_
+kind = *order
+count = 9
+<TXL_defineStatement_>
+ <TXL_defineOrRedefine_>define</TXL_defineOrRedefine_>
+ <id>pat</id>
+ <TXL_optDotDotDotBar_><empty/></TXL_optDotDotDotBar_>
+ <TXL_literalsAndBracketedDescriptions_><TXL_indLiteralsAndBracketedDescriptions_>
+   <TXL_literalOrBracketedDescription_><TXL_bracketedDescription_> [
+     <TXL_description_><id>formal</id></TXL_description_> ]
+    </TXL_bracketedDescription_>
+   </TXL_literalOrBracketedDescription_>
+   <TXL_literalsAndBracketedDescriptions_><empty/></TXL_literalsAndBracketedDescriptions_>
+  </TXL_indLiteralsAndBracketedDescriptions_>
+ </TXL_literalsAndBracketedDescriptions_>
+ <TXL_repBarLiteralsAndBracketedDescriptions_><TXL_indRepBarLiteralsAndBracketedDescriptions_> |
+   <TXL_literalsAndBracketedDescriptions_><TXL_indLiteralsAndBracketedDescriptions_>
+     <TXL_literalOrBracketedDescription_><TXL_bracketedDescription_> [
+       <TXL_description_><id>pat</id></TXL_description_> ]
+      </TXL_bracketedDescription_>
+     </TXL_literalOrBracketedDescription_>
+     <TXL_literalsAndBracketedDescriptions_><TXL_indLiteralsAndBracketedDescriptions_>
+       <TXL_literalOrBracketedDescription_><TXL_literal_>+</TXL_literal_></TXL_literalOrBracketedDescription_>
+       <TXL_literalsAndBracketedDescriptions_><TXL_indLiteralsAndBracketedDescriptions_>
+         <TXL_literalOrBracketedDescription_><TXL_bracketedDescription_> [
+           <TXL_description_><id>number</id></TXL_description_> ]
+          </TXL_bracketedDescription_>
+         </TXL_literalOrBracketedDescription_>
+         <TXL_literalsAndBracketedDescriptions_><empty/></TXL_literalsAndBracketedDescriptions_>
+        </TXL_indLiteralsAndBracketedDescriptions_>
+       </TXL_literalsAndBracketedDescriptions_>
+      </TXL_indLiteralsAndBracketedDescriptions_>
+     </TXL_literalsAndBracketedDescriptions_>
+    </TXL_indLiteralsAndBracketedDescriptions_>
+   </TXL_literalsAndBracketedDescriptions_>
+   <TXL_repBarLiteralsAndBracketedDescriptions_><empty/></TXL_repBarLiteralsAndBracketedDescriptions_>
+  </TXL_indRepBarLiteralsAndBracketedDescriptions_>
+ </TXL_repBarLiteralsAndBracketedDescriptions_>
+ <TXL_optBarDotDotDot_><empty/></TXL_optBarDotDotDot_> end
+ <TXL_defineOrRedefine_>define</TXL_defineOrRedefine_>
+ <KEEP/>
+</TXL_defineStatement_>
+
+Parse tree
+name = TXL_statement_
+kind = *choose
+count = 1
+<TXL_statement_>
+ <TXL_defineStatement_>
+  <TXL_defineOrRedefine_>define</TXL_defineOrRedefine_>
+  <id>pat</id>
+  <TXL_optDotDotDotBar_><empty/></TXL_optDotDotDotBar_>
+  <TXL_literalsAndBracketedDescriptions_><TXL_indLiteralsAndBracketedDescriptions_>
+    <TXL_literalOrBracketedDescription_><TXL_bracketedDescription_> [
+      <TXL_description_><id>formal</id></TXL_description_> ]
+     </TXL_bracketedDescription_>
+    </TXL_literalOrBracketedDescription_>
+    <TXL_literalsAndBracketedDescriptions_><empty/></TXL_literalsAndBracketedDescriptions_>
+   </TXL_indLiteralsAndBracketedDescriptions_>
+  </TXL_literalsAndBracketedDescriptions_>
+  <TXL_repBarLiteralsAndBracketedDescriptions_><TXL_indRepBarLiteralsAndBracketedDescriptions_> |
+    <TXL_literalsAndBracketedDescriptions_><TXL_indLiteralsAndBracketedDescriptions_>
+      <TXL_literalOrBracketedDescription_><TXL_bracketedDescription_> [
+        <TXL_description_><id>pat</id></TXL_description_> ]
+       </TXL_bracketedDescription_>
+      </TXL_literalOrBracketedDescription_>
+      <TXL_literalsAndBracketedDescriptions_><TXL_indLiteralsAndBracketedDescriptions_>
+        <TXL_literalOrBracketedDescription_><TXL_literal_>+</TXL_literal_></TXL_literalOrBracketedDescription_>
+        <TXL_literalsAndBracketedDescriptions_><TXL_indLiteralsAndBracketedDescriptions_>
+          <TXL_literalOrBracketedDescription_><TXL_bracketedDescription_> [
+            <TXL_description_><id>number</id></TXL_description_> ]
+           </TXL_bracketedDescription_>
+          </TXL_literalOrBracketedDescription_>
+          <TXL_literalsAndBracketedDescriptions_><empty/></TXL_literalsAndBracketedDescriptions_>
+         </TXL_indLiteralsAndBracketedDescriptions_>
+        </TXL_literalsAndBracketedDescriptions_>
+       </TXL_indLiteralsAndBracketedDescriptions_>
+      </TXL_literalsAndBracketedDescriptions_>
+     </TXL_indLiteralsAndBracketedDescriptions_>
+    </TXL_literalsAndBracketedDescriptions_>
+    <TXL_repBarLiteralsAndBracketedDescriptions_><empty/></TXL_repBarLiteralsAndBracketedDescriptions_>
+   </TXL_indRepBarLiteralsAndBracketedDescriptions_>
+  </TXL_repBarLiteralsAndBracketedDescriptions_>
+  <TXL_optBarDotDotDot_><empty/></TXL_optBarDotDotDot_> end
+  <TXL_defineOrRedefine_>define</TXL_defineOrRedefine_>
+  <KEEP/>
+ </TXL_defineStatement_>
+</TXL_statement_>
+
+First try
+
+First try
+
+First try
+
+First try
+
+First try
+
+
+
+Parse tree
+name = TXL_defineOrRedefine_
+kind = *order
+count = 0
+
+Parse tree
+name = TXL_defineStatement_
+kind = *order
+count = 0
+
+First try
+
+
+Parse tree
+name = TXL_ruleStatement_
+kind = *order
+count = 0
+
+First try
+
+
+First try
+
+Parse tree
+name = id
+kind = id
+count = 0
+<id>main</id>
+
+First try
+
+First try
+
+First try
+
+First try
+
+Parse tree
+name = id
+kind = *order
+count = 0
+
+Parse tree
+name = TXL_argument_
+kind = *order
+count = 0
+
+Parse tree
+name = TXL_indArguments_
+kind = *order
+count = 0
+
+
+Parse tree
+name = TXL_arguments_
+kind = *choose
+count = 2
+<TXL_arguments_>
+ <empty/>
+</TXL_arguments_>
+
+First try
+
+First try
+
+First try
+
+First try
+
+
+Parse tree
+name = TXL_constructPart_
+kind = *order
+count = 0
+
+First try
+
+First try
+
+First try
+
+
+Parse tree
+name = TXL_skippingBracketedDescription_
+kind = *order
+count = 0
+
+
+Parse tree
+name = TXL_optSkippingBracketedDescription_
+kind = *choose
+count = 2
+<TXL_optSkippingBracketedDescription_>
+ <empty/>
+</TXL_optSkippingBracketedDescription_>
+
+
+Backtrack
+
+
+Parse tree
+name = TXL_optSkippingBracketedDescription_
+kind = *order
+count = 0
+
+Parse tree
+name = TXL_deconstructPart_
+kind = *order
+count = 0
+
+First try
+
+First try
+
+
+
+Parse tree
+name = TXL_whereOrAssert_
+kind = *order
+count = 0
+
+Parse tree
+name = TXL_conditionPart_
+kind = *order
+count = 0
+
+First try
+
+
+Parse tree
+name = TXL_importPart_
+kind = *order
+count = 0
+
+First try
+
+
+Parse tree
+name = TXL_exportPart_
+kind = *order
+count = 0
+
+Parse tree
+name = TXL_part_
+kind = *order
+count = 0
+
+Parse tree
+name = TXL_indPart_
+kind = *order
+count = 0
+
+
+Parse tree
+name = TXL_parts_
+kind = *choose
+count = 2
+<TXL_parts_>
+ <empty/>
+</TXL_parts_>
+
+First try
+
+First try
+
+
+Parse tree
+name = TXL_skippingBracketedDescription_
+kind = *order
+count = 0
+
+
+Parse tree
+name = TXL_optSkippingBracketedDescription_
+kind = *choose
+count = 2
+<TXL_optSkippingBracketedDescription_>
+ <empty/>
+</TXL_optSkippingBracketedDescription_>
+
+First try
+
+
+
+Parse tree
+name = TXL_replaceOrMatch_
+kind = *choose
+count = 2
+<TXL_replaceOrMatch_> match</TXL_replaceOrMatch_>
+
+First try
+
+
+
+
+
+Parse tree
+name = TXL_optStarDollarHash_
+kind = *choose
+count = 4
+<TXL_optStarDollarHash_>
+ <empty/>
+</TXL_optStarDollarHash_>
+
+First try
+
+
+First try
+
+First try
+
+Parse tree
+name = id
+kind = id
+count = 0
+<id>program</id>
+
+Parse tree
+name = TXL_description_
+kind = *choose
+count = 1
+<TXL_description_>
+ <id>program</id>
+</TXL_description_>
+
+
+Parse tree
+name = TXL_bracketedDescription_
+kind = *order
+count = 3
+<TXL_bracketedDescription_> [
+ <TXL_description_><id>program</id></TXL_description_> ]
+</TXL_bracketedDescription_>
+
+First try
+
+First try
+
+First try
+
+First try
+
+First try
+
+First try
+
+Parse tree
+name = id
+kind = id
+count = 0
+<id>P</id>
+
+
+First try
+
+First try
+
+Parse tree
+name = id
+kind = id
+count = 0
+<id>program</id>
+
+Parse tree
+name = TXL_description_
+kind = *choose
+count = 1
+<TXL_description_>
+ <id>program</id>
+</TXL_description_>
+
+
+Parse tree
+name = TXL_firstTime_
+kind = *order
+count = 4
+<TXL_firstTime_>
+ <id>P</id> [
+ <TXL_description_><id>program</id></TXL_description_> ]
+</TXL_firstTime_>
+
+Parse tree
+name = TXL_firstOrLit_
+kind = *choose
+count = 1
+<TXL_firstOrLit_>
+ <TXL_firstTime_>
+  <id>P</id> [
+  <TXL_description_><id>program</id></TXL_description_> ]
+ </TXL_firstTime_>
+</TXL_firstOrLit_>
+
+First try
+
+First try
+
+First try
+
+First try
+
+First try
+
+Parse tree
+name = id
+kind = *order
+count = 0
+
+Parse tree
+name = TXL_firstTime_
+kind = *order
+count = 0
+
+First try
+
+First try
+
+
+Parse tree
+name = TXL_quotedLiteral_
+kind = *order
+count = 0
+
+First try
+
+Parse tree
+name = token
+kind = *order
+count = 0
+
+Parse tree
+name = TXL_literal_
+kind = *order
+count = 0
+
+Parse tree
+name = TXL_firstOrLit_
+kind = *order
+count = 0
+
+Parse tree
+name = TXL_indFirstsAndLits_
+kind = *order
+count = 0
+
+
+Parse tree
+name = TXL_firstsAndLits_
+kind = *choose
+count = 2
+<TXL_firstsAndLits_>
+ <empty/>
+</TXL_firstsAndLits_>
+
+Parse tree
+name = TXL_indFirstsAndLits_
+kind = *order
+count = 2
+<TXL_indFirstsAndLits_>
+ <TXL_firstOrLit_><TXL_firstTime_>
+   <id>P</id> [
+   <TXL_description_><id>program</id></TXL_description_> ]
+  </TXL_firstTime_>
+ </TXL_firstOrLit_>
+ <TXL_firstsAndLits_><empty/></TXL_firstsAndLits_>
+</TXL_indFirstsAndLits_>
+
+Parse tree
+name = TXL_firstsAndLits_
+kind = *choose
+count = 1
+<TXL_firstsAndLits_>
+ <TXL_indFirstsAndLits_>
+  <TXL_firstOrLit_><TXL_firstTime_>
+    <id>P</id> [
+    <TXL_description_><id>program</id></TXL_description_> ]
+   </TXL_firstTime_>
+  </TXL_firstOrLit_>
+  <TXL_firstsAndLits_><empty/></TXL_firstsAndLits_>
+ </TXL_indFirstsAndLits_>
+</TXL_firstsAndLits_>
+
+Parse tree
+name = TXL_pattern_
+kind = *order
+count = 1
+<TXL_pattern_>
+ <TXL_firstsAndLits_><TXL_indFirstsAndLits_>
+   <TXL_firstOrLit_><TXL_firstTime_>
+     <id>P</id> [
+     <TXL_description_><id>program</id></TXL_description_> ]
+    </TXL_firstTime_>
+   </TXL_firstOrLit_>
+   <TXL_firstsAndLits_><empty/></TXL_firstsAndLits_>
+  </TXL_indFirstsAndLits_>
+ </TXL_firstsAndLits_>
+</TXL_pattern_>
+
+First try
+
+First try
+
+First try
+
+First try
+
+
+Parse tree
+name = TXL_constructPart_
+kind = *order
+count = 0
+
+First try
+
+First try
+
+First try
+
+
+Parse tree
+name = TXL_skippingBracketedDescription_
+kind = *order
+count = 0
+
+
+Parse tree
+name = TXL_optSkippingBracketedDescription_
+kind = *choose
+count = 2
+<TXL_optSkippingBracketedDescription_>
+ <empty/>
+</TXL_optSkippingBracketedDescription_>
+
+
+Backtrack
+
+
+Parse tree
+name = TXL_optSkippingBracketedDescription_
+kind = *order
+count = 0
+
+Parse tree
+name = TXL_deconstructPart_
+kind = *order
+count = 0
+
+First try
+
+First try
+
+
+
+Parse tree
+name = TXL_whereOrAssert_
+kind = *order
+count = 0
+
+Parse tree
+name = TXL_conditionPart_
+kind = *order
+count = 0
+
+First try
+
+
+Parse tree
+name = TXL_importPart_
+kind = *order
+count = 0
+
+First try
+
+
+Parse tree
+name = TXL_exportPart_
+kind = *order
+count = 0
+
+Parse tree
+name = TXL_part_
+kind = *order
+count = 0
+
+Parse tree
+name = TXL_indPart_
+kind = *order
+count = 0
+
+
+Parse tree
+name = TXL_parts_
+kind = *choose
+count = 2
+<TXL_parts_>
+ <empty/>
+</TXL_parts_>
+
+First try
+
+First try
+
+
+Parse tree
+name = TXL_byReplacement_
+kind = *order
+count = 0
+
+
+Parse tree
+name = TXL_optByReplacement_
+kind = *choose
+count = 2
+<TXL_optByReplacement_>
+ <empty/>
+</TXL_optByReplacement_>
+
+
+
+
+Parse tree
+name = TXL_functionStatement_
+kind = *order
+count = 14
+<TXL_functionStatement_> function
+ <id>main</id>
+ <TXL_arguments_><empty/></TXL_arguments_>
+ <TXL_parts_><empty/></TXL_parts_>
+ <TXL_optSkippingBracketedDescription_><empty/></TXL_optSkippingBracketedDescription_>
+ <TXL_replaceOrMatch_>match</TXL_replaceOrMatch_>
+ <TXL_optStarDollarHash_><empty/></TXL_optStarDollarHash_>
+ <TXL_bracketedDescription_> [
+  <TXL_description_><id>program</id></TXL_description_> ]
+ </TXL_bracketedDescription_>
+ <TXL_pattern_><TXL_firstsAndLits_><TXL_indFirstsAndLits_>
+    <TXL_firstOrLit_><TXL_firstTime_>
+      <id>P</id> [
+      <TXL_description_><id>program</id></TXL_description_> ]
+     </TXL_firstTime_>
+    </TXL_firstOrLit_>
+    <TXL_firstsAndLits_><empty/></TXL_firstsAndLits_>
+   </TXL_indFirstsAndLits_>
+  </TXL_firstsAndLits_>
+ </TXL_pattern_>
+ <TXL_parts_><empty/></TXL_parts_>
+ <TXL_optByReplacement_><empty/></TXL_optByReplacement_> end function
+ <KEEP/>
+</TXL_functionStatement_>
+
+Parse tree
+name = TXL_statement_
+kind = *choose
+count = 3
+<TXL_statement_>
+ <TXL_functionStatement_> function
+  <id>main</id>
+  <TXL_arguments_><empty/></TXL_arguments_>
+  <TXL_parts_><empty/></TXL_parts_>
+  <TXL_optSkippingBracketedDescription_><empty/></TXL_optSkippingBracketedDescription_>
+  <TXL_replaceOrMatch_>match</TXL_replaceOrMatch_>
+  <TXL_optStarDollarHash_><empty/></TXL_optStarDollarHash_>
+  <TXL_bracketedDescription_> [
+   <TXL_description_><id>program</id></TXL_description_> ]
+  </TXL_bracketedDescription_>
+  <TXL_pattern_><TXL_firstsAndLits_><TXL_indFirstsAndLits_>
+     <TXL_firstOrLit_><TXL_firstTime_>
+       <id>P</id> [
+       <TXL_description_><id>program</id></TXL_description_> ]
+      </TXL_firstTime_>
+     </TXL_firstOrLit_>
+     <TXL_firstsAndLits_><empty/></TXL_firstsAndLits_>
+    </TXL_indFirstsAndLits_>
+   </TXL_firstsAndLits_>
+  </TXL_pattern_>
+  <TXL_parts_><empty/></TXL_parts_>
+  <TXL_optByReplacement_><empty/></TXL_optByReplacement_> end function
+  <KEEP/>
+ </TXL_functionStatement_>
+</TXL_statement_>
+
+First try
+
+First try
+
+First try
+
+First try
+
+First try
+
+
+
+Parse tree
+name = TXL_defineOrRedefine_
+kind = *order
+count = 0
+
+Parse tree
+name = TXL_defineStatement_
+kind = *order
+count = 0
+
+First try
+
+
+Parse tree
+name = TXL_ruleStatement_
+kind = *order
+count = 0
+
+First try
+
+
+Parse tree
+name = TXL_functionStatement_
+kind = *order
+count = 0
+
+Parse tree
+name = TXL_statement_
+kind = *order
+count = 0
+
+Parse tree
+name = TXL_indStatements_
+kind = *order
+count = 0
+
+
+Parse tree
+name = TXL_statements_
+kind = *choose
+count = 2
+<TXL_statements_>
+ <empty/>
+</TXL_statements_>
+
+Parse tree
+name = TXL_indStatements_
+kind = *order
+count = 2
+<TXL_indStatements_>
+ <TXL_statement_><TXL_functionStatement_> function
+   <id>main</id>
+   <TXL_arguments_><empty/></TXL_arguments_>
+   <TXL_parts_><empty/></TXL_parts_>
+   <TXL_optSkippingBracketedDescription_><empty/></TXL_optSkippingBracketedDescription_>
+   <TXL_replaceOrMatch_>match</TXL_replaceOrMatch_>
+   <TXL_optStarDollarHash_><empty/></TXL_optStarDollarHash_>
+   <TXL_bracketedDescription_> [
+    <TXL_description_><id>program</id></TXL_description_> ]
+   </TXL_bracketedDescription_>
+   <TXL_pattern_><TXL_firstsAndLits_><TXL_indFirstsAndLits_>
+      <TXL_firstOrLit_><TXL_firstTime_>
+        <id>P</id> [
+        <TXL_description_><id>program</id></TXL_description_> ]
+       </TXL_firstTime_>
+      </TXL_firstOrLit_>
+      <TXL_firstsAndLits_><empty/></TXL_firstsAndLits_>
+     </TXL_indFirstsAndLits_>
+    </TXL_firstsAndLits_>
+   </TXL_pattern_>
+   <TXL_parts_><empty/></TXL_parts_>
+   <TXL_optByReplacement_><empty/></TXL_optByReplacement_> end function
+   <KEEP/>
+  </TXL_functionStatement_>
+ </TXL_statement_>
+ <TXL_statements_><empty/></TXL_statements_>
+</TXL_indStatements_>
+
+Parse tree
+name = TXL_statements_
+kind = *choose
+count = 1
+<TXL_statements_>
+ <TXL_indStatements_>
+  <TXL_statement_><TXL_functionStatement_> function
+    <id>main</id>
+    <TXL_arguments_><empty/></TXL_arguments_>
+    <TXL_parts_><empty/></TXL_parts_>
+    <TXL_optSkippingBracketedDescription_><empty/></TXL_optSkippingBracketedDescription_>
+    <TXL_replaceOrMatch_>match</TXL_replaceOrMatch_>
+    <TXL_optStarDollarHash_><empty/></TXL_optStarDollarHash_>
+    <TXL_bracketedDescription_> [
+     <TXL_description_><id>program</id></TXL_description_> ]
+    </TXL_bracketedDescription_>
+    <TXL_pattern_><TXL_firstsAndLits_><TXL_indFirstsAndLits_>
+       <TXL_firstOrLit_><TXL_firstTime_>
+         <id>P</id> [
+         <TXL_description_><id>program</id></TXL_description_> ]
+        </TXL_firstTime_>
+       </TXL_firstOrLit_>
+       <TXL_firstsAndLits_><empty/></TXL_firstsAndLits_>
+      </TXL_indFirstsAndLits_>
+     </TXL_firstsAndLits_>
+    </TXL_pattern_>
+    <TXL_parts_><empty/></TXL_parts_>
+    <TXL_optByReplacement_><empty/></TXL_optByReplacement_> end function
+    <KEEP/>
+   </TXL_functionStatement_>
+  </TXL_statement_>
+  <TXL_statements_><empty/></TXL_statements_>
+ </TXL_indStatements_>
+</TXL_statements_>
+
+Parse tree
+name = TXL_indStatements_
+kind = *order
+count = 2
+<TXL_indStatements_>
+ <TXL_statement_><TXL_defineStatement_>
+   <TXL_defineOrRedefine_>define</TXL_defineOrRedefine_>
+   <id>pat</id>
+   <TXL_optDotDotDotBar_><empty/></TXL_optDotDotDotBar_>
+   <TXL_literalsAndBracketedDescriptions_><TXL_indLiteralsAndBracketedDescriptions_>
+     <TXL_literalOrBracketedDescription_><TXL_bracketedDescription_> [
+       <TXL_description_><id>formal</id></TXL_description_> ]
+      </TXL_bracketedDescription_>
+     </TXL_literalOrBracketedDescription_>
+     <TXL_literalsAndBracketedDescriptions_><empty/></TXL_literalsAndBracketedDescriptions_>
+    </TXL_indLiteralsAndBracketedDescriptions_>
+   </TXL_literalsAndBracketedDescriptions_>
+   <TXL_repBarLiteralsAndBracketedDescriptions_><TXL_indRepBarLiteralsAndBracketedDescriptions_> |
+     <TXL_literalsAndBracketedDescriptions_><TXL_indLiteralsAndBracketedDescriptions_>
+       <TXL_literalOrBracketedDescription_><TXL_bracketedDescription_> [
+         <TXL_description_><id>pat</id></TXL_description_> ]
+        </TXL_bracketedDescription_>
+       </TXL_literalOrBracketedDescription_>
+       <TXL_literalsAndBracketedDescriptions_><TXL_indLiteralsAndBracketedDescriptions_>
+         <TXL_literalOrBracketedDescription_><TXL_literal_>+</TXL_literal_></TXL_literalOrBracketedDescription_>
+         <TXL_literalsAndBracketedDescriptions_><TXL_indLiteralsAndBracketedDescriptions_>
+           <TXL_literalOrBracketedDescription_><TXL_bracketedDescription_> [
+             <TXL_description_><id>number</id></TXL_description_> ]
+            </TXL_bracketedDescription_>
+           </TXL_literalOrBracketedDescription_>
+           <TXL_literalsAndBracketedDescriptions_><empty/></TXL_literalsAndBracketedDescriptions_>
+          </TXL_indLiteralsAndBracketedDescriptions_>
+         </TXL_literalsAndBracketedDescriptions_>
+        </TXL_indLiteralsAndBracketedDescriptions_>
+       </TXL_literalsAndBracketedDescriptions_>
+      </TXL_indLiteralsAndBracketedDescriptions_>
+     </TXL_literalsAndBracketedDescriptions_>
+     <TXL_repBarLiteralsAndBracketedDescriptions_><empty/></TXL_repBarLiteralsAndBracketedDescriptions_>
+    </TXL_indRepBarLiteralsAndBracketedDescriptions_>
+   </TXL_repBarLiteralsAndBracketedDescriptions_>
+   <TXL_optBarDotDotDot_><empty/></TXL_optBarDotDotDot_> end
+   <TXL_defineOrRedefine_>define</TXL_defineOrRedefine_>
+   <KEEP/>
+  </TXL_defineStatement_>
+ </TXL_statement_>
+ <TXL_statements_><TXL_indStatements_>
+   <TXL_statement_><TXL_functionStatement_> function
+     <id>main</id>
+     <TXL_arguments_><empty/></TXL_arguments_>
+     <TXL_parts_><empty/></TXL_parts_>
+     <TXL_optSkippingBracketedDescription_><empty/></TXL_optSkippingBracketedDescription_>
+     <TXL_replaceOrMatch_>match</TXL_replaceOrMatch_>
+     <TXL_optStarDollarHash_><empty/></TXL_optStarDollarHash_>
+     <TXL_bracketedDescription_> [
+      <TXL_description_><id>program</id></TXL_description_> ]
+     </TXL_bracketedDescription_>
+     <TXL_pattern_><TXL_firstsAndLits_><TXL_indFirstsAndLits_>
+        <TXL_firstOrLit_><TXL_firstTime_>
+          <id>P</id> [
+          <TXL_description_><id>program</id></TXL_description_> ]
+         </TXL_firstTime_>
+        </TXL_firstOrLit_>
+        <TXL_firstsAndLits_><empty/></TXL_firstsAndLits_>
+       </TXL_indFirstsAndLits_>
+      </TXL_firstsAndLits_>
+     </TXL_pattern_>
+     <TXL_parts_><empty/></TXL_parts_>
+     <TXL_optByReplacement_><empty/></TXL_optByReplacement_> end function
+     <KEEP/>
+    </TXL_functionStatement_>
+   </TXL_statement_>
+   <TXL_statements_><empty/></TXL_statements_>
+  </TXL_indStatements_>
+ </TXL_statements_>
+</TXL_indStatements_>
+
+Parse tree
+name = TXL_statements_
+kind = *choose
+count = 1
+<TXL_statements_>
+ <TXL_indStatements_>
+  <TXL_statement_><TXL_defineStatement_>
+    <TXL_defineOrRedefine_>define</TXL_defineOrRedefine_>
+    <id>pat</id>
+    <TXL_optDotDotDotBar_><empty/></TXL_optDotDotDotBar_>
+    <TXL_literalsAndBracketedDescriptions_><TXL_indLiteralsAndBracketedDescriptions_>
+      <TXL_literalOrBracketedDescription_><TXL_bracketedDescription_> [
+        <TXL_description_><id>formal</id></TXL_description_> ]
+       </TXL_bracketedDescription_>
+      </TXL_literalOrBracketedDescription_>
+      <TXL_literalsAndBracketedDescriptions_><empty/></TXL_literalsAndBracketedDescriptions_>
+     </TXL_indLiteralsAndBracketedDescriptions_>
+    </TXL_literalsAndBracketedDescriptions_>
+    <TXL_repBarLiteralsAndBracketedDescriptions_><TXL_indRepBarLiteralsAndBracketedDescriptions_> |
+      <TXL_literalsAndBracketedDescriptions_><TXL_indLiteralsAndBracketedDescriptions_>
+        <TXL_literalOrBracketedDescription_><TXL_bracketedDescription_> [
+          <TXL_description_><id>pat</id></TXL_description_> ]
+         </TXL_bracketedDescription_>
+        </TXL_literalOrBracketedDescription_>
+        <TXL_literalsAndBracketedDescriptions_><TXL_indLiteralsAndBracketedDescriptions_>
+          <TXL_literalOrBracketedDescription_><TXL_literal_>+</TXL_literal_></TXL_literalOrBracketedDescription_>
+          <TXL_literalsAndBracketedDescriptions_><TXL_indLiteralsAndBracketedDescriptions_>
+            <TXL_literalOrBracketedDescription_><TXL_bracketedDescription_> [
+              <TXL_description_><id>number</id></TXL_description_> ]
+             </TXL_bracketedDescription_>
+            </TXL_literalOrBracketedDescription_>
+            <TXL_literalsAndBracketedDescriptions_><empty/></TXL_literalsAndBracketedDescriptions_>
+           </TXL_indLiteralsAndBracketedDescriptions_>
+          </TXL_literalsAndBracketedDescriptions_>
+         </TXL_indLiteralsAndBracketedDescriptions_>
+        </TXL_literalsAndBracketedDescriptions_>
+       </TXL_indLiteralsAndBracketedDescriptions_>
+      </TXL_literalsAndBracketedDescriptions_>
+      <TXL_repBarLiteralsAndBracketedDescriptions_><empty/></TXL_repBarLiteralsAndBracketedDescriptions_>
+     </TXL_indRepBarLiteralsAndBracketedDescriptions_>
+    </TXL_repBarLiteralsAndBracketedDescriptions_>
+    <TXL_optBarDotDotDot_><empty/></TXL_optBarDotDotDot_> end
+    <TXL_defineOrRedefine_>define</TXL_defineOrRedefine_>
+    <KEEP/>
+   </TXL_defineStatement_>
+  </TXL_statement_>
+  <TXL_statements_><TXL_indStatements_>
+    <TXL_statement_><TXL_functionStatement_> function
+      <id>main</id>
+      <TXL_arguments_><empty/></TXL_arguments_>
+      <TXL_parts_><empty/></TXL_parts_>
+      <TXL_optSkippingBracketedDescription_><empty/></TXL_optSkippingBracketedDescription_>
+      <TXL_replaceOrMatch_>match</TXL_replaceOrMatch_>
+      <TXL_optStarDollarHash_><empty/></TXL_optStarDollarHash_>
+      <TXL_bracketedDescription_> [
+       <TXL_description_><id>program</id></TXL_description_> ]
+      </TXL_bracketedDescription_>
+      <TXL_pattern_><TXL_firstsAndLits_><TXL_indFirstsAndLits_>
+         <TXL_firstOrLit_><TXL_firstTime_>
+           <id>P</id> [
+           <TXL_description_><id>program</id></TXL_description_> ]
+          </TXL_firstTime_>
+         </TXL_firstOrLit_>
+         <TXL_firstsAndLits_><empty/></TXL_firstsAndLits_>
+        </TXL_indFirstsAndLits_>
+       </TXL_firstsAndLits_>
+      </TXL_pattern_>
+      <TXL_parts_><empty/></TXL_parts_>
+      <TXL_optByReplacement_><empty/></TXL_optByReplacement_> end function
+      <KEEP/>
+     </TXL_functionStatement_>
+    </TXL_statement_>
+    <TXL_statements_><empty/></TXL_statements_>
+   </TXL_indStatements_>
+  </TXL_statements_>
+ </TXL_indStatements_>
+</TXL_statements_>
+
+Parse tree
+name = TXL_indStatements_
+kind = *order
+count = 2
+<TXL_indStatements_>
+ <TXL_statement_><TXL_defineStatement_>
+   <TXL_defineOrRedefine_>define</TXL_defineOrRedefine_>
+   <id>formal</id>
+   <TXL_optDotDotDotBar_><empty/></TXL_optDotDotDotBar_>
+   <TXL_literalsAndBracketedDescriptions_><TXL_indLiteralsAndBracketedDescriptions_>
+     <TXL_literalOrBracketedDescription_><TXL_literal_>(</TXL_literal_></TXL_literalOrBracketedDescription_>
+     <TXL_literalsAndBracketedDescriptions_><TXL_indLiteralsAndBracketedDescriptions_>
+       <TXL_literalOrBracketedDescription_><TXL_bracketedDescription_> [
+         <TXL_description_><TXL_listDescription_> list
+           <TXL_idOrLiteral_><id>pat</id></TXL_idOrLiteral_>
+           <TXL_optStar_><empty/></TXL_optStar_>
+          </TXL_listDescription_>
+         </TXL_description_> ]
+        </TXL_bracketedDescription_>
+       </TXL_literalOrBracketedDescription_>
+       <TXL_literalsAndBracketedDescriptions_><TXL_indLiteralsAndBracketedDescriptions_>
+         <TXL_literalOrBracketedDescription_><TXL_literal_>)</TXL_literal_></TXL_literalOrBracketedDescription_>
+         <TXL_literalsAndBracketedDescriptions_><empty/></TXL_literalsAndBracketedDescriptions_>
+        </TXL_indLiteralsAndBracketedDescriptions_>
+       </TXL_literalsAndBracketedDescriptions_>
+      </TXL_indLiteralsAndBracketedDescriptions_>
+     </TXL_literalsAndBracketedDescriptions_>
+    </TXL_indLiteralsAndBracketedDescriptions_>
+   </TXL_literalsAndBracketedDescriptions_>
+   <TXL_repBarLiteralsAndBracketedDescriptions_><TXL_indRepBarLiteralsAndBracketedDescriptions_> |
+     <TXL_literalsAndBracketedDescriptions_><TXL_indLiteralsAndBracketedDescriptions_>
+       <TXL_literalOrBracketedDescription_><TXL_bracketedDescription_> [
+         <TXL_description_><id>id</id></TXL_description_> ]
+        </TXL_bracketedDescription_>
+       </TXL_literalOrBracketedDescription_>
+       <TXL_literalsAndBracketedDescriptions_><empty/></TXL_literalsAndBracketedDescriptions_>
+      </TXL_indLiteralsAndBracketedDescriptions_>
+     </TXL_literalsAndBracketedDescriptions_>
+     <TXL_repBarLiteralsAndBracketedDescriptions_><TXL_indRepBarLiteralsAndBracketedDescriptions_> |
+       <TXL_literalsAndBracketedDescriptions_><TXL_indLiteralsAndBracketedDescriptions_>
+         <TXL_literalOrBracketedDescription_><TXL_bracketedDescription_> [
+           <TXL_description_><id>number</id></TXL_description_> ]
+          </TXL_bracketedDescription_>
+         </TXL_literalOrBracketedDescription_>
+         <TXL_literalsAndBracketedDescriptions_><empty/></TXL_literalsAndBracketedDescriptions_>
+        </TXL_indLiteralsAndBracketedDescriptions_>
+       </TXL_literalsAndBracketedDescriptions_>
+       <TXL_repBarLiteralsAndBracketedDescriptions_><empty/></TXL_repBarLiteralsAndBracketedDescriptions_>
+      </TXL_indRepBarLiteralsAndBracketedDescriptions_>
+     </TXL_repBarLiteralsAndBracketedDescriptions_>
+    </TXL_indRepBarLiteralsAndBracketedDescriptions_>
+   </TXL_repBarLiteralsAndBracketedDescriptions_>
+   <TXL_optBarDotDotDot_><empty/></TXL_optBarDotDotDot_> end
+   <TXL_defineOrRedefine_>define</TXL_defineOrRedefine_>
+   <KEEP/>
+  </TXL_defineStatement_>
+ </TXL_statement_>
+ <TXL_statements_><TXL_indStatements_>
+   <TXL_statement_><TXL_defineStatement_>
+     <TXL_defineOrRedefine_>define</TXL_defineOrRedefine_>
+     <id>pat</id>
+     <TXL_optDotDotDotBar_><empty/></TXL_optDotDotDotBar_>
+     <TXL_literalsAndBracketedDescriptions_><TXL_indLiteralsAndBracketedDescriptions_>
+       <TXL_literalOrBracketedDescription_><TXL_bracketedDescription_> [
+         <TXL_description_><id>formal</id></TXL_description_> ]
+        </TXL_bracketedDescription_>
+       </TXL_literalOrBracketedDescription_>
+       <TXL_literalsAndBracketedDescriptions_><empty/></TXL_literalsAndBracketedDescriptions_>
+      </TXL_indLiteralsAndBracketedDescriptions_>
+     </TXL_literalsAndBracketedDescriptions_>
+     <TXL_repBarLiteralsAndBracketedDescriptions_><TXL_indRepBarLiteralsAndBracketedDescriptions_> |
+       <TXL_literalsAndBracketedDescriptions_><TXL_indLiteralsAndBracketedDescriptions_>
+         <TXL_literalOrBracketedDescription_><TXL_bracketedDescription_> [
+           <TXL_description_><id>pat</id></TXL_description_> ]
+          </TXL_bracketedDescription_>
+         </TXL_literalOrBracketedDescription_>
+         <TXL_literalsAndBracketedDescriptions_><TXL_indLiteralsAndBracketedDescriptions_>
+           <TXL_literalOrBracketedDescription_><TXL_literal_>+</TXL_literal_></TXL_literalOrBracketedDescription_>
+           <TXL_literalsAndBracketedDescriptions_><TXL_indLiteralsAndBracketedDescriptions_>
+             <TXL_literalOrBracketedDescription_><TXL_bracketedDescription_> [
+               <TXL_description_><id>number</id></TXL_description_> ]
+              </TXL_bracketedDescription_>
+             </TXL_literalOrBracketedDescription_>
+             <TXL_literalsAndBracketedDescriptions_><empty/></TXL_literalsAndBracketedDescriptions_>
+            </TXL_indLiteralsAndBracketedDescriptions_>
+           </TXL_literalsAndBracketedDescriptions_>
+          </TXL_indLiteralsAndBracketedDescriptions_>
+         </TXL_literalsAndBracketedDescriptions_>
+        </TXL_indLiteralsAndBracketedDescriptions_>
+       </TXL_literalsAndBracketedDescriptions_>
+       <TXL_repBarLiteralsAndBracketedDescriptions_><empty/></TXL_repBarLiteralsAndBracketedDescriptions_>
+      </TXL_indRepBarLiteralsAndBracketedDescriptions_>
+     </TXL_repBarLiteralsAndBracketedDescriptions_>
+     <TXL_optBarDotDotDot_><empty/></TXL_optBarDotDotDot_> end
+     <TXL_defineOrRedefine_>define</TXL_defineOrRedefine_>
+     <KEEP/>
+    </TXL_defineStatement_>
+   </TXL_statement_>
+   <TXL_statements_><TXL_indStatements_>
+     <TXL_statement_><TXL_functionStatement_> function
+       <id>main</id>
+       <TXL_arguments_><empty/></TXL_arguments_>
+       <TXL_parts_><empty/></TXL_parts_>
+       <TXL_optSkippingBracketedDescription_><empty/></TXL_optSkippingBracketedDescription_>
+       <TXL_replaceOrMatch_>match</TXL_replaceOrMatch_>
+       <TXL_optStarDollarHash_><empty/></TXL_optStarDollarHash_>
+       <TXL_bracketedDescription_> [
+        <TXL_description_><id>program</id></TXL_description_> ]
+       </TXL_bracketedDescription_>
+       <TXL_pattern_><TXL_firstsAndLits_><TXL_indFirstsAndLits_>
+          <TXL_firstOrLit_><TXL_firstTime_>
+            <id>P</id> [
+            <TXL_description_><id>program</id></TXL_description_> ]
+           </TXL_firstTime_>
+          </TXL_firstOrLit_>
+          <TXL_firstsAndLits_><empty/></TXL_firstsAndLits_>
+         </TXL_indFirstsAndLits_>
+        </TXL_firstsAndLits_>
+       </TXL_pattern_>
+       <TXL_parts_><empty/></TXL_parts_>
+       <TXL_optByReplacement_><empty/></TXL_optByReplacement_> end function
+       <KEEP/>
+      </TXL_functionStatement_>
+     </TXL_statement_>
+     <TXL_statements_><empty/></TXL_statements_>
+    </TXL_indStatements_>
+   </TXL_statements_>
+  </TXL_indStatements_>
+ </TXL_statements_>
+</TXL_indStatements_>
+
+Parse tree
+name = TXL_statements_
+kind = *choose
+count = 1
+<TXL_statements_>
+ <TXL_indStatements_>
+  <TXL_statement_><TXL_defineStatement_>
+    <TXL_defineOrRedefine_>define</TXL_defineOrRedefine_>
+    <id>formal</id>
+    <TXL_optDotDotDotBar_><empty/></TXL_optDotDotDotBar_>
+    <TXL_literalsAndBracketedDescriptions_><TXL_indLiteralsAndBracketedDescriptions_>
+      <TXL_literalOrBracketedDescription_><TXL_literal_>(</TXL_literal_></TXL_literalOrBracketedDescription_>
+      <TXL_literalsAndBracketedDescriptions_><TXL_indLiteralsAndBracketedDescriptions_>
+        <TXL_literalOrBracketedDescription_><TXL_bracketedDescription_> [
+          <TXL_description_><TXL_listDescription_> list
+            <TXL_idOrLiteral_><id>pat</id></TXL_idOrLiteral_>
+            <TXL_optStar_><empty/></TXL_optStar_>
+           </TXL_listDescription_>
+          </TXL_description_> ]
+         </TXL_bracketedDescription_>
+        </TXL_literalOrBracketedDescription_>
+        <TXL_literalsAndBracketedDescriptions_><TXL_indLiteralsAndBracketedDescriptions_>
+          <TXL_literalOrBracketedDescription_><TXL_literal_>)</TXL_literal_></TXL_literalOrBracketedDescription_>
+          <TXL_literalsAndBracketedDescriptions_><empty/></TXL_literalsAndBracketedDescriptions_>
+         </TXL_indLiteralsAndBracketedDescriptions_>
+        </TXL_literalsAndBracketedDescriptions_>
+       </TXL_indLiteralsAndBracketedDescriptions_>
+      </TXL_literalsAndBracketedDescriptions_>
+     </TXL_indLiteralsAndBracketedDescriptions_>
+    </TXL_literalsAndBracketedDescriptions_>
+    <TXL_repBarLiteralsAndBracketedDescriptions_><TXL_indRepBarLiteralsAndBracketedDescriptions_> |
+      <TXL_literalsAndBracketedDescriptions_><TXL_indLiteralsAndBracketedDescriptions_>
+        <TXL_literalOrBracketedDescription_><TXL_bracketedDescription_> [
+          <TXL_description_><id>id</id></TXL_description_> ]
+         </TXL_bracketedDescription_>
+        </TXL_literalOrBracketedDescription_>
+        <TXL_literalsAndBracketedDescriptions_><empty/></TXL_literalsAndBracketedDescriptions_>
+       </TXL_indLiteralsAndBracketedDescriptions_>
+      </TXL_literalsAndBracketedDescriptions_>
+      <TXL_repBarLiteralsAndBracketedDescriptions_><TXL_indRepBarLiteralsAndBracketedDescriptions_> |
+        <TXL_literalsAndBracketedDescriptions_><TXL_indLiteralsAndBracketedDescriptions_>
+          <TXL_literalOrBracketedDescription_><TXL_bracketedDescription_> [
+            <TXL_description_><id>number</id></TXL_description_> ]
+           </TXL_bracketedDescription_>
+          </TXL_literalOrBracketedDescription_>
+          <TXL_literalsAndBracketedDescriptions_><empty/></TXL_literalsAndBracketedDescriptions_>
+         </TXL_indLiteralsAndBracketedDescriptions_>
+        </TXL_literalsAndBracketedDescriptions_>
+        <TXL_repBarLiteralsAndBracketedDescriptions_><empty/></TXL_repBarLiteralsAndBracketedDescriptions_>
+       </TXL_indRepBarLiteralsAndBracketedDescriptions_>
+      </TXL_repBarLiteralsAndBracketedDescriptions_>
+     </TXL_indRepBarLiteralsAndBracketedDescriptions_>
+    </TXL_repBarLiteralsAndBracketedDescriptions_>
+    <TXL_optBarDotDotDot_><empty/></TXL_optBarDotDotDot_> end
+    <TXL_defineOrRedefine_>define</TXL_defineOrRedefine_>
+    <KEEP/>
+   </TXL_defineStatement_>
+  </TXL_statement_>
+  <TXL_statements_><TXL_indStatements_>
+    <TXL_statement_><TXL_defineStatement_>
+      <TXL_defineOrRedefine_>define</TXL_defineOrRedefine_>
+      <id>pat</id>
+      <TXL_optDotDotDotBar_><empty/></TXL_optDotDotDotBar_>
+      <TXL_literalsAndBracketedDescriptions_><TXL_indLiteralsAndBracketedDescriptions_>
+        <TXL_literalOrBracketedDescription_><TXL_bracketedDescription_> [
+          <TXL_description_><id>formal</id></TXL_description_> ]
+         </TXL_bracketedDescription_>
+        </TXL_literalOrBracketedDescription_>
+        <TXL_literalsAndBracketedDescriptions_><empty/></TXL_literalsAndBracketedDescriptions_>
+       </TXL_indLiteralsAndBracketedDescriptions_>
+      </TXL_literalsAndBracketedDescriptions_>
+      <TXL_repBarLiteralsAndBracketedDescriptions_><TXL_indRepBarLiteralsAndBracketedDescriptions_> |
+        <TXL_literalsAndBracketedDescriptions_><TXL_indLiteralsAndBracketedDescriptions_>
+          <TXL_literalOrBracketedDescription_><TXL_bracketedDescription_> [
+            <TXL_description_><id>pat</id></TXL_description_> ]
+           </TXL_bracketedDescription_>
+          </TXL_literalOrBracketedDescription_>
+          <TXL_literalsAndBracketedDescriptions_><TXL_indLiteralsAndBracketedDescriptions_>
+            <TXL_literalOrBracketedDescription_><TXL_literal_>+</TXL_literal_></TXL_literalOrBracketedDescription_>
+            <TXL_literalsAndBracketedDescriptions_><TXL_indLiteralsAndBracketedDescriptions_>
+              <TXL_literalOrBracketedDescription_><TXL_bracketedDescription_> [
+                <TXL_description_><id>number</id></TXL_description_> ]
+               </TXL_bracketedDescription_>
+              </TXL_literalOrBracketedDescription_>
+              <TXL_literalsAndBracketedDescriptions_><empty/></TXL_literalsAndBracketedDescriptions_>
+             </TXL_indLiteralsAndBracketedDescriptions_>
+            </TXL_literalsAndBracketedDescriptions_>
+           </TXL_indLiteralsAndBracketedDescriptions_>
+          </TXL_literalsAndBracketedDescriptions_>
+         </TXL_indLiteralsAndBracketedDescriptions_>
+        </TXL_literalsAndBracketedDescriptions_>
+        <TXL_repBarLiteralsAndBracketedDescriptions_><empty/></TXL_repBarLiteralsAndBracketedDescriptions_>
+       </TXL_indRepBarLiteralsAndBracketedDescriptions_>
+      </TXL_repBarLiteralsAndBracketedDescriptions_>
+      <TXL_optBarDotDotDot_><empty/></TXL_optBarDotDotDot_> end
+      <TXL_defineOrRedefine_>define</TXL_defineOrRedefine_>
+      <KEEP/>
+     </TXL_defineStatement_>
+    </TXL_statement_>
+    <TXL_statements_><TXL_indStatements_>
+      <TXL_statement_><TXL_functionStatement_> function
+        <id>main</id>
+        <TXL_arguments_><empty/></TXL_arguments_>
+        <TXL_parts_><empty/></TXL_parts_>
+        <TXL_optSkippingBracketedDescription_><empty/></TXL_optSkippingBracketedDescription_>
+        <TXL_replaceOrMatch_>match</TXL_replaceOrMatch_>
+        <TXL_optStarDollarHash_><empty/></TXL_optStarDollarHash_>
+        <TXL_bracketedDescription_> [
+         <TXL_description_><id>program</id></TXL_description_> ]
+        </TXL_bracketedDescription_>
+        <TXL_pattern_><TXL_firstsAndLits_><TXL_indFirstsAndLits_>
+           <TXL_firstOrLit_><TXL_firstTime_>
+             <id>P</id> [
+             <TXL_description_><id>program</id></TXL_description_> ]
+            </TXL_firstTime_>
+           </TXL_firstOrLit_>
+           <TXL_firstsAndLits_><empty/></TXL_firstsAndLits_>
+          </TXL_indFirstsAndLits_>
+         </TXL_firstsAndLits_>
+        </TXL_pattern_>
+        <TXL_parts_><empty/></TXL_parts_>
+        <TXL_optByReplacement_><empty/></TXL_optByReplacement_> end function
+        <KEEP/>
+       </TXL_functionStatement_>
+      </TXL_statement_>
+      <TXL_statements_><empty/></TXL_statements_>
+     </TXL_indStatements_>
+    </TXL_statements_>
+   </TXL_indStatements_>
+  </TXL_statements_>
+ </TXL_indStatements_>
+</TXL_statements_>
+
+Parse tree
+name = TXL_indStatements_
+kind = *order
+count = 2
+<TXL_indStatements_>
+ <TXL_statement_><TXL_defineStatement_>
+   <TXL_defineOrRedefine_>define</TXL_defineOrRedefine_>
+   <id>program</id>
+   <TXL_optDotDotDotBar_><empty/></TXL_optDotDotDotBar_>
+   <TXL_literalsAndBracketedDescriptions_><TXL_indLiteralsAndBracketedDescriptions_>
+     <TXL_literalOrBracketedDescription_><TXL_bracketedDescription_> [
+       <TXL_description_><id>pat</id></TXL_description_> ]
+      </TXL_bracketedDescription_>
+     </TXL_literalOrBracketedDescription_>
+     <TXL_literalsAndBracketedDescriptions_><empty/></TXL_literalsAndBracketedDescriptions_>
+    </TXL_indLiteralsAndBracketedDescriptions_>
+   </TXL_literalsAndBracketedDescriptions_>
+   <TXL_repBarLiteralsAndBracketedDescriptions_><empty/></TXL_repBarLiteralsAndBracketedDescriptions_>
+   <TXL_optBarDotDotDot_><empty/></TXL_optBarDotDotDot_> end
+   <TXL_defineOrRedefine_>define</TXL_defineOrRedefine_>
+   <KEEP/>
+  </TXL_defineStatement_>
+ </TXL_statement_>
+ <TXL_statements_><TXL_indStatements_>
+   <TXL_statement_><TXL_defineStatement_>
+     <TXL_defineOrRedefine_>define</TXL_defineOrRedefine_>
+     <id>formal</id>
+     <TXL_optDotDotDotBar_><empty/></TXL_optDotDotDotBar_>
+     <TXL_literalsAndBracketedDescriptions_><TXL_indLiteralsAndBracketedDescriptions_>
+       <TXL_literalOrBracketedDescription_><TXL_literal_>(</TXL_literal_></TXL_literalOrBracketedDescription_>
+       <TXL_literalsAndBracketedDescriptions_><TXL_indLiteralsAndBracketedDescriptions_>
+         <TXL_literalOrBracketedDescription_><TXL_bracketedDescription_> [
+           <TXL_description_><TXL_listDescription_> list
+             <TXL_idOrLiteral_><id>pat</id></TXL_idOrLiteral_>
+             <TXL_optStar_><empty/></TXL_optStar_>
+            </TXL_listDescription_>
+           </TXL_description_> ]
+          </TXL_bracketedDescription_>
+         </TXL_literalOrBracketedDescription_>
+         <TXL_literalsAndBracketedDescriptions_><TXL_indLiteralsAndBracketedDescriptions_>
+           <TXL_literalOrBracketedDescription_><TXL_literal_>)</TXL_literal_></TXL_literalOrBracketedDescription_>
+           <TXL_literalsAndBracketedDescriptions_><empty/></TXL_literalsAndBracketedDescriptions_>
+          </TXL_indLiteralsAndBracketedDescriptions_>
+         </TXL_literalsAndBracketedDescriptions_>
+        </TXL_indLiteralsAndBracketedDescriptions_>
+       </TXL_literalsAndBracketedDescriptions_>
+      </TXL_indLiteralsAndBracketedDescriptions_>
+     </TXL_literalsAndBracketedDescriptions_>
+     <TXL_repBarLiteralsAndBracketedDescriptions_><TXL_indRepBarLiteralsAndBracketedDescriptions_> |
+       <TXL_literalsAndBracketedDescriptions_><TXL_indLiteralsAndBracketedDescriptions_>
+         <TXL_literalOrBracketedDescription_><TXL_bracketedDescription_> [
+           <TXL_description_><id>id</id></TXL_description_> ]
+          </TXL_bracketedDescription_>
+         </TXL_literalOrBracketedDescription_>
+         <TXL_literalsAndBracketedDescriptions_><empty/></TXL_literalsAndBracketedDescriptions_>
+        </TXL_indLiteralsAndBracketedDescriptions_>
+       </TXL_literalsAndBracketedDescriptions_>
+       <TXL_repBarLiteralsAndBracketedDescriptions_><TXL_indRepBarLiteralsAndBracketedDescriptions_> |
+         <TXL_literalsAndBracketedDescriptions_><TXL_indLiteralsAndBracketedDescriptions_>
+           <TXL_literalOrBracketedDescription_><TXL_bracketedDescription_> [
+             <TXL_description_><id>number</id></TXL_description_> ]
+            </TXL_bracketedDescription_>
+           </TXL_literalOrBracketedDescription_>
+           <TXL_literalsAndBracketedDescriptions_><empty/></TXL_literalsAndBracketedDescriptions_>
+          </TXL_indLiteralsAndBracketedDescriptions_>
+         </TXL_literalsAndBracketedDescriptions_>
+         <TXL_repBarLiteralsAndBracketedDescriptions_><empty/></TXL_repBarLiteralsAndBracketedDescriptions_>
+        </TXL_indRepBarLiteralsAndBracketedDescriptions_>
+       </TXL_repBarLiteralsAndBracketedDescriptions_>
+      </TXL_indRepBarLiteralsAndBracketedDescriptions_>
+     </TXL_repBarLiteralsAndBracketedDescriptions_>
+     <TXL_optBarDotDotDot_><empty/></TXL_optBarDotDotDot_> end
+     <TXL_defineOrRedefine_>define</TXL_defineOrRedefine_>
+     <KEEP/>
+    </TXL_defineStatement_>
+   </TXL_statement_>
+   <TXL_statements_><TXL_indStatements_>
+     <TXL_statement_><TXL_defineStatement_>
+       <TXL_defineOrRedefine_>define</TXL_defineOrRedefine_>
+       <id>pat</id>
+       <TXL_optDotDotDotBar_><empty/></TXL_optDotDotDotBar_>
+       <TXL_literalsAndBracketedDescriptions_><TXL_indLiteralsAndBracketedDescriptions_>
+         <TXL_literalOrBracketedDescription_><TXL_bracketedDescription_> [
+           <TXL_description_><id>formal</id></TXL_description_> ]
+          </TXL_bracketedDescription_>
+         </TXL_literalOrBracketedDescription_>
+         <TXL_literalsAndBracketedDescriptions_><empty/></TXL_literalsAndBracketedDescriptions_>
+        </TXL_indLiteralsAndBracketedDescriptions_>
+       </TXL_literalsAndBracketedDescriptions_>
+       <TXL_repBarLiteralsAndBracketedDescriptions_><TXL_indRepBarLiteralsAndBracketedDescriptions_> |
+         <TXL_literalsAndBracketedDescriptions_><TXL_indLiteralsAndBracketedDescriptions_>
+           <TXL_literalOrBracketedDescription_><TXL_bracketedDescription_> [
+             <TXL_description_><id>pat</id></TXL_description_> ]
+            </TXL_bracketedDescription_>
+           </TXL_literalOrBracketedDescription_>
+           <TXL_literalsAndBracketedDescriptions_><TXL_indLiteralsAndBracketedDescriptions_>
+             <TXL_literalOrBracketedDescription_><TXL_literal_>+</TXL_literal_></TXL_literalOrBracketedDescription_>
+             <TXL_literalsAndBracketedDescriptions_><TXL_indLiteralsAndBracketedDescriptions_>
+               <TXL_literalOrBracketedDescription_><TXL_bracketedDescription_> [
+                 <TXL_description_><id>number</id></TXL_description_> ]
+                </TXL_bracketedDescription_>
+               </TXL_literalOrBracketedDescription_>
+               <TXL_literalsAndBracketedDescriptions_><empty/></TXL_literalsAndBracketedDescriptions_>
+              </TXL_indLiteralsAndBracketedDescriptions_>
+             </TXL_literalsAndBracketedDescriptions_>
+            </TXL_indLiteralsAndBracketedDescriptions_>
+           </TXL_literalsAndBracketedDescriptions_>
+          </TXL_indLiteralsAndBracketedDescriptions_>
+         </TXL_literalsAndBracketedDescriptions_>
+         <TXL_repBarLiteralsAndBracketedDescriptions_><empty/></TXL_repBarLiteralsAndBracketedDescriptions_>
+        </TXL_indRepBarLiteralsAndBracketedDescriptions_>
+       </TXL_repBarLiteralsAndBracketedDescriptions_>
+       <TXL_optBarDotDotDot_><empty/></TXL_optBarDotDotDot_> end
+       <TXL_defineOrRedefine_>define</TXL_defineOrRedefine_>
+       <KEEP/>
+      </TXL_defineStatement_>
+     </TXL_statement_>
+     <TXL_statements_><TXL_indStatements_>
+       <TXL_statement_><TXL_functionStatement_> function
+         <id>main</id>
+         <TXL_arguments_><empty/></TXL_arguments_>
+         <TXL_parts_><empty/></TXL_parts_>
+         <TXL_optSkippingBracketedDescription_><empty/></TXL_optSkippingBracketedDescription_>
+         <TXL_replaceOrMatch_>match</TXL_replaceOrMatch_>
+         <TXL_optStarDollarHash_><empty/></TXL_optStarDollarHash_>
+         <TXL_bracketedDescription_> [
+          <TXL_description_><id>program</id></TXL_description_> ]
+         </TXL_bracketedDescription_>
+         <TXL_pattern_><TXL_firstsAndLits_><TXL_indFirstsAndLits_>
+            <TXL_firstOrLit_><TXL_firstTime_>
+              <id>P</id> [
+              <TXL_description_><id>program</id></TXL_description_> ]
+             </TXL_firstTime_>
+            </TXL_firstOrLit_>
+            <TXL_firstsAndLits_><empty/></TXL_firstsAndLits_>
+           </TXL_indFirstsAndLits_>
+          </TXL_firstsAndLits_>
+         </TXL_pattern_>
+         <TXL_parts_><empty/></TXL_parts_>
+         <TXL_optByReplacement_><empty/></TXL_optByReplacement_> end function
+         <KEEP/>
+        </TXL_functionStatement_>
+       </TXL_statement_>
+       <TXL_statements_><empty/></TXL_statements_>
+      </TXL_indStatements_>
+     </TXL_statements_>
+    </TXL_indStatements_>
+   </TXL_statements_>
+  </TXL_indStatements_>
+ </TXL_statements_>
+</TXL_indStatements_>
+
+Parse tree
+name = TXL_statements_
+kind = *choose
+count = 1
+<TXL_statements_>
+ <TXL_indStatements_>
+  <TXL_statement_><TXL_defineStatement_>
+    <TXL_defineOrRedefine_>define</TXL_defineOrRedefine_>
+    <id>program</id>
+    <TXL_optDotDotDotBar_><empty/></TXL_optDotDotDotBar_>
+    <TXL_literalsAndBracketedDescriptions_><TXL_indLiteralsAndBracketedDescriptions_>
+      <TXL_literalOrBracketedDescription_><TXL_bracketedDescription_> [
+        <TXL_description_><id>pat</id></TXL_description_> ]
+       </TXL_bracketedDescription_>
+      </TXL_literalOrBracketedDescription_>
+      <TXL_literalsAndBracketedDescriptions_><empty/></TXL_literalsAndBracketedDescriptions_>
+     </TXL_indLiteralsAndBracketedDescriptions_>
+    </TXL_literalsAndBracketedDescriptions_>
+    <TXL_repBarLiteralsAndBracketedDescriptions_><empty/></TXL_repBarLiteralsAndBracketedDescriptions_>
+    <TXL_optBarDotDotDot_><empty/></TXL_optBarDotDotDot_> end
+    <TXL_defineOrRedefine_>define</TXL_defineOrRedefine_>
+    <KEEP/>
+   </TXL_defineStatement_>
+  </TXL_statement_>
+  <TXL_statements_><TXL_indStatements_>
+    <TXL_statement_><TXL_defineStatement_>
+      <TXL_defineOrRedefine_>define</TXL_defineOrRedefine_>
+      <id>formal</id>
+      <TXL_optDotDotDotBar_><empty/></TXL_optDotDotDotBar_>
+      <TXL_literalsAndBracketedDescriptions_><TXL_indLiteralsAndBracketedDescriptions_>
+        <TXL_literalOrBracketedDescription_><TXL_literal_>(</TXL_literal_></TXL_literalOrBracketedDescription_>
+        <TXL_literalsAndBracketedDescriptions_><TXL_indLiteralsAndBracketedDescriptions_>
+          <TXL_literalOrBracketedDescription_><TXL_bracketedDescription_> [
+            <TXL_description_><TXL_listDescription_> list
+              <TXL_idOrLiteral_><id>pat</id></TXL_idOrLiteral_>
+              <TXL_optStar_><empty/></TXL_optStar_>
+             </TXL_listDescription_>
+            </TXL_description_> ]
+           </TXL_bracketedDescription_>
+          </TXL_literalOrBracketedDescription_>
+          <TXL_literalsAndBracketedDescriptions_><TXL_indLiteralsAndBracketedDescriptions_>
+            <TXL_literalOrBracketedDescription_><TXL_literal_>)</TXL_literal_></TXL_literalOrBracketedDescription_>
+            <TXL_literalsAndBracketedDescriptions_><empty/></TXL_literalsAndBracketedDescriptions_>
+           </TXL_indLiteralsAndBracketedDescriptions_>
+          </TXL_literalsAndBracketedDescriptions_>
+         </TXL_indLiteralsAndBracketedDescriptions_>
+        </TXL_literalsAndBracketedDescriptions_>
+       </TXL_indLiteralsAndBracketedDescriptions_>
+      </TXL_literalsAndBracketedDescriptions_>
+      <TXL_repBarLiteralsAndBracketedDescriptions_><TXL_indRepBarLiteralsAndBracketedDescriptions_> |
+        <TXL_literalsAndBracketedDescriptions_><TXL_indLiteralsAndBracketedDescriptions_>
+          <TXL_literalOrBracketedDescription_><TXL_bracketedDescription_> [
+            <TXL_description_><id>id</id></TXL_description_> ]
+           </TXL_bracketedDescription_>
+          </TXL_literalOrBracketedDescription_>
+          <TXL_literalsAndBracketedDescriptions_><empty/></TXL_literalsAndBracketedDescriptions_>
+         </TXL_indLiteralsAndBracketedDescriptions_>
+        </TXL_literalsAndBracketedDescriptions_>
+        <TXL_repBarLiteralsAndBracketedDescriptions_><TXL_indRepBarLiteralsAndBracketedDescriptions_> |
+          <TXL_literalsAndBracketedDescriptions_><TXL_indLiteralsAndBracketedDescriptions_>
+            <TXL_literalOrBracketedDescription_><TXL_bracketedDescription_> [
+              <TXL_description_><id>number</id></TXL_description_> ]
+             </TXL_bracketedDescription_>
+            </TXL_literalOrBracketedDescription_>
+            <TXL_literalsAndBracketedDescriptions_><empty/></TXL_literalsAndBracketedDescriptions_>
+           </TXL_indLiteralsAndBracketedDescriptions_>
+          </TXL_literalsAndBracketedDescriptions_>
+          <TXL_repBarLiteralsAndBracketedDescriptions_><empty/></TXL_repBarLiteralsAndBracketedDescriptions_>
+         </TXL_indRepBarLiteralsAndBracketedDescriptions_>
+        </TXL_repBarLiteralsAndBracketedDescriptions_>
+       </TXL_indRepBarLiteralsAndBracketedDescriptions_>
+      </TXL_repBarLiteralsAndBracketedDescriptions_>
+      <TXL_optBarDotDotDot_><empty/></TXL_optBarDotDotDot_> end
+      <TXL_defineOrRedefine_>define</TXL_defineOrRedefine_>
+      <KEEP/>
+     </TXL_defineStatement_>
+    </TXL_statement_>
+    <TXL_statements_><TXL_indStatements_>
+      <TXL_statement_><TXL_defineStatement_>
+        <TXL_defineOrRedefine_>define</TXL_defineOrRedefine_>
+        <id>pat</id>
+        <TXL_optDotDotDotBar_><empty/></TXL_optDotDotDotBar_>
+        <TXL_literalsAndBracketedDescriptions_><TXL_indLiteralsAndBracketedDescriptions_>
+          <TXL_literalOrBracketedDescription_><TXL_bracketedDescription_> [
+            <TXL_description_><id>formal</id></TXL_description_> ]
+           </TXL_bracketedDescription_>
+          </TXL_literalOrBracketedDescription_>
+          <TXL_literalsAndBracketedDescriptions_><empty/></TXL_literalsAndBracketedDescriptions_>
+         </TXL_indLiteralsAndBracketedDescriptions_>
+        </TXL_literalsAndBracketedDescriptions_>
+        <TXL_repBarLiteralsAndBracketedDescriptions_><TXL_indRepBarLiteralsAndBracketedDescriptions_> |
+          <TXL_literalsAndBracketedDescriptions_><TXL_indLiteralsAndBracketedDescriptions_>
+            <TXL_literalOrBracketedDescription_><TXL_bracketedDescription_> [
+              <TXL_description_><id>pat</id></TXL_description_> ]
+             </TXL_bracketedDescription_>
+            </TXL_literalOrBracketedDescription_>
+            <TXL_literalsAndBracketedDescriptions_><TXL_indLiteralsAndBracketedDescriptions_>
+              <TXL_literalOrBracketedDescription_><TXL_literal_>+</TXL_literal_></TXL_literalOrBracketedDescription_>
+              <TXL_literalsAndBracketedDescriptions_><TXL_indLiteralsAndBracketedDescriptions_>
+                <TXL_literalOrBracketedDescription_><TXL_bracketedDescription_> [
+                  <TXL_description_><id>number</id></TXL_description_> ]
+                 </TXL_bracketedDescription_>
+                </TXL_literalOrBracketedDescription_>
+                <TXL_literalsAndBracketedDescriptions_><empty/></TXL_literalsAndBracketedDescriptions_>
+               </TXL_indLiteralsAndBracketedDescriptions_>
+              </TXL_literalsAndBracketedDescriptions_>
+             </TXL_indLiteralsAndBracketedDescriptions_>
+            </TXL_literalsAndBracketedDescriptions_>
+           </TXL_indLiteralsAndBracketedDescriptions_>
+          </TXL_literalsAndBracketedDescriptions_>
+          <TXL_repBarLiteralsAndBracketedDescriptions_><empty/></TXL_repBarLiteralsAndBracketedDescriptions_>
+         </TXL_indRepBarLiteralsAndBracketedDescriptions_>
+        </TXL_repBarLiteralsAndBracketedDescriptions_>
+        <TXL_optBarDotDotDot_><empty/></TXL_optBarDotDotDot_> end
+        <TXL_defineOrRedefine_>define</TXL_defineOrRedefine_>
+        <KEEP/>
+       </TXL_defineStatement_>
+      </TXL_statement_>
+      <TXL_statements_><TXL_indStatements_>
+        <TXL_statement_><TXL_functionStatement_> function
+          <id>main</id>
+          <TXL_arguments_><empty/></TXL_arguments_>
+          <TXL_parts_><empty/></TXL_parts_>
+          <TXL_optSkippingBracketedDescription_><empty/></TXL_optSkippingBracketedDescription_>
+          <TXL_replaceOrMatch_>match</TXL_replaceOrMatch_>
+          <TXL_optStarDollarHash_><empty/></TXL_optStarDollarHash_>
+          <TXL_bracketedDescription_> [
+           <TXL_description_><id>program</id></TXL_description_> ]
+          </TXL_bracketedDescription_>
+          <TXL_pattern_><TXL_firstsAndLits_><TXL_indFirstsAndLits_>
+             <TXL_firstOrLit_><TXL_firstTime_>
+               <id>P</id> [
+               <TXL_description_><id>program</id></TXL_description_> ]
+              </TXL_firstTime_>
+             </TXL_firstOrLit_>
+             <TXL_firstsAndLits_><empty/></TXL_firstsAndLits_>
+            </TXL_indFirstsAndLits_>
+           </TXL_firstsAndLits_>
+          </TXL_pattern_>
+          <TXL_parts_><empty/></TXL_parts_>
+          <TXL_optByReplacement_><empty/></TXL_optByReplacement_> end function
+          <KEEP/>
+         </TXL_functionStatement_>
+        </TXL_statement_>
+        <TXL_statements_><empty/></TXL_statements_>
+       </TXL_indStatements_>
+      </TXL_statements_>
+     </TXL_indStatements_>
+    </TXL_statements_>
+   </TXL_indStatements_>
+  </TXL_statements_>
+ </TXL_indStatements_>
+</TXL_statements_>
+
+Parse tree
+name = program
+kind = *order
+count = 1
+<program>
+ <TXL_statements_><TXL_indStatements_>
+   <TXL_statement_><TXL_defineStatement_>
+     <TXL_defineOrRedefine_>define</TXL_defineOrRedefine_>
+     <id>program</id>
+     <TXL_optDotDotDotBar_><empty/></TXL_optDotDotDotBar_>
+     <TXL_literalsAndBracketedDescriptions_><TXL_indLiteralsAndBracketedDescriptions_>
+       <TXL_literalOrBracketedDescription_><TXL_bracketedDescription_> [
+         <TXL_description_><id>pat</id></TXL_description_> ]
+        </TXL_bracketedDescription_>
+       </TXL_literalOrBracketedDescription_>
+       <TXL_literalsAndBracketedDescriptions_><empty/></TXL_literalsAndBracketedDescriptions_>
+      </TXL_indLiteralsAndBracketedDescriptions_>
+     </TXL_literalsAndBracketedDescriptions_>
+     <TXL_repBarLiteralsAndBracketedDescriptions_><empty/></TXL_repBarLiteralsAndBracketedDescriptions_>
+     <TXL_optBarDotDotDot_><empty/></TXL_optBarDotDotDot_> end
+     <TXL_defineOrRedefine_>define</TXL_defineOrRedefine_>
+     <KEEP/>
+    </TXL_defineStatement_>
+   </TXL_statement_>
+   <TXL_statements_><TXL_indStatements_>
+     <TXL_statement_><TXL_defineStatement_>
+       <TXL_defineOrRedefine_>define</TXL_defineOrRedefine_>
+       <id>formal</id>
+       <TXL_optDotDotDotBar_><empty/></TXL_optDotDotDotBar_>
+       <TXL_literalsAndBracketedDescriptions_><TXL_indLiteralsAndBracketedDescriptions_>
+         <TXL_literalOrBracketedDescription_><TXL_literal_>(</TXL_literal_></TXL_literalOrBracketedDescription_>
+         <TXL_literalsAndBracketedDescriptions_><TXL_indLiteralsAndBracketedDescriptions_>
+           <TXL_literalOrBracketedDescription_><TXL_bracketedDescription_> [
+             <TXL_description_><TXL_listDescription_> list
+               <TXL_idOrLiteral_><id>pat</id></TXL_idOrLiteral_>
+               <TXL_optStar_><empty/></TXL_optStar_>
+              </TXL_listDescription_>
+             </TXL_description_> ]
+            </TXL_bracketedDescription_>
+           </TXL_literalOrBracketedDescription_>
+           <TXL_literalsAndBracketedDescriptions_><TXL_indLiteralsAndBracketedDescriptions_>
+             <TXL_literalOrBracketedDescription_><TXL_literal_>)</TXL_literal_></TXL_literalOrBracketedDescription_>
+             <TXL_literalsAndBracketedDescriptions_><empty/></TXL_literalsAndBracketedDescriptions_>
+            </TXL_indLiteralsAndBracketedDescriptions_>
+           </TXL_literalsAndBracketedDescriptions_>
+          </TXL_indLiteralsAndBracketedDescriptions_>
+         </TXL_literalsAndBracketedDescriptions_>
+        </TXL_indLiteralsAndBracketedDescriptions_>
+       </TXL_literalsAndBracketedDescriptions_>
+       <TXL_repBarLiteralsAndBracketedDescriptions_><TXL_indRepBarLiteralsAndBracketedDescriptions_> |
+         <TXL_literalsAndBracketedDescriptions_><TXL_indLiteralsAndBracketedDescriptions_>
+           <TXL_literalOrBracketedDescription_><TXL_bracketedDescription_> [
+             <TXL_description_><id>id</id></TXL_description_> ]
+            </TXL_bracketedDescription_>
+           </TXL_literalOrBracketedDescription_>
+           <TXL_literalsAndBracketedDescriptions_><empty/></TXL_literalsAndBracketedDescriptions_>
+          </TXL_indLiteralsAndBracketedDescriptions_>
+         </TXL_literalsAndBracketedDescriptions_>
+         <TXL_repBarLiteralsAndBracketedDescriptions_><TXL_indRepBarLiteralsAndBracketedDescriptions_> |
+           <TXL_literalsAndBracketedDescriptions_><TXL_indLiteralsAndBracketedDescriptions_>
+             <TXL_literalOrBracketedDescription_><TXL_bracketedDescription_> [
+               <TXL_description_><id>number</id></TXL_description_> ]
+              </TXL_bracketedDescription_>
+             </TXL_literalOrBracketedDescription_>
+             <TXL_literalsAndBracketedDescriptions_><empty/></TXL_literalsAndBracketedDescriptions_>
+            </TXL_indLiteralsAndBracketedDescriptions_>
+           </TXL_literalsAndBracketedDescriptions_>
+           <TXL_repBarLiteralsAndBracketedDescriptions_><empty/></TXL_repBarLiteralsAndBracketedDescriptions_>
+          </TXL_indRepBarLiteralsAndBracketedDescriptions_>
+         </TXL_repBarLiteralsAndBracketedDescriptions_>
+        </TXL_indRepBarLiteralsAndBracketedDescriptions_>
+       </TXL_repBarLiteralsAndBracketedDescriptions_>
+       <TXL_optBarDotDotDot_><empty/></TXL_optBarDotDotDot_> end
+       <TXL_defineOrRedefine_>define</TXL_defineOrRedefine_>
+       <KEEP/>
+      </TXL_defineStatement_>
+     </TXL_statement_>
+     <TXL_statements_><TXL_indStatements_>
+       <TXL_statement_><TXL_defineStatement_>
+         <TXL_defineOrRedefine_>define</TXL_defineOrRedefine_>
+         <id>pat</id>
+         <TXL_optDotDotDotBar_><empty/></TXL_optDotDotDotBar_>
+         <TXL_literalsAndBracketedDescriptions_><TXL_indLiteralsAndBracketedDescriptions_>
+           <TXL_literalOrBracketedDescription_><TXL_bracketedDescription_> [
+             <TXL_description_><id>formal</id></TXL_description_> ]
+            </TXL_bracketedDescription_>
+           </TXL_literalOrBracketedDescription_>
+           <TXL_literalsAndBracketedDescriptions_><empty/></TXL_literalsAndBracketedDescriptions_>
+          </TXL_indLiteralsAndBracketedDescriptions_>
+         </TXL_literalsAndBracketedDescriptions_>
+         <TXL_repBarLiteralsAndBracketedDescriptions_><TXL_indRepBarLiteralsAndBracketedDescriptions_> |
+           <TXL_literalsAndBracketedDescriptions_><TXL_indLiteralsAndBracketedDescriptions_>
+             <TXL_literalOrBracketedDescription_><TXL_bracketedDescription_> [
+               <TXL_description_><id>pat</id></TXL_description_> ]
+              </TXL_bracketedDescription_>
+             </TXL_literalOrBracketedDescription_>
+             <TXL_literalsAndBracketedDescriptions_><TXL_indLiteralsAndBracketedDescriptions_>
+               <TXL_literalOrBracketedDescription_><TXL_literal_>+</TXL_literal_></TXL_literalOrBracketedDescription_>
+               <TXL_literalsAndBracketedDescriptions_><TXL_indLiteralsAndBracketedDescriptions_>
+                 <TXL_literalOrBracketedDescription_><TXL_bracketedDescription_> [
+                   <TXL_description_><id>number</id></TXL_description_> ]
+                  </TXL_bracketedDescription_>
+                 </TXL_literalOrBracketedDescription_>
+                 <TXL_literalsAndBracketedDescriptions_><empty/></TXL_literalsAndBracketedDescriptions_>
+                </TXL_indLiteralsAndBracketedDescriptions_>
+               </TXL_literalsAndBracketedDescriptions_>
+              </TXL_indLiteralsAndBracketedDescriptions_>
+             </TXL_literalsAndBracketedDescriptions_>
+            </TXL_indLiteralsAndBracketedDescriptions_>
+           </TXL_literalsAndBracketedDescriptions_>
+           <TXL_repBarLiteralsAndBracketedDescriptions_><empty/></TXL_repBarLiteralsAndBracketedDescriptions_>
+          </TXL_indRepBarLiteralsAndBracketedDescriptions_>
+         </TXL_repBarLiteralsAndBracketedDescriptions_>
+         <TXL_optBarDotDotDot_><empty/></TXL_optBarDotDotDot_> end
+         <TXL_defineOrRedefine_>define</TXL_defineOrRedefine_>
+         <KEEP/>
+        </TXL_defineStatement_>
+       </TXL_statement_>
+       <TXL_statements_><TXL_indStatements_>
+         <TXL_statement_><TXL_functionStatement_> function
+           <id>main</id>
+           <TXL_arguments_><empty/></TXL_arguments_>
+           <TXL_parts_><empty/></TXL_parts_>
+           <TXL_optSkippingBracketedDescription_><empty/></TXL_optSkippingBracketedDescription_>
+           <TXL_replaceOrMatch_>match</TXL_replaceOrMatch_>
+           <TXL_optStarDollarHash_><empty/></TXL_optStarDollarHash_>
+           <TXL_bracketedDescription_> [
+            <TXL_description_><id>program</id></TXL_description_> ]
+           </TXL_bracketedDescription_>
+           <TXL_pattern_><TXL_firstsAndLits_><TXL_indFirstsAndLits_>
+              <TXL_firstOrLit_><TXL_firstTime_>
+                <id>P</id> [
+                <TXL_description_><id>program</id></TXL_description_> ]
+               </TXL_firstTime_>
+              </TXL_firstOrLit_>
+              <TXL_firstsAndLits_><empty/></TXL_firstsAndLits_>
+             </TXL_indFirstsAndLits_>
+            </TXL_firstsAndLits_>
+           </TXL_pattern_>
+           <TXL_parts_><empty/></TXL_parts_>
+           <TXL_optByReplacement_><empty/></TXL_optByReplacement_> end function
+           <KEEP/>
+          </TXL_functionStatement_>
+         </TXL_statement_>
+         <TXL_statements_><empty/></TXL_statements_>
+        </TXL_indStatements_>
+       </TXL_statements_>
+      </TXL_indStatements_>
+     </TXL_statements_>
+    </TXL_indStatements_>
+   </TXL_statements_>
+  </TXL_indStatements_>
+ </TXL_statements_>
+</program>
+  ... used 120 trees and 190 kids.
+Making the input language grammar tree
+[bug.txl] : TXL0213I define 'pat' - (Information) Optimized left recursive define
+  ... used 59 trees and 25 kids.
+Making the rule table
+
+  ... used 1 trees and 0 kids.
+Scanning the input file eg.bug
+Parsing the input file
+
+First try
+
+First try
+
+First try
+
+First try
+
+
+First try
+
+First try
+
+First try
+
+First try
+
+
+Parse tree
+name = __formal_1__
+kind = *order
+count = 0
+
+First try
+
+Parse tree
+name = id
+kind = id
+count = 0
+<id>m</id>
+
+Parse tree
+name = formal
+kind = *choose
+count = 2
+<formal>
+ <id>m</id>
+</formal>
+
+Parse tree
+name = pat
+kind = *choose
+count = 1
+<pat>
+ <formal><id>m</id></formal>
+</pat>
+
+Parse tree
+name = list_0_pat
+kind = *list
+count = 2
+<list_pat>
+ <pat><formal><id>m</id></formal></pat>
+ <empty/>
+</list_pat>
+
+
+Backtrack
+
+Retry generate list tree
+name = list_0_pat
+kind = *list
+count = 2
+<list_pat>
+ <pat><formal><id>m</id></formal></pat>
+ <empty/>
+</list_pat>
+
+Backtrack
+
+Retry generate list tree
+name = list_0_pat
+kind = *list
+count = 2
+<list_pat>
+ <empty/>
+</list_pat>
+
+Backtrack
+
+First try
+
+First try
+
+
+First try
+
+Parse tree
+name = number
+kind = number
+count = 0
+<number>1</number>
+
+Parse tree
+name = __pat_1__
+kind = *order
+count = 2
+ +
+
+<number>1</number>
+
+Parse tree
+name = __pat_2__
+kind = *choose
+count = 1
+ +
+
+<number>1</number>
+
+Parse tree
+name = pat
+kind = *choose
+count = 2
+<pat>
+ 
+ <pat><formal><id>m</id></formal></pat>
+ 
+  +
+ <number>1</number>
+</pat>
+
+Retry generate list result
+name = list_0_pat
+kind = *list
+count = 2
+<list_pat>
+ <pat><formal><id>m</id></formal></pat>
+ <empty/>
+</list_pat>
+
+Parse tree
+name = list_0_pat
+kind = *list
+count = 2
+<list_pat>
+ <pat><formal><id>m</id></formal></pat>
+ <empty/>
+</list_pat>
+
+
+Parse tree
+name = __formal_1__
+kind = *order
+count = 3
+ (
+
+<list_pat>
+ <pat><formal><id>m</id></formal></pat>
+ <empty/>
+</list_pat>
+ )
+
+Parse tree
+name = formal
+kind = *choose
+count = 1
+<formal>
+  (
+ <list_pat>
+  <pat><formal><id>m</id></formal></pat>
+  <empty/>
+ </list_pat> )
+</formal>
+
+Parse tree
+name = pat
+kind = *choose
+count = 1
+<pat>
+ <formal> (
+  <list_pat>
+   <pat><formal><id>m</id></formal></pat>
+   <empty/>
+  </list_pat> )
+ </formal>
+</pat>
+
+Parse tree
+name = program
+kind = *order
+count = 1
+<program>
+ <pat><formal> (
+   <list_pat>
+    <pat><formal><id>m</id></formal></pat>
+    <empty/>
+   </list_pat> )
+  </formal>
+ </pat>
+</program>
+  ... used 15 trees and 20 kids.
+Applying the transformation rules
+
+First try
+
+First try
+
+Parse tree
+name = stringlit
+kind = *order
+count = 0
+
+Parse tree
+name = repeat_0_stringlit
+kind = *repeat
+count = 2
+<repeat_stringlit>
+ <empty/>
+</repeat_stringlit>
+  ... used 8 trees and 4 kids.
+Generating transformed output
+(m)
+Used a total of 598 trees (0%) and 489 kids (0%).

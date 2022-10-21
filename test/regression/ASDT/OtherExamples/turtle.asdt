@@ -1,0 +1,404 @@
+%    Turing Machine Independent LOGO Turtle Demo
+%    Author: James R. Cordy,  Queen's University at Kingston
+%    Date:   October 1986  (Revised October 1987)
+
+% Turing standard color codes
+% Background/foreground colors
+const BLACK := 0
+const BLUE := 1
+const GREEN := 2
+const CYAN := 3
+const RED := 4
+const MAGENTA := 5
+const BROWN := 6
+const WHITE := 7
+ 
+% Foreground only colors
+const GRAY := 8
+const LIGHTBLUE := 9
+const LIGHTGREEN := 10
+const LIGHTCYAN := 11
+const LIGHTRED := 12
+const LIGHTMAGENTA := 13
+const YELLOW := 14
+const BRIGHTWHITE := 15
+
+
+% Machine Independent LOGO Turtle Implementation
+
+% START OF TURTLE MODULE
+
+% PC = running on color IBM PC
+const PC := true
+
+% This include file provides the Turtle procedure, which emulates
+% LOGO color turtle graphics using half-character color blocks on the PC
+% and full-character black and white blocks on other terminals.
+% Turtle is entirely implemented using the Turing character screen 
+% handling primitives 'locate', 'cls' and 'color'.
+
+% Usage:        turtle ("commands")
+
+% Where "commands" consists of any string of commands chosen from the 
+% following list :
+%
+%       i       (re-)initialize
+%       fN      forward N
+%       lN      left N degrees
+%       rN      right N degrees
+%       u       pen up
+%       dN      pen down, color N
+%       sN      store rest of command string as macro N, 1 <= N <= 9
+%       mN      invoke macro N
+%       eN      execute rest of command string N times
+%
+
+
+% Turtle screen - points are half-character, origin at center of screen
+const cols := 80
+const lines := 24
+const turtle_minx := - (cols div 2)
+const turtle_maxx := cols div 2 - 1
+const turtle_miny := - lines
+const turtle_maxy := lines - 1
+
+% Turtle position and direction
+var turtle_x := 0
+var turtle_y := 0
+var turtle_dir := 0
+
+% Turtle pen color - uses Turing standard IBM PC color codes
+const NONE := - 1
+type turtle_ink : NONE .. WHITE
+var turtle_pen := WHITE
+
+% Turtle macros - any string of commands can be stored and invoked later
+var turtle_macro: array 1 .. 9 of string 
+
+% Turtle depth - used to keep track of whether at command level or executing
+%               a repeat or macro
+var turtle_depth := 0
+
+% Current screen image - image on actual terminal screen is an approximation
+% unless terminal is color PC, in which case terminal image is exact
+var turtle_image : array turtle_minx .. turtle_maxx, turtle_miny ..
+    turtle_maxy of turtle_ink
+
+% Turing standard character codes for half-blocks on PC
+const TOPHALFBLOCK := chr (223)
+const BOTTOMHALFBLOCK := chr (220)
+const WHOLEBLOCK := chr (219)
+
+
+% Utility procedure used by Turtle to put points on the screen
+
+procedure turtle_point (x, y : int)
+    locate ((- turtle_miny + y) div 2 + 1, - turtle_minx + x + 1)
+
+    if turtle_pen not= NONE then
+	turtle_image (x, y) := turtle_pen
+    end if
+
+    % Top and bottom halves of affected character position on screen
+    const top := turtle_image (x, y - abs (y mod 2))
+    const bottom := turtle_image (x, y - abs (y mod 2) + 1)
+
+    if bottom not= NONE or top not= NONE then
+	% Must redraw affected character to reflect change
+	if PC then
+	    % Use foreground color for top half, background for bottom half
+	    color (BLACK)
+	    colorback (BLACK)
+    
+	    if top not= NONE then
+		color (top)
+    
+		if bottom not= NONE then
+		    colorback (bottom)
+		end if
+    
+	    else
+		assert bottom not= NONE
+		colorback (bottom) 
+	    end if
+    
+	    % Now output a top half block in the foreground color,
+	    % which also sets the bottom half to the background color at
+	    % the same time
+	    put TOPHALFBLOCK .. 
+
+	else
+	    % Regular terminal - use reverse video full character
+	    % blocks to approximate the screen image
+	    color (BLACK)
+	    colorback (WHITE)
+	    put " " ..
+	    color (WHITE)
+	    colorback (BLACK)
+	end if
+
+    else
+	% The point is empty now
+	color (WHITE)
+	colorback (BLACK)
+	put " " ..
+    end if
+
+end turtle_point
+
+
+% Turtle procedure - called by user to implement LOGO turtle graphics
+
+procedure turtle (commandstring : string)
+
+    % Turtle commands :
+    %   i       init            (clear, center, pen down)
+    %   lN      left N degrees
+    %   rN      right N degrees
+    %   fN      forward N
+    %   u       pen up
+    %   dN      pen down, color N
+    %   sN      store rest of command string as macro N, 1 <= N <= 9
+    %   mN      invoke macro N
+    %   eN      execute N times (entire rest of command string)
+
+    turtle_depth += 1
+
+    var commands := commandstring
+
+    loop
+	% Process next command in command string
+	exit when commands = ""
+
+	const command := commands (1)
+	commands := commands (2 .. *)
+
+	% Get count for direction, movement, macro, execute or color command
+	var count := 0
+	if command = "l" or command = "r" or command = "f" or command = "d"
+		or command = "s" or command = "m" or command = "e"
+		or command = "c" then
+	    loop
+		exit when commands = "" or
+		    commands (1) < "0" or commands (1) > "9"
+		count := count * 10 + ord (commands (1)) - ord ("0")
+		commands := commands (2 .. *)
+	    end loop
+
+	    if count = 0 then
+		if command not= "d" then
+		    % Default count is 1
+		    count := 1
+		else
+		    % Default color is white
+		    count := WHITE
+		end if
+	    end if
+	end if
+
+	% Execute the command
+
+	if command = "i" then
+	    %   init
+	    cls
+	    put "Wait ..."
+	    for x : turtle_minx .. turtle_maxx
+		for y : turtle_miny .. turtle_maxy
+		    turtle_image (x, y) := NONE
+		end for
+	    end for
+
+	    for m : 1 .. 9
+		turtle_macro (m) := ""
+	    end for
+
+	    turtle_x := 0
+	    turtle_y := 0
+	    turtle_dir := 0
+	    turtle_pen := WHITE
+	    cls
+
+	elsif command = "l" then
+	    %   left
+	    turtle_dir := (turtle_dir - count + 360) mod 360
+
+	elsif command = "r" then
+	    %   right
+	    turtle_dir := (turtle_dir + count) mod 360
+
+	elsif command = "f" then
+	    %   forward
+	    const dx := cosd (turtle_dir)
+	    const dy := sind (turtle_dir)
+
+	    if turtle_pen not= NONE then
+		for i : 0 .. count
+		    const ridx := round (i * dx)
+		    const ridy := round (i * dy)
+		    exit when turtle_y + ridy < turtle_miny or
+			turtle_y + ridy > turtle_maxy or
+			turtle_x + ridx < turtle_minx or
+			turtle_x + ridx > turtle_maxx
+		    turtle_point (turtle_x + ridx, turtle_y + ridy)
+		end for
+	    else
+		turtle_point (turtle_x, turtle_y)
+	    end if
+
+	    turtle_x += round (count * dx)
+
+	    if turtle_x < turtle_minx then
+		turtle_x := turtle_minx
+	    end if
+
+	    if turtle_x > turtle_maxx then
+		turtle_x := turtle_maxx
+	    end if
+
+	    turtle_y += round (count * dy)
+
+	    if turtle_y < turtle_miny then
+		turtle_y := turtle_miny
+	    end if
+
+	    if turtle_y > turtle_maxy then
+		turtle_y := turtle_maxy
+	    end if
+
+	elsif command = "u" then
+	    %   pen up
+	    turtle_pen := NONE
+
+	elsif command = "d" then
+	    %   pen down, color N
+	    turtle_pen := count mod 8  % limit to legal background colors
+
+	elsif command = "s" then
+	    %   store rest of command string as macro N
+	    turtle_macro (count) := commands
+	    commands := ""
+
+	elsif command = "m" then
+	    %   invoke macro N
+	    turtle (turtle_macro (count))
+
+	elsif command = "e" then
+	    %   execute rest of command string N times
+	    for i : 1 .. count
+		turtle (commands)
+	    end for
+
+	    commands := ""
+	end if
+    end loop
+
+    color (WHITE)
+    colorback (BLACK)
+
+    if turtle_depth = 1 then
+	% Tell current position, direction and color
+	locate (lines, 1)
+	put "(", turtle_x, ",", turtle_y, ") dir ", turtle_dir,
+	    "  color ", turtle_pen, "        " ..
+	locate ((- turtle_miny + turtle_y) div 2 + 1,
+	    - turtle_minx + turtle_x + 1)
+	if PC then
+	    color (turtle_pen)
+	end if
+	put "o" ..
+    end if
+
+    if PC then
+	color (WHITE)
+	colorback (BLACK)
+    end if
+
+    turtle_depth -= 1
+end turtle
+
+% END OF TURTLE MODULE
+
+
+% Demonstrate turtle by taking commands from terminal
+cls
+color (BLACK)
+colorback (CYAN)
+put "Turing Turtle" ..
+color (WHITE)
+colorback (BLACK)
+
+put skip, skip,
+    "This program demonstrates Turing character graphics by implementing"
+put "the classic LOGO turtle on a 48 x 80 half-character grid."
+put skip, "Type in command strings using the turtle commands:"
+put "   fN      forward N"
+put "   lN      left N degrees"
+put "   rN      right N degrees"
+put "   u       pen up"
+put "   dN      pen down, color N"
+put "   sN      store rest of command string as macro N, 1 <= N <= 9"
+put "   mN      invoke macro N"
+put "   eN      execute rest of command string N times"
+put "   i       (re-)initialize"
+put "   q       quit"
+
+locate (lines, 1)
+color (BLACK)
+colorback (CYAN)
+put "Hit return to begin " ..
+color (WHITE)
+colorback (BLACK)
+var s : string
+get s :*
+
+% Initialize
+turtle ("i")
+
+% Accept user commands
+loop
+    color (BROWN)
+    colorback (BLACK)
+    locate (1, 40)
+    put "Commands:  fN lN rN u dN sN mN eN i q"
+    locate (1, 1)
+    put "                    " ..
+    locate (1, 1)
+    get s :*
+    exit when s = "q"
+    turtle (s)
+end loop
+
+% Now show off a bit ...
+const facesize := 10
+const face : array 1 .. facesize of string :=
+    init ("ur90f20l90",     % position to start face outline
+	"d3e30f4l12",       % face outline
+	"ul90f28r90f5",     % position for right eye
+	"d2e4f3r90",        % right eye
+	"ul180f8",          % position for left eye
+	"d2e4f3l90",        % left eye
+	"ul180f5r90f8",     % position for nose
+	"d3r45f6",          % nose
+	"uf2l45f6",         % position for mouth
+	"d4l90f10l45f4"     % mouth
+	)
+
+turtle ("i")
+locate (1, 1)
+color (CYAN)
+put "And now, for your amusement ... " ..
+
+for i : 1 .. facesize
+    locate (2, 1)
+    color (CYAN)
+    put face (i), "            " ..
+    turtle (face (i))
+end for
+
+locate (lines, 1)
+put "                            " ..
+locate (lines, 1)
+color (BLACK)
+colorback (CYAN)
+put "Hit return to quit " ..
+get s :*

@@ -1,0 +1,190 @@
+%        include "infomod.std"  % standard Infomod definitions and Rules 
+
+function main
+
+    %this rule only does the std. include 
+    %    This function is the start of a suite of rules that
+    %    analyzes each non-Pattern statement, 
+    %    picks out the atomic sentences in it (no
+    %    expressions, constants etc, 
+    %    and then searches all the atomic patterns to make sure there is a
+    %    atomic pattern for each atomic formula in a rule. This effectively
+    %    type-checks all the rules to make sure they do 
+    %    not use undeclared identifiers.
+
+    replace [program]
+        P [program]
+
+    deconstruct P
+        iMD [informationModelDeclaration_45]
+        Statements [repeat informationModelStatement_48]
+        eMD [endModelDeclaration_45]
+        oiB [opt informationBase_20]
+
+    construct patterns [repeat informationModelStatement_48]
+        % ( empty ) 
+
+    construct checked_patterns [repeat informationModelStatement_48]
+        patterns [decomposePattern each Statements]
+            [decomposeClassDefs each Statements]
+            [typecheck each Statements]
+
+  
+   % construct unref_patterns [repeat informationModelStatement_48]
+    %    checked_patterns 
+            [deleteMentionedPatterns]
+            [deleteOriginalPatterns]
+
+   % construct output [repeat informationModelStatement_48]
+    %    unref_patterns 
+
+    [message '"***** Unreferenced  Patterns ******* "][print]
+    [message '"***** End Unreferenced  Patterns ******* "]
+
+    construct nul_consolidated [repeat informationModelStatement_48]
+    construct consolidated [repeat informationModelStatement_48]
+              nul_consolidated
+                  [createCollectedPatterns each Statements]
+    %[message '"***** Collecteded Patterns ******* "]
+    %[print]
+    %[message '"***** End Collected Patterns ******* "]
+%                  [consolidatePatterns]
+  %  [message '"***** Consolidated Patterns ******* "]
+%    [print]
+ %   [message '"***** End Consolidated Patterns ******* "]
+
+%    construct markup_1 [program]
+ %       P 
+%
+ %            [markup each consolidated]
+  %  [message '"***** MarkedUp Statements  ******* "][print]
+   % [message '"***** End MarkedUp Statements  ******* "]
+
+    by
+        P [deductive_closure]
+end function
+
+%===================================================
+
+function typecheck
+            Statement [informationModelStatement_48]
+    replace [repeat informationModelStatement_48]
+        patterns [repeat informationModelStatement_48]
+    by
+        patterns [typeIdentifierRule Statement]
+            [typeRequiredRule Statement]
+            [typeCorresRule Statement]
+            [typeAssertionStatement Statement]
+            [typeClassStatement Statement]
+end function
+
+% =======================================================
+
+rule deleteMentionedPatterns
+    replace [repeat informationModelStatement_48]
+        'Ment_ 
+        pW [patternWords_666]
+        ': 
+        eVP [entityVectorPattern_76]
+        sT [statementTerminator_22]
+        rest [repeat informationModelStatement_48]
+    by
+        rest 
+end rule
+
+% ======================================================
+
+rule deleteOriginalPatterns
+    replace [repeat informationModelStatement_48]
+        pW [patternWords_666]
+        ': 
+        eVP [entityVectorPattern_76]
+        sT [statementTerminator_22]
+        rest [repeat informationModelStatement_48]
+    by
+        rest 
+end rule
+
+% ====================================================
+
+function deductive_closure
+    replace [program]
+        P [program]
+
+    deconstruct P
+        iMD [informationModelDeclaration_45]
+        riMS [repeat informationModelStatement_48]
+        eMD [endModelDeclaration_45]
+        oiB [opt informationBase_20]
+
+    construct nul_axioms [repeat informationModelStatement_48]
+        % ( empty ) 
+
+    construct axioms [repeat   informationModelStatement_48 ]            
+		 nul_axioms  [normalize each riMS]
+    
+    construct debug_norm [repeat  informationModelStatement_48]
+              axioms
+
+            [message'"*****  after Normalization ******* "]
+            [print]
+            [message'"***** End    ******* "]
+
+    construct nul_facts [repeat assertionStatement_106]
+        % ( empty ) 
+
+    construct facts [repeat assertionStatement_106]
+        nul_facts 
+% [get_facts oiB]
+
+    construct deduced [repeat assertionStatement_106]
+        facts [message'"***** Collecteded Facts ******* "]
+            [print]
+            [message'"***** End Collected Facts ******* "]
+           % [deduce axioms]
+            [message'"***** Deduced Facts ******* "]
+            [print]
+            [message'"***** End Deduced Facts ******* "]
+    by
+        P 
+end function
+
+% ====================================================
+
+include "atompatt.rul"
+
+% file to produce atomic patterns & class names
+
+include "typident.rul"
+
+% file to validate Identifier statements
+
+include "typreqd.rul"
+
+% file to validate Required statements.
+
+include "typcorr.rul"
+
+% file to validate Rule of Correspondence
+
+include "assert.rul"
+
+% file to validate assertion statements 
+
+include "typclass.rul"
+
+% file to validate class definitions 
+include "collpatt.rul"    % file to collect patterns together
+%include "markup.rul"      % file to mark up the program for post-processing
+include "normalize.rul"    % rule to convert axioms to normal form axioms
+% include "deduce.rul"
+
+% file to compute deductive closure of info base.
+
+include "utils.rul"
+
+% file to contain utility rules and functions
+
+
+
+

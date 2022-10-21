@@ -1,0 +1,181 @@
+%===================================================
+function get_facts         oiB [opt informationBase_20]
+
+deconstruct oiB
+        iBD [informationBaseDeclaration_22]
+        rfS [repeat factStatement_24]
+        eBD [endBaseDeclaration_23]
+
+
+replace [repeat assertionStatement_106]
+     facts [repeat assertionStatement_106]
+
+by facts [^ oiB]
+
+end function
+%===================================================
+
+rule deduce
+            axioms [repeat assertionStatement_106]
+
+    % This rule finds recursively all the deductions that can be made from the
+    % facts. 
+ 
+
+   
+        iBD [informationBaseDeclaration_22]
+        rfS [repeat factStatement_24]
+        eBD [endBaseDeclaration_23]
+
+ construct facts [repeat assertionStatement_106]
+        nul_facts [^ oiB]
+
+
+    replace [repeat assertionStatement_106]
+        facts [repeat assertionStatement_106]
+    by
+        facts [applyEachAxiom each axioms]
+end rule
+
+
+%===================================================
+
+rule applyEachAxiom
+            axiom [assertionStatement_106]
+
+    % Apply the axiom to each fact in turn.
+
+    replace [repeat assertionStatement_106]
+        facts [repeat assertionStatement_106]
+    by
+        facts [modus_ponens axiom each facts]
+end rule
+
+%===================================================
+
+function modus_ponens
+            axiom [assertionStatement_106]
+            fact [assertionStatement_106]
+
+    % This rule carries out simple modus ponens
+
+    deconstruct fact
+        factSentence [sentence_110]
+
+    %  Get rid of extraneous expressions
+
+    construct unboundFact [assertionStatement_106]
+        fact [removeSimpleSelExpr_1]
+            [removeSimpleSelExpr_2]
+
+    % Change type.
+
+    deconstruct unboundFact
+        unboundFactSentence [sentence_110]
+
+    % Next, check to see that this axiom premise matches the 
+    % fact sentence. If not, fail right now and return to get the next fact,
+
+    deconstruct axiom
+        oDC [opt domainsClause_216]
+        unboundFactSentence 
+        cO [conditionalOp_516]
+        conclusion [sentence_110]
+
+    % good.  We have a matching premise.  
+    % Take apart the axiom conclusion and the fact into pieces.
+
+    deconstruct unboundFactSentence
+        UFSSubject [optSelectedEntity_120]
+        UFSPredicate [opt situationIndication_122]
+
+    deconstruct factSentence
+        factSubject [optSelectedEntity_120]
+        factPredicate [opt situationIndication_122]
+
+    deconstruct conclusion
+        conclusionSubject [optSelectedEntity_120]
+        conclusionPredicate [opt situationIndication_122]
+
+    % Construct the deduced fact. 
+
+    construct nul_aS [assertionStatement_106]
+        'Dummy_ '= 'Dummy_ 
+
+    construct deduction [assertionStatement_106]
+        nul_aS [matches_premise UFSSubject factSubject factPredicate conclusionSubject conclusionPredicate]
+            [not_matches_premise UFSSubject factSubject factPredicate conclusionSubject conclusionPredicate]
+
+    % Add this deduced fact to the fact base if it is not already there.
+
+    replace [repeat assertionStatement_106]
+        facts [repeat assertionStatement_106]
+
+    where
+        facts [contains_deduction deduction] [not]
+    by
+        facts [. deduction]
+end function
+
+%===================================================
+
+function matches_premise
+            UFSSubject [optSelectedEntity_120]
+            factSubject [optSelectedEntity_120]
+            factPredicate [opt situationIndication_122]
+            conclusionSubject [optSelectedEntity_120]
+            conclusionPredicate [opt situationIndication_122]
+
+    % This constructs the conclusion for the case where the conclusion
+    % subject matches the fact subject, and thereby instantiates the 
+    % fact subject in the conclusion.
+
+    replace [assertionStatement_106]
+        nul_aS [assertionStatement_106]
+
+    where
+        UFSSubject [match_oSE conclusionSubject]
+    by
+        factSubject conclusionPredicate 
+end function
+
+%===================================================
+
+function not_matches_premise
+            UFSSubject [optSelectedEntity_120]
+            factSubject [optSelectedEntity_120]
+            factPredicate [opt situationIndication_122]
+            conclusionSubject [optSelectedEntity_120]
+            conclusionPredicate [opt situationIndication_122]
+
+    % This constructs the conclusion for the case where the conclusion
+    % subject does not match the fact subject.  The conclusion stands as is.
+
+    replace [assertionStatement_106]
+        nul_aS [assertionStatement_106]
+
+    where
+        UFSSubject [match_oSE conclusionSubject] [not]
+    by
+        conclusionSubject conclusionPredicate 
+end function
+
+%===================================================
+
+function match_oSE
+            test [optSelectedEntity_120]
+    match [optSelectedEntity_120]
+        test 
+end function
+
+%===================================================
+
+rule contains_deduction
+            deduction [assertionStatement_106]
+    match [assertionStatement_106]
+        deduction 
+end rule
+
+% ====================================================
+
+

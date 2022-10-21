@@ -1,0 +1,10 @@
+New Postcondition Bugs
+TXL 7.4
+5.10.93
+
+Yes, friends, these are yet another instance of that good ol'
+post condition bug.  The problem is, we decide not to copy 
+a variable bound in the main pattern and then used in a construct, 
+apply a rule to it, and then because of a fail in a subsequent 'where' 
+or 'deconstruct', we return without making a replacement, leaving the 
+main pattern match trashed.

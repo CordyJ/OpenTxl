@@ -1,0 +1,992 @@
+% SCED - A Simple Example Screen Editor
+% Copyright (c) 1984   James R. Cordy
+
+% This program must be compiled with the curses(3) library using pttcurses(1)
+
+%
+% SCED is a very simple screen editor that demonstrates
+% some of the convenient string handling facilities of Turing.
+%
+% The editor itself is a single-mode editor, which means that
+% what you see on the screen is what you get, and typing most characters
+% will simply replace the ones that were there before.
+%
+% Navigation in the file is by use of direction movement keys,
+% using either ANSI standard arrow keys or the UNIX standard
+% control keys (LEFT=^H, DOWN=^J, UP=^K, RIGHT=^L).
+%
+% Editor commands are of the following form :
+%
+%       ESC <letter> <direction>
+%
+% where ESC is the ASCII escape character,
+%       <letter> is a one-letter mnemonic command code, and
+%       <direction> is a direction key.
+%
+% The command corresponding to the command code is applied in
+% the direction given.  For example, "ESC i LEFT" means insert 
+% characters to the left of the current character, "ESC i RIGHT" means
+% insert characters to the right of the current character,
+% "ESC i UP" means insert a line above the current line, and
+% "ESC i DOWN" means insert a line below the current line.
+%
+% Commands which require extra information such as line numbers,
+% file names and search strings will expect them input before the
+% direction.  Directionless commands such as "go to line" will accept a
+% CR in place of the direction.
+%
+% The following is a list of command mnemonics recognized by the editor.
+%
+%       i       insert
+%       d       delete
+%       /       find            <text>
+%       p       page up/down
+%       g       go to line      <line number>
+%       f       set file to     <file name>
+%       r       read file
+%       w       write file
+%       q       quit
+%       z       write and quit
+%	h	help
+%	t	run (as Turing program)
+%
+
+% UNIX utility modules
+include "%curses" % UNIX standard terminal screen interface
+include "%system" % UNIX command interface
+include "%termchars" % UNIX keyboard character map
+
+% ANSI arrow keys  (alternates for standard arrow keys)
+const Aup := "\e[A"
+const Adown := "\e[B"
+const Aleft := "\e[D"
+const Aright := "\e[C"
+
+% ANSI function keys  (alternates for standard commands)
+const Ainsert := "\eOP"
+const Adelete := "\eOQ"
+const Afind := "\eOR"
+const Apage := "\eOS"
+
+% standard arrow keys
+const Sup := chr (11) % ctrl K
+const Sdown := "\n" % ctrl J (linefeed)
+const Sleft := "\b" % ctrl H (backspace)
+const Sright := chr (12) % ctrl L
+
+% standard command sequences
+const Sinsert := "\ei"
+const Sdelete := "\ed"
+const Sfind := "\e/"
+const Sgoto := "\eg"
+const Spage := "\ep"
+const Sfile := "\ef"
+const Sread := "\er"
+const Swrite := "\ew"
+const Squit := "\eq"
+const Swritequit := "\ez"
+const Shelp := "\eh"
+const Srun := "\et"
+const Sbad := "\e*"
+
+% special characters
+const bel := chr (7)
+const del := chr (127)
+const esc := "\e"
+const ins := "^"
+const red := chr (18)
+const cr := "\r"
+
+% limits
+const maxlines := 1000
+const linesize := 79
+const screensize := 22
+
+% lines in the file
+var lines : array 1 .. maxlines of string (linesize)
+var numlines : int
+
+const nullline := "~"
+
+% lines on the screen
+var firstline : int
+var currentline : int
+var currentchar : int
+
+% file being edited
+var file : int
+var filename : string
+
+% current command, pattern and message text
+var command := ""
+var pattern := ""
+var msgtext := ""
+
+procedure putinfo
+    var infoline : string
+    infoline := filename (1 .. min (14, length (filename)))
+    infoline += repeat (" ", 16 - length (infoline))
+    const npages := min (20, numlines div (screensize + 1) + 1)
+    const page := min (20, firstline div (screensize + 1) + 1)
+    infoline += "["
+    infoline += repeat (" ", page - 1)
+    infoline += "*"
+    infoline += repeat (" ", npages - page)
+    infoline += "]"
+    infoline += repeat (" ", 40 - length (infoline))
+    if msgtext not= "" then
+	infoline += msgtext
+	infoline := infoline (1 .. min (linesize, length (infoline)))
+    end if
+    infoline += repeat (" ", linesize - length (infoline))
+    curses.move (0, 0)
+    curses.standout
+    curses.addstr (infoline)
+    curses.standend
+end putinfo
+
+procedure message (msg : string)
+    msgtext := msg
+    putinfo
+    curses.move (currentline - firstline + 1, currentchar - 1)
+    curses.refresh
+end message
+
+procedure error (msg : string)
+    message ("?" + msg)
+    put bel ..
+    command := ""
+end error
+
+procedure getcommand
+    var c : string (1)
+
+    if command = "" then
+	curses.getch (c)
+	command := c
+    end if
+
+    if command = esc then
+	% escape sequence
+	curses.getch (c)
+	command += c
+
+	if c = "[" or c = "O" then
+	    % ANSI arrow or function key - 3 character sequence
+	    curses.getch (c)
+	    command += c
+
+	    % translate ANSI to standard
+	    if command (2) = "[" then
+		% ANSI arrow key
+		if command = Aup then
+		    command := Sup
+		elsif command = Adown then
+		    command := Sdown
+		elsif command = Aleft then
+		    command := Sleft
+		elsif command = Aright then
+		    command := Sright
+		else
+		    command := Sbad
+		end if
+
+	    elsif command (2) = "O" then
+		% ANSI function key
+		if command = Ainsert then
+		    command := Sinsert
+		elsif command = Adelete then
+		    command := Sdelete
+		elsif command = Afind then
+		    command := Sfind
+		elsif command = Apage then
+		    command := Spage
+		else
+		    command := Sbad
+		end if
+
+	    else
+		command := Sbad
+	    end if
+	end if
+
+    elsif command = "" then
+	% eof
+	command := Squit
+    end if
+
+    msgtext := ""
+end getcommand
+
+procedure flush
+    var c : string (1)
+    loop
+	exit when not curses.hasch
+	curses.getch (c)
+    end loop
+end flush
+
+procedure read_
+    message ("read")
+    open : file, filename, get
+
+    if file not= 0 then
+	% read in file
+	numlines := 0
+	for i : 1 .. maxlines
+	    exit when eof (file)
+	    var s : string
+	    get : file, s :*
+	    loop
+		const tabposition := index (s, "\t")
+		exit when tabposition = 0
+		const tabblanks := repeat (" ", 8 - (tabposition - 1) mod 8)
+		s := s (1 .. tabposition - 1) + tabblanks + s (tabposition + 1 .. *)
+	    end loop
+	    lines (i) := s (1 .. min (length (s), linesize))
+	    numlines += 1
+	end for
+
+	if not eof (file) then
+	    error ("file too large")
+	else
+	    message ("read " + intstr (numlines, 1) + " lines")
+	end if
+
+	close : file
+    else
+	message ("new file")
+    end if
+end read_
+
+procedure write_
+    message ("write")
+    open : file, filename, put
+
+    if file not= 0 then
+	% write out file
+	for i : 1 .. numlines
+	    var line := lines (i)
+	    loop
+		exit when length (line) = 0 or line (length (line)) not= " "
+		line := line (1 .. length (line) - 1)
+	    end loop
+	    loop
+		const tabposition := index (line, "        ")
+		exit when tabposition = 0
+		line := line (1 .. tabposition - 1)
+		    + "\t" + line (tabposition + 8 .. *)
+	    end loop
+	    put : file, line
+	end for
+	close : file
+	message ("write " + intstr (numlines, 1) + " lines")
+    else
+	error ("can't write file")
+    end if
+end write_
+
+procedure clear
+    for i : 1 .. maxlines
+	lines (i) := nullline
+    end for
+    numlines := 0
+    firstline := 1
+    currentline := 1
+    currentchar := 1
+end clear
+
+procedure draw
+    curses.move (1, 0)
+    for i : firstline .. firstline + screensize
+	curses.move (i - firstline + 1, 0)
+	if i < maxlines then
+	    curses.addstr (lines (i))
+	else
+	    curses.addstr ("~")
+	end if
+	curses.clrtoeol
+    end for
+    curses.move (currentline - firstline + 1, currentchar - 1)
+    curses.refresh
+end draw
+
+procedure scrolldown
+    if firstline > 1 then
+	firstline -= 1
+	curses.move (1, 0)
+	curses.insertln
+	curses.addstr (lines (firstline))
+	curses.clrtoeol
+	curses.refresh
+    end if
+end scrolldown
+
+procedure scrollup
+    if firstline + screensize < maxlines then
+	firstline += 1
+	curses.move (1, 0)
+	curses.deleteln
+	curses.move (screensize + 1, 0)
+	curses.addstr (lines (firstline + screensize))
+	curses.clrtoeol
+	curses.refresh
+    end if
+end scrollup
+
+procedure move
+    message ("")
+
+    if command = Sup and currentline > 1 then
+	currentline -= 1
+    elsif command = Sdown and currentline < maxlines
+	    and lines (currentline) not= nullline then
+	currentline += 1
+    elsif command = Sright and currentchar < linesize then
+	currentchar += 1
+    elsif command = Sleft and currentchar > 1 then
+	currentchar -= 1
+    elsif command = cr and currentline < maxlines
+	    and lines (currentline) not= nullline then
+	currentchar := 1
+	currentline += 1
+    end if
+
+    if currentline < firstline then
+	scrolldown
+    elsif currentline > firstline + screensize then
+	scrollup
+    end if
+
+    curses.move (currentline - firstline + 1, currentchar - 1)
+    curses.refresh
+    command := ""
+end move
+
+procedure page
+    message ("page _")
+    command := ""
+    getcommand
+
+    if command = Sup then
+	message ("page up")
+	if currentline > 1 then
+	    currentline := max (1, currentline - screensize)
+	    firstline := max (1, firstline - screensize)
+	    putinfo
+	    draw
+	else
+	    error ("beginning of file")
+	end if
+    elsif command = Sdown or command = cr then
+	message ("page down")
+	if currentline not= numlines then
+	    currentline := min (numlines, currentline + screensize)
+	    firstline := min (numlines, firstline + screensize)
+	    putinfo
+	    draw
+	else
+	    error ("end of file")
+	end if
+    elsif command = Sright then
+	message ("page right")
+	currentchar := length (lines (currentline))
+    elsif command = Sleft then
+	message ("page left")
+	currentchar := 1
+    else
+	error ("bad command")
+    end if
+
+    curses.move (currentline - firstline + 1, currentchar - 1)
+    curses.refresh
+    command := ""
+end page
+
+procedure insert
+    if command not= ins then
+	message ("insert _")
+	command := ""
+	getcommand
+    end if
+
+    if command = Sup then
+	message ("insert up")
+	if currentline > firstline + screensize then
+	    curses.move (1, 0)
+	    curses.deleteln
+	    firstline += 1
+	end if
+	curses.move (currentline - firstline + 1, 0)
+	curses.insertln
+	currentchar := 1
+	for decreasing i : maxlines - 1 .. currentline
+	    lines (i + 1) := lines (i)
+	end for
+	lines (currentline) := ""
+	command := ""
+	numlines += 1
+	putinfo
+
+    elsif command = Sdown or command = cr then
+	message ("insert down")
+	curses.move (1, 0)
+	curses.deleteln
+	curses.move (currentline - firstline + 1, 0)
+	curses.insertln
+	firstline += 1
+	currentline += 1
+	currentchar := 1
+	for decreasing i : maxlines - 1 .. currentline
+	    lines (i + 1) := lines (i)
+	end for
+	lines (currentline) := ""
+	command := ""
+	numlines += 1
+	putinfo
+
+    elsif command = Sright then
+	message ("insert right")
+	bind var line to lines (currentline)
+	if currentchar < linesize then
+	    currentchar += 1
+	end if
+	if currentchar > length (line) then
+	    line += repeat (" ", currentchar - length (line))
+	end if
+	var c : string (1)
+	loop
+	    curses.move (currentline - firstline + 1, currentchar - 1)
+	    curses.getch (c)
+	    exit when c < " " or length (line) = linesize
+	    curses.insertch (c)
+	    line := line (1 .. currentchar) + c + line (currentchar + 1 .. *)
+	    if currentchar < linesize then
+		currentchar += 1
+	    end if
+	end loop
+	command := c
+
+    elsif command = Sleft or command = ins then
+	message ("insert left")
+	bind var line to lines (currentline)
+	var c : string (1)
+	loop
+	    curses.move (currentline - firstline + 1, currentchar - 1)
+	    curses.getch (c)
+	    exit when c < " " or length (line) = linesize
+	    curses.insertch (c)
+	    line := line (1 .. currentchar - 1) + c + line (currentchar .. *)
+	    if currentchar < linesize then
+		currentchar += 1
+	    end if
+	end loop
+	command := c
+
+    else
+	message ("insert left")
+	bind var line to lines (currentline)
+	var c : string (1) := command (1)
+	loop
+	    exit when c < " " or length (line) = linesize
+	    curses.insertch (c)
+	    line := line (1 .. currentchar - 1) + c + line (currentchar .. *)
+	    if currentchar < linesize then
+		currentchar += 1
+	    end if
+	    curses.move (currentline - firstline + 1, currentchar - 1)
+	    curses.getch (c)
+	end loop
+	command := c
+    end if
+
+    curses.move (currentline - firstline + 1, currentchar - 1)
+    curses.refresh
+end insert
+
+procedure delete
+    if command not= del then
+	message ("delete _")
+	command := ""
+	getcommand
+    end if
+
+    if command = Sup then
+	message ("delete up")
+	curses.deleteln
+	for i : currentline .. maxlines - 1
+	    exit when lines (i) = nullline
+	    lines (i) := lines (i + 1)
+	end for
+	if firstline > 1 then
+	    firstline -= 1
+	    curses.move (1, 0)
+	    curses.insertln
+	    curses.addstr (lines (firstline))
+	else
+	    curses.move (screensize + 1, 0)
+	    curses.addstr (lines (firstline + screensize))
+	end if
+	if currentline > 1 then
+	    currentline -= 1
+	end if
+	numlines -= 1
+	putinfo
+
+    elsif command = Sdown or command = cr then
+	message ("delete down")
+	curses.deleteln
+	for i : currentline .. maxlines - 1
+	    exit when lines (i) = nullline
+	    lines (i) := lines (i + 1)
+	end for
+	curses.move (screensize + 1, 0)
+	curses.addstr (lines (firstline + screensize))
+	curses.clrtoeol
+	numlines -= 1
+	putinfo
+
+    elsif command = Sright or command = del then
+	message ("delete right")
+	curses.deletech
+	bind var line to lines (currentline)
+	if currentchar <= length (line) then
+	    line := line (1 .. currentchar - 1) + line (currentchar + 1 .. *)
+	end if
+
+    elsif command = Sleft then
+	message ("delete left")
+	curses.deletech
+	bind var line to lines (currentline)
+	if currentchar <= length (line) then
+	    line := line (1 .. currentchar - 1) + line (currentchar + 1 .. *)
+	end if
+	if currentchar > 1 then
+	    currentchar -= 1
+	end if
+
+    else
+	error ("bad direction")
+    end if
+
+    curses.move (currentline - firstline + 1, currentchar - 1)
+    curses.refresh
+    command := ""
+end delete
+
+procedure find
+    const oldpattern := pattern
+    pattern := ""
+    var c : string (1)
+    loop
+	message ("find \"" + pattern)
+	curses.getch (c)
+	exit when c < " " or length (pattern) = linesize
+	pattern += c
+    end loop
+
+    if pattern = "" then
+	pattern := oldpattern
+    end if
+
+    message ("find \"" + pattern + "\" _")
+
+    command := c
+    getcommand
+
+    if command = Sright then
+	message ("find \"" + pattern + "\" right")
+	var templine := lines (currentline)
+	var position : int
+	loop
+	    position := index (templine, pattern)
+	    exit when position = 0 or position > currentchar
+	    templine := templine (1 .. position - 1) + "~"
+		+ templine (position + 1 .. *)
+	end loop
+
+	if position > currentchar then
+	    currentchar := position
+	else
+	    error ("not found")
+	end if
+
+    elsif command = Sleft then
+	message ("find \"" + pattern + "\" left")
+	const position := index (lines (currentline), pattern)
+
+	if position not= 0 and position < currentchar then
+	    currentchar := position
+	else
+	    error ("not found")
+	end if
+
+    elsif command = Sdown or command = cr then
+	message ("find \"" + pattern + "\" down")
+	const oldline := currentline
+
+	for l : currentline + 1 .. numlines
+	    if index (lines (l), pattern) not= 0 then
+		currentline := l
+		currentchar := index (lines (l), pattern)
+		exit
+	    end if
+	end for
+
+	if currentline = oldline
+		or index (lines (currentline), pattern) = 0 then
+	    error ("not found")
+	elsif currentline > firstline + screensize then
+	    firstline := max (1, currentline - screensize div 2)
+	    putinfo
+	    draw
+	end if
+
+    elsif command = Sup then
+	message ("find \"" + pattern + "\" up")
+	const oldline := currentline
+
+	for decreasing l : currentline - 1 .. 1
+	    if index (lines (l), pattern) not= 0 then
+		currentline := l
+		currentchar := index (lines (l), pattern)
+		exit
+	    end if
+	end for
+
+	if currentline = oldline
+		or index (lines (currentline), pattern) = 0 then
+	    error ("not found")
+	elsif currentline < firstline then
+	    firstline := max (1, currentline - screensize div 2)
+	    putinfo
+	    draw
+	end if
+
+    else
+	error ("bad direction")
+    end if
+
+    curses.move (currentline - firstline + 1, currentchar - 1)
+    curses.refresh
+
+    command := ""
+end find
+
+procedure goto
+    var linenumtext := ""
+    var c : string (1)
+    loop
+	message ("go to " + linenumtext)
+	curses.getch (c)
+	exit when c < "0" or c > "9" or length (linenumtext) = 6
+	linenumtext += c
+    end loop
+
+    var linenum := strint ("0" + linenumtext)
+
+    if linenum = 0 and c = "$" then
+	linenum := numlines
+	c := ""
+    elsif linenum < 1 then
+	linenum := 1
+    elsif linenum > numlines then
+	linenum := numlines
+    end if
+
+    currentline := max (1, linenum)
+    currentchar := 1
+
+    if currentline >= firstline and currentline <= firstline + screensize then
+	curses.move (currentline - firstline + 1, currentchar - 1)
+	curses.refresh
+    else
+	firstline := max (1, currentline - screensize div 2)
+	message ("go to " + intstr (currentline, 1))
+	draw
+    end if
+
+    if c = "\r" then
+	command := ""
+    else
+	command := c
+    end if
+end goto
+
+procedure redraw
+    putinfo
+    draw
+    command := ""
+end redraw
+
+procedure filecmd
+    var newfilename := ""
+    var c : string (1)
+    loop
+	message ("file \"" + newfilename)
+	curses.getch (c)
+
+	if c = "\b" and length (newfilename) > 0 then
+	    newfilename := newfilename (1 .. length (newfilename) - 1)
+	else
+	    exit when c < " " or length (newfilename) > 50
+	    newfilename += c
+	end if
+    end loop
+
+    if newfilename not= "" then
+	filename := newfilename
+    end if
+
+    message ("file \"" + filename + "\"")
+    command := ""
+end filecmd
+
+procedure readcmd
+    clear
+    read_
+    draw
+    command := ""
+end readcmd
+
+procedure writecmd
+    write_
+    command := ""
+end writecmd
+
+procedure help
+    const helpfile := "/staff/cordy/lib/scedhelp"
+    var rc := 0
+    curses.endwin
+    system ("sced " + helpfile, rc)
+    curses.clear
+    curses.noecho
+    curses.crmode
+    curses.nonl
+    redraw
+
+    if rc not= 0 then
+	error ("help failed")
+    end if
+
+    command := ""
+end help
+
+procedure run
+    % write out current program source
+    const oldfilename := filename
+    filename := "%scedtemp.t"
+    writecmd
+
+    % reset terminal to normal
+    curses.clear
+    curses.refresh
+    curses.endwin
+
+    termchars := oldtermchars
+    settermchars
+
+    % run the program using ttg
+    var rc := 0
+    system ("ttg %scedtemp.t 2> %scedtemp.errs", rc)
+
+    % get error message if any
+    var errstream : int
+    open : errstream, "%scedtemp.errs", get
+
+    % skip first three lines of interpreter junk
+    var s : string
+    for : 1 .. 3
+	exit when errstream = 0 or eof (errstream)
+	get : errstream, s :*
+    end for
+
+    % get error message and line number
+    var errmessage := ""
+    var errline := 0
+
+    if errstream not= 0 and not eof (errstream) then
+	get : errstream, errmessage :*
+	var i := 1
+	loop
+	    exit when i > length (errmessage) or
+		(errmessage (i) >= "0" and errmessage (i) <= "9")
+	    i += 1
+	end loop
+	loop
+	    exit when i > length (errmessage) or
+		(errmessage (i) < "0" or errmessage (i) > "9")
+	    errline := errline * 10 + ord (errmessage (i)) - ord ("0")
+	    i += 1
+	end loop
+	errmessage := errmessage (i .. *)
+    end if
+
+    if errstream not= 0 then
+	close : errstream
+    end if
+
+    % clean up our file mess
+    system ("rm -f %scedtemp.*", rc)
+
+    % move to line with error if any
+    if errline not= 0 then
+	firstline := max (1, errline - screensize div 2)
+	currentline := min (errline, numlines)
+	currentchar := 1
+    end if
+
+    % show error message if any
+    if errmessage not= "" then
+	var i := 1
+	loop
+	    exit when i > length (errmessage) or errmessage (i) = ":"
+	    i += 1
+	end loop
+	if i < length (errmessage) and errmessage (i) = ":" then
+	    errmessage := errmessage (i + 1 .. *)
+	end if
+	put skip ..
+	if errline not= 0 then
+	    put "Line ", errline, ":" ..
+	end if
+	put errmessage
+    end if
+
+    % return to editing
+    put skip, "[Hit return to resume editing] " ..
+    get s :*
+
+    termchars (TINTRC) := TUNDEF
+    settermchars
+
+    curses.clear
+    curses.noecho
+    curses.crmode
+    curses.nonl
+
+    filename := oldfilename
+    msgtext := ""
+    redraw
+
+    if errmessage not= "" then
+	error (errmessage)
+    end if
+
+    command := ""
+end run
+
+procedure replace
+    message ("")
+    if command >= " " then
+	bind var line to lines (currentline)
+
+	if currentchar > length (line) then
+	    line := line + repeat (" ", currentchar - length (line))
+	end if
+
+	if currentchar <= length (line) then
+	    line := line (1 .. currentchar - 1) + command
+		+ line (currentchar + 1 .. *)
+	end if
+
+	currentchar += 1
+
+	if currentchar > linesize then
+	    currentchar := linesize
+	end if
+
+	if currentline > numlines then
+	    numlines += 1
+	end if
+
+	curses.addch (command)
+	curses.move (currentline - firstline + 1, currentchar - 1)
+	curses.refresh
+
+    else
+	error ("bad command")
+    end if
+
+    command := ""
+end replace
+
+
+% main program
+
+gettermchars
+termchars (TINTRC) := TUNDEF
+settermchars
+
+curses.clear
+curses.noecho
+curses.crmode
+curses.nonl
+
+clear
+
+if nargs > 0 then
+    filename := fetcharg (1)
+    read_
+else
+    filename := "%temp"
+end if
+
+putinfo
+draw
+command := ""
+
+loop
+    getcommand
+
+    if command = Sup or command = Sdown
+	    or command = Sleft or command = Sright then
+	move
+    elsif command = Spage then
+	page
+    elsif command = Sinsert then
+	insert
+    elsif command = Sdelete then
+	delete
+    elsif command = Sfind then
+	find
+    elsif command = Sgoto then
+	goto
+    elsif command = Sfile then
+	filecmd
+    elsif command = Sread then
+	readcmd
+    elsif command = Swrite then
+	writecmd
+    elsif command = Squit then
+	exit
+    elsif command = Swritequit then
+	write_
+	exit when file not= 0
+    elsif command = Shelp then
+	help
+    elsif command = Srun then
+	run
+    elsif command = red then
+	redraw
+    elsif command = del then
+	delete
+    elsif command = ins then
+	insert
+    elsif command = cr then
+	move
+    elsif command >= " " then
+	replace
+    else
+	error ("bad command")
+	flush
+    end if
+end loop
+
+termchars := oldtermchars
+settermchars
+
+curses.move (23, 0)
+curses.refresh
+curses.endwin
+put ""
