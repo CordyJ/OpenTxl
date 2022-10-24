@@ -1,11 +1,7 @@
 #!/bin/sh 
-# FreeTXL Application Compiler
+# OpenTxl Application Compiler
 
-# Rev 9.5.20 JRC - added clean exit code
-# Rev 8.2.15 JRC - new .ctxl naming convention
-# Rev 7.8.15 JRC - added -lm to CC
-
-# Where's FreeTXL?
+# Where's OpenTxl?
 if [ "unset$TXLLIB" = "unset" ]
 then
     TXLLIB=/usr/local/lib/txl
@@ -21,10 +17,12 @@ fi
 # Localization
 CC="gcc -m64"
 
-if [[ "`uname -s`" =~ MINGW.* ]] || [[ "`uname -s`" =~ CYGWIN.* ]]
-then
-    CC="$CC -Wl,--stack,0x20000000"
-fi
+case `uname -s` in
+    CYGWIN*|MINGW*)
+        CC="$CC -Wl,--stack,0x20000000";;
+    *)
+	;;
+esac
 
 # Decode TXL program name and options
 TXLPROG=""

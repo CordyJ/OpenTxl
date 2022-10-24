@@ -28,25 +28,27 @@ SIGTYPE = NONE
 
 # Localization
 
+OS := $(shell (uname -s | sed 's/_.*//'))
+
 MESSAGE = "Unrecognized platform - making TXL using gcc and no signal handling"
 
-ifeq ($(OSTYPE), darwin)
+ifeq ($(OS), Darwin)
     MESSAGE = "Making TXL on MacOS using gcc and BSD signal handling"
     CFLAGS := $(CFLAGS) -mmacosx-version-min=10.12
     LDFLAGS := $(LDFLAGS) -mmacosx-version-min=10.12
     SIGTYPE = BSD
 
-else ifeq ($(OSTYPE), linux)
+else ifeq ($(OS), Linux)
     MESSAGE = "Making TXL on Linux using gcc and BSD signal handling"
     SIGTYPE = BSD
 
-else ifeq ($(OSTYPE), cygwin)
+else ifeq ($(OS), CYGWIN)
     MESSAGE = "Making TXL on Cygwin using gcc and BSD signal handling"
     LDFLAGS := $(LDFLAGS) -Wl,--stack,0x2000000
     EXE = .exe
     SIGTYPE = BSD
 
-else ifeq ($(OSTYPE), msys)
+else ifeq ($(OS), MINGW)
     MESSAGE = "Making TXL on Msys / MinGW using gcc and BSD signal handling"
     LDFLAGS := $(LDFLAGS) -Wl,--stack,0x2000000
     EXE = .exe
@@ -179,10 +181,10 @@ distrib : bin lib opentxl
 	cp lib/* opentxl/lib/
 	cp -r ../src/distrib/c/* opentxl/
 	cp ../LICENSE.txt opentxl/
-	mv opentxl opentxl-$(OSTYPE)
-	tar cfz opentxl-$(OSTYPE).tar.gz opentxl-$(OSTYPE)
+	mv opentxl opentxl-$(OS)
+	tar cfz opentxl-$(OS).tar.gz opentxl-$(OS)
 	@echo ""
-	@echo "Distributable binary in opentxl-$(OSTYPE).tar.gz"
+	@echo "Distributable binary in opentxl-$(OS).tar.gz"
 	@echo ""
 
 # Directories

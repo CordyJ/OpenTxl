@@ -1,2 +1,3 @@
 #!/bin/sh
-TXLLIB=../lib ../bin/txlp $*
+TXLLIB=../lib
+../bin/txlp $*
