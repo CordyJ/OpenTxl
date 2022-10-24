@@ -1,7 +1,12 @@
 #!/bin/sh 
 # OpenTxl Application Compiler
 
-# Where's OpenTxl?
+# Where's TXL?
+if [ "unset$TXLBIN" = "unset" ]
+then
+    TXLBIN=/usr/local/bin
+fi
+
 if [ "unset$TXLLIB" = "unset" ]
 then
     TXLLIB=/usr/local/lib/txl
@@ -65,7 +70,7 @@ TXLNAME=`basename $TXLNAME .txl`
 
 # Compile to TXLVM byte code using TXL 
 /bin/rm -f $TXLNAME.ctxl Txl/$TXLNAME.ctxl txl/$TXLNAME.ctxl ${TXLNAME}_TXL.* 2> /dev/null
-./txl -q -c $TXLPROG $TXLOPTIONS
+$TXLBIN/txl -q -c $TXLPROG $TXLOPTIONS
 
 # Check that we got a result
 if [ ! -r $TXLNAME.ctxl ]

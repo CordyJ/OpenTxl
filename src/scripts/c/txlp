@@ -1,9 +1,12 @@
 #!/bin/sh
-# FreeTXL Profiler
+# OpenTxl Profiler
 
-# Rev 9.5.20 JRC - added clean exit code
+# Where's TXL?
+if [ "unset$TXLBIN" = "unset" ]
+then
+    TXLBIN=/usr/local/bin
+fi
 
-# Where's FreeTXL?
 if [ "unset$TXLLIB" = "unset" ]
 then
     TXLLIB=/usr/local/lib/txl

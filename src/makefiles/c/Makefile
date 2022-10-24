@@ -48,7 +48,7 @@ else ifeq ($(OS), CYGWIN)
     EXE = .exe
     SIGTYPE = BSD
 
-else ifeq ($(OS), MINGW)
+else ifeq ($(OS), MINGW64)
     MESSAGE = "Making TXL on Msys / MinGW using gcc and BSD signal handling"
     LDFLAGS := $(LDFLAGS) -Wl,--stack,0x2000000
     EXE = .exe
