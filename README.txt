@@ -11,7 +11,7 @@ subdirectory for a full regression test. See the README.txt files
 in those directories for further information.
 
 To build the fast production version of TXL using auto-generated C code, 
-first use the command "make C" in this directory to make the auto-generated 
+first use the command "make csrc" in this directory to make the auto-generated 
 C directory "csrc", then see the README.txt file in that directory 
 for production build instructions.
 

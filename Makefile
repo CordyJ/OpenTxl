@@ -163,6 +163,6 @@ clean :
 
 # Production auto-generated C version
 
-C :
+csrc :
 	make -f Makefile-C
 
