@@ -18,7 +18,7 @@ ${BOOTSTRAP}.tokentable: ${BOOTSTRAP}.tokens
 
 ${BOOTSTRAP}.tokenfinds: ${BOOTSTRAP}.tokens
 	cp ${BOOTSTRAP}.tokens ${BOOTSTRAP}.tokenfinds
-	sed -e "s/.*/grep -n '&' ${BOOTSTRAP}.tokentable/" -e "s/\[/\\\\[/" -e "s/]/\\\\]/" -e "s/\./\\\\./g" -e "s/\*/\\\\*/" -e "s/'\"'\"'/\"\\\\\"\\\\'\\\\\"\"/" < ${BOOTSTRAP}.tokens > ${BOOTSTRAP}.tokenfinds
+	sed -e "s/.*/grep -n '&' ${BOOTSTRAP}.tokentable/" -e "s/\[/\\\\[/" -e "s/]/\\\\]/" -e "s/\./\\\\./g" -e "s/\*/\\\\*/" -e "s/'\"'\"'/\"\\\\\"\\'\\\\\"\"/" < ${BOOTSTRAP}.tokens > ${BOOTSTRAP}.tokenfinds
 
 ${BOOTSTRAP}.tokenindexes: ${BOOTSTRAP}.tokens ${BOOTSTRAP}.tokentable ${BOOTSTRAP}.tokenfinds
 	sh ${BOOTSTRAP}.tokenfinds | sed 's/:.*//' > ${BOOTSTRAP}.tokenindexes
