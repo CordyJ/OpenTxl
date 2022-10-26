@@ -26,7 +26,7 @@ case `uname -s` in
     CYGWIN*|MSYS*)
         ;;
     *)
-        if [ "`whoami`" != "root" ] && [ "`uname -s | 's/_.*//'`" != "CYGWIN" ] 
+        if [ "`whoami`" != "root" ]
         then
             echo ""
             echo "Warning - you are not running as root, so you can install TXL for yourself only."
