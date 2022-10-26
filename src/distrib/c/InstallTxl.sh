@@ -22,28 +22,32 @@ fi
 unset noclobber
 
 # Check what kind of installation we have here
-if [ "`whoami`" != "root" ] 
-then
-	echo ""
-	echo "Warning - you are not running as root, so you can install TXL for yourself only."
-	echo "If you intend to install TXL for all users on this machine,"
-	echo "you will have to run this install script as root, for example using 'sudo ./InstallTxl'."
-	echo ""
-	echo "Do you want to continue to install TXL for yourself only? (y/n) :"
-	read YESNO
-	if [ "$YESNO" = "y" ] 
-	then
-		echo ""
-		echo "Installing TXL for $USER only."
-		DEFAULT=false
-		TXLBIN=$HOME/bin
-		TXLLIB=$HOME/txl/lib
-		TXLMAN=$HOME/txl/man/man1
-	else
-		exit 99
-	fi
-fi
-
+case `uname -s` in
+    CYGWIN*|MSYS*)
+        ;;
+    *)
+        if [ "`whoami`" != "root" ] && [ "`uname -s | 's/_.*//'`" != "CYGWIN" ] 
+        then
+            echo ""
+            echo "Warning - you are not running as root, so you can install TXL for yourself only."
+            echo "If you intend to install TXL for all users on this machine,"
+            echo "you will have to run this install script as root, for example using 'sudo ./InstallTxl'."
+            echo ""
+            echo "Do you want to continue to install TXL for yourself only? (y/n) :"
+            read YESNO
+            if [ "$YESNO" = "y" ] 
+            then
+                echo ""
+                echo "Installing TXL for $USER only."
+                DEFAULT=false
+                TXLBIN=$HOME/bin
+                TXLLIB=$HOME/txl/lib
+                TXLMAN=$HOME/txl/man/man1
+            else
+                exit 99
+            fi
+        fi
+esac
 sleep 1
 
 # Install TXL commands
@@ -56,8 +60,8 @@ then
     for i in $TXLBIN/txlc $TXLBIN/txlp
     do
         $SED "s;/usr/local/lib/txl;$TXLLIB;" < $i > $i.temp
-	/bin/mv $i.temp $i
-	chmod 0755 $i
+        /bin/mv $i.temp $i
+        chmod 0755 $i
     done
 fi
 sleep 1
