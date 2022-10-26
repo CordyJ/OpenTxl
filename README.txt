@@ -1,4 +1,4 @@
-The OpenTxl Turing+ source code and build process
+The OpenTxl Turing+ source code and build process for Unix-like systems
 
 OpenTxl requires the Turing+ compiler, tpc, to build.
 
