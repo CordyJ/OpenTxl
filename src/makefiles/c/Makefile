@@ -53,6 +53,12 @@ else ifeq ($(OS), MSYS)
     LDFLAGS := $(LDFLAGS) -Wl,--stack,0x2000000
     EXE = .exe
     SIGTYPE = BSD
+
+else ifeq ($(OS), MINGW64)
+    MESSAGE = "Making TXL on Msys / MinGW using gcc and BSD signal handling"
+    LDFLAGS := $(LDFLAGS) -Wl,--stack,0x2000000
+    EXE = .exe
+    SIGTYPE = BSD
 endif
 
 # Object groups

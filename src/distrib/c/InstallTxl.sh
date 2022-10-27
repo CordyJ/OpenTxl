@@ -23,7 +23,7 @@ unset noclobber
 
 # Check what kind of installation we have here
 case `uname -s` in
-    CYGWIN*|MSYS*)
+    CYGWIN*|MSYS*|MINGW64*)
         ;;
     *)
         if [ "`whoami`" != "root" ]

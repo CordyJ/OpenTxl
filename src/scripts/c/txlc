@@ -23,7 +23,7 @@ fi
 CC="gcc -m64"
 
 case `uname -s` in
-    CYGWIN*|MSYS*)
+    CYGWIN*|MSYS*|MINGW64*)
         CC="$CC -Wl,--stack,0x20000000";;
     *)
 	;;
