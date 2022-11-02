@@ -31,6 +31,7 @@
 %	Remodularized to aid maintenance and understanding.
 
 % v11.1	Added new predefined function [faccess]
+%	Updated [system] predefined function to return success code for use in where clauses
 
 % The TXL Rule Table
 
@@ -1184,7 +1185,7 @@ module rule
 		init ("pragma", pragmaR, 1, false),
 		init ("div", divR, 1, false),
 		init ("rem", remR, 1, false),
-		init ("system", systemR, 1, false),
+		init ("system", systemR, 1, true),
 		init ("pipe", pipeR, 1, false),
 		init ("tolower", tolowerR, 0, false),
 		init ("toupper", toupperR, 0, false),
