@@ -26,6 +26,8 @@
 
 % v11.0	Initial revision, revised from FreeTXL 10.8b (c) 1988-2022 Queen's University at Kingston
 
+% v11.1	Added new predifined function [faccess]
+
 module predefs
     import 
 	var tree, var tree_ops,
@@ -1555,6 +1557,43 @@ module predefs
 		end if
 
 		matched := false
+
+	    label faccessR :
+		% Test whether a file can be opened in the given mode
+		% Any [faccess Filename Method], where Method = in[put]/get, out[put]/put or mod/append
+
+		% Get filename
+		bind var fileName to type (string, LS1)
+		evaluateString (string@(ident.idents (tree.trees (valueTP (ruleEnvironment.valuesBase + 1)).name)), 
+		    tree.trees (valueTP (ruleEnvironment.valuesBase + 1)).kind, fileName)
+		ltruncate (fileName, maxTuringStringLength)
+		
+		% Get method
+		bind var method to type (string, LS2)
+		evaluateString (string@(ident.idents (tree.trees (valueTP (ruleEnvironment.valuesBase + 2)).name)), 
+		    tree.trees (valueTP (ruleEnvironment.valuesBase + 2)).kind, method)
+		ltruncate (method, maxTuringStringLength)
+		
+		% Try to open the file in the specified mode: in[put]/get, out[put]/put or mod/append
+		var fs := 0
+
+		if index (method, "in") = 1 or index (method, "get") = 1 then
+		    open : fs, fileName, get
+		elsif index (method, "out") = 1 or index (method, "put") = 1 then
+		    open : fs, fileName, put
+		elsif index (method, "mod") = 1 or index (method, "app") = 1 then
+		    open : fs, fileName, put, mod, seek
+		else
+		    predefinedError ("Unknown access mode '" + method + "' (must be one of get, put, append)", applyingRuleName, callingRuleName)
+		end if
+		
+		% We succeed if it opened in the specified mode, fail otherwise
+		if fs not= 0 then
+		    close : fs
+		    matched := true
+		else
+		    matched := false
+		end if
 		
 	    label pragmaR :
 		% Dynamically change TXL options

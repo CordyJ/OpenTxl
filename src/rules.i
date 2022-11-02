@@ -30,6 +30,7 @@
 % v11.0	Initial revision, revised from FreeTXL 10.8b (c) 1988-2022 Queen's University at Kingston
 %	Remodularized to aid maintenance and understanding.
 
+% v11.1	Added new predefined function [faccess]
 
 % The TXL Rule Table
 
@@ -193,7 +194,8 @@ const * getsR := 59
 const * fgetsR := 60
 const * putsR := 61
 const * fputsR := 62
-const * nPredefinedRules := 62
+const * faccessR := 63
+const * nPredefinedRules := 63
 
 % The main rule of the transformation
 var mainRule := 0
@@ -1105,6 +1107,15 @@ module rule
 		    error (context, "Parameter of [fputs] predefined function is not a string filename", FATAL, 593)
 		end if
 
+	    label faccessR :
+		% X [faccess F M]
+		% (any scope will do)
+		if p1type not= stringlit_T and p1type not= charlit_T then
+		    error (context, "First parameter of [faccess] predefined function is not a string filename", FATAL, 594)
+		end if
+		if p2type not= stringlit_T and p2type not= charlit_T then
+		    error (context, "Second parameter of [faccess] predefined function is not a string file mode", FATAL, 595)
+		end if
 	end case
 
     end checkPredefinedFunctionScopeAndParameters
@@ -1184,7 +1195,8 @@ module rule
 		init ("gets", getsR, 0, false),
 		init ("fgets", fgetsR, 1, false),
 		init ("puts", putsR, 0, false),
-		init ("fputs", fputsR, 1, false)
+		init ("fputs", fputsR, 1, false),
+		init ("faccess", faccessR, 2, true)
 	    )
 
     for p : 1 .. nPredefinedRules

@@ -32,13 +32,14 @@
 
 % v11.1	Added anonymous conditions, e.g., where _ [test]
 %	Added optional match/replace rules, implicit match [any]
+%	Added new predefined function [faccess FILE MODE] 
 
 
 % Global symbols granted to child modules
 include "globals.i"
 
 % TXL version
-const * version := "OpenTxl v11.1 (1.11.22) (c) 2022 James R. Cordy and others"
+const * version := "OpenTxl v11.1 (2.11.22) (c) 2022 James R. Cordy and others"
 
 % Phase
 const * INITIALIZE := 0

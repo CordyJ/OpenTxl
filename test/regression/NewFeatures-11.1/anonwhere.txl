@@ -3,15 +3,18 @@ define program
 end define
 
 function main
-    match [program] _ [program]
+    replace [program] 
+	_ [program]
     where _ [ok]
-    construct _ [id]
-	_ [message "ok"]
-    where not _ [ok]
-    construct _ [id]
-	_ [message "not ok"]
+    where not _ [notok]
+    by
+	'ok
 end function
 
 function ok
     match [any] _ [any]
+end function
+
+function notok
+    match [id] 'NOSUCHID
 end function
