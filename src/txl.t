@@ -33,6 +33,7 @@
 % v11.1	Added anonymous conditions, e.g., where _ [test]
 %	Added optional match/replace rules, implicit match [any]
 %	Added new predefined function [faccess FILE MODE] 
+% 	Added NBSP (ASCII 160) as space character and separator
 
 
 % Global symbols granted to child modules
