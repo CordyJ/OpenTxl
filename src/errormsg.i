@@ -137,16 +137,18 @@ function externalType (internalType : string) : string
 	end if
     elsif index (internalType, "lit__") = 1 then
 	result "lit " + "'" + internalType (6..*) 
-    elsif index (internalType, "__") = 1 then
+    elsif index (internalType, "__") = 1 and 
+	    length (internalType) > 4 and internalType (*-1 .. *) = "__" then
     	% __if_statement_2__
-	assert length (internalType) > 4 and internalType (*-1 .. *) = "__"
 	var targetType := internalType (3 .. *-2)
 	var i := length (targetType)
 	loop
-	    exit when targetType (i) = "_"
+	    exit when i = 0 or targetType (i) = "_"
 	    i -= 1
 	end loop
-	targetType := targetType (1 .. i-1)
+	if i > 0 then
+	    targetType := targetType (1 .. i-1)
+	end if
 	result targetType
     else
 	result internalType

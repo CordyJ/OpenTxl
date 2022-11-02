@@ -90,6 +90,8 @@ const * quit_T := ident.install ("quit", kindT.id)
 const * assert_T := ident.install ("assert", kindT.id)
 const * ignore_T := ident.install ("ignore", kindT.id)	
 const * each_T := ident.install ("each", kindT.id)	
+const * match_T := ident.install ("match", kindT.id)	
+const * replace_T := ident.install ("replace", kindT.id)	
 
 % internal TXL name, helps resolve unresolvable TXL parse ambiguity
 const * TXL_optBar_T := ident.install ("TXL_optBar_", kindT.literal)

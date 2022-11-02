@@ -11,9 +11,9 @@
 
 TPCFLAGS = -O 
 
-TXLSRCS = src/globals.i src/ident.i src/locale.i src/limits.i src/options.i src/unparse.i src/rules.i \
-	  src/symbols.i src/errors.i src/trees.i src/treeops.i src/tokens.i src/charset.i src/shared.i \
-	  src/errormsg.i src/scan.i src/boot.i src/bootgrm.i
+TXLSRCS = src/boot.i src/bootgrm.i src/charset.i src/errormsg.i src/errors.i src/globals.i src/ident.i \
+	  src/limits.i src/locale.i src/options.i src/rules.i src/scan.i src/shared.i src/symbols.i \
+	  src/tokens.i src/treeops.i src/trees.i src/txltree.i src/unparse.i 
 
 COMPILEOBJS = csrc/comprul.c csrc/compdef.c csrc/loadstor.c 
 

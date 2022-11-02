@@ -985,10 +985,14 @@ body module defineCompiler
 	% make sure each constructed nonterminal is defined,
 	% in case it doesn't appear in the grammar
 	% (e.g. construct X [repeat blortz] )
-	const ruleTargetT := txltree.rule_targetT (ruleTP)
-	const targetBracketedDescriptionTP := txltree.rule_target_bracketedDescriptionTP (ruleTP)
-	processImplicitType (ruleTargetT, targetBracketedDescriptionTP)
-	
+
+	% TXL 11.1, optional match/replace part 
+	if not tree.plural_emptyP (txltree.rule_optReplaceOrMatchPartTP (ruleTP)) then
+	    const ruleTargetT := txltree.rule_targetT (ruleTP)
+	    const targetBracketedDescriptionTP := txltree.rule_targetBracketedDescriptionTP (ruleTP)
+	    processImplicitType (ruleTargetT, targetBracketedDescriptionTP)
+	end if
+
 	var formalsTP := txltree.rule_formalsTP (ruleTP)
 	loop
 	    exit when tree.plural_emptyP (formalsTP)

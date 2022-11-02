@@ -52,6 +52,9 @@
 % v11.0	Initial revision, revised from FreeTXL bootstrap grammar 10.8b.
 %	Removed unused external rule statement.
 
+% v11.1	Refactored and renamed rule body grammar.
+%	Added optional replace/match pattern part.
+
 define program
 	[TXL_statements_]
 end define
@@ -164,12 +167,9 @@ end define
 define TXL_ruleStatement_
 	'rule [id] [TXL_arguments_]
 	    [TXL_parts_]
-	    [TXL_optSkippingBracketedDescription_] 
-	    [TXL_replaceOrMatch_] [TXL_optStarDollarHash_]
-			[TXL_bracketedDescription_] 
-		[TXL_pattern_]
+	    [TXL_optReplaceOrMatchPart_]
 	    [TXL_parts_]
-	    [TXL_optByReplacement_]
+	    [TXL_optByPart_]
 	'end 'rule 
 	[KEEP]
 end define
@@ -177,21 +177,30 @@ end define
 define TXL_functionStatement_
 	'function [id] [TXL_arguments_]
 	    [TXL_parts_]
-	    [TXL_optSkippingBracketedDescription_] 
-	    [TXL_replaceOrMatch_] [TXL_optStarDollarHash_] 
-			[TXL_bracketedDescription_] 
-		[TXL_pattern_]	
+	    [TXL_optReplaceOrMatchPart_]
 	    [TXL_parts_]
-	    [TXL_optByReplacement_]
+	    [TXL_optByPart_]
 	'end 'function
 	[KEEP]
+end define
+
+define TXL_optReplaceOrMatchPart_
+	[TXL_replaceOrMatchPart_]
+    |	[empty]
+end define
+
+define TXL_replaceOrMatchPart_
+	[TXL_optSkippingBracketedDescription_] 
+	[TXL_replaceOrMatch_] [TXL_optStarDollarHash_]
+		[TXL_bracketedDescription_] 
+	[TXL_pattern_]
 end define
 
 define TXL_replaceOrMatch_
     	'replace | 'match
 end define
 
-define TXL_optByReplacement_
+define TXL_optByPart_
 	[TXL_byReplacement_]
     |	[empty]
 end define
