@@ -126,6 +126,7 @@ module charset
 #end if
 
     % Alphabetics = Upper case + Lower case
+    alphaP := falseP
     for c : chr (0) .. chr (255)
 	alphaP (c) := upperP (c) or lowerP (c)
     end for
@@ -135,17 +136,20 @@ module charset
     alphaidP ('_') := true
     
     % Identifiers = Alphabetic identifiers + Digits
+    idP := falseP
     for c : chr (0) .. chr (255)
 	idP (c) := alphaidP (c) or digitP (c)
     end for
 
     % Upper case identifiers = Upper case letters + Digits + underscore
+    upperidP := falseP
     for c : chr (0) .. chr (255)
 	upperidP (c) := upperP (c) or digitP (c)
     end for
     upperidP ('_') := true
     
     % Lower case identifiers = Lower case letters + Digits + underscore
+    loweridP := falseP
     for c : chr (0) .. chr (255)
 	loweridP (c) := lowerP (c) or digitP (c)
     end for
