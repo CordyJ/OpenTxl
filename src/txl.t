@@ -30,11 +30,18 @@
 % v11.0	Initial revision, revised from FreeTXL 10.8b (c) 1988-2022 Queen's University at Kingston
 %	Reprogrammed and remodularized to improve maintainability
 
+% v11.1	Added anonymous conditions, e.g., where _ [test]
+%	Added optional match/replace rules, implicit match [any]
+%	Added new predefined function [faccess FILE MODE] 
+% 	Added NBSP (ASCII 160) as space character and separator
+%	Fixed local variable binding bug issue #1
+
+
 % Global symbols granted to child modules
 include "globals.i"
 
 % TXL version
-const * version := "OpenTxl v11.0 (20.10.22) (c) 2022 James R. Cordy and others"
+const * version := "OpenTxl v11.1 (2.1.23) (c) 2023 James R. Cordy and others"
 
 % Phase
 const * INITIALIZE := 0

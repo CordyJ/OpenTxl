@@ -9,6 +9,7 @@
 
 /* Revised to be both 32- and 64-bit compatible - JRC 11.8.15 */
 /* Added missing implicit includes - JRC 11.8.15 */
+/* Added TL_TLS_TLSBSS - JRC 1.11.22 */
 
 #include <string.h>
 #include <stdio.h>
@@ -36,6 +37,22 @@ void TL_TLS_TLSBXX (target, endIndex, startIndex, source)
 	register char *dst = target;
 	register char *src = source + startIndex - 1;
 	char *lastAddr = source + endIndex;
+
+	while (src < lastAddr) {
+	    *dst++ = *src++;
+	}
+	*dst = '\0';
+    }
+
+void TL_TLS_TLSBSS (target, endOffset, startOffset, source)
+    char * target;
+    int endOffset, startOffset;
+    char * source;
+    {
+	int srcLength = strlen (source);
+	register char *dst = target;
+	register char *src = source + srcLength + startOffset - 1;
+	char *lastAddr = source + srcLength + endOffset;
 
 	while (src < lastAddr) {
 	    *dst++ = *src++;

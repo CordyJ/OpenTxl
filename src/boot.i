@@ -48,7 +48,7 @@ module bootstrap
     function enterBootSymbol (partId : tokenT, kind : kindT) : int
 	for s : 1 .. nBootSymbols
 	    if tree.trees (bootSymbols (s)).name = partId then
-		assert tree.trees (bootSymbols (s)).kind = kind
+		%% assert tree.trees (bootSymbols (s)).kind = kind
 		result s
 	    end if
 	end for

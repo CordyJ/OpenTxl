@@ -5,9 +5,9 @@
 
 # This process builds the fully checked Turing+ version of the Txl-11 compiler/interpreter and command line tools
 
-TXLSRCS = src/globals.i src/ident.i src/locale.i src/limits.i src/options.i src/unparse.i src/rules.i \
-	  src/symbols.i src/errors.i src/trees.i src/treeops.i src/tokens.i src/charset.i src/shared.i \
-	  src/errormsg.i src/scan.i src/boot.i src/bootgrm.i
+TXLSRCS = src/boot.i src/bootgrm.i src/charset.i src/errormsg.i src/errors.i src/globals.i src/ident.i \
+	  src/limits.i src/locale.i src/options.i src/rules.i src/scan.i src/shared.i src/symbols.i \
+	  src/tokens.i src/treeops.i src/trees.i src/txltree.i src/unparse.i 
 
 COMPILEOBJS = objs/comprul.o objs/compdef.o objs/loadstor.o 
 
@@ -15,7 +15,7 @@ GENERALOBJS = objs/locale.o
 
 OBJS = ${COMPILEOBJS} ${GENERALOBJS}
 
-TPCFLAGS = -O -DCHECKED
+TPCFLAGS = -DCHECKED
 
 CC = cc -c
 COPTS = -w

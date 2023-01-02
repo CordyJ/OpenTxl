@@ -28,13 +28,14 @@
 
 % v11.0	Initial revision, revised from FreeTXL 10.8b (c) 1988-2022 Queen's University at Kingston
 
+% v11.1	Updated to match TXL 11.1 grammar
+
 module txltree
     import 
 	var tree, var ident, error
 
     export 
 	patternOrReplacement_litsAndVarsAndExpsTP, 
-	rule_targetT, rule_target_bracketedDescriptionTP,
 	construct_varNameT, construct_targetT, construct_replacementTP,
 	construct_bracketedDescriptionTP, construct_isAnonymous,
 	construct_anonymousExpressionTP,
@@ -42,11 +43,14 @@ module txltree
 	deconstruct_isStarred, deconstruct_negated, deconstruct_targetT,
 	deconstruct_isTyped, deconstruct_optSkippingTP,
 	import_export_targetT, import_export_bracketedDescriptionTP, import_patternTP,
-	rule_nameT, rule_prePatternTP, rule_postPatternTP, rule_patternTP, 
-	rule_isStarred, rule_isDollared, rule_optSkippingTP, optSkipping_nameT, 
-	rule_replaceOrMatchT, rule_optByReplacementTP, optByReplacement_replacementTP, 
-	optByReplacement_isAnonymous, optByReplacement_anonymousExpressionTP,
-	rule_formalsTP, formal_nameT, formal_typeT, formal_bracketedDescriptionTP,
+	rule_nameT, rule_formalsTP, rule_prePatternTP, rule_postPatternTP, 
+	rule_optReplaceOrMatchPartTP, rule_optByPartTP, 
+	rule_isStarred, rule_isDollared,
+	rule_optSkippingTP, optSkipping_nameT, 
+	rule_replaceOrMatchT, rule_patternTP, 
+	rule_targetBracketedDescriptionTP, rule_targetT, 
+	optByPart_replacementTP, optByPart_isAnonymous, optByPart_anonymousExpressionTP,
+	formal_nameT, formal_typeT, formal_bracketedDescriptionTP,
 	isQuotedLiteral, literal_tokenT, literal_rawtokenT, literal_kindT, ruleCall_nameT, 
 	ruleCall_literalsTP, bracketedDescription_idT,
 	bracketedDescription_listRepeatOrOptTargetTP,
@@ -55,7 +59,7 @@ module txltree
 	program_statementsTP, keys_literalsTP, define_nameT, define_defineOrRedefineT, 
 	define_endDefineOrRedefineT, define_optDotDotDotBarTP, define_optBarDotDotDotTP, 
 	define_literalsAndBracketedIdsTP, define_barOrdersTP, statement_keyDefRuleTP, 
-	condition_is_assert, condition_expressionTP, condition_negated, condition_anded, 
+	condition_is_assert, condition_expressionTP, condition_isAnonymous, condition_negated, condition_anded, 
 	literalOrBracketedIdP, bracketedDescriptionP, quotedLiteralP, literalP, 
 	listP, list1P, repeatP, repeat1P, optP, attrP, seeP, notP, fenceP, pushP, popP
 
@@ -116,26 +120,6 @@ module txltree
 	result identIndex
 
     end descriptionTargetT
-
-    function rule_target_bracketedDescriptionTP (ruleTP : treePT) : treePT
-	pre string@(ident.idents (tree.trees (ruleTP).name)) = "TXL_ruleStatement_" or
-	     string@(ident.idents (tree.trees (ruleTP).name)) = "TXL_functionStatement_" 
-	const bracketedDescriptionTP := tree.kidTP (8,ruleTP)
-	assert string@(ident.idents (tree.trees (bracketedDescriptionTP).name)) = "TXL_bracketedDescription_"
-	result bracketedDescriptionTP
-    end rule_target_bracketedDescriptionTP
-
-    function rule_targetT (ruleTP : treePT) : tokenT
-	pre string@(ident.idents (tree.trees (ruleTP).name)) = "TXL_ruleStatement_" or
-	     string@(ident.idents (tree.trees (ruleTP).name)) = "TXL_functionStatement_" 
-     
-	const bracketedDescriptionTP := tree.kidTP (8,ruleTP)
-	assert string@(ident.idents (tree.trees (bracketedDescriptionTP).name)) = "TXL_bracketedDescription_"
-	const descriptionTP := tree.kid2TP (bracketedDescriptionTP)
-	assert string@(ident.idents (tree.trees (descriptionTP).name)) = "TXL_description_"
-
-	result descriptionTargetT (descriptionTP)
-    end rule_targetT
 
     function construct_varNameT (constructTP : treePT) : tokenT
 	pre string@(ident.idents (tree.trees (constructTP).name)) = "TXL_constructPart_"
@@ -268,11 +252,27 @@ module txltree
 	result tree.kid4TP (importTP)
     end import_patternTP
 
+    %    define TXL_ruleStatement_
+    %    	'rule [id] [TXL_arguments_]
+    %    	    [TXL_parts_]
+    %    	    [TXL_optReplaceOrMatchPart_]
+    %    	    [TXL_parts_]
+    %    	    [TXL_optByPart_]
+    %    	'end 'rule 
+    %    end define
+
     function rule_nameT (ruleTP : treePT) : tokenT
 	pre string@(ident.idents (tree.trees (ruleTP).name)) = "TXL_ruleStatement_"
 	 or string@(ident.idents (tree.trees (ruleTP).name)) = "TXL_functionStatement_"
 	result tree.trees (tree.kid2TP (ruleTP)).name
     end rule_nameT
+
+    function rule_formalsTP (ruleTP : treePT) : treePT
+	pre (string@(ident.idents (tree.trees (ruleTP).name)) = "TXL_ruleStatement_" or
+	     string@(ident.idents (tree.trees (ruleTP).name)) = "TXL_functionStatement_" ) and
+	    string@(ident.idents (tree.trees (tree.kid3TP (ruleTP)).name)) = "TXL_arguments_"
+	result tree.kid3TP (ruleTP)
+    end rule_formalsTP
 
     function rule_prePatternTP (ruleTP : treePT) : treePT
 	pre (string@(ident.idents (tree.trees (ruleTP).name)) = "TXL_ruleStatement_" or
@@ -281,53 +281,140 @@ module txltree
 	result tree.kid4TP (ruleTP)
     end rule_prePatternTP
 
+    function rule_optReplaceOrMatchPartTP (ruleTP : treePT) : treePT
+	pre (string@(ident.idents (tree.trees (ruleTP).name)) = "TXL_ruleStatement_" or
+	     string@(ident.idents (tree.trees (ruleTP).name)) = "TXL_functionStatement_" ) and
+	    string@(ident.idents (tree.trees (tree.kid5TP (ruleTP)).name)) = "TXL_optReplaceOrMatchPart_"
+	result tree.kid5TP (ruleTP)
+    end rule_optReplaceOrMatchPartTP
+
     function rule_postPatternTP (ruleTP : treePT) : treePT
 	pre (string@(ident.idents (tree.trees (ruleTP).name)) = "TXL_ruleStatement_" or
 	     string@(ident.idents (tree.trees (ruleTP).name)) = "TXL_functionStatement_") and
-	    string@(ident.idents (tree.trees (tree.kidTP (10,ruleTP)).name)) = "TXL_parts_"
-	result tree.kidTP (10,ruleTP)
+	    string@(ident.idents (tree.trees (tree.kid6TP (ruleTP)).name)) = "TXL_parts_"
+	result tree.kid6TP (ruleTP)
     end rule_postPatternTP
 
-    function rule_patternTP (ruleTP : treePT) : treePT
+    function rule_optByPartTP (ruleTP : treePT) : treePT
 	pre (string@(ident.idents (tree.trees (ruleTP).name)) = "TXL_ruleStatement_" or
 	     string@(ident.idents (tree.trees (ruleTP).name)) = "TXL_functionStatement_" ) and
-	    string@(ident.idents (tree.trees (tree.kidTP (9,ruleTP)).name)) = "TXL_pattern_"
-	result tree.kidTP (9,ruleTP)
-    end rule_patternTP
+	    string@(ident.idents (tree.trees (tree.kid7TP (ruleTP)).name)) = "TXL_optByPart_"
+	result tree.kid7TP (ruleTP)
+    end rule_optByPartTP
+
+    % define TXL_optReplaceOrMatchPart_
+    % 		[TXL_replaceOrMatchPart_]
+    %     |	[empty]
+    % end define
+    % 
+    % define TXL_replaceOrMatchPart_
+    % 	[TXL_optSkippingBracketedDescription_] 
+    % 	[TXL_replaceOrMatch_] [TXL_optStarDollarHash_]
+    % 		[TXL_bracketedDescription_] 
+    % 	[TXL_pattern_]
+    % end define
 
     function rule_isStarred (ruleTP : treePT) : boolean
-	result tree.trees (tree.kid1TP (tree.kidTP (7,ruleTP))).name = star_T
+	pre string@(ident.idents (tree.trees (ruleTP).name)) = "TXL_ruleStatement_" or
+	    string@(ident.idents (tree.trees (ruleTP).name)) = "TXL_functionStatement_" 
+	const optReplaceOrMatchPartTP := rule_optReplaceOrMatchPartTP (ruleTP)
+	assert string@(ident.idents (tree.trees (optReplaceOrMatchPartTP).name)) = "TXL_optReplaceOrMatchPart_" 
+	assert not tree.plural_emptyP (optReplaceOrMatchPartTP) 
+	const replaceOrMatchPartTP := tree.kid1TP (optReplaceOrMatchPartTP)
+	result tree.trees (tree.kid1TP (tree.kid3TP (replaceOrMatchPartTP))).name = star_T
     end rule_isStarred
 
     function rule_isDollared (ruleTP : treePT) : boolean
-	result tree.trees (tree.kid1TP (tree.kidTP (7,ruleTP))).name = dollar_T
+	pre string@(ident.idents (tree.trees (ruleTP).name)) = "TXL_ruleStatement_" or
+	    string@(ident.idents (tree.trees (ruleTP).name)) = "TXL_functionStatement_" 
+	const optReplaceOrMatchPartTP := rule_optReplaceOrMatchPartTP (ruleTP)
+	assert string@(ident.idents (tree.trees (optReplaceOrMatchPartTP).name)) = "TXL_optReplaceOrMatchPart_" 
+	assert not tree.plural_emptyP (optReplaceOrMatchPartTP) 
+	const replaceOrMatchPartTP := tree.kid1TP (optReplaceOrMatchPartTP)
+	result tree.trees (tree.kid1TP (tree.kid3TP (replaceOrMatchPartTP))).name = dollar_T
     end rule_isDollared
 
     function rule_replaceOrMatchT (ruleTP : treePT) : tokenT
-	pre (string@(ident.idents (tree.trees (ruleTP).name)) = "TXL_ruleStatement_" or
-	     string@(ident.idents (tree.trees (ruleTP).name)) = "TXL_functionStatement_" ) and
-	    string@(ident.idents (tree.trees (tree.kidTP (6,ruleTP)).name)) = "TXL_replaceOrMatch_"
-	result tree.trees (tree.kid1TP (tree.kidTP (6,ruleTP))).name 
+	pre string@(ident.idents (tree.trees (ruleTP).name)) = "TXL_ruleStatement_" or
+	    string@(ident.idents (tree.trees (ruleTP).name)) = "TXL_functionStatement_" 
+	const optReplaceOrMatchPartTP := rule_optReplaceOrMatchPartTP (ruleTP)
+	assert string@(ident.idents (tree.trees (optReplaceOrMatchPartTP).name)) = "TXL_optReplaceOrMatchPart_" 
+	assert not tree.plural_emptyP (optReplaceOrMatchPartTP) 
+	const replaceOrMatchPartTP := tree.kid1TP (optReplaceOrMatchPartTP)
+	result tree.trees (tree.kid1TP (tree.kid2TP (replaceOrMatchPartTP))).name 
     end rule_replaceOrMatchT
 
-    function rule_optByReplacementTP (ruleTP : treePT) : treePT
-	pre (string@(ident.idents (tree.trees (ruleTP).name)) = "TXL_ruleStatement_" or
-	     string@(ident.idents (tree.trees (ruleTP).name)) = "TXL_functionStatement_" ) and
-	    string@(ident.idents (tree.trees (tree.kidTP (11,ruleTP)).name)) = "TXL_optByReplacement_"
-	result tree.kidTP (11,ruleTP)
-    end rule_optByReplacementTP
+    function rule_optSkippingTP (ruleTP : treePT) : treePT
+	pre string@(ident.idents (tree.trees (ruleTP).name)) = "TXL_ruleStatement_" or
+	    string@(ident.idents (tree.trees (ruleTP).name)) = "TXL_functionStatement_" 
+	const optReplaceOrMatchPartTP := rule_optReplaceOrMatchPartTP (ruleTP)
+	assert string@(ident.idents (tree.trees (optReplaceOrMatchPartTP).name)) = "TXL_optReplaceOrMatchPart_" 
+	assert not tree.plural_emptyP (optReplaceOrMatchPartTP) 
+    	const replaceOrMatchPartTP := tree.kid1TP (optReplaceOrMatchPartTP)
+    	assert string@(ident.idents (tree.trees (tree.kid1TP (replaceOrMatchPartTP)).name)) = "TXL_optSkippingBracketedDescription_"
+    	result tree.kid1TP (replaceOrMatchPartTP)
+    end rule_optSkippingTP
 
-    function optByReplacement_replacementTP (optByReplacementTP : treePT) : treePT
-	pre string@(ident.idents (tree.trees (optByReplacementTP).name)) = "TXL_optByReplacement_" and
-	 (not tree.plural_emptyP (optByReplacementTP)) and
-	    string@(ident.idents (tree.trees (tree.kid2TP (tree.kids (tree.trees (optByReplacementTP).kidsKP))).name)) = "TXL_replacement_"
-	result tree.kid2TP (tree.kids (tree.trees (optByReplacementTP).kidsKP))
-    end optByReplacement_replacementTP 
+    function rule_targetBracketedDescriptionTP (ruleTP : treePT) : treePT
+	pre string@(ident.idents (tree.trees (ruleTP).name)) = "TXL_ruleStatement_" or
+	    string@(ident.idents (tree.trees (ruleTP).name)) = "TXL_functionStatement_" 
+	const optReplaceOrMatchPartTP := rule_optReplaceOrMatchPartTP (ruleTP)
+	assert string@(ident.idents (tree.trees (optReplaceOrMatchPartTP).name)) = "TXL_optReplaceOrMatchPart_" 
+	assert not tree.plural_emptyP (optReplaceOrMatchPartTP) 
+    	const replaceOrMatchPartTP := tree.kid1TP (optReplaceOrMatchPartTP)
+    	assert string@(ident.idents (tree.trees (tree.kid4TP (replaceOrMatchPartTP)).name)) = "TXL_bracketedDescription_"
+    	result tree.kid4TP (replaceOrMatchPartTP)
+    end rule_targetBracketedDescriptionTP
 
-    function optByReplacement_isAnonymous (optByReplacementTP : treePT) : boolean
-	pre string@(ident.idents (tree.trees (optByReplacementTP).name)) = "TXL_optByReplacement_"
-	const replacementTP := optByReplacement_replacementTP (optByReplacementTP)
+    function rule_targetT (ruleTP : treePT) : tokenT
+	pre string@(ident.idents (tree.trees (ruleTP).name)) = "TXL_ruleStatement_" or
+	    string@(ident.idents (tree.trees (ruleTP).name)) = "TXL_functionStatement_" 
+	const optReplaceOrMatchPartTP := rule_optReplaceOrMatchPartTP (ruleTP)
+	assert string@(ident.idents (tree.trees (optReplaceOrMatchPartTP).name)) = "TXL_optReplaceOrMatchPart_" 
+	assert not tree.plural_emptyP (optReplaceOrMatchPartTP) 
+    	const replaceOrMatchPartTP := tree.kid1TP (optReplaceOrMatchPartTP)
+    	const bracketedDescriptionTP := tree.kid4TP (replaceOrMatchPartTP)
+    	assert string@(ident.idents (tree.trees (bracketedDescriptionTP).name)) = "TXL_bracketedDescription_"
+    	const descriptionTP := tree.kid2TP (bracketedDescriptionTP)
+    	assert string@(ident.idents (tree.trees (descriptionTP).name)) = "TXL_description_"
+    	result descriptionTargetT (descriptionTP)
+    end rule_targetT
+
+    function rule_patternTP (ruleTP : treePT) : treePT
+	pre string@(ident.idents (tree.trees (ruleTP).name)) = "TXL_ruleStatement_" or
+	    string@(ident.idents (tree.trees (ruleTP).name)) = "TXL_functionStatement_" 
+	const optReplaceOrMatchPartTP := rule_optReplaceOrMatchPartTP (ruleTP)
+	assert string@(ident.idents (tree.trees (optReplaceOrMatchPartTP).name)) = "TXL_optReplaceOrMatchPart_" 
+	assert not tree.plural_emptyP (optReplaceOrMatchPartTP) 
+	const replaceOrMatchPartTP := tree.kid1TP (optReplaceOrMatchPartTP)
+	assert string@(ident.idents (tree.trees (tree.kid5TP (replaceOrMatchPartTP)).name)) = "TXL_pattern_"
+	result tree.kid5TP (replaceOrMatchPartTP)
+    end rule_patternTP 
+
+    % define TXL_optByPart_
+    % 		[TXL_byPart_]
+    %     |	[empty]
+    % end define
+    % 
+    % define TXL_byPart_
+    % 	'by
+    % 	    [TXL_replacement_]
+    % end define
+
+    function optByPart_replacementTP (optByPartTP : treePT) : treePT
+	pre string@(ident.idents (tree.trees (optByPartTP).name)) = "TXL_optByPart_" and
+	 (not tree.plural_emptyP (optByPartTP)) and
+	    string@(ident.idents (tree.trees (tree.kid2TP (tree.kids (tree.trees (optByPartTP).kidsKP))).name)) = "TXL_replacement_"
+	result tree.kid2TP (tree.kids (tree.trees (optByPartTP).kidsKP))
+    end optByPart_replacementTP 
+
+    function optByPart_isAnonymous (optByPartTP : treePT) : boolean
+	pre string@(ident.idents (tree.trees (optByPartTP).name)) = "TXL_optByPart_" and
+	    not tree.plural_emptyP (optByPartTP)
+	const replacementTP := optByPart_replacementTP (optByPartTP)
+	assert string@(ident.idents (tree.trees (replacementTP).name)) = "TXL_replacement_"
 	if tree.plural_emptyP (tree.kid1TP (replacementTP)) then
+	    % nothing in replacement
 	    result false
 	else
 	    const indExpsAndLitsTP := tree.kid1TP (tree.kid1TP (replacementTP))
@@ -343,21 +430,23 @@ module txltree
 		end if
 	    end if
 	end if
-    end optByReplacement_isAnonymous
+    end optByPart_isAnonymous
 
-    function optByReplacement_anonymousExpressionTP (optByReplacementTP : treePT) : treePT
-        pre optByReplacement_isAnonymous (optByReplacementTP)
-        const replacementTP := optByReplacement_replacementTP (optByReplacementTP)
+    function optByPart_anonymousExpressionTP (optByPartTP : treePT) : treePT
+        pre optByPart_isAnonymous (optByPartTP)
+        const replacementTP := optByPart_replacementTP (optByPartTP)
 	const indExpsAndLitsTP := tree.kid1TP (tree.kid1TP (replacementTP))
 	result tree.kid1TP (tree.kid1TP (indExpsAndLitsTP))
-    end optByReplacement_anonymousExpressionTP
+    end optByPart_anonymousExpressionTP
 
-    function rule_optSkippingTP (ruleTP : treePT) : treePT
-	pre (string@(ident.idents (tree.trees (ruleTP).name)) = "TXL_ruleStatement_" or
-	     string@(ident.idents (tree.trees (ruleTP).name)) = "TXL_functionStatement_" ) and
-	    string@(ident.idents (tree.trees (tree.kidTP (5,ruleTP)).name)) = "TXL_optSkippingBracketedDescription_"
-	result tree.kidTP (5,ruleTP)
-    end rule_optSkippingTP
+    % define TXL_optSkippingBracketedDescription_
+    % 		[TXL_skippingBracketedDescription_]
+    %     |	[empty]
+    % end define
+    % 
+    % define TXL_skippingBracketedDescription_
+    % 	'skipping [TXL_bracketedDescription_]
+    % end define
 
     function optSkipping_nameT (optSkippingTP : treePT) : tokenT
 	pre string@(ident.idents (tree.trees (optSkippingTP).name)) = "TXL_optSkippingBracketedDescription_"
@@ -371,31 +460,14 @@ module txltree
 	result descriptionTargetT (descriptionTP)
     end optSkipping_nameT
 	
-    % How to get from a rule to its formals
-    function rule_formalsTP (ruleTP : treePT) : treePT
-	pre (string@(ident.idents (tree.trees (ruleTP).name)) = "TXL_ruleStatement_" or
-	     string@(ident.idents (tree.trees (ruleTP).name)) = "TXL_functionStatement_" ) and
-	    string@(ident.idents (tree.trees (tree.kid3TP (ruleTP)).name)) = "TXL_arguments_"
-	result tree.kid3TP (ruleTP)
-    end rule_formalsTP
+    % define TXL_argument_
+    % 	[id] [TXL_bracketedDescription_]
+    % end define
 
-    % how to get from an argument to its name
     function formal_nameT (argumentTP : treePT) : tokenT
 	pre string@(ident.idents (tree.trees (argumentTP).name)) = "TXL_argument_"
 	result tree.trees (tree.kids (tree.trees (argumentTP).kidsKP)).name
     end formal_nameT
-
-    % how to get from an argument to its type
-    function formal_typeT (argumentTP : treePT) : tokenT
-	pre string@(ident.idents (tree.trees (argumentTP).name)) = "TXL_argument_" 
-
-	const bracketedDescriptionTP := tree.kid2TP (argumentTP)
-	assert string@(ident.idents (tree.trees (bracketedDescriptionTP).name)) = "TXL_bracketedDescription_"
-	const descriptionTP := tree.kid2TP (bracketedDescriptionTP)
-	assert string@(ident.idents (tree.trees (descriptionTP).name)) = "TXL_description_"
-
-	result descriptionTargetT (descriptionTP)
-    end formal_typeT
 
     function formal_bracketedDescriptionTP (argumentTP : treePT) : treePT
 	pre string@(ident.idents (tree.trees (argumentTP).name)) = "TXL_argument_" 
@@ -403,13 +475,20 @@ module txltree
 	result tree.kid2TP (argumentTP)
     end formal_bracketedDescriptionTP
 
+    function formal_typeT (argumentTP : treePT) : tokenT
+	pre string@(ident.idents (tree.trees (argumentTP).name)) = "TXL_argument_" 
+	const bracketedDescriptionTP := tree.kid2TP (argumentTP)
+	assert string@(ident.idents (tree.trees (bracketedDescriptionTP).name)) = "TXL_bracketedDescription_"
+	const descriptionTP := tree.kid2TP (bracketedDescriptionTP)
+	assert string@(ident.idents (tree.trees (descriptionTP).name)) = "TXL_description_"
+	result descriptionTargetT (descriptionTP)
+    end formal_typeT
+
     function isQuotedLiteral (literalTP : treePT) : boolean
 	pre string@(ident.idents (tree.trees (literalTP).name)) = "TXL_literal_"
 	    or string@(ident.idents (tree.trees (literalTP).name)) = "TXL_expression_"
 	    or string@(ident.idents (tree.trees (literalTP).name)) = "TXL_firstTime_"
-
 	const k1TP : treePT := tree.kids (tree.trees (literalTP).kidsKP)
-
 	result string@(ident.idents (tree.trees (literalTP).name)) = "TXL_literal_"
 	    and string@(ident.idents (tree.trees (k1TP).name)) = "TXL_quotedLiteral_" 
     end isQuotedLiteral
@@ -597,6 +676,13 @@ module txltree
             and string@(ident.idents (tree.trees (tree.kid4TP (conditionTP)).name)) = "TXL_expression_"
         result tree.kid4TP (conditionTP)
     end condition_expressionTP
+
+    function condition_isAnonymous (conditionTP : treePT) : boolean
+        pre string@(ident.idents (tree.trees (conditionTP).name)) = "TXL_conditionPart_"
+	const expressionTP := tree.kid4TP (conditionTP)
+        assert string@(ident.idents (tree.trees (expressionTP).name)) = "TXL_expression_"
+	result tree.trees (tree.kid1TP (expressionTP)).name = anonymous_T
+    end condition_isAnonymous
 
     function condition_negated (conditionTP : treePT) : boolean
         pre string@(ident.idents (tree.trees (conditionTP).name)) = "TXL_conditionPart_"

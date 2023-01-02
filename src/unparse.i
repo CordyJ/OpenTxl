@@ -943,7 +943,12 @@ module unparser
 		    type (string, outputline (lineLength + 1)) := leafName 
 		    lineLength += lengthLeaf
 		    emptyLine := false
-		    lastLeafNameEnd := outputline (lineLength)
+		    if lineLength > 0 then 
+			lastLeafNameEnd := outputline (lineLength) 
+		    else
+			% an empty leaf on an empty line!
+			lastLeafNameEnd := '\0' 
+		    end if
 		    % If the leaf ends in a newline, we may as well output it now
 		    if lastLeafNameEnd = '\r' or lastLeafNameEnd = '\n' then
 			if outstream >= 0 then

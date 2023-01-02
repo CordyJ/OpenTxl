@@ -30,6 +30,8 @@
 % v11.0	Initial revision, revised from FreeTXL 10.8b (c) 1988-2022 Queen's University at Kingston
 %	Remodularized to improve maintainability
 
+% v11.1	Added NBSP (ASCII 160) as space character and separator
+
 module charset
 
     export 
@@ -124,6 +126,7 @@ module charset
 #end if
 
     % Alphabetics = Upper case + Lower case
+    alphaP := falseP
     for c : chr (0) .. chr (255)
 	alphaP (c) := upperP (c) or lowerP (c)
     end for
@@ -133,17 +136,20 @@ module charset
     alphaidP ('_') := true
     
     % Identifiers = Alphabetic identifiers + Digits
+    idP := falseP
     for c : chr (0) .. chr (255)
 	idP (c) := alphaidP (c) or digitP (c)
     end for
 
     % Upper case identifiers = Upper case letters + Digits + underscore
+    upperidP := falseP
     for c : chr (0) .. chr (255)
 	upperidP (c) := upperP (c) or digitP (c)
     end for
     upperidP ('_') := true
     
     % Lower case identifiers = Lower case letters + Digits + underscore
+    loweridP := falseP
     for c : chr (0) .. chr (255)
 	loweridP (c) := lowerP (c) or digitP (c)
     end for
@@ -210,6 +216,9 @@ module charset
     separatorP ('\f') := true
     separatorP ('\r') := true
     separatorP (' ') := true
+#if UNICODE then
+    c1 := 160; separatorP (chr (c1)) := true
+#end if
     
     % White space
     spaceP := falseP
@@ -218,6 +227,9 @@ module charset
     spaceP ('\f') := true
     spaceP ('\r') := true
     spaceP (' ') := true
+#if UNICODE then
+    c1 := 160; spaceP (chr (c1)) := true
+#end if
     
 
     % TXL token pattern metacharacters
@@ -273,6 +285,9 @@ module charset
     spaceBeforeP ('.') := false
     spaceBeforeP (']') := false
     spaceBeforeP ('}') := false
+#if UNICODE then
+    c1 := 160; spaceBeforeP (chr (c1)) := true
+#end if
     
     % By default, we always space after any token except those that end with:
     spaceAfterP ('\t') := false
@@ -283,6 +298,9 @@ module charset
     spaceAfterP ('.') := false
     spaceAfterP ('[') := false
     spaceAfterP ('{') := false
+#if UNICODE then
+    c1 := 160; spaceAfterP (chr (c1)) := true
+#end if
 
     % Upper-to-lower and lower-to-upper case maps
     type mapT : array chr (0) .. chr (255) of char

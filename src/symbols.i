@@ -50,7 +50,8 @@ module symbol
 	#if not NOCOMPILE then
 	    for p : 1 .. nSymbols
 		if tree.trees (symbols (p)).name = partId then
-		    assert kind = kindT.undefined or tree.trees (symbols (p)).kind = kind
+		    %% Does not hold if user token has same name as built-in token!
+		    %% assert kind = kindT.undefined or tree.trees (symbols (p)).kind = kind
 		    result p
 		end if
 	    end for

@@ -30,6 +30,8 @@
 % v11.0	Initial revision, revised from FreeTXL 10.8b (c) 1988-2022 Queen's University at Kingston
 %	Remodularized to aid maintenance and understanding.
 
+% v11.1	Added new predefined function [faccess]
+%	Updated [system] predefined function to return success code for use in where clauses
 
 % The TXL Rule Table
 
@@ -193,7 +195,8 @@ const * getsR := 59
 const * fgetsR := 60
 const * putsR := 61
 const * fputsR := 62
-const * nPredefinedRules := 62
+const * faccessR := 63
+const * nPredefinedRules := 63
 
 % The main rule of the transformation
 var mainRule := 0
@@ -220,7 +223,7 @@ module rule
 	    setPartKind, setPartName, setPartNameRef, setPartTarget, setPartPattern, setPartReplacement, setPartNegated, setPartAnded, setPartStarred,
 	    setPartSkipName, setPartSkipRepeat, setPartGlobalRef,
 
-	    enterRule, enterRuleCall, enterLocalVar, lookupLocalVar, findLocalVar,
+	    enterRule, enterRuleCall, enterLocalVar, unenterLocalVar, lookupLocalVar, findLocalVar,
 	    checkPredefinedFunctionScopeAndParameters
 	#end if
 
@@ -364,7 +367,7 @@ module rule
 	end if
 
 	ruleLocalCount += 1
-	localsListT@(addr(localVars)).nlocals += 1	% not really a cheat, because localVars are actually in rules, which belong to us
+	localsListT@(addr(localVars)).nlocals += 1	% not really a cheat, because localVars are actually in rules
 
 	bind var localVar to ruleLocals (localVars.localBase + localVars.nlocals)
 	localVar.name := varName
@@ -395,6 +398,12 @@ module rule
 
 	result localVars.nlocals
     end enterLocalVar
+
+    procedure unenterLocalVar (context : string, localVars : localsListT, varName : tokenT)
+	assert (ruleLocals (localVars.localBase + localVars.nlocals).name = varName)
+	localsListT@(addr(localVars)).nlocals -= 1	% not really a cheat, because localVars are actually in rules
+	ruleLocalCount -= 1
+    end unenterLocalVar
 
 
     procedure enterRuleCall (context : string,  callingRuleIndex, calledRuleIndex : int)
@@ -1105,6 +1114,15 @@ module rule
 		    error (context, "Parameter of [fputs] predefined function is not a string filename", FATAL, 593)
 		end if
 
+	    label faccessR :
+		% X [faccess F M]
+		% (any scope will do)
+		if p1type not= stringlit_T and p1type not= charlit_T then
+		    error (context, "First parameter of [faccess] predefined function is not a string filename", FATAL, 594)
+		end if
+		if p2type not= stringlit_T and p2type not= charlit_T then
+		    error (context, "Second parameter of [faccess] predefined function is not a string file mode", FATAL, 595)
+		end if
 	end case
 
     end checkPredefinedFunctionScopeAndParameters
@@ -1173,7 +1191,7 @@ module rule
 		init ("pragma", pragmaR, 1, false),
 		init ("div", divR, 1, false),
 		init ("rem", remR, 1, false),
-		init ("system", systemR, 1, false),
+		init ("system", systemR, 1, true),
 		init ("pipe", pipeR, 1, false),
 		init ("tolower", tolowerR, 0, false),
 		init ("toupper", toupperR, 0, false),
@@ -1184,7 +1202,8 @@ module rule
 		init ("gets", getsR, 0, false),
 		init ("fgets", fgetsR, 1, false),
 		init ("puts", putsR, 0, false),
-		init ("fputs", fputsR, 1, false)
+		init ("fputs", fputsR, 1, false),
+		init ("faccess", faccessR, 2, true)
 	    )
 
     for p : 1 .. nPredefinedRules

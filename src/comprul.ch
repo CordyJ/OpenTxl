@@ -30,6 +30,8 @@
 
 % v11.0	Initial revision, revised from FreeTXL 10.8b (c) 1988-2022 Queen's University at Kingston
 %	Remodularized to improve maintainability
+% v11.1	Added anonymous conditions, e.g., where _ [test]
+%	Fixed local variable binding bug
 
 parent "txl.t"
 
@@ -528,6 +530,8 @@ body module ruleCompiler
 	    else
 		% It's a local variable binding, but it doesn't match the production type, so parse fails
 		varOrExpMatches := false
+		% Don't forget to unenter it from the locals table, it may be tried again
+		rule.unenterLocalVar (context, varsSoFar, ftname) 
 	    end if
     
 
@@ -1116,6 +1120,35 @@ body module ruleCompiler
     end processCondition
 
 
+    procedure processConditionAnonymous (ruleNameT : tokenT,
+	    conditionTP : treePT,
+	    partIndex : partsBaseT,
+	    localVars : localsListT)
+
+	% create a new anonymous local construct as a parse of [empty], 
+	% and replace the original anonymous variable in the condition
+	% with the new anonymous local
+	
+        const partName := string@(ident.idents (tree.trees (conditionTP).name))
+	assert partName = "TXL_conditionPart_"
+	
+	% create an anonymous construct of type [empty]
+	makeAnonymousConstruct (id_T, partIndex, localVars)
+
+	% make a reference for the new local and replace the anonymous
+	% with it in the real construct
+	var anonTP := tree.newTreeInit (kindT.id, rule.ruleParts (partIndex).name, rule.ruleParts (partIndex).name, 0, nilKid)
+
+	% replace the anonymous in the real construct with the new local
+	var anonymousExpressionTP : treePT
+	anonymousExpressionTP := txltree.condition_expressionTP (conditionTP)
+	
+	assert tree.trees (tree.kid1TP (anonymousExpressionTP)).name = anonymous_T
+	tree.setKidTree (tree.trees (anonymousExpressionTP).kidsKP, anonTP)
+
+    end processConditionAnonymous
+
+
     procedure processImport (ruleNameT : tokenT,
 	    importTP : treePT,
 	    partIndex : partsBaseT,
@@ -1251,8 +1284,102 @@ body module ruleCompiler
     end processExport
 
 
+    procedure makeDefaultMatchPart (ruleTP : treePT)
+
+	% In TXL 11.1, match/replace parts are optional, to assist in writing utility rules.
+	% The default is a pattern that matches anything:
+	%
+	%	match [any]
+	%	    _ [any] 
+	%
+	% We implement this by constructing the TXL bootstrap parse of that pattern.
+
+	% TXL_pattern order -> TXL_firstsAndLits choose -> TXL_indFirstsAndLits order -> 
+	%	TXL_firstOrLit choose -> 
+	%	    (TXL_firstTime order -> 
+	%		(id (_), empty ([), TXL_description choose -> id (any), empty (])), 
+	%		    TXL_firstsAndLits choose -> emptyTP)
+
+	% The target type [any]
+	const TXLdescriptionT := ident.install ("TXL_description_", kindT.id)
+	const TXLdescription_anyTP := tree.newTreeInit (kindT.choose, TXLdescriptionT, TXLdescriptionT, 0, nilKid)
+	const anyTP := tree.newTreeInit (kindT.id, any_T, any_T, 0, nilKid)
+	tree.makeOneKid (TXLdescription_anyTP, anyTP)
+
+	const TXLbracketedDescriptionT := ident.install ("TXL_bracketedDescription_", kindT.id)
+	const TXLbracketedDescription_anyTP := 
+	    tree.newTreeInit (kindT.order, TXLbracketedDescriptionT, TXLbracketedDescriptionT, 0, nilKid)
+	tree.makeThreeKids (TXLbracketedDescription_anyTP, emptyTP, TXLdescription_anyTP, emptyTP)
+
+	% The pattern _ [any]
+	const TXLpatternT := ident.install ("TXL_pattern_", kindT.id)
+	const TXLfirstsAndLitsT := ident.install ("TXL_firstsAndLits_", kindT.id)
+	const TXLindFirstsAndLitsT := ident.install ("TXL_indFirstsAndLits_", kindT.id)
+	const TXLfirstOrLitT := ident.install ("TXL_firstOrLit_", kindT.id)
+	const TXLfirstTimeT := ident.install ("TXL_firstTime_", kindT.id)
+	
+	const TXLfirstTime_anyTP := tree.newTreeInit (kindT.order, TXLfirstTimeT, TXLfirstTimeT, 0, nilKid)
+	const underscoreTP := tree.newTreeInit (kindT.id, underscore_T, underscore_T, 0, nilKid)
+	tree.makeFourKids (TXLfirstTime_anyTP, underscoreTP, emptyTP, TXLdescription_anyTP, emptyTP) 
+	
+	const TXLfirstOrLit_anyTP := tree.newTreeInit (kindT.choose, TXLfirstOrLitT, TXLfirstOrLitT, 0, nilKid)
+	tree.makeOneKid (TXLfirstOrLit_anyTP, TXLfirstTime_anyTP)
+	
+	const TXLfirstsAndLits_emptyTP := 
+	    tree.newTreeInit (kindT.choose, TXLfirstsAndLitsT, TXLfirstsAndLitsT, 0, nilKid)
+	tree.makeOneKid (TXLfirstsAndLits_emptyTP, emptyTP)
+	
+	const TXLindFirstsAndLits_anyTP := 
+	    tree.newTreeInit (kindT.order, TXLindFirstsAndLitsT, TXLindFirstsAndLitsT, 0, nilKid)
+	tree.makeTwoKids (TXLindFirstsAndLits_anyTP, TXLfirstOrLit_anyTP, TXLfirstsAndLits_emptyTP)
+	
+	const TXLfirstsAndLits_anyTP := tree.newTreeInit (kindT.choose, TXLfirstsAndLitsT, TXLfirstsAndLitsT, 0, nilKid)
+	tree.makeOneKid (TXLfirstsAndLits_anyTP, TXLindFirstsAndLits_anyTP)
+	
+	const TXLpattern_anyTP := tree.newTreeInit (kindT.order, TXLpatternT, TXLpatternT, 0, nilKid)
+	tree.makeOneKid (TXLpattern_anyTP, TXLfirstsAndLits_anyTP)
+
+	% The match part match [any] _ [any]
+
+	% TXL_replaceOrMatchPart order -> 
+	%	(TXL_optSkippingBracketedDescription choose -> empty, 
+	%	    TXL_replaceOrMatch choose -> id (match), 
+	%	        TXL_optStarDollarHash choose -> empty, 
+	%		    TXL_bracketedDescription_anyTP, TXL_pattern_anyTP)
+
+	const TXLreplaceOrMatchPartT := ident.install ("TXL_replaceOrMatchPart_", kindT.id)
+	const TXLoptSkippingBracketedDescriptionT := ident.install ("TXL_optSkippingBracketedDescription_", kindT.id)
+	const TXLreplaceOrMatchT := ident.install ("TXL_replaceOrMatch_", kindT.id)
+	const TXLoptStarDollarHashT := ident.install ("TXL_optStarDollarHash_", kindT.id)
+
+	const TXLoptSkippingBracketedDescription_emptyTP := tree.newTreeInit (kindT.choose, 
+	    TXLoptSkippingBracketedDescriptionT, TXLoptSkippingBracketedDescriptionT, 0, nilKid)
+	tree.makeOneKid (TXLoptSkippingBracketedDescription_emptyTP, emptyTP)
+
+	const TXLreplaceOrMatch_matchTP := 
+	    tree.newTreeInit (kindT.choose, TXLreplaceOrMatchT, TXLreplaceOrMatchT, 0, nilKid)
+	const matchTP := tree.newTreeInit (kindT.id, match_T, match_T, 0, nilKid)
+	tree.makeOneKid (TXLreplaceOrMatch_matchTP, matchTP)
+
+	const TXLoptStarDollarHash_emptyTP := 
+	    tree.newTreeInit (kindT.choose, TXLoptStarDollarHashT, TXLoptStarDollarHashT, 0, nilKid)
+	tree.makeOneKid (TXLoptStarDollarHash_emptyTP, emptyTP)
+
+	const TXLreplaceOrMatchPart_anyTP := 
+	    tree.newTreeInit (kindT.order, TXLreplaceOrMatchPartT, TXLreplaceOrMatchPartT, 0, nilKid)
+	tree.makeFiveKids (TXLreplaceOrMatchPart_anyTP, TXLoptSkippingBracketedDescription_emptyTP, 
+	    TXLreplaceOrMatch_matchTP, TXLoptStarDollarHash_emptyTP, TXLbracketedDescription_anyTP, TXLpattern_anyTP)
+
+	% Link the constructed match part into the rule's parse tree
+	assert string@(ident.idents (tree.trees (tree.kid5TP (ruleTP)).name)) = "TXL_optReplaceOrMatchPart_"
+	assert tree.trees (tree.kid1TP (tree.kid5TP (ruleTP))).name = empty_T
+	tree.setKidTree (tree.trees (tree.kid5TP (ruleTP)).kidsKP, TXLreplaceOrMatchPart_anyTP)
+
+    end makeDefaultMatchPart
+
+
     procedure processReplacementAnonymous (targetT : tokenT,
-	    optByReplacementTP : treePT,
+	    optByPartTP : treePT,
 	    partIndex : partsBaseT,
 	    localVars : localsListT)
 
@@ -1269,7 +1396,7 @@ body module ruleCompiler
 
 	% replace the anonymous in the real construct with the new local
 	var anonymousExpressionTP : treePT
-	anonymousExpressionTP := txltree.optByReplacement_anonymousExpressionTP (optByReplacementTP)
+	anonymousExpressionTP := txltree.optByPart_anonymousExpressionTP (optByPartTP)
 	
 	assert tree.trees (tree.kid1TP (anonymousExpressionTP)).name = anonymous_T
 	tree.setKidTree (tree.trees (anonymousExpressionTP).kidsKP, anonTP)
@@ -1403,7 +1530,7 @@ body module ruleCompiler
 	    end if
 	
 	    if tree.trees (treeTP).kind >= firstLeafKind then
-	    	% A terminal -
+		% A terminal -
 		% Pop any completed sequences ...
 		loop
 		    if searchTop = 0 then
@@ -1422,7 +1549,7 @@ body module ruleCompiler
     
 	    else
 		% Push a new sequence of subtrees to check
-	    	assert tree.trees (treeTP).kind = kindT.order or tree.trees (treeTP).kind = kindT.repeat or tree.trees (treeTP).kind = kindT.list
+		assert tree.trees (treeTP).kind = kindT.order or tree.trees (treeTP).kind = kindT.repeat or tree.trees (treeTP).kind = kindT.list
 
 		if searchTop >= maxSearchDepth then
 		    result nilTree	% can't find out
@@ -1445,8 +1572,14 @@ body module ruleCompiler
 
 	bind r to rule.rules (ruleIndex)
 
-	% enter target name and kind
-	rule.setTarget (ruleIndex, txltree.rule_targetT (ruleTP))
+	% TXL 11.1, optional match/replace part 
+	if tree.plural_emptyP (txltree.rule_optReplaceOrMatchPartTP (ruleTP)) then
+	    % Add default target [any]
+	    rule.setTarget (ruleIndex, any_T)
+	else
+	    % enter target name and kind
+	    rule.setTarget (ruleIndex, txltree.rule_targetT (ruleTP))
+	end if
 
 	var symbolIndex := symbol.findSymbol (r.target)
 
@@ -1480,6 +1613,13 @@ body module ruleCompiler
 	    const partName := string@(ident.idents (tree.trees (partTP).name))
 
 	    if partName = "TXL_conditionPart_" then
+		if txltree.condition_isAnonymous (partTP) then
+		    % add a construct for the empty anonymous
+		    processConditionAnonymous (txltree.rule_nameT (ruleTP), partTP, r.prePattern.partsBase + prePatternCount, r.localVars)
+		    prePatternCount += 1	% checked above (see 'sic')
+		    % now process the condition that uses it
+		end if
+
 		processCondition (txltree.rule_nameT (ruleTP), partTP, r.prePattern.partsBase + prePatternCount, r.localVars)
 
 	    elsif partName = "TXL_constructPart_" then
@@ -1526,6 +1666,12 @@ body module ruleCompiler
 	% already checked above
 	rule.incPartCount (prePatternCount)
 
+	% TXL 11.1, optional match/replace part 
+	if tree.plural_emptyP (txltree.rule_optReplaceOrMatchPartTP (ruleTP)) then
+	    % Add default match [any]
+	    makeDefaultMatchPart (ruleTP)
+	end if
+
 	% process skipping
 	const optSkippingTP := txltree.rule_optSkippingTP (ruleTP)
 
@@ -1537,17 +1683,16 @@ body module ruleCompiler
 	    symbolIndex := symbol.findSymbol (r.skipName)
 	    % Check for optimizable case
 	    if r.skipName = r.target then
-	    	% skipping [X] match/replace * [X]
+		% skipping [X] match/replace * [X]
 		% potentially optimizable if all scopes are [repeat/list X]
 		rule.setSkipRepeat (ruleIndex, true)
 	    else
-	        rule.setSkipRepeat (ruleIndex, false)
+		rule.setSkipRepeat (ruleIndex, false)
 	    end if
 	end if
 
 	% process pattern
-	context := "pattern of " + ruleorfunction + " '" + 
-	    string@(ident.idents (txltree.rule_nameT (ruleTP))) + "'"
+	context := "pattern of " + ruleorfunction + " '" + string@(ident.idents (txltree.rule_nameT (ruleTP))) + "'"
 
 	var resultTP : treePT
 	processPatternOrReplacement (txltree.rule_targetT (ruleTP), txltree.rule_patternTP (ruleTP), resultTP, r.localVars)
@@ -1556,7 +1701,7 @@ body module ruleCompiler
 	rule.setStarred (ruleIndex, txltree.rule_isStarred (ruleTP))
 
 	% process postPattern
- 	rule.setPostPatternPartsBase (ruleIndex, rule.rulePartCount)
+	rule.setPostPatternPartsBase (ruleIndex, rule.rulePartCount)
 	var postPatternCount := 0
 	var hasPostConstruct := false
 	var postPatternTP := txltree.rule_postPatternTP (ruleTP)
@@ -1596,6 +1741,13 @@ body module ruleCompiler
 			    rule.incLocalRefs (r.localVars.localBase + i, 1)
 			end if
 		    end for
+		end if
+
+		if txltree.condition_isAnonymous (partTP) then
+		    % add a construct for the empty anonymous
+		    processConditionAnonymous (txltree.rule_nameT (ruleTP), partTP, r.postPattern.partsBase + postPatternCount, r.localVars)
+		    postPatternCount += 1	% checked above (see 'sic')
+		    % now process the condition that uses it
 		end if
 
 		processCondition (txltree.rule_nameT (ruleTP), partTP, r.postPattern.partsBase + postPatternCount, r.localVars)
@@ -1657,21 +1809,21 @@ body module ruleCompiler
 	rule.incPartCount (postPatternCount)
 
 	% process replacement
-	const optByReplacementTP := txltree.rule_optByReplacementTP (ruleTP)
+	const optByPartTP := txltree.rule_optByPartTP (ruleTP)
 
-	if string@(ident.idents (txltree.rule_replaceOrMatchT (ruleTP))) = "replace" then
-	    if tree.plural_emptyP (optByReplacementTP) then
+	if txltree.rule_replaceOrMatchT (ruleTP) = replace_T then
+	    if tree.plural_emptyP (optByPartTP) then
 		error (context, "'replace' rule/function must have a replacement", FATAL, 338)
 	    else
 		context := "replacement of " + ruleorfunction + " '" + 
 		    string@(ident.idents (txltree.rule_nameT (ruleTP))) + "'"
 		
-		if txltree.optByReplacement_isAnonymous (optByReplacementTP) then
+		if txltree.optByPart_isAnonymous (optByPartTP) then
 		    % add a construct for the empty anonymous
 		    hasPostConstruct := true
 
 		    if postPatternCount >= maxParts then
-	       		error (context, "Rule/function is too complex - simplify using subrules", LIMIT_FATAL, 335)
+			error (context, "Rule/function is too complex - simplify using subrules", LIMIT_FATAL, 335)
 		    end if
 
 		    if rule.rulePartCount + postPatternCount >= maxTotalParts then
@@ -1684,7 +1836,7 @@ body module ruleCompiler
 		    rule.setPostPatternNParts (ruleIndex, postPatternCount)	% don't forget!!
 
 		    processReplacementAnonymous (txltree.rule_targetT (ruleTP),
-			optByReplacementTP, r.postPattern.partsBase + postPatternCount, r.localVars)
+			optByPartTP, r.postPattern.partsBase + postPatternCount, r.localVars)
 		end if
 
 		% can only optimize last references if they are in the replacement
@@ -1694,14 +1846,14 @@ body module ruleCompiler
 
 		%% var resultTP : treePT
 		processPatternOrReplacement (txltree.rule_targetT (ruleTP), 
-		    txltree.optByReplacement_replacementTP (optByReplacementTP), resultTP, r.localVars)
+		    txltree.optByPart_replacementTP (optByPartTP), resultTP, r.localVars)
 		rule.setReplacement (ruleIndex, resultTP)
 	
 		% mark the last reference of each main- or post-pattern variable as optimizable
 		% pre-pattern variables are not optimizable!
 		for i : r.localVars.nformals + 1 .. r.localVars.nlocals
 		    if rule.ruleLocals (r.localVars.localBase + i).lastref not= nilTree 
-		    	    and tree.trees (rule.ruleLocals (r.localVars.localBase + i).lastref).kind = kindT.expression 
+			    and tree.trees (rule.ruleLocals (r.localVars.localBase + i).lastref).kind = kindT.expression 
 			    and rule.ruleLocals (r.localVars.localBase + i).basetypename not= key_T		% JRC 10.6.99
 			    and rule.ruleLocals (r.localVars.localBase + i).basetypename not= token_T then	% JRC 10.6.99
 			% we must be careful that the variable was not *deconstructed* from
@@ -1722,8 +1874,8 @@ body module ruleCompiler
 	    end if
 
 	else
-	    assert string@(ident.idents (txltree.rule_replaceOrMatchT (ruleTP))) = "match"
-	    if not tree.plural_emptyP (optByReplacementTP) then
+	    assert txltree.rule_replaceOrMatchT (ruleTP) = match_T
+	    if not tree.plural_emptyP (optByPartTP) then
 		error (context, "'match' rule/function cannot have a replacement", FATAL, 339)
 	    end if
 	    rule.setReplacement (ruleIndex, nilTree)
@@ -1754,8 +1906,8 @@ body module ruleCompiler
 		% we cannot safely optimize the last reference to the child
 		if rule.ruleLocals (r.localVars.localBase + parentvar).lastref not= nilTree then
 		    if rule.ruleLocals (r.localVars.localBase + i).lastref not= nilTree 
-		    	    and tree.trees (rule.ruleLocals (r.localVars.localBase + i).lastref).kind = kindT.lastExpression then
-		    	tree.setKind (rule.ruleLocals (r.localVars.localBase + i).lastref, kindT.expression)
+			    and tree.trees (rule.ruleLocals (r.localVars.localBase + i).lastref).kind = kindT.lastExpression then
+			tree.setKind (rule.ruleLocals (r.localVars.localBase + i).lastref, kindT.expression)
 		    end if
 		end if
 		
@@ -1763,8 +1915,8 @@ body module ruleCompiler
 		% we cannot safely optimize the last reference to the deconstructed parent
 		if rule.ruleLocals (r.localVars.localBase + i).lastref not= nilTree then
 		    if rule.ruleLocals (r.localVars.localBase + parentvar).lastref not= nilTree 
-		    	    and tree.trees (rule.ruleLocals (r.localVars.localBase + parentvar).lastref).kind = kindT.lastExpression then
-		    	tree.setKind (rule.ruleLocals (r.localVars.localBase + parentvar).lastref, kindT.expression)
+			    and tree.trees (rule.ruleLocals (r.localVars.localBase + parentvar).lastref).kind = kindT.lastExpression then
+			tree.setKind (rule.ruleLocals (r.localVars.localBase + parentvar).lastref, kindT.expression)
 		    end if
 		end if
 	    end if
@@ -1773,7 +1925,7 @@ body module ruleCompiler
 	% fix the reference counts of local variables of special types [key] and [token] - JRC 10.6.99
 	for i : r.localVars.nformals + 1 .. r.localVars.nlocals
 	    if rule.ruleLocals (r.localVars.localBase + i).basetypename = key_T 
-	    	or rule.ruleLocals (r.localVars.localBase + i).basetypename = token_T then
+		or rule.ruleLocals (r.localVars.localBase + i).basetypename = token_T then
 		% not optimizable!
 		rule.setLocalRefs (r.localVars.localBase + i, 9)
 	    end if
@@ -1811,9 +1963,9 @@ body module ruleCompiler
 
 	if r.defined then
 	    if ruleIndex <= nPredefinedRules then
-	    	error (context, "Rule/function declaration overrides predefined function", WARNING, 341)
+		error (context, "Rule/function declaration overrides predefined function", WARNING, 341)
 	    else
-	    	error (context, "Rule/function has been previously defined", FATAL, 342)
+		error (context, "Rule/function has been previously defined", FATAL, 342)
 	    end if
 	end if
 
@@ -1821,7 +1973,12 @@ body module ruleCompiler
 	rule.setKind (ruleIndex, ruleKind.normalRule)
 
 	if not r.called then
-	    rule.setIsCondition (ruleIndex, string@(ident.idents (txltree.rule_replaceOrMatchT (ruleTP))) = "match")
+	    % TXL 11.1, optional match/replace part 
+	    if tree.plural_emptyP (txltree.rule_optReplaceOrMatchPartTP (ruleTP)) then
+	        rule.setIsCondition (ruleIndex, true)
+	    else
+	        rule.setIsCondition (ruleIndex, txltree.rule_replaceOrMatchT (ruleTP) = match_T)
+	    end if
 	end if
 
 	enterRuleFormals (ruleIndex, txltree.rule_formalsTP (ruleTP))
@@ -1833,9 +1990,9 @@ body module ruleCompiler
 	    rule.setIsCondition (ruleIndex, r.replacementTP = nilTree)
 
 	    if r.isCondition then
-	        % optimize by treating it as a deep function
+		% optimize by treating it as a deep function
 		rule.setStarred (ruleIndex, true)
-	        rule.setKind (ruleIndex, ruleKind.functionRule)
+		rule.setKind (ruleIndex, ruleKind.functionRule)
 	    end if
 	end if
 
@@ -1868,9 +2025,9 @@ body module ruleCompiler
 
 	if r.defined then
 	    if ruleIndex <= nPredefinedRules then
-	    	error (context, "Rule/function declaration overrides predefined function", WARNING, 341)
+		error (context, "Rule/function declaration overrides predefined function", WARNING, 341)
 	    else
-	    	error (context, "Rule/function has been previously defined", FATAL, 342)
+		error (context, "Rule/function has been previously defined", FATAL, 342)
 	    end if
 	end if
 
@@ -1878,7 +2035,12 @@ body module ruleCompiler
 	rule.setKind (ruleIndex, ruleKind.functionRule)
 
 	if not r.called then
-	    rule.setIsCondition (ruleIndex, string@(ident.idents (txltree.rule_replaceOrMatchT (ruleTP))) = "match")
+	    % TXL 11.1, optional match/replace part 
+	    if tree.plural_emptyP (txltree.rule_optReplaceOrMatchPartTP (ruleTP)) then
+	        rule.setIsCondition (ruleIndex, true)
+	    else
+	        rule.setIsCondition (ruleIndex, txltree.rule_replaceOrMatchT (ruleTP) = match_T)
+	    end if
 	end if
 
 	enterRuleFormals (ruleIndex, txltree.rule_formalsTP (ruleTP))
@@ -1908,11 +2070,11 @@ body module ruleCompiler
 
     procedure processUndefinedRules (var undefinedRules : boolean)
     
-    	% Check that all called rules are defined.  If there are any 
+	% Check that all called rules are defined.  If there are any 
 	% query rule calls [?R], create a copy of the rule table entry
 	% for [R] for the query rule.
     
-    	undefinedRules := false
+	undefinedRules := false
 	
 	% We use a loop rather than a for loop in case a match rule
 	% with an undefined base rule adds the undefined rule to the
@@ -1939,7 +2101,7 @@ body module ruleCompiler
 
 		    % ? on predefined rules is undefined
 		    if realRuleIndex <= nPredefinedRules then
-		    	error ("", "[?] is not defined on predefined function [" + 
+			error ("", "[?] is not defined on predefined function [" + 
 			    string@(ident.idents (rule.rules (realRuleIndex).name)) + "]", DEFERRED, 352)
 			undefinedRules := true
 		    end if
@@ -1953,7 +2115,7 @@ body module ruleCompiler
 			if rule.rules (r).kind = ruleKind.normalRule or rule.rules (r).kind = ruleKind.onepassRule then
 			    % optimize the new match rule by treating it as a deep function
 			    rule.setStarred (r, true)
-	        	    rule.setKind (r, ruleKind.functionRule)
+			    rule.setKind (r, ruleKind.functionRule)
 			end if
 			
 			% If the new match rule has a post construct, it may change a pattern
@@ -1995,10 +2157,10 @@ body module ruleCompiler
     
     procedure processGlobalVariables (var globalErrors : boolean)
     
-    	% Find all the global variables imported or exported from rules
+	% Find all the global variables imported or exported from rules
 	% and enter them in the global scope.  Check global variable type consistency.
     
-    	globalErrors := false
+	globalErrors := false
 
 	% set up predefined globals
 	const repeat_stringlit_T := ident.install ("repeat_0_stringlit", kindT.id)
@@ -2028,7 +2190,7 @@ body module ruleCompiler
 		const partIndex := r.prePattern.partsBase + p
 		bind part to rule.ruleParts (partIndex)
 
-	        if part.kind = partKind.import_ or part.kind = partKind.export_ then
+		if part.kind = partKind.import_ or part.kind = partKind.export_ then
 			
 		    const globalVarRef := rule.lookupLocalVar ("", globals.localVars, part.name)
 		    
@@ -2038,7 +2200,7 @@ body module ruleCompiler
 			rule.setPartGlobalRef (partIndex, globalIndex)
 			
 		    elsif rule.ruleParts (partIndex).target not= rule.ruleLocals (globals.localVars.localBase + globalVarRef).typename then
-		        error ("rule/function '" + string@(ident.idents (r.name)) + "'", 
+			error ("rule/function '" + string@(ident.idents (r.name)) + "'", 
 			    "Type of imported/exported variable '" + string@(ident.idents (rule.ruleParts (partIndex).name))
 			    + "' does not match global variable", DEFERRED, 354)
 			globalErrors := true
@@ -2053,7 +2215,7 @@ body module ruleCompiler
 		const partIndex := r.postPattern.partsBase + p
 		bind part to rule.ruleParts (partIndex)
 
-	        if part.kind = partKind.import_ or part.kind = partKind.export_ then
+		if part.kind = partKind.import_ or part.kind = partKind.export_ then
 			
 		    const globalVarRef := rule.lookupLocalVar ("", globals.localVars, part.name)
 		    
@@ -2063,7 +2225,7 @@ body module ruleCompiler
 			rule.setPartGlobalRef (partIndex, globalIndex)
 
 		    elsif part.target not= rule.ruleLocals (globals.localVars.localBase + globalVarRef).typename then
-		        error ("rule/function '" + string@(ident.idents (r.name)) + "'", 
+			error ("rule/function '" + string@(ident.idents (r.name)) + "'", 
 			    "Type of imported/exported variable '" + string@(ident.idents (part.name))
 			    + "' does not match global variable", DEFERRED, 354)
 			globalErrors := true
@@ -2083,7 +2245,7 @@ body module ruleCompiler
     var reachLength := 0
     
     function real_reachable (defineTP, targetTP : treePT, depth : int) : boolean
-        % reachable (X,Y) = true if X is of type Y,
+	% reachable (X,Y) = true if X is of type Y,
 	%		  = true if X is of type choose, and reachable (one kid of X,Y)
 	%		  = true if X is of type order, and reachable (one kid of X,Y)
 
@@ -2110,8 +2272,8 @@ body module ruleCompiler
 	
 	for i : 1 .. reachLength
 	    if tree.trees (reachList (i)).name = tree.trees (defineTP).name
-	    	    and tree.trees (reachList (i)).kind = tree.trees (defineTP).kind then
-	        % been there, done that
+		    and tree.trees (reachList (i)).kind = tree.trees (defineTP).kind then
+		% been there, done that
 		result false
 	    end if
 	end for
@@ -2124,21 +2286,21 @@ body module ruleCompiler
 	if tree.trees (defineTP).kind = kindT.generaterepeat
 		or tree.trees (defineTP).kind = kindT.generatelist then
 	    result tree.trees (targetTP).kind = kindT.empty
-	            or real_reachable (tree.kid1TP (defineTP), targetTP, depth + 1)
+		    or real_reachable (tree.kid1TP (defineTP), targetTP, depth + 1)
 	elsif tree.trees (defineTP).kind = kindT.lookahead then 
 	    result tree.trees (targetTP).kind = kindT.empty
 	elsif tree.trees (defineTP).kind = kindT.choose or tree.trees (defineTP).kind = kindT.leftchoose 
 		or tree.trees (defineTP).kind = kindT.order then
 	    for i : 1 .. tree.trees (defineTP).count
-	        if real_reachable (tree.kidTP (i, defineTP), targetTP, depth + 1) then
-	    	    result true
+		if real_reachable (tree.kidTP (i, defineTP), targetTP, depth + 1) then
+		    result true
 		end if
 	    end for
 	    result false
 	elsif tree.trees (defineTP).kind = kindT.repeat or tree.trees (defineTP).kind = kindT.list then
 	    assert tree.trees (defineTP).count = 2
 	    result real_reachable (tree.kid2TP (defineTP), targetTP, depth + 1)
-	    	or real_reachable (tree.kid1TP (defineTP), targetTP, depth + 1)
+		or real_reachable (tree.kid1TP (defineTP), targetTP, depth + 1)
 	else 
 	    result false
 	end if
@@ -2147,7 +2309,7 @@ body module ruleCompiler
     
     const reachableCacheSize := 30
     var reachableCache : array 1 .. reachableCacheSize of
-    	record
+	record
 	    defineTP, targetTP : treePT
 	    yes : boolean
 	end record
@@ -2156,7 +2318,7 @@ body module ruleCompiler
     function reachable (defineTP, targetTP : treePT) : boolean
 	for i : 1 .. reachableCacheTop
 	    if reachableCache (i).targetTP = targetTP and reachableCache (i).defineTP = defineTP then
-	        result reachableCache (i).yes
+		result reachableCache (i).yes
 	    end if
 	end for
 	if reachableCacheTop < reachableCacheSize then
@@ -2173,7 +2335,7 @@ body module ruleCompiler
     
     
     function possiblyEmpty (r : ruleT, replacementTP : treePT, depth : int) : boolean
-        % possiblyEmpty (X) = true if X is of type empty, generaterepeat or generatelist,
+	% possiblyEmpty (X) = true if X is of type empty, generaterepeat or generatelist,
 	%		    = true if X is of type choose, and possiblyEmpty (kid of X)
 	%		    = true if X is of type order, repeat or list, and possiblyEmpty (all kids of X)
 
@@ -2196,7 +2358,7 @@ body module ruleCompiler
 		or tree.trees (replacementTP).kind = kindT.repeat 
 		or tree.trees (replacementTP).kind = kindT.list then
 	    for i : 1 .. tree.trees (replacementTP).count
-	    	if not possiblyEmpty (r, tree.kidTP (i, replacementTP), depth + 1) then
+		if not possiblyEmpty (r, tree.kidTP (i, replacementTP), depth + 1) then
 		    result false
 		end if
 	    end for
@@ -2225,7 +2387,7 @@ body module ruleCompiler
     
 
     procedure empty_result_warning (ruleName, calledRuleName, localName, localTypeName, repeat1TypeName : tokenT)
-        error ("rule/function '" + string@(ident.idents (ruleName)) + "'",
+	error ("rule/function '" + string@(ident.idents (ruleName)) + "'",
 	    "Call to rule/function '" + string@(ident.idents (calledRuleName))
 	    + "' with scope '" + string@(ident.idents (localName))
 	    + " [" + externalType (string@(ident.idents (localTypeName)))
@@ -2305,12 +2467,12 @@ body module ruleCompiler
 			    end if
 
 			    if tree.trees (targetType0TP).name not= any_T 
-			    	    and tree.trees (scopeTypeTP).name not= any_T
-			    	    and tree.trees (targetType0TP).name not= key_T 
-			    	    and not reachable (scopeTypeTP, targetType0TP) then
-			  	if not polymorphicProgram then
+				    and tree.trees (scopeTypeTP).name not= any_T
+				    and tree.trees (targetType0TP).name not= key_T 
+				    and not reachable (scopeTypeTP, targetType0TP) then
+				if not polymorphicProgram then
 				    unreachable_target_warning (r.name, rule.rules (calledRuleIndex).name, 
-			   	        rule.ruleLocals (r.localVars.localBase + localIndex).name, rule.ruleLocals (r.localVars.localBase + localIndex).typename)
+					rule.ruleLocals (r.localVars.localBase + localIndex).name, rule.ruleLocals (r.localVars.localBase + localIndex).typename)
 				end if
 			    end if
 			    
@@ -2337,7 +2499,7 @@ body module ruleCompiler
 				if tree_ops.isListOrRepeatType (tree.trees (scopeTypeTP).name)
 					and tree.trees (targetTypeTP).name = tree_ops.listOrRepeatBaseType (tree.trees (scopeTypeTP).name) then
 				    % skipping [X] match/replace * [X] in [repeat/list X]
-			    	else
+				else
 				    % this call can't be optimized, so we give up on the optimization
 				    rule.setSkipRepeat (calledRuleIndex, false)
 				end if
@@ -2358,16 +2520,16 @@ body module ruleCompiler
     
     procedure processRuleCalls (var scopeErrors : boolean)
     
-    	% Find all rule calls and check that their targets are reachable from their scopes.
+	% Find all rule calls and check that their targets are reachable from their scopes.
     
-    	scopeErrors := false
+	scopeErrors := false
 	
 	for r : nPredefinedRules + 1 .. rule.nRules
 	    checkRuleCallScopes (rule.rules (r).replacementTP, rule.rules (r), scopeErrors)
 	    
 	    for p : 1 .. rule.rules (r).prePattern.nparts
 		bind part to rule.ruleParts (rule.rules (r).prePattern.partsBase + p)
-	        if part.kind = partKind.construct or part.kind = partKind.export_ 
+		if part.kind = partKind.construct or part.kind = partKind.export_ 
 			or part.kind = partKind.cond or part.kind = partKind.assert_ then
 		    checkRuleCallScopes (part.replacementTP, rule.rules (r), scopeErrors)
 		end if
@@ -2375,7 +2537,7 @@ body module ruleCompiler
 	    
 	    for p : 1 .. rule.rules (r).postPattern.nparts
 		bind part to rule.ruleParts (rule.rules (r).postPattern.partsBase + p)
-	        if part.kind = partKind.construct or part.kind = partKind.export_
+		if part.kind = partKind.construct or part.kind = partKind.export_
 			or part.kind = partKind.cond or part.kind = partKind.assert_ then
 		    checkRuleCallScopes (part.replacementTP, rule.rules (r), scopeErrors)
 		end if
@@ -2465,7 +2627,7 @@ body module ruleCompiler
 	end if
 	for c : 1 .. callerDepth
 	    if callerIndex (c) = ruleIndex then
-	        result false
+		result false
 	    end if
 	end for
 	
@@ -2476,16 +2638,16 @@ body module ruleCompiler
 	    bind r to rule.rules (rindex)
 	    for c : 1 .. r.calledRules.ncalls
 	    
-	    	if rule.ruleCalls (r.calledRules.callBase + c) = ruleIndex then
+		if rule.ruleCalls (r.calledRules.callBase + c) = ruleIndex then
 		    const localIndex := rule.lookupLocalVar (context, r.localVars, globalName)
 		    if localIndex not= 0 and rule.ruleLocals (r.localVars.localBase + localIndex).global then
-		    	for p : 1 .. r.prePattern.nparts
+			for p : 1 .. r.prePattern.nparts
 			    if rule.ruleParts (r.prePattern.partsBase + p).kind = partKind.import_
-			    	    and rule.ruleParts (r.prePattern.partsBase + p).name = globalName then
+				    and rule.ruleParts (r.prePattern.partsBase + p).name = globalName then
 				for pp : p + 1 .. r.prePattern.nparts
 				    exit when rule.ruleParts (r.prePattern.partsBase + pp).name = globalName
 				    if (rule.ruleParts (r.prePattern.partsBase + pp).kind = partKind.construct
-				            or rule.ruleParts (r.prePattern.partsBase + pp).kind = partKind.export_)
+					    or rule.ruleParts (r.prePattern.partsBase + pp).kind = partKind.export_)
 					    and callsRule (ruleIndex, rule.ruleParts (r.prePattern.partsBase + pp).replacementTP) then
 					callerDepth -= 1
 					result true
@@ -2494,7 +2656,7 @@ body module ruleCompiler
 				for pp : 1 .. r.postPattern.nparts
 				    exit when rule.ruleParts (r.postPattern.partsBase + pp).name = globalName
 				    if (rule.ruleParts (r.postPattern.partsBase + pp).kind = partKind.construct
-				            or rule.ruleParts (r.postPattern.partsBase + pp).kind = partKind.export_)
+					    or rule.ruleParts (r.postPattern.partsBase + pp).kind = partKind.export_)
 					    and callsRule (ruleIndex, rule.ruleParts (r.postPattern.partsBase + pp).replacementTP) then
 					callerDepth -= 1
 					result true
@@ -2502,13 +2664,13 @@ body module ruleCompiler
 				end for
 			    end if
 			end for
-		    	for p : 1 .. r.postPattern.nparts
+			for p : 1 .. r.postPattern.nparts
 			    if rule.ruleParts (r.postPattern.partsBase + p).kind = partKind.import_
-			    	    and rule.ruleParts (r.postPattern.partsBase + p).name = globalName then
+				    and rule.ruleParts (r.postPattern.partsBase + p).name = globalName then
 				for pp : p + 1 .. r.postPattern.nparts
 				    exit when rule.ruleParts (r.postPattern.partsBase + pp).name = globalName
 				    if (rule.ruleParts (r.postPattern.partsBase + pp).kind = partKind.construct
-				            or rule.ruleParts (r.postPattern.partsBase + pp).kind = partKind.export_)
+					    or rule.ruleParts (r.postPattern.partsBase + pp).kind = partKind.export_)
 					    and callsRule (ruleIndex, rule.ruleParts (r.postPattern.partsBase + pp).replacementTP) then
 					callerDepth -= 1
 					result true
@@ -2519,7 +2681,7 @@ body module ruleCompiler
 		    end if
 		    if callersPreImportGlobal (rindex, globalName) then
 			callerDepth -= 1
-		    	result true
+			result true
 		    end if
 		end if
 	    end for
@@ -2531,7 +2693,7 @@ body module ruleCompiler
     
     procedure optimizeGlobalVariables 
     
-    	% Find all global variable tail-recursive updates
+	% Find all global variable tail-recursive updates
 	% and optimize to avoid copying
     
 	for rindex : nPredefinedRules + 1 .. rule.nRules
@@ -2556,7 +2718,7 @@ body module ruleCompiler
 		    const lastReplacementRefTP := findLastRef (rule.ruleParts (r.postPattern.partsBase + i).name, r.replacementTP)
 		    
 		    if lastPostExportRefTP = nilTree and lastReplacementRefTP = nilTree 
-		    	    and not callersPreImportGlobal (rindex, rule.ruleParts (r.postPattern.partsBase + i).name) then
+			    and not callersPreImportGlobal (rindex, rule.ruleParts (r.postPattern.partsBase + i).name) then
 			tree.setKind (lastRecursiveRefTP, kindT.lastExpression)
 		    end if
 		end if
@@ -2627,7 +2789,7 @@ body module ruleCompiler
 	    bind main to rule.rules (mainRule)
 	    if main.kind = ruleKind.functionRule and not main.starred then
 		const programT := ident.lookup ("program")
-		if main.target not= programT then
+		if main.target not= programT and main.target not= any_T then
 		    error ("", "Function 'main' can never match input type [program]" +
 			" (use rule, searching function, or target type [program] instead)", FATAL, 362)
 		end if

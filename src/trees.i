@@ -136,8 +136,8 @@ module tree
     #end if
 
 	% General tree operations - used everywhere
-	makeOneKid, makeTwoKids, 
-	kidTP, kid1TP, kid2TP, kid3TP, kid4TP, kid5TP, kid6TP,
+	makeOneKid, makeTwoKids, makeThreeKids, makeFourKids, makeFiveKids, 
+	kidTP, kid1TP, kid2TP, kid3TP, kid4TP, kid5TP, kid6TP, kid7TP,
 	plural_emptyP, plural_firstTP, plural_restTP,
 
 	% Fast whole tree operations - used in transformer and predefineds   
@@ -617,6 +617,10 @@ module tree
 	result kids (trees (treeP).kidsKP + 5)
     end kid6TP
 
+    function kid7TP (treeP : treePT) : treePT
+	result kids (trees (treeP).kidsKP + 6)
+    end kid7TP
+
     procedure makeOneKid (parentTP : treePT, babyTP : treePT)
 	trees (parentTP).kidsKP := newKid
 	kids (trees (parentTP).kidsKP) := babyTP
@@ -629,6 +633,33 @@ module tree
 	kids (trees (parentTP).kidsKP) := buddyTP
 	kids (trees (parentTP).kidsKP + 1) := sisTP
     end makeTwoKids
+
+    procedure makeThreeKids (parentTP : treePT, kid1TP : treePT, kid2TP : treePT, kid3TP : treePT)
+	trees (parentTP).kidsKP := newKids (3)
+	trees (parentTP).count := 3
+	kids (trees (parentTP).kidsKP) := kid1TP
+	kids (trees (parentTP).kidsKP + 1) := kid2TP
+	kids (trees (parentTP).kidsKP + 2) := kid3TP
+    end makeThreeKids
+
+    procedure makeFourKids (parentTP : treePT, kid1TP : treePT, kid2TP : treePT, kid3TP : treePT, kid4TP : treePT)
+	trees (parentTP).kidsKP := newKids (4)
+	trees (parentTP).count := 4
+	kids (trees (parentTP).kidsKP) := kid1TP
+	kids (trees (parentTP).kidsKP + 1) := kid2TP
+	kids (trees (parentTP).kidsKP + 2) := kid3TP
+	kids (trees (parentTP).kidsKP + 3) := kid4TP
+    end makeFourKids
+
+    procedure makeFiveKids (parentTP : treePT, kid1TP : treePT, kid2TP : treePT, kid3TP : treePT, kid4TP : treePT, kid5TP : treePT)
+	trees (parentTP).kidsKP := newKids (5)
+	trees (parentTP).count := 5
+	kids (trees (parentTP).kidsKP) := kid1TP
+	kids (trees (parentTP).kidsKP + 1) := kid2TP
+	kids (trees (parentTP).kidsKP + 2) := kid3TP
+	kids (trees (parentTP).kidsKP + 3) := kid4TP
+	kids (trees (parentTP).kidsKP + 4) := kid5TP
+    end makeFiveKids
 
     function plural_emptyP (pluralTP : treePT) : boolean
 	result trees (kids (trees (pluralTP).kidsKP)).kind = kindT.empty
