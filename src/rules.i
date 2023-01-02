@@ -223,7 +223,7 @@ module rule
 	    setPartKind, setPartName, setPartNameRef, setPartTarget, setPartPattern, setPartReplacement, setPartNegated, setPartAnded, setPartStarred,
 	    setPartSkipName, setPartSkipRepeat, setPartGlobalRef,
 
-	    enterRule, enterRuleCall, enterLocalVar, lookupLocalVar, findLocalVar,
+	    enterRule, enterRuleCall, enterLocalVar, unenterLocalVar, lookupLocalVar, findLocalVar,
 	    checkPredefinedFunctionScopeAndParameters
 	#end if
 
@@ -367,7 +367,7 @@ module rule
 	end if
 
 	ruleLocalCount += 1
-	localsListT@(addr(localVars)).nlocals += 1	% not really a cheat, because localVars are actually in rules, which belong to us
+	localsListT@(addr(localVars)).nlocals += 1	% not really a cheat, because localVars are actually in rules
 
 	bind var localVar to ruleLocals (localVars.localBase + localVars.nlocals)
 	localVar.name := varName
@@ -398,6 +398,12 @@ module rule
 
 	result localVars.nlocals
     end enterLocalVar
+
+    procedure unenterLocalVar (context : string, localVars : localsListT, varName : tokenT)
+	assert (ruleLocals (localVars.localBase + localVars.nlocals).name = varName)
+	localsListT@(addr(localVars)).nlocals -= 1	% not really a cheat, because localVars are actually in rules
+	ruleLocalCount -= 1
+    end unenterLocalVar
 
 
     procedure enterRuleCall (context : string,  callingRuleIndex, calledRuleIndex : int)

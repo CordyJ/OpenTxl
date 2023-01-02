@@ -34,13 +34,14 @@
 %	Added optional match/replace rules, implicit match [any]
 %	Added new predefined function [faccess FILE MODE] 
 % 	Added NBSP (ASCII 160) as space character and separator
+%	Fixed local variable binding bug issue #1
 
 
 % Global symbols granted to child modules
 include "globals.i"
 
 % TXL version
-const * version := "OpenTxl v11.1 (2.11.22) (c) 2022 James R. Cordy and others"
+const * version := "OpenTxl v11.1 (2.1.23) (c) 2023 James R. Cordy and others"
 
 % Phase
 const * INITIALIZE := 0

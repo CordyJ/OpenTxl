@@ -38,7 +38,7 @@ parent "txl.t"
 stub module parser
 
     import 
-	var tree, var ident, charset, 
+	var tree, var ident, charset, var rule, 
 	inputTokens, var currentTokenIndex, var failTokenIndex, lastTokenIndex, 
 	error, parseInterruptError, parseStackError, fileNames, stackBase,
 	options, kindType
@@ -274,6 +274,7 @@ body module parser
 		% it's a terminal - back up over it
 		backup
 		
+            #if not NOCOMPILE then
 	    label kindT.firstTime, kindT.subsequentUse, kindT.expression, kindT.lastExpression :
 		% pattern variable - back up over it
 		backup
@@ -281,8 +282,9 @@ body module parser
 		% If the variable we are backing up over was a binding occurence,
 		% undo the binding
 		if tree.trees (subtreeTP).kind = kindT.firstTime then
-		    localsListT@(patternVarsAddr).nlocals -= 1
+		    rule.unenterLocalVar (parseContext, localsListT@(patternVarsAddr),  tree.trees (subtreeTP).name)
 		end if
+            #end if
 		    
 	    label :
 		error ("", "Fatal TXL error in backup_tree", INTERNAL_FATAL, 121)
@@ -640,7 +642,7 @@ body module parser
 			% If the variable we are backing up over was a binding occurence,
 			% undo the binding
 			if tree.trees (parseTP).kind = kindT.firstTime then
-			    localsListT@(patternVarsAddr).nlocals -= 1
+			    rule.unenterLocalVar (parseContext, localsListT@(patternVarsAddr),  tree.trees (parseTP).name)
 			end if
 
 			% Now fail
@@ -678,7 +680,7 @@ body module parser
 			% If the variable we are backing up over was a binding occurence,
 			% undo the binding
 			if tree.trees (parseTP).kind = kindT.firstTime then
-			    localsListT@(patternVarsAddr).nlocals -= 1
+			    rule.unenterLocalVar (parseContext, localsListT@(patternVarsAddr),  tree.trees (parseTP).name)
 			end if
 
 			% Mark it as the first try of a variable that doesn't match
@@ -786,7 +788,7 @@ body module parser
 		if tree.trees (parseTP).name = FENCE_T then
 		    fenceState := true
 		end if
-		
+
 		parseTP := nilTree
 			
 		#if not NOCOMPILE then
@@ -1960,7 +1962,8 @@ body module parser
 				% If the variable we are backing up over was a binding occurence,
 				% undo the binding
 				if tree.trees (tree.kids (tree.trees (parseTP).kidsKP + 1)).kind = kindT.firstTime then
-				    localsListT@(patternVarsAddr).nlocals -= 1
+				    rule.unenterLocalVar (parseContext, localsListT@(patternVarsAddr),  
+					tree.trees (tree.kids (tree.trees (parseTP).kidsKP + 1)).name)
 				end if
 			    end if
 			else
@@ -2122,7 +2125,8 @@ body module parser
 				% If the variable we are backing up over was a binding occurence,
 				% undo the binding
 				if tree.trees (tree.kids (tree.trees (parseTP).kidsKP + 1)).kind = kindT.firstTime then
-				    localsListT@(patternVarsAddr).nlocals -= 1
+				    rule.unenterLocalVar (parseContext, localsListT@(patternVarsAddr),  
+					tree.trees (tree.kids (tree.trees (parseTP).kidsKP + 1)).name)
 				end if
 			    end if
 			else
@@ -2427,7 +2431,7 @@ body module parser
 				% If the variable we are backing up over was a binding occurence,
 				% undo the binding
 				if tree.trees (parseTP).kind = kindT.firstTime then
-				    localsListT@(patternVarsAddr).nlocals -= 1
+				    rule.unenterLocalVar (parseContext, localsListT@(patternVarsAddr),  tree.trees (parseTP).name)
 				end if
 	
 				% No other parse possible, so give up

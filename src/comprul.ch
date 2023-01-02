@@ -31,6 +31,7 @@
 % v11.0	Initial revision, revised from FreeTXL 10.8b (c) 1988-2022 Queen's University at Kingston
 %	Remodularized to improve maintainability
 % v11.1	Added anonymous conditions, e.g., where _ [test]
+%	Fixed local variable binding bug
 
 parent "txl.t"
 
@@ -529,6 +530,8 @@ body module ruleCompiler
 	    else
 		% It's a local variable binding, but it doesn't match the production type, so parse fails
 		varOrExpMatches := false
+		% Don't forget to unenter it from the locals table, it may be tried again
+		rule.unenterLocalVar (context, varsSoFar, ftname) 
 	    end if
     
 
