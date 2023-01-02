@@ -1,7 +1,7 @@
-OpenTxl Version 11 
-J.R. Cordy, July 2022
+OpenTxl Version 11.1 
+J.R. Cordy, Jan 2023
 
-Copyright 2022, James R. Cordy and others
+Copyright 2023, James R. Cordy and others
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software 
 and associated documentation files (the “Software”), to deal in the Software without restriction, 
