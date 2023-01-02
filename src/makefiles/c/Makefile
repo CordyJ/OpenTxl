@@ -3,6 +3,8 @@
 
 # Copyright 2022, James R. Cordy and others
 
+# Rev v11.1, Jan 2023
+
 # This process builds the production unchecked auto-translated C version 
 # of the Txl-11 compiler/interpreter and command line tools
 
@@ -185,8 +187,8 @@ distrib : bin lib opentxl
 	@echo ""
 	cp bin/* opentxl/bin/
 	cp lib/* opentxl/lib/
-	cp -r ../src/distrib/c/* opentxl/
-	cp ../LICENSE.txt opentxl/
+	cp -r distrib/* opentxl/
+	cp LICENSE.txt opentxl/
 	mv opentxl opentxl-$(OS)
 	tar cfz opentxl-$(OS).tar.gz opentxl-$(OS)
 	@echo ""

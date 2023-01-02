@@ -9,6 +9,8 @@
 # Usage:
 #	make -f Makefile-C		
 
+# Rev v11.1, Jan 2023
+
 TPCFLAGS = -O 
 
 TXLSRCS = src/boot.i src/bootgrm.i src/charset.i src/errormsg.i src/errors.i src/globals.i src/ident.i \
@@ -34,6 +36,8 @@ all :
 	cp LICENSE.txt csrc/LICENSE.txt
 	mkdir csrc/bin
 	cp src/scripts/c/* csrc/bin
+	mkdir csrc/distrib
+	cp -r src/distrib/c/* csrc/distrib
 	cp -r -P test csrc/test
 
 C : csrc csrc/txl.c csrc/parse.c csrc/xform.c ${OBJS} csrc/xformdb.c csrc/txlsa.c csrc/loadsa.c csrc/parsa.c \
