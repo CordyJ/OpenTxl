@@ -30,7 +30,7 @@ OBJS = ${COMPILEOBJS} ${GENERALOBJS} ${INHERITEDOBJS}
 all : 
 	/bin/rm -rf csrc
 	$(MAKE) -f Makefile-C clean
-	$(MAKE) -f Makefile-C C TPCFLAGS="-w -O -DUNICODE -mUNIX64" 
+	$(MAKE) -f Makefile-C C TPCFLAGS="-w -O -DLATIN1 -DUNICODE -mUNIX64" 
 	cp src/makefiles/c/Makefile csrc/Makefile
 	cp src/readmes/c/README.txt csrc/README.txt
 	cp LICENSE.txt csrc/LICENSE.txt

@@ -32,6 +32,8 @@
 
 % v11.1	Added NBSP (ASCII 160) as space character and separator
 
+% v11.2	Changed default ASCII Latin-1 alphabetics to remove â, Â and Ã, which conflict wiht UTF-8
+
 module charset
 
     export 
@@ -77,7 +79,7 @@ module charset
     for c : 'A' .. 'Z'
 	upperP (c) := true
     end for
-#if UNICODE then
+#if LATIN1 then
     % Have to fool T+, who thinks these are illegal characters
     var c1, cn : int
     % À Á Â Ã Ä Å Æ Ç È É Ê Ë Ì Í Î Ï Ð Ñ Ò Ó Ô Õ Ö
@@ -85,6 +87,11 @@ module charset
     for c : chr (c1) .. chr (cn)
 	upperP (c) := true
     end for
+    #if UNICODE then
+        % Latin-1 Â and Ã conflict with UTF-8
+        upperP (chr (194)) := false
+        upperP (chr (195)) := false
+    #end if
     % Ø Ù Ú Û Ü Ý Þ
     c1 := 216; cn := 222
     for c : chr (c1) .. chr (cn)
@@ -105,12 +112,16 @@ module charset
     for c : 'a' .. 'z'
 	lowerP (c) := true
     end for
-#if UNICODE then
+#if LATIN1 then
     % à á â ã ä å æ ç è é ê ë ì í î ï ð ñ ò ó ô õ ö
     c1 := 224; cn := 246
     for c : chr (c1) .. chr (cn)
 	lowerP (c) := true
     end for
+    #if UNICODE then
+        % Latin-1 â conflicts with UTF-8
+        lowerP (chr (226)) := false
+    #end if
     % ø ù ú û ü ý þ 
     c1 := 248; cn := 254
     for c : chr (c1) .. chr (cn)
@@ -182,7 +193,7 @@ module charset
     for c : '{' .. '~'
 	specialP (c) := true
     end for
-#if UNICODE then
+#if LATIN1 then
     % € ‚ ƒ „ … † ‡ ˆ ‰ 
     c1 := 128; cn := 137
     for c : chr (c1) .. chr (cn)
@@ -216,7 +227,7 @@ module charset
     separatorP ('\f') := true
     separatorP ('\r') := true
     separatorP (' ') := true
-#if UNICODE then
+#if LATIN1 then
     c1 := 160; separatorP (chr (c1)) := true
 #end if
     
@@ -227,7 +238,7 @@ module charset
     spaceP ('\f') := true
     spaceP ('\r') := true
     spaceP (' ') := true
-#if UNICODE then
+#if LATIN1 then
     c1 := 160; spaceP (chr (c1)) := true
 #end if
     
@@ -285,7 +296,7 @@ module charset
     spaceBeforeP ('.') := false
     spaceBeforeP (']') := false
     spaceBeforeP ('}') := false
-#if UNICODE then
+#if LATIN1 then
     c1 := 160; spaceBeforeP (chr (c1)) := true
 #end if
     
@@ -298,7 +309,7 @@ module charset
     spaceAfterP ('.') := false
     spaceAfterP ('[') := false
     spaceAfterP ('{') := false
-#if UNICODE then
+#if LATIN1 then
     c1 := 160; spaceAfterP (chr (c1)) := true
 #end if
 
@@ -318,7 +329,7 @@ module charset
 	uppercase (i) := chr (ord (i) - ord ('a') + ord ('A'))
     end for
 
-#if UNICODE then
+#if LATIN1 then
     % Have to fool T+, who thinks these are illegal characters
     var uc, lc : int
     % À Á Â Ã Ä Å Æ Ç È É Ê Ë Ì Í Î Ï Ð Ñ Ò Ó Ô Õ Ö
