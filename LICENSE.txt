@@ -1,5 +1,5 @@
-OpenTxl Version 11.1 
-J.R. Cordy, Jan 2023
+OpenTxl Version 11.2 
+J.R. Cordy, July 2023
 
 Copyright 2023, James R. Cordy and others
 

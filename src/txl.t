@@ -36,12 +36,14 @@
 % 	Added NBSP (ASCII 160) as space character and separator
 %	Fixed local variable binding bug issue #1
 
+% v11.2 Corrected Unicode conflict with Latin-1 character set
+
 
 % Global symbols granted to child modules
 include "globals.i"
 
 % TXL version
-const * version := "OpenTxl v11.1 (2.1.23) (c) 2023 James R. Cordy and others"
+const * version := "OpenTxl v11.2 (10.7.23) (c) 2023 James R. Cordy and others"
 
 % Phase
 const * INITIALIZE := 0
