@@ -1,38 +1,38 @@
     $ File (F5025, Regular) $
-	$ File (F5026, Regular) $
-	$ File (F5027, Regular) $
-	$ FileRec (F5025, A F5025) $
-	$ FileRec (F5025, D F5025) $
-	$ FileRec (F5026, A F5026) $
-	$ FileRec (F5026, B F5026) $
-	$ FileRec (F5027, A F5027) $
-	$ FileRec (F5027, D F5027) $
-	$ FileRecType (A F5025, M TW5025) $
-	$ FileRecType (A F5025, J TW5025) $
-	$ FileRecType (D F5025, K TW5025) $
-	$ FileRecType (B A F5025, L TW5025) $
-	$ FileRecType (A F5026, U TW5025) $
-	$ FileRecType (B F5026, V TW5025) $
-	$ FileRecType (A F5027, X TW5025) $
-	$ FileRecType (D F5027, Y TW5025) $		
-	$ Date (SOME-ABC M TW5025, "YY", 0, NAMING CONVENTION) $
+        $ File (F5026, Regular) $
+        $ File (F5027, Regular) $
+        $ FileRec (F5025, A F5025) $
+        $ FileRec (F5025, D F5025) $
+        $ FileRec (F5026, A F5026) $
+        $ FileRec (F5026, B F5026) $
+        $ FileRec (F5027, A F5027) $
+        $ FileRec (F5027, D F5027) $
+        $ FileRecType (A F5025, M TW5025) $
+        $ FileRecType (A F5025, J TW5025) $
+        $ FileRecType (D F5025, K TW5025) $
+        $ FileRecType (B A F5025, L TW5025) $
+        $ FileRecType (A F5026, U TW5025) $
+        $ FileRecType (B F5026, V TW5025) $
+        $ FileRecType (A F5027, X TW5025) $
+        $ FileRecType (D F5027, Y TW5025) $             
+        $ Date (SOME-ABC M TW5025, "YY", 0, NAMING CONVENTION) $
     $ Date (SOMEMORE J TW5025, "UNKNOWN", 0, NAMING CONVENTION) $
-	$ Date (EVENMORE K TW5025, "UNKNOWN", 0, NAMING CONVENTION) $
-	$ Date (FORTHENEXT X TW5025, "UNKNOWN", 0, NAMING CONVENTION) $
-	$ Date (NEWFILE Y TW5025, "YY", 0, NAMING CONVENTION) $
-	$ IsReport (F5027) $
-	$ TransactionTag (M TW5025, FIELD1) $
-	$ TransactionTag (M TW5025, FIELD2) $
-	$ TransactionTag (J TW5025, FIELD3) $
-	$ TransactionTag (K TW5025, FIELD4) $
-	$ TransactionTag (L TW5025, FIELD5) $
-	$ TransactionTag (U TW5025, FIELD6) $
-	$ TransactionTag (V TW5025, FIELD7) $
-	$ TransactionTag (X TW5025, FIELD8) $
+        $ Date (EVENMORE K TW5025, "UNKNOWN", 0, NAMING CONVENTION) $
+        $ Date (FORTHENEXT X TW5025, "UNKNOWN", 0, NAMING CONVENTION) $
+        $ Date (NEWFILE Y TW5025, "YY", 0, NAMING CONVENTION) $
+        $ IsReport (F5027) $
+        $ TransactionTag (M TW5025, FIELD1) $
+        $ TransactionTag (M TW5025, FIELD2) $
+        $ TransactionTag (J TW5025, FIELD3) $
+        $ TransactionTag (K TW5025, FIELD4) $
+        $ TransactionTag (L TW5025, FIELD5) $
+        $ TransactionTag (U TW5025, FIELD6) $
+        $ TransactionTag (V TW5025, FIELD7) $
+        $ TransactionTag (X TW5025, FIELD8) $
     $ TransactionTag (Y TW5025, FIELD9) $
-	$ TransactionCase (FIELD1 ,001, {{ XA-DETAIL1 }}) $
-	$ TransactionCase (FIELD1, 040, {{ XA-DETAIL2 }}) $
-	$ TransactionCase (FIELD1, 105, XA-GIC-VERSION) $
-	$ TransactionCase (XA-GIC-VERSION, "AA", {{ XA-DETAIL3 }}) $
-	
-	
+        $ TransactionCase (FIELD1 ,001, {{ XA-DETAIL1 }}) $
+        $ TransactionCase (FIELD1, 040, {{ XA-DETAIL2 }}) $
+        $ TransactionCase (FIELD1, 105, XA-GIC-VERSION) $
+        $ TransactionCase (XA-GIC-VERSION, "AA", {{ XA-DETAIL3 }}) $
+        
+        

@@ -16,10 +16,10 @@ define of_in_id
 end define
 
 define subscript
-	'( [identifier] ')
+        '( [identifier] ')
 end define
 
 function main
     match [program]
-	Id [identifier]
+        Id [identifier]
 end function

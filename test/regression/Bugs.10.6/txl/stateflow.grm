@@ -14,10 +14,10 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 redefine stateflow_list
-    'Stateflow {				[NL][IN]
-    	[repeat stateflow_list_element]
-						[EX]
-    }						[NL]
+    'Stateflow {                                [NL][IN]
+        [repeat stateflow_list_element]
+                                                [EX]
+    }                                           [NL]
 end redefine
 
 define stateflow_list_element
@@ -40,16 +40,16 @@ end define
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 define sf_machine_list
-    'machine {					[NL][IN]
-    	[repeat sf_machine_list_element]
-						[EX]
-    }						[NL]
+    'machine {                                  [NL][IN]
+        [repeat sf_machine_list_element]
+                                                [EX]
+    }                                           [NL]
 end define
 
 % machine name seems to be the name of the simulink 
 % modle that uses the chart.
 
-define sf_machine_list_element		[NL]
+define sf_machine_list_element          [NL]
   % key elements
     [sf_id_element]
   | [sf_name_element]
@@ -92,10 +92,10 @@ end define
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 define sf_chart_list
-    'chart '{					[NL][IN]
+    'chart '{                                   [NL][IN]
        [repeat sf_chart_list_element] 
-    						[EX]
-    '}						[NL]
+                                                [EX]
+    '}                                          [NL]
 end define
 
 define sf_chart_list_element
@@ -170,13 +170,13 @@ end define
 define sf_stateFontS_list
     'stateFontS { [NL] [IN]
          [repeat sf_stateFontS_list_element] 
-	 [EX]
+         [EX]
      '} [NL]
 end define
 define sf_transitionFontS_list
     'transitionFontS { [NL] [IN]
          [repeat sf_transitionFontS_list_element] 
-	 [EX]
+         [EX]
      '} [NL]
 end define
 
@@ -218,43 +218,43 @@ define sf_executeAtInitialization_element
 end define
 
 define sf_toolbarMode_element
-    'toolbarMode [id]				[NL]
+    'toolbarMode [id]                           [NL]
 end define
 
 define sf_updateMethod_element
-    'updateMethod [id]				[NL]
+    'updateMethod [id]                          [NL]
 end define
 
 define sf_sampleTime_element
-    'sampleTime [stringlit]				[NL]
+    'sampleTime [stringlit]                             [NL]
 end define
 
 define sf_noDebugging_element
-    'noDebugging [number]			[NL]
+    'noDebugging [number]                       [NL]
 end define
 
 define sf_chartColor_element
-    'chartColor  [sf_number_repeat_value]	[NL]
+    'chartColor  [sf_number_repeat_value]       [NL]
 end define
 
 define sf_transitionColor_element
-    'transitionColor  [sf_number_repeat_value]	[NL]
+    'transitionColor  [sf_number_repeat_value]  [NL]
 end define
 
 define sf_stateLabelColor_element
-    'stateLabelColor  [sf_number_repeat_value]	[NL]
+    'stateLabelColor  [sf_number_repeat_value]  [NL]
 end define
 
 define sf_transitionLabelColor_element
-    'transitionLabelColor  [sf_number_repeat_value]	[NL]
+    'transitionLabelColor  [sf_number_repeat_value]     [NL]
 end define
 
 define sf_junctionColor_element
-    'junctionColor  [sf_number_repeat_value]	[NL]
+    'junctionColor  [sf_number_repeat_value]    [NL]
 end define
 
 define sf_selectionColor_element
-    'selectionColor  [sf_number_repeat_value]	[NL]
+    'selectionColor  [sf_number_repeat_value]   [NL]
 end define
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -266,10 +266,10 @@ end define
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 define sf_state_list
-    'state '{					[NL][IN]
+    'state '{                                   [NL][IN]
        [repeat sf_state_list_element] 
-    						[EX]
-    '}						[NL]
+                                                [EX]
+    '}                                          [NL]
 end define
 
 define sf_state_list_element
@@ -391,19 +391,19 @@ end define
   'requirementInfo [repeat stringlit] [NL]
   end define
 define sf_functionInlineOption_element
-    'functionInlineOption [id]				[NL]
+    'functionInlineOption [id]                          [NL]
 end define
 
 define sf_outputData_element
-    'outputData [number]				[NL]
+    'outputData [number]                                [NL]
 end define
 
 
 define sf_simulink_list
-    'simulink '{					[NL][IN]
+    'simulink '{                                        [NL][IN]
        [repeat sf_simulink_list_element] 
-    						[EX]
-    '}						[NL]
+                                                [EX]
+    '}                                          [NL]
 end define
 
 define sf_simulink_list_element
@@ -419,23 +419,23 @@ define sf_isSimulinkFcn_element
 end define
 
 define sf_isComponent_element
-    'isComponent [number]				[NL]
+    'isComponent [number]                               [NL]
 end define
 
 define sf_blockName_element
-    'blockName [stringlit]				[NL]
+    'blockName [stringlit]                              [NL]
 end define
 
 define sf_binding_element
-    'binding [repeat stringlit]				[NL]
+    'binding [repeat stringlit]                         [NL]
 end define
 
 define sf_isNoteBox_element
-    'isNoteBox [number]				[NL]
+    'isNoteBox [number]                         [NL]
 end define
 
 define sf_noteBox_element
-    'noteBox [sf_number_repeat_value]		[NL]
+    'noteBox [sf_number_repeat_value]           [NL]
 end define
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -446,10 +446,10 @@ end define
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 define sf_transition_list
-    'transition {				[NL][IN]
- 	[repeat sf_transition_list_element]
-						[EX]
-    }						[NL]
+    'transition {                               [NL][IN]
+        [repeat sf_transition_list_element]
+                                                [EX]
+    }                                           [NL]
 end define
 
 define sf_transition_list_element
@@ -498,10 +498,10 @@ end define
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 define sf_event_list
-    'event {				[NL][IN]
- 	[repeat sf_event_list_element]
-					[EX]
-    }					[NL]
+    'event {                            [NL][IN]
+        [repeat sf_event_list_element]
+                                        [EX]
+    }                                   [NL]
 end define
 
 define sf_event_list_element
@@ -527,10 +527,10 @@ end define
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 define sf_data_list
-    'data {				[NL][IN]
- 	[repeat sf_data_list_element]
-					[EX]
-    }					[NL]
+    'data {                             [NL][IN]
+        [repeat sf_data_list_element]
+                                        [EX]
+    }                                   [NL]
 end define
 
 define sf_data_list_element
@@ -564,15 +564,15 @@ define sf_outputState_element
 end define
 
 define sf_isNonTunable_element
-   'isNonTunable [number]		[NL]
+   'isNonTunable [number]               [NL]
 end define
 
 define sf_initFromWorkspace_element
-   'initFromWorkspace [number]		[NL]
+   'initFromWorkspace [number]          [NL]
 end define
 
 define sf_ParamIndexForInitFromWorkspace_element
-   'paramIndexForInitFromWorkspace [number]		[NL]
+   'paramIndexForInitFromWorkspace [number]             [NL]
 end define
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -582,10 +582,10 @@ end define
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 define sf_instance_list
-    'instance {				[NL][IN]
- 	[repeat sf_instance_list_element]
-					[EX]
-    }					[NL]
+    'instance {                         [NL][IN]
+        [repeat sf_instance_list_element]
+                                        [EX]
+    }                                   [NL]
 end define
 
 define sf_instance_list_element
@@ -600,10 +600,10 @@ end define
 %   No idea whatthis is...
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 define sf_target_list
-    'target {				[NL][IN]
- 	[repeat sf_target_list_element]
-					[EX]
-    }					[NL]
+    'target {                           [NL][IN]
+        [repeat sf_target_list_element]
+                                        [EX]
+    }                                   [NL]
 end define
 
 define sf_target_list_element
@@ -630,15 +630,15 @@ define sf_userIncludeDirs_element
   end define
 
 define sf_codegenDirectory_element
-  'codegenDirectory [stringlit]			[NL]
+  'codegenDirectory [stringlit]                 [NL]
 end define
 
 define sf_targetFunction_element
-  'targetFunction [stringlit]			[NL]
+  'targetFunction [stringlit]                   [NL]
 end define
 
 define sf_checksumOld_element
-   'checksumOld [sf_number_repeat_value]	[NL]
+   'checksumOld [sf_number_repeat_value]        [NL]
 end define
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -646,10 +646,10 @@ end define
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 define sf_junction_list
-    'junction '{				[NL][IN]
+    'junction '{                                [NL][IN]
        [repeat sf_junction_list_element] 
-    						[EX]
-    '}						[NL]
+                                                [EX]
+    '}                                          [NL]
 end define
 
 define sf_junction_list_element
@@ -681,10 +681,10 @@ end define
 % Key elements
 
 define sf_eml_list
-    'eml {					[NL][IN]
+    'eml {                                      [NL][IN]
         [repeat sf_eml_list_element]
-						[EX]
-    '}						[NL]
+                                                [EX]
+    '}                                          [NL]
 end define
 
 define sf_eml_list_element
@@ -703,15 +703,15 @@ define sf_eml_list_element
 end define
 
 define sf_script_element
-    'script [repeat stringlit]				[NL]
+    'script [repeat stringlit]                          [NL]
 end define
 
 define sf_isEML_element
-   isEML [number]				[NL]
+   isEML [number]                               [NL]
 end define 
 
 define sf_firstJunction_element
-   'firstJunction [number]			[NL]
+   'firstJunction [number]                      [NL]
 end define
 
 % GROUPED
@@ -721,19 +721,19 @@ end define
 
 % INPUT_EVENT INPUT_DATA
 define sf_scope_element
-   'scope [id]					[NL]
+   'scope [id]                                  [NL]
 end define
 
 % EITHER_EDGE_EVENT
 define sf_trigger_element
-   'trigger [id]				[NL]
+   'trigger [id]                                [NL]
 end define
 
 define sf_props_list
-    'props {					[NL][IN]
+    'props {                                    [NL][IN]
         [repeat sf_props_list_element]
-						[EX]
-    '}						[NL]
+                                                [EX]
+    '}                                          [NL]
 end define
 
 define sf_props_list_element
@@ -764,10 +764,10 @@ define sf_initialValue_element
 end define
 
 define sf_type_list
-    'type {					[NL][IN]
+    'type {                                     [NL][IN]
         [repeat sf_type_list_element]
-						[EX]
-    '}						[NL]
+                                                [EX]
+    '}                                          [NL]
 end define
 
 define sf_type_list_element
@@ -783,26 +783,26 @@ define sf_type_list_element
 end define
 
 define sf_enumType_element
-    'enumType [stringlit]	[NL]
+    'enumType [stringlit]       [NL]
 end define
 
 define sf_units_element
-   'units [stringlit]				[NL]
+   'units [stringlit]                           [NL]
 end define
 
 define sf_expression_element
-    'expression [stringlit]				[NL]
+    'expression [stringlit]                             [NL]
 end define
 
 define sf_busObject_element
-    'busObject [stringlit]				[NL]
+    'busObject [stringlit]                              [NL]
 end define
 
 define sf_fixpt_list
-    'fixpt {					[NL][IN]
+    'fixpt {                                    [NL][IN]
         [repeat sf_fixpt_list_element]
-						[EX]
-    '}						[NL]
+                                                [EX]
+    '}                                          [NL]
 end define
 
 define sf_fixpt_list_element
@@ -813,44 +813,44 @@ define sf_fixpt_list_element
 end define
 
 define sf_fractionLength_element
-    'fractionLength [stringlit]			[NL]
+    'fractionLength [stringlit]                 [NL]
 end define
 
 define sf_slope_element
-    'slope [stringlit]			[NL]
+    'slope [stringlit]                  [NL]
 end define
 
 define sf_bias_element
-    'bias [stringlit]			[NL]
+    'bias [stringlit]                   [NL]
 end define
 
 define sf_scalingMode_element
-    scalingMode [id]				[NL]
+    scalingMode [id]                            [NL]
 end define
 
 %SF_INHERITED_TYPE
 define sf_method_element
-   'method [id]					[NL]
+   'method [id]                                 [NL]
 end define
 
 %SF_DOUBLE_TYPE
 define sf_primitive_element
-   'primitive [id]				[NL]
+   'primitive [id]                              [NL]
 end define
 
 define sf_isSigned_element
-   'isSigned [number]				[NL]
+   'isSigned [number]                           [NL]
 end define
 
 define sf_wordLength_element
-   'wordLength [stringlit]			[NL]
+   'wordLength [stringlit]                      [NL]
 end define
 
 define sf_range_list
-    'range {					[NL][IN]
+    'range {                                    [NL][IN]
         [repeat sf_range_list_element]
-						[EX]
-    '}						[NL]
+                                                [EX]
+    '}                                          [NL]
 end define
 
 define sf_range_list_element
@@ -859,45 +859,45 @@ define sf_range_list_element
 end define
 
 define sf_minimum_element
-   'minimum [stringlit]			[NL]
+   'minimum [stringlit]                 [NL]
 end define
 
 define sf_maximum_element
-   'maximum [stringlit]			[NL]
+   'maximum [stringlit]                 [NL]
 end define
 
 define sf_dataType_element
-    'dataType [stringlit]			[NL]
+    'dataType [stringlit]                       [NL]
 end define
 
 define sf_linkNode_element
-    'linkNode [sf_number_repeat_value]		[NL]
+    'linkNode [sf_number_repeat_value]          [NL]
 end define
 
 define sf_codeFlags_element
-    'codeFlags [repeat stringlit]			[NL]
+    'codeFlags [repeat stringlit]                       [NL]
 end define
 
 define sf_customCode_element
-    'customCode [repeat stringlit]			[NL]
+    'customCode [repeat stringlit]                      [NL]
 end define
 
 define sf_labelString_element
-    'labelString [repeat stringlit]			[NL]
+    'labelString [repeat stringlit]                     [NL]
 end define
 
 define sf_src_list
-    'src {					[NL][IN]
+    'src {                                      [NL][IN]
         [repeat sf_src_list_element]
-						[EX]
-    '}						[NL]
+                                                [EX]
+    '}                                          [NL]
 end define
 
 define sf_dst_list
-    'dst {					[NL][IN]
+    'dst {                                      [NL][IN]
         [repeat sf_dst_list_element]
-						[EX]
-    '}						[NL]
+                                                [EX]
+    '}                                          [NL]
 end define
 
 define sf_src_list_element
@@ -911,36 +911,36 @@ define sf_dst_list_element
 end define
 
 define sf_id_element
-    'id [number]				[NL]
+    'id [number]                                [NL]
 end define
 
 define sf_name_element
-    'name [stringlit]				[NL]
+    'name [stringlit]                           [NL]
 end define
 
 define sf_firstTarget_element
-    'firstTarget [number]			[NL]
+    'firstTarget [number]                       [NL]
 end define
 
 define sf_machine_element
-    'machine [number]				[NL]
+    'machine [number]                           [NL]
 end define
 
 %CLUSTER_CHART CLUSTER_STATE SET_STATE
 define sf_decomposition_element
-    'decomposition    [id]			[NL]
+    'decomposition    [id]                      [NL]
 end define
 
 define sf_firstEvent_element
-    'firstEvent [number]			[NL]
+    'firstEvent [number]                        [NL]
 end define
 
 define sf_firstData_element
-    'firstData [number]				[NL]
+    'firstData [number]                         [NL]
 end define
 
 define sf_isGrouped_element
-    'isGrouped [number]				[NL]
+    'isGrouped [number]                         [NL]
 end define
 
 % first number is parent node in state tree
@@ -953,32 +953,32 @@ define sf_treeNode_element
 end define
 
 define sf_executionOrder_element
-    'executionOrder [number]			[NL]
+    'executionOrder [number]                    [NL]
 end define
 
 % OR_STATE AND_STATE EML_CHART CONNECTIVE_JUNCTION
 define sf_type_element
-    'type [id] 					[NL]
+    'type [id]                                  [NL]
 end define
 
 define sf_chart_element
-    'chart [number]				[NL]
+    'chart [number]                             [NL]
 end define
 
 define sf_firstTransition_element
-    'firstTransition [number]			[NL]
+    'firstTransition [number]                   [NL]
 end define
 
 define sf_fimathString_element
-    'fimathString [repeat stringlit]			[NL]
+    'fimathString [repeat stringlit]                    [NL]
 end define
 
 define sf_emlDefaultFimath_element
-   'emlDefaultFimath [id]			[NL]
+   'emlDefaultFimath [id]                       [NL]
 end define
 
 define sf_fimathForFiConstructors_element
-    'fimathForFiConstructors [id]		[NL]
+    'fimathForFiConstructors [id]               [NL]
 end define
 
 %define _element
@@ -986,14 +986,14 @@ end define
 % Misc elements
 
 define sf_description_element
-    'description [repeat stringlit]			[NL]
+    'description [repeat stringlit]                     [NL]
 end define
 
 define sf_array_list
-   'array {					[NL][IN]
-   	[repeat sf_array_list_element]
-						[EX]
-    '}						[NL]
+   'array {                                     [NL][IN]
+        [repeat sf_array_list_element]
+                                                [EX]
+    '}                                          [NL]
 end define
 
 define sf_array_list_element
@@ -1003,61 +1003,61 @@ define sf_array_list_element
 end define
 
 define sf_size_element
-    'size [stringlit] 				[NL]
+    'size [stringlit]                           [NL]
 end define
 
 define sf_isDynamic_element
-    'isDynamic [number] 				[NL]
+    'isDynamic [number]                                 [NL]
 end define
 
 define sf_firstIndex_elment
-    'firstIndex [stringlit]			[NL]
+    'firstIndex [stringlit]                     [NL]
 end define
 
 % SF_FRAME_INHERITED
 define sf_frame_element
-    'frame [id]					[NL]
+    'frame [id]                                 [NL]
 end define
 
 % one number in list
 define sf_debug_element
-   'debug [sf_number_repeat_value]			[NL]
+   'debug [sf_number_repeat_value]                      [NL]
 end define
 
 define sf_windowPosition_element
-   'windowPosition [sf_number_repeat_value]	[NL]
+   'windowPosition [sf_number_repeat_value]     [NL]
 end define
 
 define sf_labelPosition_element
-   'labelPosition [sf_number_repeat_value]		[NL]
+   'labelPosition [sf_number_repeat_value]              [NL]
 end define
 
 define sf_intersection_element
-  'intersection  [sf_number_repeat_value]		[NL]
+  'intersection  [sf_number_repeat_value]               [NL]
 end define
 
 define sf_midPoint_element
-    'midPoint	[sf_number_repeat_value]		[NL]
+    'midPoint   [sf_number_repeat_value]                [NL]
 end define
 
 define sf_dataLimits_element
-    'dataLimits	[sf_number_repeat_value]		[NL]
+    'dataLimits [sf_number_repeat_value]                [NL]
 end define
 
 define sf_stampAngle_element
-   'stampAngle [sf_number_or_NaN]			[NL]
+   'stampAngle [sf_number_or_NaN]                       [NL]
 end define
 
 % SMART
 define sf_drawStyle_element
-   'drawStyle [id]				[NL]
+   'drawStyle [id]                              [NL]
 end define
 
 define sf_slide_list
-   'slide {					[NL][IN]
-   	[repeat sf_slide_list_element]
-						[EX]
-    '}						[NL]
+   'slide {                                     [NL][IN]
+        [repeat sf_slide_list_element]
+                                                [EX]
+    '}                                          [NL]
 end define
 
 define sf_slide_list_element
@@ -1069,45 +1069,45 @@ define sf_slide_list_element
 end define
 
 define sf_arcL_element
- 'arcL [mnumber]			[NL]
+ 'arcL [mnumber]                        [NL]
 end define
 
 %MIRROR_SLIDE
 define sf_mode_element
-   'mode [id]					[NL]
+   'mode [id]                                   [NL]
 end define
 
 % BOTH_STICK
 define sf_sticky_element
-   'sticky [id]					[NL]
+   'sticky [id]                                 [NL]
 end define
 
 define sf_midPointSticky_element
-   'midPointSticky [number]					[NL]
+   'midPointSticky [number]                                     [NL]
 end define
 
 define sf_arcClockDir_element
-   'arcClockDir [id]					[NL]
+   'arcClockDir [id]                                    [NL]
 end define
 
 define sf_position_element
-    'position [sf_number_repeat_value]		[NL]
+    'position [sf_number_repeat_value]          [NL]
 end define
 
 define sf_fontSize_element
-    'fontSize [number]				[NL]
+    'fontSize [number]                          [NL]
 end define
 
 define sf_subviewer_element
-    'subviewer [number]				[NL]
+    'subviewer [number]                         [NL]
 end define
 
 define sf_subgrouped_element
-    'subgrouped [number]				[NL]
+    'subgrouped [number]                                [NL]
 end define
 
 define sf_ssIdNumber_element
-    'ssIdNumber [number]			[NL]
+    'ssIdNumber [number]                        [NL]
 end define
 
 define sf_arrowSize_element
@@ -1115,33 +1115,33 @@ define sf_arrowSize_element
 end define
 
 define sf_viewLimits_element
-   'viewLimits [sf_number_repeat_value]		[NL]
+   'viewLimits [sf_number_repeat_value]         [NL]
 end define
 
 define sf_stateColor_element
-   'stateColor [sf_number_repeat_value]		[NL]
+   'stateColor [sf_number_repeat_value]         [NL]
 end define
 
 define sf_zoomFactor_element
-   'zoomFactor [number]				[NL]
+   'zoomFactor [number]                         [NL]
 end define
 
 define sf_screen_element
-   'screen [sf_number_repeat_value]			[NL]
+   'screen [sf_number_repeat_value]                     [NL]
 end define
 
 define sf_viewObj_element
-   'viewObj [number]				[NL]
+   'viewObj [number]                            [NL]
 end define
 
 define sf_visible_element
-   'visible [number]				[NL]
+   'visible [number]                            [NL]
 end define
 
 define sf_subviewS_list
-   'subviewS {					[NL][IN]
-	[repeat sf_subviewS_list_element]	[EX]
-   }						[NL]
+   'subviewS {                                  [NL][IN]
+        [repeat sf_subviewS_list_element]       [EX]
+   }                                            [NL]
 end define
 
 define sf_subviewS_list_element
@@ -1153,23 +1153,23 @@ define sf_subviewS_list_element
 end define
 
 define sf_x1_element
-    'x1 [mnumber]		[NL]
+    'x1 [mnumber]               [NL]
 end define
 
 define sf_y1_element
-    'y1 [mnumber]		[NL]
+    'y1 [mnumber]               [NL]
 end define
 
 define sf_pos_element
-    'pos [sf_number_repeat_value]		[NL]
+    'pos [sf_number_repeat_value]               [NL]
 end define
 
 define sf_ssIdHighWaterMark_element
-   'ssIdHighWaterMark [number]			[NL]
+   'ssIdHighWaterMark [number]                  [NL]
 end define
 
 define sf_chartFileNumber_element
-   'chartFileNumber [number]			[NL]
+   'chartFileNumber [number]                    [NL]
 end define
 
 define sf_nonTerminalMaxCounts_element
@@ -1177,7 +1177,7 @@ define sf_nonTerminalMaxCounts_element
 end define
 
 define sf_saturateOnIntegerOverflow_element
-   'saturateOnIntegerOverflow [number]		[NL]
+   'saturateOnIntegerOverflow [number]          [NL]
 end define
 
 define sf_userSpecifiedStateTransitionExecutionOrder_element
@@ -1185,22 +1185,22 @@ define sf_userSpecifiedStateTransitionExecutionOrder_element
 end define
 
 define sf_disableImplicitCasting_element
-   'disableImplicitCasting  [number]		[NL]
+   'disableImplicitCasting  [number]            [NL]
 end define
 
 define sf_created_element
-    'created [stringlit]			[NL]
+    'created [stringlit]                        [NL]
 end define
 
 define sf_isLibrary_element
-    'isLibrary [number]				[NL]
+    'isLibrary [number]                         [NL]
 end define
 
 define sf_debug_list
-    'debug {					[NL][IN]
+    'debug {                                    [NL][IN]
        [repeat sf_debug_list_element]
-       						[EX]
-    }						[NL]
+                                                [EX]
+    }                                           [NL]
 end define
 
 define sf_debug_list_element
@@ -1212,35 +1212,35 @@ define sf_debug_list_element
 end define
 
 define sf_disableAllBreakpoints_element
-    'disableAllBreakpoints [number]			[NL]
+    'disableAllBreakpoints [number]                     [NL]
 end define
 
 define sf_gui_element
-    'gui [sf_number_repeat_value]			[NL]
+    'gui [sf_number_repeat_value]                       [NL]
 end define
 
 define sf_breakOn_element
-    'breakOn [sf_number_repeat_value]			[NL]
+    'breakOn [sf_number_repeat_value]                   [NL]
 end define
 
 define sf_runtimeCheck_element
-    'runTimeCheck   [sf_number_repeat_value]		[NL]
+    'runTimeCheck   [sf_number_repeat_value]            [NL]
 end define
 
 define sf_animation_element
-    'animation   [sf_number_repeat_value]		[NL]
+    'animation   [sf_number_repeat_value]               [NL]
 end define
 
 define sf_sfVersion_element
-    'sfVersion [number]				[NL]
+    'sfVersion [number]                         [NL]
 end define
 
 define sf_version_element
-    'version [stringlit]				[NL]
+    'version [stringlit]                                [NL]
 end define
 
 define sf_sfDemoChecksum
-   'sfDemoChecksum [sf_number_repeat_value]			[NL]
+   'sfDemoChecksum [sf_number_repeat_value]                     [NL]
 end define
 
 define sf_supportVariableSizing_element
@@ -1248,7 +1248,7 @@ define sf_supportVariableSizing_element
 end define
 
 define editorLayout_element
-    'editorLayout [stringlit]			[NL]
+    'editorLayout [stringlit]                   [NL]
 end define
 
 % copied from simulink.grammar

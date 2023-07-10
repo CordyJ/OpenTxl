@@ -1,31 +1,31 @@
 TXL Example Specification
 -------------------------
 
-Name:	
-	ISL.Txl
+Name:   
+        ISL.Txl
 
 Description:
-	Prototype implementation of transformation of Project REX
-	Interface Specification Language (ISL) to programming-language
-	dependent interface files.  
-	
-	This specification handles stage 1, the language-independent 
-	ISL->ISL part of the transforms, which converts to declaration-
-	before-use from free-form, resolves generic and parameterized 
-	types, and converts the type dependencies from structural-
-	equivalence (ISL) to name-equivalence (most target languages).
+        Prototype implementation of transformation of Project REX
+        Interface Specification Language (ISL) to programming-language
+        dependent interface files.  
+        
+        This specification handles stage 1, the language-independent 
+        ISL->ISL part of the transforms, which converts to declaration-
+        before-use from free-form, resolves generic and parameterized 
+        types, and converts the type dependencies from structural-
+        equivalence (ISL) to name-equivalence (most target languages).
 
 Author:
-   	J.R. Cordy
+        J.R. Cordy
 
 Affiliation:
-	Esprit Project REX
-	Gesellschaft fuer Mathematik und Datenverarbeitung,
-	Forschungstelle an der Universitaet Karlsruhe,
-	Karlsruhe, Germany
+        Esprit Project REX
+        Gesellschaft fuer Mathematik und Datenverarbeitung,
+        Forschungstelle an der Universitaet Karlsruhe,
+        Karlsruhe, Germany
 
 Date:
-	November 1990
+        November 1990
 
 Example:
-	txl Example.ISL	
+        txl Example.ISL 

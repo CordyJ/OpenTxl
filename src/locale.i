@@ -25,13 +25,13 @@
 
 % Modification Log
 
-% v11.0	Initial revision, revised from FreeTXL 10.8b (c) 1988-2022 Queen's University at Kingston
-% 	Retired obsolete hard time limit. 
+% v11.0 Initial revision, revised from FreeTXL 10.8b (c) 1988-2022 Queen's University at Kingston
+%       Retired obsolete hard time limit. 
 
 % Default library location and subdirectory selector character
 #if WIN then
     const * defaultLibrary := "C:/TXL/LIB"
-    const * directoryChar := "/"	% (sic) - used by VS C
+    const * directoryChar := "/"        % (sic) - used by VS C
 #else
     const * defaultLibrary := "/usr/local/lib/txl"
     const * directoryChar := "/"

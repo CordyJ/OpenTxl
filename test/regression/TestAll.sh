@@ -33,35 +33,35 @@ dirs=`/bin/ls`
 
 for dir in $dirs; do
     if [ -d $dir ]; then
-	cd $dir
+        cd $dir
 
-	# For each example input
-	egs=`/bin/ls eg*.*`
+        # For each example input
+        egs=`/bin/ls eg*.*`
 
-	for eg in $egs; do
-	    # Run old TXL
-	    : > /tmp/tta-old$$
-	    (/usr/bin/time -l $OLDTXL -v -s 400 -w 200 $eg -o /tmp/tta-old$$ < /tmp/42 2>&1 ) >> $eg-oldoutput
-	    cat /tmp/tta-old$$ >> $eg-oldoutput
+        for eg in $egs; do
+            # Run old TXL
+            : > /tmp/tta-old$$
+            (/usr/bin/time -l $OLDTXL -v -s 400 -w 200 $eg -o /tmp/tta-old$$ < /tmp/42 2>&1 ) >> $eg-oldoutput
+            cat /tmp/tta-old$$ >> $eg-oldoutput
 
-	    # Run new TXL
-	    : > /tmp/tta-new$$
-	    (/usr/bin/time -l ../$NEWTXL -v -s 400 -w 200 $eg -o /tmp/tta-new$$ < /tmp/42 2>&1 ) >> $eg-newoutput
-	    cat /tmp/tta-new$$ >> $eg-newoutput
+            # Run new TXL
+            : > /tmp/tta-new$$
+            (/usr/bin/time -l ../$NEWTXL -v -s 400 -w 200 $eg -o /tmp/tta-new$$ < /tmp/42 2>&1 ) >> $eg-newoutput
+            cat /tmp/tta-new$$ >> $eg-newoutput
 
-	    # Diff them
-	    if [ "`diff -q /tmp/tta-old$$ /tmp/tta-new$$`" != "" ]; then
-		echo "** Output for $dir/$eg differs"
-		success=false
-	    fi
+            # Diff them
+            if [ "`diff -q /tmp/tta-old$$ /tmp/tta-new$$`" != "" ]; then
+                echo "** Output for $dir/$eg differs"
+                success=false
+            fi
 
-	    # Diff detailed performance if requested
-	    if [ "$1" == "performance" ]; then
+            # Diff detailed performance if requested
+            if [ "$1" == "performance" ]; then
                 echo "==== $dir/$eg ===="
-		diff $eg-oldoutput $eg-newoutput
-	    fi
-	done
-	cd ..
+                diff $eg-oldoutput $eg-newoutput
+            fi
+        done
+        cd ..
     fi
 done
 

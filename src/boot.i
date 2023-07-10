@@ -26,15 +26,15 @@
 
 % Modification Log
 
-% v11.0	Initial revision, revised from FreeTXL 10.8b (c) 1988-2022 Queen's University at Kingston
-%	Remodularized to improve maintainability
+% v11.0 Initial revision, revised from FreeTXL 10.8b (c) 1988-2022 Queen's University at Kingston
+%       Remodularized to improve maintainability
 
 module bootstrap
     import 
-	var tree, var ident, error
+        var tree, var ident, error
 
     export 
-	makeGrammarTree
+        makeGrammarTree
 
     % Automatically generated pre-scanned encoding of the TXL language grammar
     include "bootgrm.i"
@@ -46,95 +46,95 @@ module bootstrap
 
 
     function enterBootSymbol (partId : tokenT, kind : kindT) : int
-	for s : 1 .. nBootSymbols
-	    if tree.trees (bootSymbols (s)).name = partId then
-		%% assert tree.trees (bootSymbols (s)).kind = kind
-		result s
-	    end if
-	end for
+        for s : 1 .. nBootSymbols
+            if tree.trees (bootSymbols (s)).name = partId then
+                %% assert tree.trees (bootSymbols (s)).kind = kind
+                result s
+            end if
+        end for
 
-	if nBootSymbols = maxBootstrapSymbols then
-	    error ("TXL bootstrap", "Too many symbols in TXL bootstrap", INTERNAL_FATAL, 931)
-	end if
+        if nBootSymbols = maxBootstrapSymbols then
+            error ("TXL bootstrap", "Too many symbols in TXL bootstrap", INTERNAL_FATAL, 931)
+        end if
 
-	nBootSymbols += 1
-	bootSymbols (nBootSymbols) := tree.newTreeInit (kind, partId, partId, 0, nilKid)
-	result nBootSymbols
+        nBootSymbols += 1
+        bootSymbols (nBootSymbols) := tree.newTreeInit (kind, partId, partId, 0, nilKid)
+        result nBootSymbols
     end enterBootSymbol
 
 
     procedure getNextToken (expectedToken : string)
-	bootstrapToken += 1
+        bootstrapToken += 1
         nextToken := bootstrapStrings (bootstrapTokens (bootstrapToken))
-	if expectedToken not= "" and nextToken not= expectedToken then
-	    error ("TXL bootstrap", "Syntax error in TXL bootstrap - expected '" + expectedToken + "' + got '" + nextToken + "'", INTERNAL_FATAL, 932)
+        if expectedToken not= "" and nextToken not= expectedToken then
+            error ("TXL bootstrap", "Syntax error in TXL bootstrap - expected '" + expectedToken + "' + got '" + nextToken + "'", INTERNAL_FATAL, 932)
         end if
     end getNextToken
 
 
     procedure processDefineBody (parentIndex : int)
 
-	% it's an order tree until we see otherwise
-	tree.setKind (bootSymbols (parentIndex), kindT.order)
+        % it's an order tree until we see otherwise
+        tree.setKind (bootSymbols (parentIndex), kindT.order)
 
-	% allocate first kid 
-	var nKids := 0
-	var kidListKP := tree.newKid
-	tree.setKids (bootSymbols (parentIndex), kidListKP)
+        % allocate first kid 
+        var nKids := 0
+        var kidListKP := tree.newKid
+        tree.setKids (bootSymbols (parentIndex), kidListKP)
 
         getNextToken ("")
 
-	loop
-	    var kidTP : treePT
+        loop
+            var kidTP : treePT
 
-	    if nextToken = "[" then
-		% non-terminal or builtin
-		getNextToken ("")
-		const identIndex := ident.install (nextToken, kindT.id)
-		var kidIndex := enterBootSymbol (identIndex, kindT.id)
-		kidTP := bootSymbols (kidIndex)
-		getNextToken ("]")
+            if nextToken = "[" then
+                % non-terminal or builtin
+                getNextToken ("")
+                const identIndex := ident.install (nextToken, kindT.id)
+                var kidIndex := enterBootSymbol (identIndex, kindT.id)
+                kidTP := bootSymbols (kidIndex)
+                getNextToken ("]")
 
-	    else
-		% literal
-		if nextToken = "'" then
-		    % quoted literal
-		    getNextToken ("")
-		end if
-		const identIndex := ident.install (nextToken, kindT.id)
-		kidTP := tree.newTreeInit (kindT.literal, identIndex, identIndex, 0, nilKid)
-	    end if
+            else
+                % literal
+                if nextToken = "'" then
+                    % quoted literal
+                    getNextToken ("")
+                end if
+                const identIndex := ident.install (nextToken, kindT.id)
+                kidTP := tree.newTreeInit (kindT.literal, identIndex, identIndex, 0, nilKid)
+            end if
 
-	    nKids += 1
-	    assert nKids < maxDefineKids
+            nKids += 1
+            assert nKids < maxDefineKids
 
-	    tree.setKidTree (kidListKP, kidTP)
+            tree.setKidTree (kidListKP, kidTP)
 
-	    getNextToken ("")
+            getNextToken ("")
 
-	    exit when nextToken = "end"
+            exit when nextToken = "end"
 
-	    if tree.trees (bootSymbols (parentIndex)).kind = kindT.choose then
-		if nextToken = "|" then
-		    getNextToken ("")
-		else
-		    error ("TXL bootstrap", "Syntax error in TXL bootstrap - expected '|', got '" + nextToken + "'", INTERNAL_FATAL, 933)
-		end if
-	    elsif nextToken = "|" then
-		if nKids = 1 then
-		    tree.setKind (bootSymbols (parentIndex), kindT.choose)
-		    getNextToken ("")
-		else
-		    error ("TXL bootstrap", "Syntax error in TXL bootstrap - multiple tokens in choice alternative", INTERNAL_FATAL, 934)
-		end if
-	    end if
+            if tree.trees (bootSymbols (parentIndex)).kind = kindT.choose then
+                if nextToken = "|" then
+                    getNextToken ("")
+                else
+                    error ("TXL bootstrap", "Syntax error in TXL bootstrap - expected '|', got '" + nextToken + "'", INTERNAL_FATAL, 933)
+                end if
+            elsif nextToken = "|" then
+                if nKids = 1 then
+                    tree.setKind (bootSymbols (parentIndex), kindT.choose)
+                    getNextToken ("")
+                else
+                    error ("TXL bootstrap", "Syntax error in TXL bootstrap - multiple tokens in choice alternative", INTERNAL_FATAL, 934)
+                end if
+            end if
 
-	    % allocate next kid
-	    kidListKP := tree.newKid 
-	end loop
+            % allocate next kid
+            kidListKP := tree.newKid 
+        end loop
 
-	% These necessary conditions for high-falutin' parser optimizations!
-	tree.setCount (bootSymbols (parentIndex), nKids)
+        % These necessary conditions for high-falutin' parser optimizations!
+        tree.setCount (bootSymbols (parentIndex), nKids)
 
     end processDefineBody
 
@@ -149,16 +149,16 @@ module bootstrap
         const symbolIndex := enterBootSymbol (identIndex, kindT.id)
 
         % now process the body - in the TXL bootstrap it can only be one 
-	% of two simple forms:
+        % of two simple forms:
         %     "order", a sequence of single terminals and nonterminals,     
-	%	        e.g., A [B] C [D] E, 
-	%  or "choose", a choice between single terminals and nonterminals,
-	%		e.g., A | [B] | C | [D] | E
+        %               e.g., A [B] C [D] E, 
+        %  or "choose", a choice between single terminals and nonterminals,
+        %               e.g., A | [B] | C | [D] | E
 
-	processDefineBody (symbolIndex)
+        processDefineBody (symbolIndex)
 
-	assert nextToken = "end"
-	getNextToken ("define")
+        assert nextToken = "end"
+        getNextToken ("define")
 
     end processDefine
 
@@ -168,13 +168,13 @@ module bootstrap
         var symbolIndex : int
         var identIndex : tokenT
 
-	identIndex := ident.install ("stringlit", kindT.id)
-	symbolIndex := enterBootSymbol (identIndex, kindT.stringlit)
+        identIndex := ident.install ("stringlit", kindT.id)
+        symbolIndex := enterBootSymbol (identIndex, kindT.stringlit)
 
-	identIndex := ident.install ("charlit", kindT.id)
-	symbolIndex := enterBootSymbol (identIndex, kindT.charlit)
+        identIndex := ident.install ("charlit", kindT.id)
+        symbolIndex := enterBootSymbol (identIndex, kindT.charlit)
 
-	identIndex := ident.install ("number", kindT.id)
+        identIndex := ident.install ("number", kindT.id)
         symbolIndex := enterBootSymbol (identIndex, kindT.number)
 
         identIndex := ident.install ("id", kindT.id)
@@ -186,8 +186,8 @@ module bootstrap
         identIndex := ident.install ("key", kindT.id)
         symbolIndex := enterBootSymbol (identIndex, kindT.key)
 
-	identIndex := ident.install ("empty", kindT.id)
-	symbolIndex := enterBootSymbol (identIndex, kindT.empty)
+        identIndex := ident.install ("empty", kindT.id)
+        symbolIndex := enterBootSymbol (identIndex, kindT.empty)
 
         identIndex := ident.install ("KEEP", kindT.id)
         symbolIndex := enterBootSymbol (identIndex, kindT.empty)
@@ -202,12 +202,12 @@ module bootstrap
 
         grammarTreeTP := bootSymbols (symbolIndex)
 
-	% Install the TXL built-in symbols
-	setUpBuiltins
+        % Install the TXL built-in symbols
+        setUpBuiltins
 
         % TXL grammar defines 
         loop
-	    processDefine
+            processDefine
             exit when bootstrapToken = numBootstrapTokens
         end loop
 
@@ -216,8 +216,8 @@ module bootstrap
 
         for i : 1 .. nBootSymbols
             if tree.trees (bootSymbols (i)).kind = kindT.undefined then
-		error ("TXL bootstrap", "[" +
-		    string@(ident.idents (tree.trees (bootSymbols (i)).name)) +
+                error ("TXL bootstrap", "[" +
+                    string@(ident.idents (tree.trees (bootSymbols (i)).name)) +
                     "] has not been defined", INTERNAL_FATAL, 935)
                 errorcount += 1
             end if

@@ -4,19 +4,19 @@
 
 % Revision log
 %
-% Version 1.3	AS	18 May 2012
-%	Modified blocktype_value to [id] | [stringlit] instead of many constants
-%	Added [repeat annotation_list] to [system_list] definition
+% Version 1.3   AS      18 May 2012
+%       Modified blocktype_value to [id] | [stringlit] instead of many constants
+%       Added [repeat annotation_list] to [system_list] definition
 %
-% Version 1.2	JC	16 May 2012
-% 	Modified to accept negative numbers as values
-% 	Added -w pragma to avoid line wraps 
+% Version 1.2   JC      16 May 2012
+%       Modified to accept negative numbers as values
+%       Added -w pragma to avoid line wraps 
 %
-% Version 1.1	JC	7 March 2012
-% 	Modified to accept but ignore Stateflow
+% Version 1.1   JC      7 March 2012
+%       Modified to accept but ignore Stateflow
 %
-% Version 1.0	TD&AS	Feb 2012
-%	Original revision
+% Version 1.0   TD&AS   Feb 2012
+%       Original revision
 %
 
 #pragma -idchars '$' -w 32000
@@ -37,18 +37,18 @@ define program
 end define
 
 define stateflow_list
-    'Stateflow '{  	[IN][NL]
-	[repeat water]	[EX]
-    '}			[NL]
+    'Stateflow '{       [IN][NL]
+        [repeat water]  [EX]
+    '}                  [NL]
 end define
 
 define water
-	'{ [repeat water] '}
+        '{ [repeat water] '}
     |   [not '{] [not '}] [token]
 end define
 
 define model_or_library
-	[model_list]
+        [model_list]
     |   [library_list]
 end define
 
@@ -57,19 +57,19 @@ end define
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 define model_list
-    'Model '{				[IN][NL]
-	[repeat default_element]	[EX]
-    '}					[NL]
+    'Model '{                           [IN][NL]
+        [repeat default_element]        [EX]
+    '}                                  [NL]
 end define
 
 define library_list
-    'Library '{				[IN][NL]
-	[repeat default_element]	[EX]
-    '}					[NL]
+    'Library '{                         [IN][NL]
+        [repeat default_element]        [EX]
+    '}                                  [NL]
 end define 
 
 define defined_list_element
-	[graphicalinterface_list]
+        [graphicalinterface_list]
     |   [array_list]
     |   [blockdefaults_list]
     |   [annotationdefaults_list]
@@ -85,33 +85,33 @@ end define
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 define array_list
-    'Array '{			[IN][NL]
-	[type_element]
-	[dimension_element]
-	[repeat array_element]
-	[propname_element]	[EX]
-    '}				[NL]
+    'Array '{                   [IN][NL]
+        [type_element]
+        [dimension_element]
+        [repeat array_element]
+        [propname_element]      [EX]
+    '}                          [NL]
 end define
 
 define type_element
-    'Type [stringlit]		[NL]
+    'Type [stringlit]           [NL]
 end define
 
 define dimension_element
-    'Dimension [number]		[NL]
+    'Dimension [number]         [NL]
 end define
 
 define propname_element
-    'PropName [stringlit]	[NL]
+    'PropName [stringlit]       [NL]
 end define
 
 define array_element
-	[cell_element]
+        [cell_element]
     |   [defined_list_element]
 end define
 
 define cell_element
-    'CELL  [stringlit]		[NL]
+    'CELL  [stringlit]          [NL]
 end define
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -119,13 +119,13 @@ end define
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 define graphicalinterface_list
-    'GraphicalInterface '{			[IN][NL]
-	[repeat graphicalinterface_element]	[EX]
-    '}						[NL]
+    'GraphicalInterface '{                      [IN][NL]
+        [repeat graphicalinterface_element]     [EX]
+    '}                                          [NL]
 end define
 
 define graphicalinterface_element
-	[numrootinports_element]
+        [numrootinports_element]
     |   [numrootoutports_element]
     |   [parameterargumentnames_element]
     |   [computedmodelversion_element]
@@ -134,27 +134,27 @@ define graphicalinterface_element
 end define
 
 define numrootinports_element
-    'NumRootInports [number]	[NL]
+    'NumRootInports [number]    [NL]
 end define
 
 define numrootoutports_element
-    'NumRootOutports [number]	[NL]
+    'NumRootOutports [number]   [NL]
 end define
 
 define parameterargumentnames_element
-    'ParameterArgumentNames [stringlit]	[NL]
+    'ParameterArgumentNames [stringlit] [NL]
 end define
 
 define computedmodelversion_element
-    'ComputedModelVersion [stringlit]	[NL]
+    'ComputedModelVersion [stringlit]   [NL]
 end define
 
 define nummodelreferences_element
-    'NumModelReferences [number]	[NL]
+    'NumModelReferences [number]        [NL]
 end define
 
 define numtestpointedsignals_element
-    'NumTestPointedSignals [number]	[NL]
+    'NumTestPointedSignals [number]     [NL]
 end define
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -162,71 +162,71 @@ end define
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 define system_list
-    'System '{				[NL][IN]
-	[repeat default_single_element]
-	[repeat block_list]
-	[repeat line_list]
-	[repeat annotation_list]		[EX]
-    '}					[NL]
+    'System '{                          [NL][IN]
+        [repeat default_single_element]
+        [repeat block_list]
+        [repeat line_list]
+        [repeat annotation_list]                [EX]
+    '}                                  [NL]
 end define
 
 define annotation_list
-	Annotation {			[NL][IN]
-		[repeat default_single_element]	[EX]
-	}						[NL]
+        Annotation {                    [NL][IN]
+                [repeat default_single_element] [EX]
+        }                                               [NL]
 end define
 
 define modelbrowservisibility_element
-    'ModelBrowserVisibility [on_or_off]	[NL]
+    'ModelBrowserVisibility [on_or_off] [NL]
 end define
 
 define modelbrowserwidth_element
-    'ModelBrowserWidth [number]	[NL]
+    'ModelBrowserWidth [number] [NL]
 end define
 
 define screencolor_element
-    'ScreenColor [stringlit]	[NL]
+    'ScreenColor [stringlit]    [NL]
 end define
 
 define paperorientation_element
-    'PaperOrientation [id]	[NL]
+    'PaperOrientation [id]      [NL]
 end define
 
 define paperpositionmode_element
-    'PaperPositionMode [stringlit]	[NL]
+    'PaperPositionMode [stringlit]      [NL]
 end define
 
 define papertype_element
-    'PaperType [stringlit]	[NL]
+    'PaperType [stringlit]      [NL]
 end define
 
 define paperunits_element
-    'PaperUnits [stringlit]	[NL]
+    'PaperUnits [stringlit]     [NL]
 end define
 
 % 4 real numbers
 define tiledpapermargins_element
-    'TiledPaperMargins [number_list_value]	[NL]
+    'TiledPaperMargins [number_list_value]      [NL]
 end define
 
 define tiledpagescale_element
-    'TiledPageScale [number]	[NL]
+    'TiledPageScale [number]    [NL]
 end define
 
 define showpageboundaries_element
-    'ShowPageBoundaries [on_or_off]	[NL]
+    'ShowPageBoundaries [on_or_off]     [NL]
 end define
 
 define zoomfactor_element
-    'ZoomFactor [stringlit]	[NL]
+    'ZoomFactor [stringlit]     [NL]
 end define
 
 define reportname_element
-    'ReportName [stringlit]	[NL]
+    'ReportName [stringlit]     [NL]
 end define
 
 define sidhighwatermark_element
-    'SIDHighWatermark [number]	[NL]
+    'SIDHighWatermark [number]  [NL]
 end define
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -234,105 +234,105 @@ end define
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 define block_list
-    'Block '{				[NL][IN]
-	[blocktype_element]
-	[repeat default_element]	[EX]
-    '}					[NL]
+    'Block '{                           [NL][IN]
+        [blocktype_element]
+        [repeat default_element]        [EX]
+    '}                                  [NL]
 end define
 
 define blocktype_element
-    'BlockType [blocktype_value]	[NL]
+    'BlockType [blocktype_value]        [NL]
 end define
 
 define blocktype_value
-	[id] | [stringlit]
-%	% sources
-%	'Clock | 'Constant | 'FromFile | 'FromWorkspace 
+        [id] | [stringlit]
+%       % sources
+%       'Clock | 'Constant | 'FromFile | 'FromWorkspace 
 %    |   'SignalGenerator | 'Sin | 'StepFcn | 'WhiteNoise | 'DiscretePulseGenerator
-%	% sinks
+%       % sinks
 %    |   'Scope | 'ToFile | 'ToWorkspace | 'Terminator
-%	% discrete
+%       % discrete
 %    |   'DiscSateSpace | 'DiscTransferFcn | 'DiscZeroPole
 %    |   'Filter | 'UnitDelay | 'Logic
-%	% linear
+%       % linear
 %    |   'Derivative | 'Gain | 'Integrator | 'StateSpace
 %    |   'Sum | 'TransferFcn | 'ZeroPole
-%	% nonlinear
+%       % nonlinear
 %    |   'Abs | 'Backslash | 'DeadZone | 'Fcn | 'LookUpTable
 %    |   'MATLABFcn | 'Product | 'RateLimiter | 'Relay
 %    |   'Saturation | 'Saturate | 'S '- 'Function | 'Switch | 'TransportDelay
-%	% connections
+%       % connections
 %    |   'Demux | 'Inport | 'Mux | 'Outport
-%	% extras
+%       % extras
 %    |   'SubSystem 
 %    |   'Lookup_n '- 'D
-%    |	'From
-%    |	'Goto
+%    |  'From
+%    |  'Goto
 end define
 
 define blocklist_list
-    'List '{				[NL][IN]
-	[listtype_element]
-	[repeat default_element]	[EX]
-    '}					[NL] 
+    'List '{                            [NL][IN]
+        [listtype_element]
+        [repeat default_element]        [EX]
+    '}                                  [NL] 
 end define
 
 define listtype_element
-    'ListType [id]	[NL]
+    'ListType [id]      [NL]
 end define
 
 define port_list
-    'Port '{				[NL][IN]
-	[portnumber_element]
-	[name_element]
-	[rtwstorageclass_element]
-	[dataloggingnamemode_element]	[EX]
-    '}					[NL]
+    'Port '{                            [NL][IN]
+        [portnumber_element]
+        [name_element]
+        [rtwstorageclass_element]
+        [dataloggingnamemode_element]   [EX]
+    '}                                  [NL]
 end define
 
 define portnumber_element
-    'PortNumber [number]	[NL]
+    'PortNumber [number]        [NL]
 end define
 
 define name_element
-    'Name [stringlit]	[NL]
+    'Name [stringlit]   [NL]
 end define
 
 define rtwstorageclass_element
-    'RTWStorageClass [stringlit]	[NL]
+    'RTWStorageClass [stringlit]        [NL]
 end define
 
 define dataloggingnamemode_element
-    'DataLoggingNameMode [stringlit]	[NL]
+    'DataLoggingNameMode [stringlit]    [NL]
 end define
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % MatData subgrammar
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 define matdata_list
-    'MatData '{				[IN][NL]
-	[numrecords_element]
-	[repeat datarecord_list]	[EX]
-    '}					[NL]
+    'MatData '{                         [IN][NL]
+        [numrecords_element]
+        [repeat datarecord_list]        [EX]
+    '}                                  [NL]
 end define
 
 define numrecords_element
-    'NumRecords [number]	[NL]
+    'NumRecords [number]        [NL]
 end define
 
 define datarecord_list
-    'DataRecord '{			[IN][NL]
-	[tag_element]
-	[data_element]			[EX]
-    '}					[NL]
+    'DataRecord '{                      [IN][NL]
+        [tag_element]
+        [data_element]                  [EX]
+    '}                                  [NL]
 end define
 
 define tag_element
-    'Tag [id]	[NL]
+    'Tag [id]   [NL]
 end define
 
 define data_element
-    'Data [repeat stringlit+]	[NL]
+    'Data [repeat stringlit+]   [NL]
 end define
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -340,20 +340,20 @@ end define
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 define line_list
-    'Line '{				[NL][IN]
-	[repeat default_element]	[EX]
-    '}					[NL]
+    'Line '{                            [NL][IN]
+        [repeat default_element]        [EX]
+    '}                                  [NL]
 end define
 
 define branch_list
-    'Branch '{				[NL][IN]
-	[repeat default_element]
-	[end_or_branch]			[EX]
-    '}					[NL]
+    'Branch '{                          [NL][IN]
+        [repeat default_element]
+        [end_or_branch]                 [EX]
+    '}                                  [NL]
 end define
 
 define end_or_branch
-	[end_line_elements]
+        [end_line_elements]
     |   [repeat branch_list]
 end define
 
@@ -363,11 +363,11 @@ define end_line_elements
 end define
 
 define dstblock_element
-    'DstBlock [default_value]	[NL]
+    'DstBlock [default_value]   [NL]
 end define
 
 define dstport_element
-    'DstPort [default_value]	[NL]
+    'DstPort [default_value]    [NL]
 end define
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -388,17 +388,17 @@ end define
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 define default_element
-	[default_single_element]
+        [default_single_element]
     |   [defined_list_element]
     |   [default_list_element]
 end define
 
 define default_single_element
-    [id] [default_value]	[NL]
+    [id] [default_value]        [NL]
 end define
 
 define default_value
-	[mnumber]			% T.D. allow negative number
+        [mnumber]                       % T.D. allow negative number
     |   [repeat stringlit+]
     |   [on_or_off]
     |   [id]
@@ -407,9 +407,9 @@ define default_value
 end define
 
 define default_list_element
-    [id] [repeat dot_id] '{		[NL][IN]
-	[repeat default_element]	[EX]
-    '}					[NL]
+    [id] [repeat dot_id] '{             [NL][IN]
+        [repeat default_element]        [EX]
+    '}                                  [NL]
 end define
 
 define dot_id
@@ -451,27 +451,27 @@ end define
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 define blockdefaults_list
-    'BlockDefaults '{			[NL][IN]
-	[repeat default_element]	[EX]
-    '}					[NL]
+    'BlockDefaults '{                   [NL][IN]
+        [repeat default_element]        [EX]
+    '}                                  [NL]
 end define
 
 define annotationdefaults_list
-    'AnnotationDefaults '{			[NL][IN]
-	 [repeat graphics_presentation_element]	[EX]
-    '}						[NL]
+    'AnnotationDefaults '{                      [NL][IN]
+         [repeat graphics_presentation_element] [EX]
+    '}                                          [NL]
 end define
 
 define linedefaults_list
-    'LineDefaults '{				[NL][IN]
-	 [repeat graphics_presentation_element]	[EX]
-    '}						[NL]
+    'LineDefaults '{                            [NL][IN]
+         [repeat graphics_presentation_element] [EX]
+    '}                                          [NL]
 end define
 
 define blockparameterdefaults_element
-    'BlockParameterDefaults '{		[NL][IN]
-	[repeat block_list]		[EX]
-    '}					[NL]
+    'BlockParameterDefaults '{          [NL][IN]
+        [repeat block_list]             [EX]
+    '}                                  [NL]
 end define
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -479,7 +479,7 @@ end define
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 define graphics_presentation_element
-	[foregroundcolor_element]
+        [foregroundcolor_element]
     |   [backgroundcolor_element]
     |   [dropshadow_element]
     |   [nameplacement_element]
@@ -496,65 +496,65 @@ define graphics_presentation_element
 end define
 
 define foregroundcolor_element
-    'ForegroundColor [stringlit]	[NL]
+    'ForegroundColor [stringlit]        [NL]
 end define
 
 define backgroundcolor_element
-    'BackgroundColor [stringlit]	[NL]
+    'BackgroundColor [stringlit]        [NL]
 end define
 
 define dropshadow_element
-    'DropShadow [on_or_off]	[NL]
+    'DropShadow [on_or_off]     [NL]
 end define
 
 define nameplacement_element
-    'NamePlacement [stringlit]	[NL]
+    'NamePlacement [stringlit]  [NL]
 end define
 
 define fontname_element
-    'FontName [stringlit]	[NL]
+    'FontName [stringlit]       [NL]
 end define
 
 define fontsize_element
-    'FontSize [number]	[NL]
+    'FontSize [number]  [NL]
 end define
 
 define fontweight_element
-    'FontWeight [stringlit]	[NL]
+    'FontWeight [stringlit]     [NL]
 end define
 
 define fontangle_element
-    'FontAngle [stringlit]	[NL]
+    'FontAngle [stringlit]      [NL]
 end define
 
 define showname_element
-    'ShowName [on_or_off]	[NL]
+    'ShowName [on_or_off]       [NL]
 end define
 
 define blockrotation_element
-    'BlockRotation [number]	[NL]
+    'BlockRotation [number]     [NL]
 end define
 
 define blockmirror_element
-    'BlockMirror [on_or_off]	[NL]
+    'BlockMirror [on_or_off]    [NL]
 end define
 
 %% annotations only??
 
 define horizontalalignment_element
-    'HorizontalAlignment [stringlit]	[NL]
+    'HorizontalAlignment [stringlit]    [NL]
 end define
 
 define verticalalignment_element
-    'VerticalAlignment [stringlit]	[NL]
+    'VerticalAlignment [stringlit]      [NL]
 end define
 
 define usedisplaytextasclickcallback_element
-    'UseDisplayTextAsClickCallback [on_or_off]	[NL]
+    'UseDisplayTextAsClickCallback [on_or_off]  [NL]
 end define
 
 define showportlabels_element
-    'ShowPortLabels [stringlit]	[NL]
+    'ShowPortLabels [stringlit] [NL]
 end define
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

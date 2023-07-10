@@ -9,7 +9,7 @@ end define
 
 function main
     replace [program] 
-	I [integernumber] + J [integernumber]
+        I [integernumber] + J [integernumber]
     by
         I [+ J]
 end function

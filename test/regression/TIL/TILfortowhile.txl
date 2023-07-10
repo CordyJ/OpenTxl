@@ -25,27 +25,27 @@ rule main
     % Capture each "for" statement, in its statement sequence context 
     % so that we can replace it with multiple statements
     replace [statement*]
-	'for Id [id] := Expn1 [expression] 'to Expn2 [expression] 'do
-	    Statements [statement*]
-	'end
-	MoreStatements [statement*]
+        'for Id [id] := Expn1 [expression] 'to Expn2 [expression] 'do
+            Statements [statement*]
+        'end
+        MoreStatements [statement*]
 
     % Need a unique new identifier for the upper bound
     construct UpperId [id]
-    	Id [_ 'Upper] [!]
+        Id [_ 'Upper] [!]
 
     % Construct the iterator
     construct IterateStatement [statement]
-	Id := Id + 1;
+        Id := Id + 1;
 
     % Replace the whole thing
     by
-	'var Id;
-	Id := Expn1;
-	'var UpperId;
-	UpperId := (Expn2) + 1;
-	'while Id - UpperId 'do
-	    Statements [. IterateStatement]
-	'end
-	MoreStatements
+        'var Id;
+        Id := Expn1;
+        'var UpperId;
+        UpperId := (Expn2) + 1;
+        'while Id - UpperId 'do
+            Statements [. IterateStatement]
+        'end
+        MoreStatements
 end rule

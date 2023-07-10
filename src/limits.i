@@ -25,7 +25,7 @@
 
 % Modification Log
 
-% v11.0	Initial revision, revised from FreeTXL 10.8b (c) 1988-2022 Queen's University at Kingston
+% v11.0 Initial revision, revised from FreeTXL 10.8b (c) 1988-2022 Queen's University at Kingston
 
 
 % Turing+ Limits
@@ -40,9 +40,9 @@ const * maxIfdefDepth := 32
 
 % Maximimum line length - limits input and output line length
 #if CHECKED then
-    const * maxLineLength := 4095	% Turing limit
+    const * maxLineLength := 4095       % Turing limit
 #else
-    const * maxLineLength := 1048575	% 1 Mb - 1
+    const * maxLineLength := 1048575    % 1 Mb - 1
 #end if
 
 % Maximum include file depth in a TXL program
@@ -52,7 +52,7 @@ const * maxIncludeDepth := 8
 const * maxBootstrapSymbols := 100
 
 % Maximum total defined symbols in a TXL program
-const * maxSymbols := 16384 + (options.txlSize div 200) * 2048	% 16384, 18432 (200), 20480 (400) .. 26624 (1000)
+const * maxSymbols := 16384 + (options.txlSize div 200) * 2048  % 16384, 18432 (200), 20480 (400) .. 26624 (1000)
 
 % Maximum number of keywords in each of bootstrap and TXL program
 const * maxKeys := 2048
@@ -65,26 +65,26 @@ const * maxTokenPatterns := 128
 const * maxTokenPatternLinks := 25 * maxTokenPatterns
 
 % Maximum total comment brackets in a TXL program
-const * maxCommentTokens := 32	% (pairs)
+const * maxCommentTokens := 32  % (pairs)
 
 % Maximum number of rules in a TXL program
-const * maxRules := 4096 + (options.txlSize div 200) * 1024	% 4096, 5120 (200), 6144 (400) .. 9216 (1000)
+const * maxRules := 4096 + (options.txlSize div 200) * 1024     % 4096, 5120 (200), 6144 (400) .. 9216 (1000)
 
 % Number of parameters to a rule
 const * maxParameters := 16
 const * avgParameters := 4
 
 % Number of local vars in a rule
-const * maxLocalVars := 65535	% nat2
+const * maxLocalVars := 65535   % nat2
 const * avgLocalVars := 128
 
 % Maximum unique sub-rule calls in a rule
-const * maxRuleCalls := 65535	% nat2
+const * maxRuleCalls := 65535   % nat2
 
 % Number of conditions, constructors and deconstructors preceding
 % or following a pattern in a rule
-const * maxParts := 65535	% nat2
-const * avgParts := 64		% allow for very complex rule sets
+const * maxParts := 65535       % nat2
+const * avgParts := 64          % allow for very complex rule sets
 
 % Maximum length of any rule pattern or replacement, in tokens
 const * maxPatternTokens := 4096
@@ -95,13 +95,13 @@ const * maxPatternTokens := 4096
 var vmaxIdents := 2048
 loop
     exit when vmaxIdents >= options.txlSize * 1024 
-	    or vmaxIdents = 1048576
+            or vmaxIdents = 1048576
     vmaxIdents *= 2
 end loop
 const * maxIdents := vmaxIdents
 
 % Maximum total characters in token texts
-const * maxIdentChars := maxIdents * 32 	% (statistical estimate of ratio)
+const * maxIdentChars := maxIdents * 32         % (statistical estimate of ratio)
 
 % Maximum total length of any input,
 % including each of: TXL bootstrap grammar, TXL program, input source
@@ -127,7 +127,7 @@ const * maxLeftRecursion := 10
 const * maxParseCycles := min (1000000 + 100 * maxTokens, 500000000)
 
 % Maximum number of alternatives in a choice or elements in a sequence
-const * maxDefineKids := 65535	% nat2
+const * maxDefineKids := 65535  % nat2
 
 % Maximum rule call depth
 % Normally should allow for at least the length of the whole input file
@@ -151,8 +151,8 @@ if defaultStackUse > 256*1024*1024 then
 end if
 
 % We need at least these to run
-const reservedStack := 1048576		% 1 mb
-const minimumStack := 4194304		% 4 mb
+const reservedStack := 1048576          % 1 mb
+const minimumStack := 4194304           % 4 mb
 
 % Do we have less than we'd like at this size?
 if stackSize - reservedStack < defaultStackUse then
@@ -160,14 +160,14 @@ if stackSize - reservedStack < defaultStackUse then
     const oldStackUse : addressint := defaultStackUse
     defaultStackUse := stackSize - reservedStack
     if defaultStackUse >= minimumStack then
-	if (not options.option (quiet_p)) and (not options.option (compile_p)) 	% we don't want to hear about it
-		and (defaultStackUse < oldStackUse div 2 or options.option (verbose_p)) then
-	    error ("", "Stack limit less than recommended for TXL size (probable cause: shell stack limit)", WARNING, 911)
-	    error ("", "Recursion stack limit reduced from " + intstr (oldStackUse,1) 
-		+ " to " + intstr (defaultStackUse,1) + " to fit", INFORMATION, 913)
-	end if
+        if (not options.option (quiet_p)) and (not options.option (compile_p))  % we don't want to hear about it
+                and (defaultStackUse < oldStackUse div 2 or options.option (verbose_p)) then
+            error ("", "Stack limit less than recommended for TXL size (probable cause: shell stack limit)", WARNING, 911)
+            error ("", "Recursion stack limit reduced from " + intstr (oldStackUse,1) 
+                + " to " + intstr (defaultStackUse,1) + " to fit", INFORMATION, 913)
+        end if
     else
-	error ("", "Stack limit less than minimum for TXL size (probable cause: shell stack limit)", FATAL, 912)
+        error ("", "Stack limit less than minimum for TXL size (probable cause: shell stack limit)", FATAL, 912)
     end if
 end if
 

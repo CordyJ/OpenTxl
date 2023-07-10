@@ -4,11 +4,11 @@ include "Tplus.Grammar"
 
 rule main
     match [compilation]
-	C [compilation]
+        C [compilation]
     construct NullProcCalls [repeat callStatement]
-	% none yet
+        % none yet
     construct ProcCalls [repeat callStatement]
-	NullProcCalls [extract C] [print]
+        NullProcCalls [extract C] [print]
 end rule
 
 % % external rule extract Scope [compilation]

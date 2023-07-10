@@ -17,11 +17,11 @@ function main
     construct NewId [id]
         _ [+ "theid"]
     construct NewItem [item]
-	NewId
+        NewId
     construct NewJimbo [jimbo]
        _ [+ "#jimbo"]
     construct NewJimboItem [item]
-	NewJimbo
+        NewJimbo
     by
         _ [. each Items] [. NewItem] [. NewJimboItem]
 end function

@@ -20,9 +20,9 @@ VAR
  
 BEGIN
     FOR i := 1 TO 10000 DO
-	FOR j := 1 TO 100 DO
-	    dummy[i] := i*i DIV (j*i);
-	END;
+        FOR j := 1 TO 100 DO
+            dummy[i] := i*i DIV (j*i);
+        END;
     END;   
 END eat;
 
@@ -34,9 +34,9 @@ VAR
 
 BEGIN
     FOR i := 1 TO 10000 DO
-	FOR j := 1 TO 100 DO
-	    dummy[i] := i*i DIV (j*i);
-	END;
+        FOR j := 1 TO 100 DO
+            dummy[i] := i*i DIV (j*i);
+        END;
     END;   
 END think;
 
@@ -47,16 +47,16 @@ BEGIN
         CALL(sit,req); WAIT (sit,ok);
 
         InOut . WriteString ( "sitting" ) ; InOut . WriteLn ( ) ;
-	req.order := pickup;
-	CALL(left,req); WAIT(left,ok);
-	CALL(right,req); WAIT(right,ok);
+        req.order := pickup;
+        CALL(left,req); WAIT(left,ok);
+        CALL(right,req); WAIT(right,ok);
 
-	InOut . WriteString ( "eating" ) ; InOut . WriteLn ( ) ;
-	eat();
-	CALL(leave,req); WAIT(leave,ok);
-	req.order := putdown;
-	CALL(left,req); WAIT(left,ok);
-	CALL(right,req); WAIT(right,ok);
+        InOut . WriteString ( "eating" ) ; InOut . WriteLn ( ) ;
+        eat();
+        CALL(leave,req); WAIT(leave,ok);
+        req.order := putdown;
+        CALL(left,req); WAIT(left,ok);
+        CALL(right,req); WAIT(right,ok);
     END;
 END Phil.
 

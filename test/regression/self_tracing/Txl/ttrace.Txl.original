@@ -9,32 +9,32 @@
 include "Turing.Grammar"
 
 keys 
-	DONE__
+        DONE__
 end keys
 
 define declarationOrStatement
-	[declaration]		[opt ';] [NL] 	
-    |	[variableBinding]	[opt ';] [NL] 	
-    |	[statement]		[opt ';] [NL] 	[attr 'DONE__]
+        [declaration]           [opt ';] [NL]   
+    |   [variableBinding]       [opt ';] [NL]   
+    |   [statement]             [opt ';] [NL]   [attr 'DONE__]
 end define
 
 % external rule quote X [any]
 
 function main
     replace [program]
-	DandS [repeat declarationOrStatement]
+        DandS [repeat declarationOrStatement]
     by
-	DandS [addtracing]
+        DandS [addtracing]
 end function
 
 rule addtracing
     replace [repeat declarationOrStatement]
-	S [statement] _ [opt ';]
-	Rest [repeat declarationOrStatement]
+        S [statement] _ [opt ';]
+        Rest [repeat declarationOrStatement]
     construct QuoteS [stringlit]
-	_ [quote S]
+        _ [quote S]
     by
-	put ">>> ", QuoteS 	DONE__
-	S			DONE__
-	Rest
+        put ">>> ", QuoteS      DONE__
+        S                       DONE__
+        Rest
 end rule

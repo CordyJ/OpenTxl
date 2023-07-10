@@ -26,8 +26,8 @@
 
 % Modification Log
 
-% v11.0	Initial revision, revised from FreeTXL 10.8b (c) 1988-2022 Queen's University at Kingston
-%	Reprogrammed and remodularized to improve maintainability
+% v11.0 Initial revision, revised from FreeTXL 10.8b (c) 1988-2022 Queen's University at Kingston
+%       Reprogrammed and remodularized to improve maintainability
 
 include "%system"
 
@@ -36,8 +36,8 @@ const usage := "Usage: txlcvt [-e] file.ctxl"
 % Runtime assertion checker
 procedure insist (cond : boolean, message : string)
     if not cond then
-	put : 0, "TXL Bytecode Converter: ", message
-	quit
+        put : 0, "TXL Bytecode Converter: ", message
+        quit
     end if
 end insist
 
@@ -77,7 +77,7 @@ put : outstream, "unsigned char " + ctxlname + "TXL [] = {"
 for b : 1 .. 999999999
     exit when eof (instream)
     if b mod 20 = 0 then
-	put : outstream, ""
+        put : outstream, ""
     end if
     var byte : nat1
     read : instream, byte : 1

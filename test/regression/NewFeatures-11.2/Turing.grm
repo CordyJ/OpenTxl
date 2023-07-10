@@ -1,0 +1,1044 @@
+% TXL 4.2 Turing language basis grammar
+
+% J.R. Cordy and E. Promislow, Queen's University, June 1988, revised Sept 1990
+
+% (after the original by C.D. Halpern, University of Toronto, January 1986)
+
+
+
+#pragma -width 160
+
+
+
+compounds
+
+        :=  +=  -=  *=  >=  <=  ~= 
+
+end compounds
+
+
+
+comments
+
+        '%
+
+end comments
+
+
+
+keys
+
+        'array 'assert 'begin 'bind 'body 'boolean 'case 'collection 'const 'decreasing
+
+        'else 'elsif 'end 'enum 'exit 'export 'for 'forward 'free 'function
+
+        'get 'if 'import 'init 'int 'label 'loop 'module 'new 'not
+
+        'of 'opaque 'pervasive 'pointer 'post 'pre 'procedure 'put 'real 'record
+
+        'result 'return 'set 'skip 'string 'then 'to 'type 'union 'var 'when
+
+end keys
+
+
+
+define program
+
+        [repeat declaration_or_statement]
+
+end define
+
+
+
+define sub_scope
+
+        [repeat declaration_or_statement]
+
+end define
+
+
+
+define declaration_or_statement
+
+        [declaration]   [NL] 
+
+    |   [statement]     [NL]
+
+end define
+
+
+
+define declaration
+
+        [module_declaration]
+
+    |   [constant_declaration]
+
+    |   [type_declaration]
+
+    |   [variable_declaration]
+
+    |   [variable_binding]
+
+    |   [subprogram_declaration]
+
+end define
+
+
+
+define module_declaration 
+
+                                [NL]
+
+        'module [id]            [NL][IN]
+
+            [module_body]       [EX]
+
+        'end [id]               [NL]
+
+end define
+
+
+
+define module_body 
+
+        [opt import_list]
+
+        [opt export_list]
+
+        [sub_scope]
+
+end define
+
+
+
+define export_list 
+
+        'export ( [list exported_id] )    [NL]
+
+end define
+
+
+
+define exported_id 
+
+        [opt 'opaque] [id] 
+
+end define
+
+
+
+define constant_declaration 
+
+        'const [opt pervasive_indicator] [id] [opt colon_type_spec] [opt assign_initial_value]
+
+end define
+
+
+
+define assign_initial_value
+
+        := [initial_value]
+
+end define
+
+
+
+define initial_value
+
+        'init ( [initial_value] [repeat comma_initial_value] )
+
+    |   [expn]
+
+end define
+
+
+
+define comma_initial_value 
+
+        , [initial_value]
+
+end define
+
+
+
+define colon_type_spec
+
+        : [type_spec]
+
+end define
+
+
+
+define type_spec
+
+        [standard_type]
+
+    |   [array_type]
+
+    |   [record_type]
+
+    |   [enumerated_type]
+
+    |   [set_type]
+
+    |   [union_type]
+
+    |   [collection_type]
+
+    |   [pointer_type]
+
+    |   [subrange_type]
+
+    |   [named_type]
+
+end define
+
+
+
+define standard_type
+
+        'int  
+
+    |   'real  
+
+    |   'boolean  
+
+    |   [string_type]
+
+end define
+
+
+
+define string_type
+
+        'string [opt string_length]
+
+end define
+
+
+
+define string_length
+
+        ( [expn_or_star] )
+
+end define
+
+
+
+define id_or_star
+
+        [expn]  | *
+
+end define
+
+
+
+% Non-precedence expression grammar (leave precedence to Turing)
+
+
+
+define expn 
+
+        [primary] [opt operator_expn]
+
+end define
+
+
+
+define operator_expn 
+
+        [op] [expn]
+
+end define
+
+
+
+define op 
+
+        +  | *  |  -  |  /  |  =  |  <  |  >  |  'and  |  'or  |  >=  |  <=  |  ~=  |  'mod  |  'div  |  'not =
+
+end define
+
+
+
+define primary 
+
+        ( [expn] )
+
+    |   [prefix_op] [primary]
+
+    |   [stringlit]
+
+    |   [number]
+
+    |   [reference]
+
+end define
+
+
+
+define prefix_op 
+
+        +  | -  |  'not
+
+end define
+
+
+
+define reference 
+
+        [id] [repeat component_selector]
+
+end define
+
+
+
+define component_selector
+
+        . [id]
+
+    |   [subscript]
+
+end define
+
+
+
+define subscript
+
+        ( [expn_or_star] [opt comma_or_dot_dot_expn_or_star] )
+
+end define
+
+
+
+define comma_or_dot_dot_expn_or_star
+
+        [repeat comma_expn]
+
+    |   [dot_dot_expn_or_star]
+
+end define
+
+
+
+define comma_expn
+
+          , [expn]
+
+end define
+
+
+
+define dot_dot_expn_or_star
+
+        [dot_dot] [expn_or_star]
+
+end define
+
+
+
+define expn_or_star
+
+        [star_expn]
+
+    |   [expn]
+
+end define
+
+
+
+define star_expn
+
+        * [opt plus_or_minus_expn]
+
+end define
+
+
+
+define plus_or_minus_expn
+
+        + [expn]
+
+    |   - [expn]
+
+end define
+
+
+
+define subrange_type
+
+        [expn] [dot_dot] [expn]
+
+end define
+
+
+
+define comma_id
+
+        , [id]
+
+end define
+
+
+
+define array_type 
+
+        'array [index_type] [repeat comma_index_type] 'of [type_spec]
+
+end define
+
+
+
+define index_type 
+
+        [enumerated_type] 
+
+    |   [starred_subrange_type] 
+
+    |   [named_type]
+
+end define
+
+
+
+define starred_subrange_type
+
+        [expn] [dot_dot] [expn_or_star]
+
+end define
+
+
+
+define comma_index_type
+
+        , [index_type]
+
+end define
+
+
+
+define record_type 
+
+                                        [NL][IN]
+
+        'record                         [NL][IN]
+
+            [repeat record_field]       [EX]
+
+        'end 'record                    [EX]
+
+end define
+
+
+
+define record_field
+
+        [id] [repeat comma_id] : [type_spec]    [NL]
+
+end define
+
+
+
+define union_type 
+
+                                                [NL][IN]
+
+        'union [opt id] : [index_type] 'of      [NL][IN]
+
+            [union_alternative]
+
+            [repeat union_alternative]
+
+            [opt last_union_alternative]        [EX]
+
+        'end 'union                             [EX]
+
+end define
+
+
+
+define union_alternative 
+
+        'label [expn] [repeat comma_expn] :             [NL][IN]
+
+            [repeat id_rep_comma_id_colon_type_spec]    [EX]
+
+end define
+
+
+
+define id_rep_comma_id_colon_type_spec 
+
+        [id] [repeat comma_id] : [type_spec]    [NL]
+
+end define
+
+
+
+define last_union_alternative 
+
+        'label :                                        [NL][IN]
+
+            [repeat id_rep_comma_id_colon_type_spec]    [EX]
+
+end define
+
+
+
+define collection_type
+
+        'collection 'of [forward_id_or_type_spec]
+
+end define
+
+
+
+define forward_id_or_type_spec 
+
+        'forward [id] 
+
+    |   [type_spec]
+
+end define
+
+
+
+define pointer_type 
+
+        'pointer 'to [id]
+
+end define
+
+
+
+define named_type
+
+        [reference]
+
+end define
+
+
+
+define enumerated_type 
+
+        'enum ( [id] [repeat comma_id] )
+
+end define
+
+
+
+define set_type 
+
+        'set 'of [index_type]
+
+end define
+
+
+
+define variable_binding 
+
+        'bind [opt 'var] [id] 'to [reference] [repeat comma_var_binding]
+
+end define
+
+
+
+define comma_var_binding 
+
+         , [variable_binding]
+
+end define
+
+
+
+define variable_declaration 
+
+        'var [id] [repeat comma_id] [opt colon_type_spec] [opt assign_initial_value]
+
+end define
+
+
+
+define type_declaration
+
+        'type [opt pervasive_indicator] [id] : [type_spec]
+
+end define
+
+
+
+define pervasive_indicator 
+
+        'pervasive 
+
+    |   '*
+
+    |   [empty]
+
+end define
+
+
+
+define subprogram_declaration
+
+        [procedure_declaration]
+
+    |   [function_declaration] 
+
+    |   [forward_subprogram_declaration] 
+
+    |   [body_subprogram_declaration] 
+
+end define
+
+
+
+define procedure_declaration
+
+                                [NL]
+
+        [procedure_header]      [NL][IN]
+
+            [opt import_list]
+
+            [subprogram_body]
+
+end define
+
+
+
+define function_declaration
+
+                                [NL]
+
+        [function_header]       [NL][IN]
+
+            [opt import_list]
+
+            [subprogram_body]
+
+end define
+
+
+
+define forward_subprogram_declaration
+
+        'forward [subprogram_header]    [NL][IN]
+
+        [import_list]                   [EX]
+
+end define
+
+
+
+define subprogram_header
+
+        [procedure_header] 
+
+    |   [function_header]
+
+end define
+
+
+
+define body_subprogram_declaration
+
+                                                [NL]
+
+        'body [procedure_or_function] [id]      [NL][IN]
+
+        [subprogram_body]
+
+end define
+
+
+
+define procedure_or_function
+
+        'procedure
+
+    |   'function
+
+end define
+
+
+
+define procedure_header
+
+        'procedure [id] [opt parameter_list]
+
+end define
+
+
+
+define parameter_list
+
+        ( [parameter_declaration]  [repeat comma_parameter_decl] )
+
+end define
+
+
+
+define parameter_declaration
+
+        [opt 'var] [id] [repeat comma_id] :  [type_spec]
+
+    |   [subprogram_header]
+
+end define
+
+
+
+define comma_parameter_decl
+
+        , [parameter_declaration]
+
+end define
+
+
+
+define function_header
+
+        'function [id] [opt parameter_list] [opt id] : [type_spec]
+
+end define
+
+
+
+define import_list 
+
+        'import ( [list imported_id] )    [NL]
+
+end define
+
+
+
+define imported_id 
+
+        [opt var_or_forward] [id]
+
+end define
+
+
+
+define var_or_forward 
+
+        'var 
+
+    |   'forward 
+
+end define
+
+
+
+define subprogram_body
+
+            [opt pre_expn]
+
+            [opt init_list]
+
+            [opt post_expn]
+
+            [sub_scope]         [EX]
+
+        'end  [id]              [NL]
+
+end define
+
+
+
+define init_list
+
+        'init  [init_assignment]  [repeat comma_init_assignment]    [NL]
+
+end define
+
+
+
+define pre_expn 
+
+        'pre [expn]             [NL]
+
+end define
+
+
+
+define post_expn 
+
+        'post [expn]            [NL]
+
+end define
+
+
+
+define init_assignment
+
+        [id] := [expn]
+
+end define
+
+
+
+define comma_init_assignment
+
+        , [init_assignment]
+
+end define
+
+
+
+define statement
+
+        'assert [expn]
+
+    |   'return
+
+    |   'result [expn]
+
+    |   [if_statement]
+
+    |   'loop                        [NL][IN]
+
+            [sub_scope]              [EX]
+
+        'end 'loop
+
+    |   'exit [opt when]
+
+    |   [case_statement]
+
+    |   'begin                       [NL][IN]
+
+            [sub_scope]              [EX]
+
+        'end
+
+    |   'new [id], [reference]
+
+    |   'free [id], [reference]
+
+    |   [for_statement]
+
+    |   [put_statement]
+
+    |   [get_statement]
+
+    |   [assignment]
+
+    |   [procedure_call]
+
+    |   ;
+
+end define
+
+
+
+define if_statement
+
+        'if [expn] 'then             [NL][IN]
+
+                [sub_scope]          [EX]
+
+        [repeat elsif_clause]
+
+        [opt else_clause]
+
+        'end 'if
+
+end define
+
+
+
+define elsif_clause
+
+        'elsif [expn] 'then          [NL][IN]
+
+            [sub_scope]              [EX]
+
+end define
+
+
+
+define else_clause
+
+        'else                        [NL][IN]
+
+            [sub_scope]              [EX]
+
+end define
+
+
+
+define case_statement
+
+        'case [expn] 'of                 [NL][IN]
+
+            [case_alternative]
+
+            [repeat case_alternative]
+
+            [opt last_case_alternative]  [EX]
+
+        'end case
+
+end define
+
+
+
+define case_alternative
+
+        'label [expn] [repeat comma_expn] :     [NL][IN]
+
+            [sub_scope]                         [EX]
+
+end define
+
+
+
+define last_case_alternative
+
+        'label :                     [NL][IN]
+
+            [sub_scope]              [EX]
+
+end define
+
+
+
+define when
+
+        'when [expn]
+
+end define
+
+
+
+define for_statement
+
+        'for [opt 'decreasing] [opt id] : [for_range]        [NL][IN]
+
+            [sub_scope]                                      [EX]
+
+        'end 'for
+
+end define
+
+
+
+define for_range 
+
+        [subrange_type] 
+
+    |   [named_type]
+
+end define
+
+
+
+define put_statement
+
+        'put [opt colon_id_comma] [put_item] [repeat comma_put_item] [opt dot_dot]
+
+end define
+
+
+
+define dot_dot
+
+        [SP] .. [SP]
+
+end define
+
+
+
+define colon_id_comma 
+
+        : [id] , 
+
+end define
+
+
+
+define put_item
+
+        [expn] [opt colon_expn] [opt colon_expn] [opt colon_expn]
+
+    |   'skip
+
+end define
+
+
+
+define colon_expn 
+
+        : [expn]
+
+end define
+
+
+
+define comma_put_item
+
+        , [put_item]
+
+end define
+
+
+
+define get_statement
+
+        'get [opt colon_id_comma] [get_item] [repeat comma_get_item]
+
+end define
+
+
+
+define get_item
+
+        [reference] [opt colon_expn_or_star]
+
+    |   'skip
+
+end define
+
+
+
+define colon_expn_or_star
+
+        : [expn_or_star]
+
+end define
+
+
+
+define comma_get_item
+
+        , [get_item]
+
+end define
+
+
+
+define assignment
+
+        [reference] [assignment_operator] [expn]
+
+end define
+
+
+
+define assignment_operator
+
+                :=  | +=  |  -=  |  *=
+
+end define
+
+
+
+define procedure_call
+
+        [reference]
+
+end define
+

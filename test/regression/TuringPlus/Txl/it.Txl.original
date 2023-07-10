@@ -6,27 +6,27 @@ include "Tplus.Grammar"
 
 % Extend syntax to allow inline keyword
 keys
-	inline
+        inline
 end keys
 
 define fcnSpec
-	[opt 'inline] [fcnOrFunction]
+        [opt 'inline] [fcnOrFunction]
 end define
 
 define fcnOrFunction
-    	fcn | 'function
+        fcn | 'function
 end define
 
 % Simplify parameter syntax to use full lists 
 % (superset syntax which simplifies the transform)
 define parameterDeclarationList
-	[list parameterDeclaration] [opt commaVaryingParameterDeclaration]
-    |	[id] : ..	% (only) varying parameter
+        [list parameterDeclaration] [opt commaVaryingParameterDeclaration]
+    |   [id] : ..       % (only) varying parameter
 end define
 
 define componentSelector
-	( [list expn] ) 
-    |	. [id] 
+        ( [list expn] ) 
+    |   . [id] 
 end define
 
 
@@ -34,48 +34,48 @@ end define
 
 function mainRule
     replace [program]
-	C [compilation]
+        C [compilation]
     by
-	C [transformTrivialInlineFunctions]
+        C [transformTrivialInlineFunctions]
 end function
 
 rule transformTrivialInlineFunctions
     replace [repeat declarationOrStatement]
-	inline Fcn [fcnOrFunction] Fname [id] ( Fformals [list parameterDeclaration] ) 
-		Fresultname [opt id] : Ftype [typeSpec]
-	    Fimports [opt importList]
-	    result Fresultexpn [expn]
-	'end Fname
-	Fscope [repeat declarationOrStatement]
+        inline Fcn [fcnOrFunction] Fname [id] ( Fformals [list parameterDeclaration] ) 
+                Fresultname [opt id] : Ftype [typeSpec]
+            Fimports [opt importList]
+            result Fresultexpn [expn]
+        'end Fname
+        Fscope [repeat declarationOrStatement]
     by
-	Fscope [fixTrivialCalls Fname Fformals Fresultexpn]
+        Fscope [fixTrivialCalls Fname Fformals Fresultexpn]
 end rule
 
 rule fixTrivialCalls Fname [id] Fformals [list parameterDeclaration] Fresultexpn [expn]
     replace [subExpn]
-	Fname ( Factuals [list expn] )
+        Fname ( Factuals [list expn] )
     by
-	( Fresultexpn [replaceReferenceFormalWithActual each Fformals Factuals] 
-		          [replaceValueFormalWithActual each Fformals Factuals] )
+        ( Fresultexpn [replaceReferenceFormalWithActual each Fformals Factuals] 
+                          [replaceValueFormalWithActual each Fformals Factuals] )
 end rule
 
 rule replaceReferenceFormalWithActual Formal [parameterDeclaration] Actual [expn]
     deconstruct Actual
-	Aref [reference]
+        Aref [reference]
     deconstruct Formal
-	Fid [id] : Ftype [parameterType]
+        Fid [id] : Ftype [parameterType]
     replace [reference]
-	Fid
+        Fid
     by
-	Aref
+        Aref
 end rule
 
 rule replaceValueFormalWithActual Formal [parameterDeclaration] Actual [expn]
     deconstruct Formal
-	Fid [id] : Ftype [parameterType]
+        Fid [id] : Ftype [parameterType]
     replace [subExpn]
-	Fid
+        Fid
     by
-	( Actual )
+        ( Actual )
 end rule
 

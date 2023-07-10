@@ -4,16 +4,16 @@
 % include "System"
 
 tokens
-	char "\c"
+        char "\c"
 end tokens
 
 define program
-	[repeat char]
+        [repeat char]
 end define
 
 function main
-	replace [program]
-		P [program]
-	by
-		P
+        replace [program]
+                P [program]
+        by
+                P
 end function

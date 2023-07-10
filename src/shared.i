@@ -26,8 +26,8 @@
 
 % Modification Log
 
-% v11.0	Initial revision, revised from FreeTXL 10.8b (c) 1988-2022 Queen's University at Kingston
-%	Removed old COBOL specializations.
+% v11.0 Initial revision, revised from FreeTXL 10.8b (c) 1988-2022 Queen's University at Kingston
+%       Removed old COBOL specializations.
 
 
 % Shared pre-hashed global common names and trees
@@ -37,7 +37,7 @@ const * empty_T := ident.install ("empty", kindT.empty)
 const * emptyTP := tree.newTreeInit (kindT.empty, empty_T, empty_T, 0, nilKid)
 
 % needed by trees.i, which precedes us and can't use emptyTP directly
-tree_emptyTP := emptyTP		
+tree_emptyTP := emptyTP         
 
 % comma, dot
 const * comma_T := ident.install (",", kindT.literal)
@@ -88,10 +88,10 @@ const * dotDotDot_T := ident.install ("...", kindT.literal)
 const * bar_T := ident.install ("|", kindT.literal)
 const * quit_T := ident.install ("quit", kindT.id)
 const * assert_T := ident.install ("assert", kindT.id)
-const * ignore_T := ident.install ("ignore", kindT.id)	
-const * each_T := ident.install ("each", kindT.id)	
-const * match_T := ident.install ("match", kindT.id)	
-const * replace_T := ident.install ("replace", kindT.id)	
+const * ignore_T := ident.install ("ignore", kindT.id)  
+const * each_T := ident.install ("each", kindT.id)      
+const * match_T := ident.install ("match", kindT.id)    
+const * replace_T := ident.install ("replace", kindT.id)        
 
 % internal TXL name, helps resolve unresolvable TXL parse ambiguity
 const * TXL_optBar_T := ident.install ("TXL_optBar_", kindT.literal)
@@ -201,12 +201,12 @@ kindType (ord (kindT.undefined)) := undefined_T
 % Inverse map - type kind name to tree type
 function typeKind (name : tokenT) : kindT
     #if not NOCOMPILE then
-	for k : firstTreeKind .. lastTreeKind
-	    if kindType (ord(k)) = name then
-		result k
-	    end if
-	end for
-	result kindT.undefined
+        for k : firstTreeKind .. lastTreeKind
+            if kindType (ord(k)) = name then
+                result k
+            end if
+        end for
+        result kindT.undefined
     #end if
 end typeKind
 

@@ -2,12 +2,12 @@
 % J.R. Cordy, Queen's University, 22.10.92
 
 comments
-	{ }
-	(* *)
+        { }
+        (* *)
 end comments
 
 compounds
-	:= .. >= <= <>
+        := .. >= <= <>
 end compounds
 
 keys
@@ -20,81 +20,81 @@ keys
 end keys
 
 define program
-	program [id] ( [list id+] ) ;	[NL]
-	[p_block] .
+        program [id] ( [list id+] ) ;   [NL]
+        [p_block] .
 end define
 
 define p_block
-	[IN]
-	[repeat p_declaration]		
-	[repeat p_subprogramDeclaration]	[EX]
-	[p_beginEnd] 
+        [IN]
+        [repeat p_declaration]          
+        [repeat p_subprogramDeclaration]        [EX]
+        [p_beginEnd] 
 end define
 
 define p_beginEnd
-	'begin					[NL][IN]
-	    [opt p_statements]	[EX]
-	'end                                            
+        'begin                                  [NL][IN]
+            [opt p_statements]  [EX]
+        'end                                            
 end define 
 
 define p_statements
-	[p_statement] ; [NL] 
-	[p_statements]
-    |	[p_statement] [opt ';] [NL]
+        [p_statement] ; [NL] 
+        [p_statements]
+    |   [p_statement] [opt ';] [NL]
 end define
 
 define p_declaration
-	[p_constDeclaration]	
-    |   [p_typeDeclaration]     	
-    |   [p_variableDeclaration]  	
-    |   [p_labelDeclaration]     	
+        [p_constDeclaration]    
+    |   [p_typeDeclaration]             
+    |   [p_variableDeclaration]         
+    |   [p_labelDeclaration]            
 end define
 
 define p_constDeclaration
-	const 				[IN][NL]
-	    [repeat p_constDefinition+]	[EX]
+        const                           [IN][NL]
+            [repeat p_constDefinition+] [EX]
 end define
 
 define p_constDefinition
-	[p_constId] = [p_constValue] ;	[NL]
+        [p_constId] = [p_constValue] ;  [NL]
 end define
 
 define p_constId
-	[id]
+        [id]
 end define
 
 define p_constValue
-	[p_constant]
+        [p_constant]
 end define
 
 define p_constant
-	[opt p_plusOrMinus] [id]
+        [opt p_plusOrMinus] [id]
     |   [opt p_plusOrMinus] [number]
     |   [charlit] 
-    |	''' [SPOFF] ''' [SPON]	% ''''
-    |	true
-    |	false
+    |   ''' [SPOFF] ''' [SPON]  % ''''
+    |   true
+    |   false
 end define
 
 define p_plusOrMinus
-	+ | -
+        + | -
 end define
 
 define p_typeDeclaration
-	type 				[IN][NL]
-	    [repeat p_typeDefinition+]	[EX]
+        type                            [IN][NL]
+            [repeat p_typeDefinition+]  [EX]
 end define
 
 define p_typeDefinition
-	[p_typeId] = [p_typeType] ;	[NL]
+        [p_typeId] = [p_typeType] ;     [NL]
 end define
 
 define p_typeId
-	[id]
+        [id]
 end define
 
 define p_typeType
-	[p_typeSpec]
+        [p_typeSpec]
 end define
 
 define p_typeSpec
@@ -107,148 +107,148 @@ define p_typeSpec
 end define
 
 define p_simpleType
-	[p_typeIdentifier]
+        [p_typeIdentifier]
     |   [p_enumeratedType]
     |   [p_subrangeType]
 end define
 
 define p_typeIdentifier
-	[id]
-    |	'integer
+        [id]
+    |   'integer
     |   'real
     |   'boolean
     |   'char
 end define
 
 define p_enumeratedType
-	( [list id+] )
+        ( [list id+] )
 end define
 
 define p_subrangeType
-	[p_constant] .. [p_constant]
+        [p_constant] .. [p_constant]
 end define
 
 define p_pointerType
-	^ [p_typeSpec]
+        ^ [p_typeSpec]
 end define
 
 define p_arrayType
-	array '[ [list p_simpleType+] '] of [p_typeSpec]
+        array '[ [list p_simpleType+] '] of [p_typeSpec]
 end define
 
 define p_fileType
-	file of [p_typeSpec]
+        file of [p_typeSpec]
 end define
 
 define p_setType
-	set of [p_simpleType]
+        set of [p_simpleType]
 end define
 
 define p_recordType
-				[NL] [IN]
-	record 			[IN]
-	    [p_fieldList]		[EX] [NL]
-	'end			[EX]
+                                [NL] [IN]
+        record                  [IN]
+            [p_fieldList]               [EX] [NL]
+        'end                    [EX]
 end define
 
 define p_fieldList
-	[p_recordField] [repeat p_semicolonRecordField] 
+        [p_recordField] [repeat p_semicolonRecordField] 
     |   [p_variantRecord]
 end define
 
 define p_recordField
-	[NL]
-	[list id+] : [p_typeSpec]
+        [NL]
+        [list id+] : [p_typeSpec]
 end define
 
 define p_semicolonRecordField
-	; [p_recordField]
+        ; [p_recordField]
 end define
 
 define p_variantRecord
-	case [p_expression] of  		[IN][IN]
-	    [p_caseAlternative]
-	    [repeat p_caseAlternative]	[EX][EX][NL]
-	'end
-	case [id] : [p_typeSpec] of	[IN][IN]
-	    [p_variant] 		
-	    [repeat p_semicolonVariant]	[EX][EX][NL]
+        case [p_expression] of                  [IN][IN]
+            [p_caseAlternative]
+            [repeat p_caseAlternative]  [EX][EX][NL]
+        'end
+        case [id] : [p_typeSpec] of     [IN][IN]
+            [p_variant]                 
+            [repeat p_semicolonVariant] [EX][EX][NL]
 end define
 
 define p_variant
-	[NL][EX]
-	[list p_constant+] : 	[IN][NL]
-	    ( [p_fieldList] )
+        [NL][EX]
+        [list p_constant+] :    [IN][NL]
+            ( [p_fieldList] )
 end define
 
 define p_semicolonVariant
-	; [p_variant]
+        ; [p_variant]
 end define
 
 define p_variableDeclaration
-	var 				[IN][NL]
-	    [repeat p_varDefinition+]	[EX]
+        var                             [IN][NL]
+            [repeat p_varDefinition+]   [EX]
 end define
 
 define p_varDefinition
-	[p_varId] : [p_varType] ; [NL]
+        [p_varId] : [p_varType] ; [NL]
 end define
 
 define p_varId
-	[list id+]
+        [list id+]
 end define
 
 define p_varType
-	[p_typeSpec]
+        [p_typeSpec]
 end define
 
 define p_labelDeclaration
-	label [list number+] ;
+        label [list number+] ;
 end define
 
 define p_subprogramDeclaration
-	[p_procedureDeclaration]
+        [p_procedureDeclaration]
     |   [p_functionDeclaration]
 end define
 
 define p_procedureDeclaration
-	[NL]
-	procedure [id] [opt p_parameterList] ; [NL]
-	[p_block] ; [NL]
+        [NL]
+        procedure [id] [opt p_parameterList] ; [NL]
+        [p_block] ; [NL]
 end define
 
 define p_parameterList
-    	( [p_parameterDeclaration] [repeat p_semicolonParameterDeclaration] )
+        ( [p_parameterDeclaration] [repeat p_semicolonParameterDeclaration] )
 end define
 
 define p_parameterDeclaration
-	[opt 'var] [list id+] : [p_typeIdentifier]
-    |	'function [id] : [p_typeIdentifier]
-    |	procedure [id] 
+        [opt 'var] [list id+] : [p_typeIdentifier]
+    |   'function [id] : [p_typeIdentifier]
+    |   procedure [id] 
 end define
 
 define p_semicolonParameterDeclaration
-	; [p_parameterDeclaration]
+        ; [p_parameterDeclaration]
 end define
 
 define p_functionDeclaration
-	[NL]
-	'function [id] [opt p_parameterList] : [p_typeIdentifier] ; [NL]
-	[p_block] ; [NL]
+        [NL]
+        'function [id] [opt p_parameterList] : [p_typeIdentifier] ; [NL]
+        [p_block] ; [NL]
 end define
 
 define p_statement
-   	[opt p_statementLabel] [p_unlabeledStatement]
+        [opt p_statementLabel] [p_unlabeledStatement]
 end define
 
 define p_statementLabel
-	[number] :
+        [number] :
 end define
 
 define p_unlabeledStatement
         [p_assignmentStatement]                    
-    |	[p_callStatement]
-    |	[p_writeStatement]                
+    |   [p_callStatement]
+    |   [p_writeStatement]                
     |   [p_writelnStatement]              
     |   [p_readStatement]                 
     |   [p_readlnStatement]               
@@ -261,159 +261,159 @@ define p_unlabeledStatement
     |   [p_withStatement]                 
     |   [p_gotoStatement]         
     |   ;
-    |	[p_otherStatement]
+    |   [p_otherStatement]
 end define
 
 define p_otherStatement
-	'NONE_SO_FAR	% placeholder for extensions
+        'NONE_SO_FAR    % placeholder for extensions
 end define
 
 define p_assignmentStatement
-	[p_variable] := [p_expression]
+        [p_variable] := [p_expression]
 end define
 
 define p_callStatement
-	[id] [opt p_argumentList]
+        [id] [opt p_argumentList]
 end define
 
 define p_argumentList
-	( [list p_expression+] ) 
+        ( [list p_expression+] ) 
 end define
 
 define p_writeStatement
-	write [p_writeArgumentList] 
+        write [p_writeArgumentList] 
 end define
 
 define p_writeArgumentList
-	( [list p_writeArgument+] )        
+        ( [list p_writeArgument+] )        
 end define
 
 define p_writeArgument
-	[p_expression] [opt p_colonExpression]
+        [p_expression] [opt p_colonExpression]
 end define
 
 define p_colonExpression
-	: [p_expression]
+        : [p_expression]
 end define
     
 define p_writelnStatement
-	writeln [opt p_writeArgumentList]
+        writeln [opt p_writeArgumentList]
 end define
 
 define p_readStatement
-	read [p_readArgumentList]
+        read [p_readArgumentList]
 end define
 
 define p_readArgumentList
-	( [list id+] )
+        ( [list id+] )
 end define
 
 define p_readlnStatement
-	readln [opt p_readArgumentList]
+        readln [opt p_readArgumentList]
 end define
 
 define p_ifStatement
-	if [p_expression] then	[IN][NL]
-	    [p_statement]		[EX]
-	[opt p_elsePart]
+        if [p_expression] then  [IN][NL]
+            [p_statement]               [EX]
+        [opt p_elsePart]
 end define
 
 define p_elsePart
-	[NL]
-	else 			[IN][NL]
-	    [p_statement]		[EX]
+        [NL]
+        else                    [IN][NL]
+            [p_statement]               [EX]
 end define
 
 define p_caseStatement
-	case [p_expression] of  		[IN][IN]
-	    [p_caseAlternative]
-	    [repeat p_caseAlternative]	[EX][EX][NL]
-	'end
+        case [p_expression] of                  [IN][IN]
+            [p_caseAlternative]
+            [repeat p_caseAlternative]  [EX][EX][NL]
+        'end
 end define
 
 define p_caseAlternative
-	[NL] [EX] 
-	[list p_constant+] :	[IN][NL]
-	    [opt p_statement] ;	
+        [NL] [EX] 
+        [list p_constant+] :    [IN][NL]
+            [opt p_statement] ; 
 end define
 
 define p_whileStatement
-	while [p_expression] do 	[IN][NL]
-	    [p_statement]		[EX]
+        while [p_expression] do         [IN][NL]
+            [p_statement]               [EX]
 end define
 
 define p_repeatStatement
-	'repeat			[IN][NL]
-	    [opt p_statements]	[EX]
-	until [p_expression]
+        'repeat                 [IN][NL]
+            [opt p_statements]  [EX]
+        until [p_expression]
 end define
 
 define p_forStatement
-	for [id] := [p_expression] [p_toOrDownto] [p_expression] do	[IN][NL]
-	    [p_statement]	[EX]
+        for [id] := [p_expression] [p_toOrDownto] [p_expression] do     [IN][NL]
+            [p_statement]       [EX]
 end define
 
 define p_toOrDownto
-	to | downto
+        to | downto
 end define
 
 define p_withStatement
-	with [list p_variable+] do	[IN][NL]
-	    [p_statement]			[EX]
+        with [list p_variable+] do      [IN][NL]
+            [p_statement]                       [EX]
 end define
 
 define p_gotoStatement
-	goto [number] 
+        goto [number] 
 end define
 
 define p_variable
-    	[id] [repeat p_componentSelector]
+        [id] [repeat p_componentSelector]
 end define
 
 define p_componentSelector
-	'[ [list p_expression+] ']
-    |	. [id]
-    |	^
+        '[ [list p_expression+] ']
+    |   . [id]
+    |   ^
 end define
 
 define p_expression
-	[p_simpleExpression] [repeat p_operatorSimpleExpression]
+        [p_simpleExpression] [repeat p_operatorSimpleExpression]
 end define
 
 define p_operatorSimpleExpression
-	[p_operator] [p_simpleExpression]
+        [p_operator] [p_simpleExpression]
 end define
 
 define p_operator
-	=  |  <  |  >  |  <>  |  >=  |  <=  |  in
+        =  |  <  |  >  |  <>  |  >=  |  <=  |  in
 end define
 
 define p_simpleExpression
-	[opt p_prefixOperator] [p_term] [repeat p_termOperatorTerm]
+        [opt p_prefixOperator] [p_term] [repeat p_termOperatorTerm]
 end define
 
 define p_termOperatorTerm
-	[p_termOperator] [p_term]
+        [p_termOperator] [p_term]
 end define
 
 define p_termOperator
-	+ | - | or
+        + | - | or
 end define
 
 define p_term
-	[p_factor] [repeat p_factorOperatorFactor]
+        [p_factor] [repeat p_factorOperatorFactor]
 end define
 
 define p_factorOperatorFactor
-	[p_factorOperator] [p_factor]
+        [p_factorOperator] [p_factor]
 end define
 
 define p_factorOperator
-	* | / | div | mod | and
+        * | / | div | mod | and
 end define
 
 define p_factor
-	[p_constant]
+        [p_constant]
     |   [p_variable] 
     |   [id] ( [list p_expression+] )        
     |   ( [p_expression] )
@@ -422,10 +422,10 @@ define p_factor
 end define
 
 define p_subrangeExpn
-	[p_expression] .. [p_expression]
+        [p_expression] .. [p_expression]
 end define
 
 define p_prefixOperator
-	+  |  -  
+        +  |  -  
 end define
 

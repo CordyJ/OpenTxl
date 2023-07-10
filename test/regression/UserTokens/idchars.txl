@@ -1,8 +1,8 @@
 #pragma -idchars '-+#$%' -spchars ';'
 
 tokens
-    hexnumber	"[\dabcdefABCDEF]+H"
-    octalnumber	"0[01234567]*"
+    hexnumber   "[\dabcdefABCDEF]+H"
+    octalnumber "0[01234567]*"
 end tokens
 
 define program
@@ -15,8 +15,8 @@ end define
 
 rule main
     replace [thing*]
-	H [hexnumber]
-	Rest [thing*]
+        H [hexnumber]
+        Rest [thing*]
     by
-	Rest
+        Rest
 end rule

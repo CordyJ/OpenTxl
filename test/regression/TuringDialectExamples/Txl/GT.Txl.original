@@ -7,29 +7,29 @@ include "Turing.Grammar"
 % Syntactic forms
 
 define declaration
-	[moduleDeclaration]
-    |  	[constantDeclaration]
-    | 	[typeDeclaration]
-    |	[variableDeclaration]
-    |	[variableBinding]
-    |  	[subprogramDeclaration]
-    |  	[genericDeclaration]
-    | 	[instanceDeclaration]
+        [moduleDeclaration]
+    |   [constantDeclaration]
+    |   [typeDeclaration]
+    |   [variableDeclaration]
+    |   [variableBinding]
+    |   [subprogramDeclaration]
+    |   [genericDeclaration]
+    |   [instanceDeclaration]
 end define
 
 define genericDeclaration
-	generic [id] ( [list id] ) 	[NL][IN]
-		[declaration]		[EX]
+        generic [id] ( [list id] )      [NL][IN]
+                [declaration]           [EX]
 end define
 
 define instanceDeclaration
-	instance [id] : [id] ( [list expnOrTypeSpec] )
+        instance [id] : [id] ( [list expnOrTypeSpec] )
 end define
 
 define expnOrTypeSpec
-	[id]			% This is the ambiguous case - could be either.
-    |	[typeSpec]	% All types
-    |	[expn]		% All expressions
+        [id]                    % This is the ambiguous case - could be either.
+    |   [typeSpec]      % All types
+    |   [expn]          % All expressions
 end define
 
 
@@ -37,54 +37,54 @@ end define
 
 rule mainRule
     replace [repeat declarationOrStatement]
-	generic Gname [id] ( Formals [list id] )
-	    Decl [declaration]
-	RestOfScope [repeat declarationOrStatement]
+        generic Gname [id] ( Formals [list id] )
+            Decl [declaration]
+        RestOfScope [repeat declarationOrStatement]
     by
-	RestOfScope [fixInstantiations Gname Formals Decl]
+        RestOfScope [fixInstantiations Gname Formals Decl]
 end rule
 
 rule fixInstantiations Gname [id] Formals [list id] BaseDecl [declaration]
     replace [declaration]
-	instance Iname [id] : Gname ( Actuals [list expnOrTypeSpec] )
+        instance Iname [id] : Gname ( Actuals [list expnOrTypeSpec] )
     by
-	BaseDecl
-	    [substId Gname Iname]
-	    [substAmbiguousArgs each Formals Actuals]
-	    [substExpnArgs each Formals Actuals]
-	    [substTypeArgs each Formals Actuals]
+        BaseDecl
+            [substId Gname Iname]
+            [substAmbiguousArgs each Formals Actuals]
+            [substExpnArgs each Formals Actuals]
+            [substTypeArgs each Formals Actuals]
 end rule
 
 rule substId Old [id] New [id]
     replace [id]
-	Old 
+        Old 
     by
-	New
+        New
 end rule
 
 rule substAmbiguousArgs OldName [id] New [expnOrTypeSpec]
     deconstruct New
-	NewName [id]
+        NewName [id]
     replace [id]
-	OldName
+        OldName
     by
-	NewName
+        NewName
 end rule
 
 rule substExpnArgs OldName [id] New [expnOrTypeSpec]
     deconstruct New
-	NewExpn [expn]
+        NewExpn [expn]
     replace [primary]
-	OldName
+        OldName
     by
-	( NewExpn )
+        ( NewExpn )
 end rule
 
 rule substTypeArgs Old [id] New [expnOrTypeSpec]
     deconstruct New
-	NewTypeSpec [typeSpec]
+        NewTypeSpec [typeSpec]
     replace [typeSpec]
-	Old
+        Old
     by
-	NewTypeSpec
+        NewTypeSpec
 end rule

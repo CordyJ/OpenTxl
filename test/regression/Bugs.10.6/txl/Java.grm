@@ -148,7 +148,7 @@ define modifier
     |   'volatile
     |   'native
     |   'synchronized
-    |   'strictfp		% Added strictfp XG July 23, 2002
+    |   'strictfp               % Added strictfp XG July 23, 2002
 end define
 
 define extends_clause

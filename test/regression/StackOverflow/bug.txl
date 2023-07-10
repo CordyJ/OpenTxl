@@ -1,10 +1,10 @@
 define program
-	[repeat number]
+        [repeat number]
 end define
 
 function main
     replace * [repeat number]
-	1 Rest [repeat number]
+        1 Rest [repeat number]
     by
-	1 Rest [. Rest] [main]
+        1 Rest [. Rest] [main]
 end function

@@ -27,7 +27,7 @@
 
 % Modification Log
 
-% v11.0	Initial revision, revised from FreeTXL 10.8b (c) 1988-2022 Queen's University at Kingston
+% v11.0 Initial revision, revised from FreeTXL 10.8b (c) 1988-2022 Queen's University at Kingston
 */
 
 // Minimal Turing+ library
@@ -44,9 +44,9 @@ int main (int argc, char **argv)
 
     // Global uncaught exception handler
     if (setjmp (TL_handlerArea->quit_env)) {
-	// Exceptional exit
-    	TL_finalize ();
-	exit (TL_handlerArea->quitCode);
+        // Exceptional exit
+        TL_finalize ();
+        exit (TL_handlerArea->quitCode);
     }
 
     // Run the standalone TXL engine and bytecode

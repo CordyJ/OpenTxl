@@ -1,6 +1,6 @@
 % Demonstration of working with sequences in TXL Pro
 define program 
-    	[repeat thingie]
+        [repeat thingie]
 end define
 
 define thingie
@@ -9,10 +9,10 @@ end define
 
 rule main
     replace [program]
-	Input [repeat thingie] 
+        Input [repeat thingie] 
 
     by
-	Input [. Input]
+        Input [. Input]
 end rule
 
     

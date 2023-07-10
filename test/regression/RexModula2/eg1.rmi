@@ -16,9 +16,9 @@ END Enter;
 
 CONST ListLength = 73;
 
-VAR	i : TelNo;
-	m : ARRAY[10..ListLength] OF message;
-	NoEntry : message;
+VAR     i : TelNo;
+        m : ARRAY[10..ListLength] OF message;
+        NoEntry : message;
 
 BEGIN
 

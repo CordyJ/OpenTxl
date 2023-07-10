@@ -7,7 +7,7 @@ Reference: http://www.int.gu.edu.au/courses/3008int/m03/FYI/Command_Syntax.htm
 Thanks to the HCI teaching team at Griffith University.
 
 Example:
-	txl Examples/Module1.bas
+        txl Examples/Module1.bas
 
 This is an approximate grammar for Visual Basic 6.0, drawn from the reference
 above, old MS web pages and updated to handle many undocumented features 

@@ -1,20 +1,20 @@
 define program
-	[repeat idorlits]
+        [repeat idorlits]
 end define
 
 define literals
-	[repeat id] 
+        [repeat id] 
 end define
 
 define idorlits
-    	[id]
-    |	[literals]
+        [id]
+    |   [literals]
 end define
 
 rule main
     replace [program]
-	% an empty one
+        % an empty one
     by
-	Jim
+        Jim
 end rule
 

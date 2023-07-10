@@ -1,26 +1,26 @@
 TXL Example Specification
 -------------------------
 
-Name:	
-	Infer.Txl
+Name:   
+        Infer.Txl
 
 Description:
-    	Preliminary prototype type inferencer for the T'Nial 
-    	programming language inclusion polymorphism type system.
+        Preliminary prototype type inferencer for the T'Nial 
+        programming language inclusion polymorphism type system.
 
-	The spec is designed to attribute references to variables
-	and constants with their inferred types, infer the types
-	of higher-level expressions from these, and check for
-	inconsistencies.
+        The spec is designed to attribute references to variables
+        and constants with their inferred types, infer the types
+        of higher-level expressions from these, and check for
+        inconsistencies.
 
 Author:
-   	T.C.N. Graham
+        T.C.N. Graham
 
 Affiliation:
-	Queen's University, Kingston, Canada
+        Queen's University, Kingston, Canada
 
 Date:
-	May 1989.
+        May 1989.
 
 Example:
-	txl Example.Infer
+        txl Example.Infer

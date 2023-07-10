@@ -1,35 +1,35 @@
 TXL Example Specification
 -------------------------
 
-Name:	
-	PF.Txl
+Name:   
+        PF.Txl
 
 Description:
-	Prototype implementation of a set of general theoretical
-	transformations from limited imperative to pure functional form.
+        Prototype implementation of a set of general theoretical
+        transformations from limited imperative to pure functional form.
 
-	This specfication extends the grammar of the pure functional
-	subset of the T'Nial programming language to include limited forms 
-	of several imperative programming features, including sequential 
-	statements, variables and assignment, procedures, out and inout 
-	parameters, and global variables (through existential parameters).
+        This specfication extends the grammar of the pure functional
+        subset of the T'Nial programming language to include limited forms 
+        of several imperative programming features, including sequential 
+        statements, variables and assignment, procedures, out and inout 
+        parameters, and global variables (through existential parameters).
 
-	The ruleset prototypes the general transformations of these features
-	to pure functional form described in the paper "The Safe Introduction 
-	of Imperative Features into a Functional Programming Language"
-	by T.C.N Graham, submitted to TAPSOFT '91.
+        The ruleset prototypes the general transformations of these features
+        to pure functional form described in the paper "The Safe Introduction 
+        of Imperative Features into a Functional Programming Language"
+        by T.C.N Graham, submitted to TAPSOFT '91.
 
 Author:
-   	T.C.N. Graham
+        T.C.N. Graham
 
 Affiliation:
-	Gesellschaft fuer Mathematik und Datenverarbeitung,
-	Forschungstelle an der Universitaet Karlsruhe,
-	Karlsruhe, Germany
+        Gesellschaft fuer Mathematik und Datenverarbeitung,
+        Forschungstelle an der Universitaet Karlsruhe,
+        Karlsruhe, Germany
 
 Date:
-	January 1990
+        January 1990
 
 Example:
-	pf2tn Example.PF	(invokes txl as a subcommand)
-			    (this is a large example and will take some time!)
+        pf2tn Example.PF        (invokes txl as a subcommand)
+                            (this is a large example and will take some time!)

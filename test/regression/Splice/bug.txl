@@ -7,11 +7,11 @@ end define
 
 function main
     replace [program]
-	RN [repeat number]
+        RN [repeat number]
     construct RN2 [repeat number]
-	44 55
+        44 55
     construct RN3 [repeat number]
-	RN [. RN2] 
+        RN [. RN2] 
     by
-	RN [. RN2] [. RN3]
+        RN [. RN2] [. RN3]
 end function

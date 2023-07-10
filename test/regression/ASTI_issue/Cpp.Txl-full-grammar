@@ -1,8 +1,8 @@
 % C++ 3.0 TXL Basis Grammar
 % J.R. Cordy, 24 Feb 1992
-% Loosely adapted from:	
-% 	Unix System V, AT&T C++ Language System, Release 2.0
-% 	Appendix A: Grammar Summary
+% Loosely adapted from: 
+%       Unix System V, AT&T C++ Language System, Release 2.0
+%       Appendix A: Grammar Summary
 % but with the (as usual) many bugs in the C++ grammar fixed, and the 
 % forms tuned for TXL performance.  As noted in the reference above, 
 % this grammar is actually a slight superset of C++ 2.0.
@@ -39,8 +39,8 @@ tokens
 end tokens
 
 comments
-	//
-	/*  */
+        //
+        /*  */
 end comments
 
 compounds
@@ -62,11 +62,11 @@ keys
 end keys
 
 define string
-	[opt 'L][repeat stringlit+]
+        [opt 'L][repeat stringlit+]
 end define
 
 define character_constant
-	[opt 'L][charlit]
+        [opt 'L][charlit]
 end define
 
 define floating_constant
@@ -82,7 +82,7 @@ end define
 
 % Txl grammar goal symbol - a C++ compilation file
 define program
-	[declaration_list]
+        [declaration_list]
 end define
 
 %%
@@ -95,8 +95,8 @@ define expression
 end define
 
 define assignment_expression
-    	[conditional_expression]
-    |	[unary_expression] [assignment_operator] [assignment_expression]
+        [conditional_expression]
+    |   [unary_expression] [assignment_operator] [assignment_expression]
     |   [throw_expression]
 end define
 
@@ -250,7 +250,7 @@ define qualified_name
 end define
 
 define class_component
-     [opt '~] [class_name]		
+     [opt '~] [class_name]              
    | [operator_function_name]
    | [conversion_function_name]
    | [qualified_name]
@@ -264,7 +264,7 @@ define literal
 end define
 
 define declaration
-     [opt decl_specifiers] [opt declarator_list] ; [KEEP] [NL]	
+     [opt decl_specifiers] [opt declarator_list] ; [KEEP] [NL]  
    | [asm_declaration] [KEEP]
    | [fct_definition] [KEEP]
    | [template_declaration] [KEEP]
@@ -275,7 +275,7 @@ define declaration
    | [namespace_alias_definition] [KEEP]
    | [using_directive] [KEEP]
    | [using_declaration] [KEEP]
-   | [preprocessor] [KEEP] [NL]			
+   | [preprocessor] [KEEP] [NL]                 
    | [comment] [NL] [repeat comment_NL] [KEEP]
 %%
 %% Not part of DWP spec, but added to parse custom CPP output for gdesigner.
@@ -545,7 +545,7 @@ end define
 %%
 
 define init_declarator
-	[declarator] [opt initializer] [opt exception_specification]
+        [declarator] [opt initializer] [opt exception_specification]
 end define
 
 define declarator
@@ -599,7 +599,7 @@ define parameter_declaration
 %% 
 %% Added optional string to allow rule to fix misparsed declarations.
 %%
-    |	[opt "FOO*"] [decl_specifiers] [opt abstract_declarator] 
+    |   [opt "FOO*"] [decl_specifiers] [opt abstract_declarator] 
         [opt equal_expression]
 end define
 
@@ -729,7 +729,7 @@ end define
 define member_declaration
      [opt level_2_decl_specifiers] [opt member_declarator_list] ; [NL]
    | [fct_definition]  [opt ;]
-   | [qualified_name] ;	[NL]
+   | [qualified_name] ; [NL]
    | [preprocessor] [NL]
    | [comment] [NL] [repeat comment_NL]
    | [using_directive] [NL]
@@ -833,14 +833,14 @@ end define
 
 define statement
      [repeat label] [null_statement] [KEEP]
-   | [repeat label] [expression_statement] [KEEP] 	
-   | [repeat label] [compound_statement] [KEEP]	
-   | [repeat label] [selection_statement] [KEEP]	
-   | [repeat label] [iteration_statement] [KEEP]	
-   | [repeat label] [jump_statement] [KEEP]		
-   | [repeat label] [declaration_statement] [KEEP]	
+   | [repeat label] [expression_statement] [KEEP]       
+   | [repeat label] [compound_statement] [KEEP] 
+   | [repeat label] [selection_statement] [KEEP]        
+   | [repeat label] [iteration_statement] [KEEP]        
+   | [repeat label] [jump_statement] [KEEP]             
+   | [repeat label] [declaration_statement] [KEEP]      
    | [repeat label] [try_block] [KEEP]
-   | [comment] [NL] [repeat comment_NL]	[KEEP]
+   | [comment] [NL] [repeat comment_NL] [KEEP]
 end define
 
 %%
@@ -888,8 +888,8 @@ end define
 
 define label
      [id] : 
-   | [EX] 'case [constant_expression] :	[NL] [IN]
-   | [EX] 'default : 			[NL] [IN]
+   | [EX] 'case [constant_expression] : [NL] [IN]
+   | [EX] 'default :                    [NL] [IN]
 end define
 
 define expression_statement
@@ -901,13 +901,13 @@ define null_statement
 end define
 
 define compound_statement
-     {  			[NL] [IN]
-       [opt statement_list]  	[EX]
-     }				[NL]
+     {                          [NL] [IN]
+       [opt statement_list]     [EX]
+     }                          [NL]
 end define
 
 define statement_list
-	[repeat statement+]
+        [repeat statement+]
 end define
 
 define selection_statement
@@ -926,13 +926,13 @@ end define
 
 define iteration_statement
      'while ( [condition] ) [statement]
-   | 'do [statement] 'while ( [expression] ) ;	[NL]
+   | 'do [statement] 'while ( [expression] ) ;  [NL]
    | 'for ( [for_init_statement] [opt condition] ;  [opt expression] ) 
-	  [for_body]
+          [for_body]
 end define
 
 define for_init_statement
-     [expression] ;		
+     [expression] ;             
    | [opt decl_specifiers] [opt declarator_list] ;
 end define
 
@@ -992,10 +992,10 @@ end define
 
 % Trivial parse rule for testing.
 function main
-	replace [program]
+        replace [program]
            P [repeat declaration]
-	by
-	   P
+        by
+           P
 end function
 
 

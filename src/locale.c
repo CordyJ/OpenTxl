@@ -26,8 +26,8 @@
 
 % Modification Log
 
-% v11.0	Initial revision, revised from FreeTXL 10.8b (c) 1988-2022 Queen's University at Kingston
-%	Moved non-OS dependent limits to locale.i
+% v11.0 Initial revision, revised from FreeTXL 10.8b (c) 1988-2022 Queen's University at Kingston
+%       Moved non-OS dependent limits to locale.i
 */
 
 /* Clock resolution */
@@ -41,23 +41,23 @@ int txl_clocks_per_second = CLOCKS_PER_SEC;
 
 unsigned long txl_stacksize ()
 {
-    #define TXL_DEFAULT_STACKSIZE  8388608  		/* 8Mb */
-    unsigned long stacksize = TXL_DEFAULT_STACKSIZE;	/* We link at this size on Windows */
+    #define TXL_DEFAULT_STACKSIZE  8388608              /* 8Mb */
+    unsigned long stacksize = TXL_DEFAULT_STACKSIZE;    /* We link at this size on Windows */
     
     #ifndef WIN
-	struct rlimit limit;
-	int errcode;
-	
-	/* See what we have */
-	errcode = getrlimit (RLIMIT_STACK, &(limit));
-	/* If it's not enough, ask for our default */
-	if (limit.rlim_cur < TXL_DEFAULT_STACKSIZE) {
-	    limit.rlim_cur = TXL_DEFAULT_STACKSIZE;
-	    errcode = setrlimit (RLIMIT_STACK, &(limit));
-	};
-	/* See what we really have now */
-	errcode = getrlimit (RLIMIT_STACK, &(limit));
-	stacksize = limit.rlim_cur;
+        struct rlimit limit;
+        int errcode;
+        
+        /* See what we have */
+        errcode = getrlimit (RLIMIT_STACK, &(limit));
+        /* If it's not enough, ask for our default */
+        if (limit.rlim_cur < TXL_DEFAULT_STACKSIZE) {
+            limit.rlim_cur = TXL_DEFAULT_STACKSIZE;
+            errcode = setrlimit (RLIMIT_STACK, &(limit));
+        };
+        /* See what we really have now */
+        errcode = getrlimit (RLIMIT_STACK, &(limit));
+        stacksize = limit.rlim_cur;
     #endif
 
     return (stacksize);

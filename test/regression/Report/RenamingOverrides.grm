@@ -38,8 +38,8 @@
 %%     - Remove Commented out definitions that won't be coming back
 
 %% R.A.T.H. changes for v3r3 - Field size information.
-%%	- create new fact, 'FieldSize' to denote field length
-%%	- allow annotation of records and fields with field size
+%%      - create new fact, 'FieldSize' to denote field length
+%%      - allow annotation of records and fields with field size
 
 %% v3r4 - May 16, 1996
 %%    M.S.S. - generating facts for the file description entries.
@@ -47,9 +47,9 @@
 
 function RenameVersion
     replace [stringlit]
-	CurString [stringlit]
+        CurString [stringlit]
     by
-	CurString [+ "Renaming Overrides v3.4 (May 16, 1996)"]
+        CurString [+ "Renaming Overrides v3.4 (May 16, 1996)"]
 end function
 
 
@@ -64,38 +64,38 @@ end function
 %% enclosed in braces.
 
 define field_size_clause
-	'{ [number] [number] '}
+        '{ [number] [number] '}
 end define
 
 define level_1_group_item
-	[NL] [NL] [level_1] [SP] [id_or_FILLER] 
-	  [opt field_size_clause]
-	  [opt '&]
-	  [repeat group_description_clause] [dot]
-	  [opt facts]                    				[IN]
-	  [repeat level_66_or_88_description] [SP] '[
-	     [repeat record_item] [SP] ']  				[EX]
+        [NL] [NL] [level_1] [SP] [id_or_FILLER] 
+          [opt field_size_clause]
+          [opt '&]
+          [repeat group_description_clause] [dot]
+          [opt facts]                                                   [IN]
+          [repeat level_66_or_88_description] [SP] '[
+             [repeat record_item] [SP] ']                               [EX]
 end define
 
 define level_1_data_item
         [NL] [NL] [level_1] [SP]
-	  [opt id_or_FILLER] 
-	  [opt field_size_clause]
-	  [opt '&] [repeat picture_or_description_clause+] [dot]
-	  [opt facts]							[IN]
-	    [repeat level_66_or_88_description]				[EX]
+          [opt id_or_FILLER] 
+          [opt field_size_clause]
+          [opt '&] [repeat picture_or_description_clause+] [dot]
+          [opt facts]                                                   [IN]
+            [repeat level_66_or_88_description]                         [EX]
 end define
 
 define level_77_description
-         								[NL] 
-	'77 [SP] [id_or_FILLER] 
-	     [opt field_size_clause]
-	     [repeat picture_or_description_clause] [dot]
-	     [opt facts]
-	     [IN] [repeat level_66_or_88_description] [EX]
-	     %% T.D Feb 14/96 The grammar only allows 88's here.  The Y2K code
-	     %% is more general if 66 is also here.  66 will never be here since
-	     %% we are handling valid cobol code.
+                                                                        [NL] 
+        '77 [SP] [id_or_FILLER] 
+             [opt field_size_clause]
+             [repeat picture_or_description_clause] [dot]
+             [opt facts]
+             [IN] [repeat level_66_or_88_description] [EX]
+             %% T.D Feb 14/96 The grammar only allows 88's here.  The Y2K code
+             %% is more general if 66 is also here.  66 will never be here since
+             %% we are handling valid cobol code.
 end define
 
 % The following definition of record_item is extended to allow square brackets
@@ -106,21 +106,21 @@ end define
 
 define record_group_item
         [NL] [level_number] [SP]
-	  [id_or_FILLER]  
-	  [opt field_size_clause]
-	  [opt '&] [repeat group_description_clause] [dot]
-	  [opt facts]							[IN]
-	  [repeat level_66_or_88_description] [SP] '[
-	    [repeat record_item] [SP] ']				[EX]
+          [id_or_FILLER]  
+          [opt field_size_clause]
+          [opt '&] [repeat group_description_clause] [dot]
+          [opt facts]                                                   [IN]
+          [repeat level_66_or_88_description] [SP] '[
+            [repeat record_item] [SP] ']                                [EX]
 end define
 
 define record_data_item
         [NL] [level_number] [SP] [id_or_FILLER] 
-	  [opt field_size_clause]
-	  [opt '&]
-	  [repeat picture_or_description_clause] [dot]
-	  [opt facts]							[IN]
-	  [repeat level_66_or_88_description]				[EX]
+          [opt field_size_clause]
+          [opt '&]
+          [repeat picture_or_description_clause] [dot]
+          [opt facts]                                                   [IN]
+          [repeat level_66_or_88_description]                           [EX]
 end define
 
 
@@ -128,13 +128,13 @@ end define
 %% conditions.  More consistent with other levels.
 
 define level_66_description
-	[NL] '66 [SP] [id_or_FILLER] [opt '&] [TAB_38] [renames_clause] [dot]
-	[opt facts]
+        [NL] '66 [SP] [id_or_FILLER] [opt '&] [TAB_38] [renames_clause] [dot]
+        [opt facts]
 end define
 
 define level_88_description
-	[NL] '88 [SP] [id_or_FILLER] [opt '&] [TAB_38] [value_clause] [dot]  
-	[opt facts]
+        [NL] '88 [SP] [id_or_FILLER] [opt '&] [TAB_38] [value_clause] [dot]  
+        [opt facts]
 end define
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
@@ -142,29 +142,29 @@ end define
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
 define facts 
-	[repeat prolog_fact]
+        [repeat prolog_fact]
 end define
 
 % [prolog_fact]'s are predicates that are embedded in places in the code that
 % will be extracted later to form the fact database.
 
 keys
-	Compared Move Date
-	Name Program Value
-	Pic IsGlobal Usage RedefinedBy
-	Calls Renames SubRedefines
+        Compared Move Date
+        Name Program Value
+        Pic IsGlobal Usage RedefinedBy
+        Calls Renames SubRedefines
 end keys
 
 %% T.D. Feb 14 96 Deleted all sorts of keywords (above) and facts (below)
 %% most were facts that were not being used at all.
 
 define prolog_fact
-	[comp_fact]
+        [comp_fact]
     |   [move_fact]
     |   [movelit_fact]
-    |	[date_fact]
+    |   [date_fact]
     |   [done_flag]
-    |	[name_fact]
+    |   [name_fact]
     |   [program_fact]
     |   [value_fact] 
     |   [pic_fact]
@@ -174,8 +174,8 @@ define prolog_fact
     |   [redefined_by_fact]
     |   [rename_fact]
     |   [field_fact]
-	% The above two facts are nonterminals so that they can be extracted
-	% directly using the TXL '^' function.
+        % The above two facts are nonterminals so that they can be extracted
+        % directly using the TXL '^' function.
     |   [call_fact]
     |   [arg_fact]
     |   [entry_fact]
@@ -183,60 +183,60 @@ define prolog_fact
     |   [docall_fact]
     |   [alias_fact]
     |   [arglit_fact]
-    |	[field_size_fact]
+    |   [field_size_fact]
     |   [level_01_fact]
     |   [level_77_fact]
     |   [occurs_fact]
-    |   [file_fact] 		% M.S.S. 15/5/96
-    |   [filerec_fact] 		% M.S.S. 16/5/96
-    |   [sysfile_fact] 		% M.S.S. 16/5/96
-    |   [conflict_fact]		%% T.D. 16/5/96
-    |   [no_trans_fact]		%% T.D. 18/5/96
-    |   [change_pic_fact]	%% T.D. 18/5/96
+    |   [file_fact]             % M.S.S. 15/5/96
+    |   [filerec_fact]          % M.S.S. 16/5/96
+    |   [sysfile_fact]          % M.S.S. 16/5/96
+    |   [conflict_fact]         %% T.D. 16/5/96
+    |   [no_trans_fact]         %% T.D. 18/5/96
+    |   [change_pic_fact]       %% T.D. 18/5/96
 end define
 
 define change_pic_fact
-	[NL] [IN] '$ 'ChangePic '( [newNameClause],[picture],[picture] ') '$ [EX]    
+        [NL] [IN] '$ 'ChangePic '( [newNameClause],[picture],[picture] ') '$ [EX]    
 end define
 
 define no_trans_fact
-	[NL] [IN] '$ 'NoTransform '( [newNameClause] ') '$ [EX]    
+        [NL] [IN] '$ 'NoTransform '( [newNameClause] ') '$ [EX]    
 end define
 
 define conflict_fact
-	[NL] [IN] '$ 'Conflict '( [newNameClause], [date_type], [newNameClause], [date_type], [how_date] ') '$ [EX]
+        [NL] [IN] '$ 'Conflict '( [newNameClause], [date_type], [newNameClause], [date_type], [how_date] ') '$ [EX]
 end define
 
 define occurs_fact
-	[NL] [IN] '$ 'Occurs '( [newNameClause], [number] ') '$ [EX]
+        [NL] [IN] '$ 'Occurs '( [newNameClause], [number] ') '$ [EX]
 end define
 
 define level_01_fact
-	[NL] [IN] '$ 'Level01 '( [newNameClause] ') '$	[EX]
+        [NL] [IN] '$ 'Level01 '( [newNameClause] ') '$  [EX]
 end define
 
 define level_77_fact
-	[NL] [IN] '$ 'Level77 '( [newNameClause] ') '$ 	[EX]
+        [NL] [IN] '$ 'Level77 '( [newNameClause] ') '$  [EX]
 end define
 
 define arg_fact
-	[NL] [IN] '$ 'Argument '( [newNameClause], [newNameClause_or_literal], [number] ') '$ [EX]
+        [NL] [IN] '$ 'Argument '( [newNameClause], [newNameClause_or_literal], [number] ') '$ [EX]
 end define
 
 define entry_fact
-	[NL] [IN] '$ 'Entry '([id], [id_or_literal]) '$ [EX]
+        [NL] [IN] '$ 'Entry '([id], [id_or_literal]) '$ [EX]
 end define
 
 define param_fact
-	[NL] [IN] '$ 'Parameter '( [id_or_literal], [newNameClause], [number] ') '$ [EX]
+        [NL] [IN] '$ 'Parameter '( [id_or_literal], [newNameClause], [number] ') '$ [EX]
 end define
 
 define docall_fact
-	[NL] [IN] '$ 'DoCall  '( [id] , [id] ') '$ [EX]
+        [NL] [IN] '$ 'DoCall  '( [id] , [id] ') '$ [EX]
 end define
 
 define comp_fact
-	[NL] [IN] '$ [opt '&] Compared '( [newNameClause], [newNameClause] ') '$ [EX]
+        [NL] [IN] '$ [opt '&] Compared '( [newNameClause], [newNameClause] ') '$ [EX]
 end define
 
 define move_fact
@@ -245,27 +245,27 @@ define move_fact
 end define
 
 define movelit_fact
-	[NL] [IN] '$ MoveLit '( [literal], [newNameClause] ') '$ [EX] %% T.D. 15.02.96
+        [NL] [IN] '$ MoveLit '( [literal], [newNameClause] ') '$ [EX] %% T.D. 15.02.96
 end define
 
 define program_fact
-	[NL] [IN] '$ 'Program '( [newNameClause] ') '$  [EX]
+        [NL] [IN] '$ 'Program '( [newNameClause] ') '$  [EX]
 end define
 
 define value_fact
-	[NL] [IN] '$ 'Value '( [newNameClause], [literal_operands] ') '$ [EX]
+        [NL] [IN] '$ 'Value '( [newNameClause], [literal_operands] ') '$ [EX]
 end define
 
 define pic_fact
-	[NL] [IN] '$ 'Pic '( [newNameClause], [picture] ') '$ [EX]
+        [NL] [IN] '$ 'Pic '( [newNameClause], [picture] ') '$ [EX]
 end define
 
 define global_fact
-	[NL] [IN] '$ 'IsGlobal '( [newNameClause], [clause] ') '$ [EX] 
+        [NL] [IN] '$ 'IsGlobal '( [newNameClause], [clause] ') '$ [EX] 
 end define
 
 define usage_fact
-	[NL] [IN] '$ 'Usage '( [newNameClause], [usage_type] ') '$ [EX]
+        [NL] [IN] '$ 'Usage '( [newNameClause], [usage_type] ') '$ [EX]
 end define
 
 define call_fact
@@ -273,16 +273,16 @@ define call_fact
 end define
 
 define call_type
-	'STATIC
+        'STATIC
     |   'DYNAMIC
 end define
 
 define field_fact
-	[NL] [IN] '$ 'Field '( [newNameClause], [newNameClause], [number], [number] ') '$ [EX]
+        [NL] [IN] '$ 'Field '( [newNameClause], [newNameClause], [number], [number] ') '$ [EX]
 end define
 
 define alias_fact
-	[NL] [IN] '$ 'Alias '( [newNameClause], [newNameClause], [alias_type] ') '$ [EX]
+        [NL] [IN] '$ 'Alias '( [newNameClause], [newNameClause], [alias_type] ') '$ [EX]
 end define
 
 define alias_type
@@ -293,7 +293,7 @@ define alias_type
 end define
 
 define arglit_fact
-	[NL] [IN] '$ 'ArgLit '( [literal], [newNameClause]') '$ [EX]
+        [NL] [IN] '$ 'ArgLit '( [literal], [newNameClause]') '$ [EX]
 end define
 
 define newNameClause_or_literal
@@ -302,7 +302,7 @@ define newNameClause_or_literal
 end define
 
 define done_flag
-	[NL] [IN] '$ 'Done '( [newNameClause] ') '$ [EX]
+        [NL] [IN] '$ 'Done '( [newNameClause] ') '$ [EX]
 end define
 
 define how_date
@@ -324,7 +324,7 @@ define date_fact
 end define
 
 define date_type
-    [stringlit]				%% T.D. March 1/1996
+    [stringlit]                         %% T.D. March 1/1996
 end define
 
 define name_fact
@@ -332,35 +332,35 @@ define name_fact
 end define
 
 define redefined_by_fact
-	[NL] [IN] '$ RedefinedBy '( [newNameClause], [newNameClause] ') '$
-	[EX] %% T.D. [EX] Was Missing
+        [NL] [IN] '$ RedefinedBy '( [newNameClause], [newNameClause] ') '$
+        [EX] %% T.D. [EX] Was Missing
 end define
 
 define redefine_fact
         [NL] [IN] '$ 'Redefines '( [newNameClause], [clause] ') '$ [EX]
     |   [NL] [IN] '$ 'SubRedefines '( [newNameClause], [clause] ') '$ [EX]
-	% When a subfield of a field that redefines another is used, it
-	% would be useful to know what data structure it refers to.
+        % When a subfield of a field that redefines another is used, it
+        % would be useful to know what data structure it refers to.
 end define
 
 define rename_fact
         [NL] [IN] '$ 'Renames '( [newNameClause], [clause] ') '$ [EX]
 end define
-	
+        
 define hash_newNameClause
-	'# [newNameClause] 
+        '# [newNameClause] 
 end define
 
 define date_type_clause
-	'{ [repeat date_type] '}
+        '{ [repeat date_type] '}
 end define
 
 define newNameClause
-	[repeat id+]
+        [repeat id+]
 end define
 
 define field_size_fact
-	[NL] [IN] '$ 'FieldSize '( [newNameClause], [number] ') '$ [EX]
+        [NL] [IN] '$ 'FieldSize '( [newNameClause], [number] ') '$ [EX]
 end define
 
 %% M.S.S. 15/5/96 - change the [id] in the file description clause
@@ -388,13 +388,13 @@ end define
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 define program
-	[identification_division]
-	[opt environment_division]
-	[opt facts]
-	[opt data_division]
-	[opt procedure_division]
-	[repeat nested_source_program]
-	[opt end_clause]
+        [identification_division]
+        [opt environment_division]
+        [opt facts]
+        [opt data_division]
+        [opt procedure_division]
+        [repeat nested_source_program]
+        [opt end_clause]
 end define
 
 
@@ -416,14 +416,14 @@ end define
 % at the end of the structure.
 
 define identifier
-   	[id] [repeat qualifier] [opt subscript] [opt date_type_clause]
+        [id] [repeat qualifier] [opt subscript] [opt date_type_clause]
      |  '[ [id] [repeat qualifier] [opt subscript] [opt hash_newNameClause]
            [opt date_type_clause] ']
 end define
 
 
 define move_statement
-    	[NL] 'MOVE [opt '&] [move_clause]
+        [NL] 'MOVE [opt '&] [move_clause]
 end define
 
 define clause
@@ -432,7 +432,7 @@ define clause
 end define
 
 define id_or_FILLER
-	[id] [opt 'DO_NOT_TRANSFORM] [opt date_type_clause]
+        [id] [opt 'DO_NOT_TRANSFORM] [opt date_type_clause]
      |  'FILLER
 end define
 
@@ -442,9 +442,9 @@ end define
 %% the original definition is copied fron the file LSCobol.Grammar
 
 define file_description
-        						[NL] [NL]
-    	'FD [SP] [id] [opt IS_EXTERNAL] [opt IS_GLOBAL] [IN] 
-	    [repeat file_description_clause] [dot]	[EX] %% T.D. BNS_missing_dot -> dot 07.03.96
+                                                        [NL] [NL]
+        'FD [SP] [id] [opt IS_EXTERNAL] [opt IS_GLOBAL] [IN] 
+            [repeat file_description_clause] [dot]      [EX] %% T.D. BNS_missing_dot -> dot 07.03.96
         [facts]
         [repeat record_description]
 end define 
@@ -455,9 +455,9 @@ end define
 %% the original definition is copied fron the file LSCobol.Grammar
 
 define sort_merge_file_description
-    	   							[NL] [NL]
-    	'SD [SP] [id] 						[IN] 
-	    [repeat sort_merge_description_clause] [dot]	[EX]
+                                                                [NL] [NL]
+        'SD [SP] [id]                                           [IN] 
+            [repeat sort_merge_description_clause] [dot]        [EX]
         [facts]
         [repeat record_description]
 end define
@@ -469,6 +469,6 @@ end define
 %% Overrides for formal parameters
 
 define procedure_parameter_item
-	[opt BY_REFERENCE_or_VALUE] [identifier]
+        [opt BY_REFERENCE_or_VALUE] [identifier]
 end define
 

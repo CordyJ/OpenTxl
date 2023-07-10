@@ -16,54 +16,54 @@
 % 
 % Here is very simple example.
 
-	keys
-		KEY
-	end keys
+        keys
+                KEY
+        end keys
 
-	define program
-		[repeat anything]
-	end define
+        define program
+                [repeat anything]
+        end define
 
-	define anything
-		[token]
-	|	[NL] [IN] KEY [EX] [NL]
-	end define
+        define anything
+                [token]
+        |       [NL] [IN] KEY [EX] [NL]
+        end define
 
 % (If KEY were written first, of course, the problem would not be illustrated.
 % There is another reason, which I added a postscript about.)
 % 
 % Using a simple program
 
-	function main
-		replace [program]
-			Program [program]
-		by
-			Program [reparse Program]
-	end function
+        function main
+                replace [program]
+                        Program [program]
+                by
+                        Program [reparse Program]
+        end function
 
 
 % and input stream
 % 
-% 	THE KEY (TO IT ALL) IS: DO NOT KEY THE KEY!
+%       THE KEY (TO IT ALL) IS: DO NOT KEY THE KEY!
 % 
 % we get the expected output
 % 
-% 	THE
-% 		KEY
-% 	(TO IT ALL) IS : DO NOT
-% 		KEY
-% 	THE
-% 		KEY
-% 	!
+%       THE
+%               KEY
+%       (TO IT ALL) IS : DO NOT
+%               KEY
+%       THE
+%               KEY
+%       !
 % 
 % but if the program ends
 % 
-% 			Program
-% 				[reparse Program]
+%                       Program
+%                               [reparse Program]
 % 
 % then we get the surprising output
 % 
-% 	THE KEY (TO IT ALL) IS : DO NOT KEY THE KEY !
+%       THE KEY (TO IT ALL) IS : DO NOT KEY THE KEY !
 % 
 % showing that the KEY tokens were accepted by [token] during reparse.
 % 
@@ -72,10 +72,10 @@
 % 
 % PS.  In the real situation I want [anything] to be described as like
 % 
-% 	define anything
-% 		[token] [token] [token] [token] [token] [token] [token] [token]
-% 	|	[token]
-% 	end define
+%       define anything
+%               [token] [token] [token] [token] [token] [token] [token] [token]
+%       |       [token]
+%       end define
 % 
 % because this allows the parser to grab chunks at a time, instead of only
 % one token.

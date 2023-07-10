@@ -26,17 +26,17 @@
 
 % Modification Log
 
-% v11.0	Initial revision, revised from FreeTXL 10.8b (c) 1988-2022 Queen's University at Kingston
+% v11.0 Initial revision, revised from FreeTXL 10.8b (c) 1988-2022 Queen's University at Kingston
 
 
 module symbol
     import 
-	var ident, var tree, 
-	error, externalType
+        var ident, var tree, 
+        error, externalType
 
     export 
-	symbols, nSymbols, UNDEFINED,
-	enterSymbol, lookupSymbol, findSymbol
+        symbols, nSymbols, UNDEFINED,
+        enterSymbol, lookupSymbol, findSymbol
     
     % The TXL program nonterminal symbol table 
     % Nonterminal defines are compiled into grammar trees for the defined nonterminal symbols, stored here
@@ -47,47 +47,47 @@ module symbol
     % Symbol Table Operations
 
     function enterSymbol (partId : tokenT, kind : kindT) : int
-	#if not NOCOMPILE then
-	    for p : 1 .. nSymbols
-		if tree.trees (symbols (p)).name = partId then
-		    %% Does not hold if user token has same name as built-in token!
-		    %% assert kind = kindT.undefined or tree.trees (symbols (p)).kind = kind
-		    result p
-		end if
-	    end for
+        #if not NOCOMPILE then
+            for p : 1 .. nSymbols
+                if tree.trees (symbols (p)).name = partId then
+                    %% Does not hold if user token has same name as built-in token!
+                    %% assert kind = kindT.undefined or tree.trees (symbols (p)).kind = kind
+                    result p
+                end if
+            end for
 
-	    if nSymbols = maxSymbols then
-		error ("", "Too many defined nonterminal types (> " + intstr (maxSymbols, 1) + ")", LIMIT_FATAL, 111)
-	    end if
+            if nSymbols = maxSymbols then
+                error ("", "Too many defined nonterminal types (> " + intstr (maxSymbols, 1) + ")", LIMIT_FATAL, 111)
+            end if
 
-	    nSymbols += 1
-	    symbols (nSymbols) := tree.newTreeInit (kind, partId, partId, 0, nilKid)
-	    result nSymbols
-	#end if
+            nSymbols += 1
+            symbols (nSymbols) := tree.newTreeInit (kind, partId, partId, 0, nilKid)
+            result nSymbols
+        #end if
     end enterSymbol
 
     function lookupSymbol (partId : tokenT) : int
-	% returns UNDEFINED if symbol is not defined
-	for p : 1 .. nSymbols
-	    if tree.trees (symbols (p)).name = partId then
-		result p
-	    end if
-	end for
+        % returns UNDEFINED if symbol is not defined
+        for p : 1 .. nSymbols
+            if tree.trees (symbols (p)).name = partId then
+                result p
+            end if
+        end for
 
-	result UNDEFINED
+        result UNDEFINED
     end lookupSymbol
 
     function findSymbol (partId : tokenT) : int
-	#if not NOCOMPILE then
-	    for p : 1 .. nSymbols
-		if tree.trees (symbols (p)).name = partId then
-		    result p
-		end if
-	    end for
+        #if not NOCOMPILE then
+            for p : 1 .. nSymbols
+                if tree.trees (symbols (p)).name = partId then
+                    result p
+                end if
+            end for
 
-	    error ("", "[" + externalType (string@(ident.idents (partId))) + "] has not been defined", FATAL, 112)
-	    result UNDEFINED
-	#end if
+            error ("", "[" + externalType (string@(ident.idents (partId))) + "] has not been defined", FATAL, 112)
+            result UNDEFINED
+        #end if
     end findSymbol
 
 end symbol

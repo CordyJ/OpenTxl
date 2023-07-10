@@ -1,5 +1,5 @@
 define program
-	[nlprogram] [flprogram]
+        [nlprogram] [flprogram]
 end define
 
 define nlprogram
@@ -28,17 +28,17 @@ end define
 
 function main
     replace [program]
-	NLLines [repeat nlline]
+        NLLines [repeat nlline]
     construct FLLines [repeat flline]
-	_ [addLine each NLLines]
+        _ [addLine each NLLines]
     by
-	NLLines FLLines
+        NLLines FLLines
 end function
 
 function addLine NLLine [nlline]
     deconstruct NLLine
-	Line [line]
+        Line [line]
     replace * [repeat flline]
     by
-	Line
+        Line
 end function

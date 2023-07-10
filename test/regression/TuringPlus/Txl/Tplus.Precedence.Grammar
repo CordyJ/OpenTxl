@@ -3,383 +3,383 @@
 % (from yacc grammar for T+, R.C. Holt)
 
 compounds
-	:= .. >> >>> <= >= => ** 
+        := .. >> >>> <= >= => ** 
 end compounds
 
 comments
-    	'%
-    	/* */
+        '%
+        /* */
 end comments
 
 keys
-	const init pervasive var collection of forward
-	bind to type set int real boolean string
-	enum array record 'end union label pointer
-	'import body procedure proc 'function fcn
-	pre post module 'export invariant begin
-	assert new free tag if then else elsif
-	loop exit when case for decreasing return
-	result put skip get true false div mod
-	not and or in all opaque 
-	int1 int2 int4 nat1 nat2 nat4 nat real4 real8
-	stub grant parent monitor child condition priority
-	deferred timeout 'external register char addressint
-	packed process handler unqualified read write seek tell
-	open quit fork asm signal wait pause bits xor shl shr close 
-	checked unchecked 'include
+        const init pervasive var collection of forward
+        bind to type set int real boolean string
+        enum array record 'end union label pointer
+        'import body procedure proc 'function fcn
+        pre post module 'export invariant begin
+        assert new free tag if then else elsif
+        loop exit when case for decreasing return
+        result put skip get true false div mod
+        not and or in all opaque 
+        int1 int2 int4 nat1 nat2 nat4 nat real4 real8
+        stub grant parent monitor child condition priority
+        deferred timeout 'external register char addressint
+        packed process handler unqualified read write seek tell
+        open quit fork asm signal wait pause bits xor shl shr close 
+        checked unchecked 'include
 end keys
 
 
 % required by TXL
 define program
-    	[compilation]
+        [compilation]
 end define
 
 
 define compilation
-    	[opt grantList]
-	[mainProgram]
+        [opt grantList]
+        [mainProgram]
 
-    |	[opt parentClause]
-	stub [moduleOrMonitorStub]
-	[opt bodyModuleOrMonitorBody]
+    |   [opt parentClause]
+        stub [moduleOrMonitorStub]
+        [opt bodyModuleOrMonitorBody]
 
-    |	[opt parentClause]
-	stub [extendedSubprogramHeader]
-	[opt bodySubprogramImplementation]
+    |   [opt parentClause]
+        stub [extendedSubprogramHeader]
+        [opt bodySubprogramImplementation]
 
-    |	body [stringlit] [NL]
-	[moduleOrMonitorBody]
+    |   body [stringlit] [NL]
+        [moduleOrMonitorBody]
 
-    |	body [stringlit] [NL]
-	[subprogramImplementation]
+    |   body [stringlit] [NL]
+        [subprogramImplementation]
 end define
 
 
 define grantList
-	grant (  [list optVarId] ) [NL]
+        grant (  [list optVarId] ) [NL]
 end define
 
 
 define parentClause
-	parent [stringlit] [NL]
+        parent [stringlit] [NL]
 end define
 
 
 define moduleOrMonitorStub
-	module [id] [IN] [NL]
-	    [opt importList]
-	    [opt exportList]
-	    [opt grantList]
-	    [repeat declarationInStub] [EX]
-	'end [id]
+        module [id] [IN] [NL]
+            [opt importList]
+            [opt exportList]
+            [opt grantList]
+            [repeat declarationInStub] [EX]
+        'end [id]
 
-    |	monitor [id] [IN] [NL]
-	    [opt importList]
-	    [opt exportList]
-	    [opt grantList]
-	    [repeat declarationInStub] [EX]
-	'end [id]
+    |   monitor [id] [IN] [NL]
+            [opt importList]
+            [opt exportList]
+            [opt grantList]
+            [repeat declarationInStub] [EX]
+        'end [id]
 end define
 
 
 define bodyModuleOrMonitorBody
-	body [moduleOrMonitorBody]
+        body [moduleOrMonitorBody]
 end define
 
 
 define moduleOrMonitorBody
-	module [id] [IN] [NL]
-	    [opt preClause]
-	    [repeat declarationOrStatement]
-	    [opt postClause] [EX]
-	'end [id]
+        module [id] [IN] [NL]
+            [opt preClause]
+            [repeat declarationOrStatement]
+            [opt postClause] [EX]
+        'end [id]
 
-    |	monitor [id] [IN] [NL]
-	    [opt colonExpn] 	% device monitor priority 
-	    [opt preClause]
-	    [repeat declarationOrStatement]
-	    [opt postClause] [EX]
-	'end [id]
+    |   monitor [id] [IN] [NL]
+            [opt colonExpn]     % device monitor priority 
+            [opt preClause]
+            [repeat declarationOrStatement]
+            [opt postClause] [EX]
+        'end [id]
 end define
 
 
 define declarationInStub
-	[constantDeclaration] [NL]
-    |	[typeDeclaration] [NL]
-    |	[collectionDeclaration] [NL]
-    |	[opt 'external] [subprogramHeader] [NL]
-    |	child [stringlit] [NL]
+        [constantDeclaration] [NL]
+    |   [typeDeclaration] [NL]
+    |   [collectionDeclaration] [NL]
+    |   [opt 'external] [subprogramHeader] [NL]
+    |   child [stringlit] [NL]
 end define
     
 
 define bodySubprogramImplementation
-    	body [subprogramImplementation]
+        body [subprogramImplementation]
 end define
 
 
 define externalDeclaration
-	'external [opt stringlit] 	% external name override
-	[subprogramHeader]
+        'external [opt stringlit]       % external name override
+        [subprogramHeader]
 end define
 
 
 define mainProgram
-	[repeat declarationOrStatement]
+        [repeat declarationOrStatement]
 end define
 
 
 define declaration
-	[constantDeclaration]
+        [constantDeclaration]
     |   [variableDeclaration]
-    |	[collectionDeclaration]
+    |   [collectionDeclaration]
     |   [typeDeclaration]
-    |	[externalDeclaration]
-    |	[subprogramDeclaration]	
-    |	[processDeclaration]	
-    |	[moduleDeclaration]	
-    |	[monitorDeclaration]	
-    |	[conditionDeclaration]
+    |   [externalDeclaration]
+    |   [subprogramDeclaration] 
+    |   [processDeclaration]    
+    |   [moduleDeclaration]     
+    |   [monitorDeclaration]    
+    |   [conditionDeclaration]
 end define
 
 
 define constantDeclaration
-    	const [opt pervasiveSpec] [id] [opt colon_typeSpec] 
-	    := [initializingValue]
+        const [opt pervasiveSpec] [id] [opt colon_typeSpec] 
+            := [initializingValue]
 end define
 
 
 define colon_typeSpec
-	: [typeSpec]
+        : [typeSpec]
 end define
 
 
 define initializingValue
-	[expn]
-    |	[IN] [NL] init ( [list initializingValue] ) [EX]
+        [expn]
+    |   [IN] [NL] init ( [list initializingValue] ) [EX]
 end define
 
 
 define pervasiveSpec
-	pervasive
-    |	*
+        pervasive
+    |   *
 end define
 
 
 define variableDeclaration
-    	[opt externalSpec] var [opt 'register] [list id+] 
-	    [colonTypeSpec_or_colonEqualInitializingValue]
+        [opt externalSpec] var [opt 'register] [list id+] 
+            [colonTypeSpec_or_colonEqualInitializingValue]
 end define
 
 
 define colonTypeSpec_or_colonEqualInitializingValue
-	: [typeSpec] [opt colonEqualInitializingValue]
-    |	[colonEqualInitializingValue]
+        : [typeSpec] [opt colonEqualInitializingValue]
+    |   [colonEqualInitializingValue]
 end define
 
 
 define collectionDeclaration
-    	var [list id+] : [opt 'unchecked] collection of [typeSpec_or_forwardId]
+        var [list id+] : [opt 'unchecked] collection of [typeSpec_or_forwardId]
 end define
 
 
 define typeSpec_or_forwardId
-	[typeSpec]
-    |	forward [id]
+        [typeSpec]
+    |   forward [id]
 end define
 
 
 define externalSpec
-	'external [opt expn]  % external address
+        'external [opt expn]  % external address
 end define
 
 
 define conditionDeclaration
-    	var [list id+] : [opt arrayOf] condition [opt conditionOption]
+        var [list id+] : [opt arrayOf] condition [opt conditionOption]
 end define
 
 
 define conditionOption
-	priority
-    |	deferred
-    |	timeout
+        priority
+    |   deferred
+    |   timeout
 end define
 
 
 define arrayOf
-	array [list indexType+] of
-    |	{ [list indexType+] }
+        array [list indexType+] of
+    |   { [list indexType+] }
 end define
 
 
 define colonEqualInitializingValue
-	:= [initializingValue]
+        := [initializingValue]
 end define
 
 
 define variableBinding
-	bind [list bindClause+]
+        bind [list bindClause+]
 end define
 
 
 define bindClause
-	[opt 'var] [opt 'register] [id] to [variableReference]
+        [opt 'var] [opt 'register] [id] to [variableReference]
 end define
 
 
 define optVarId
-	[opt 'var] [id]
+        [opt 'var] [id]
 end define
 
 
 define typeDeclaration
-	type [opt pervasiveSpec] [id] : [typeSpec]
+        type [opt pervasiveSpec] [id] : [typeSpec]
 end define
 
 
 % Type Specifications 
 
 define typeSpec
-	[opt 'packed] [unpackedTypeSpec]
+        [opt 'packed] [unpackedTypeSpec]
 end define
 
 
 define unpackedTypeSpec
-	[standardType]
-    |	[subrangeType] [opt storageSize]
-    |	[enumeratedType]
-    |	[arrayType]
-    |	set of [baseType]
-    |	[recordType]
-    |	[unionType]
-    |	[pointerType]
-    |	[subprogramType]
-    |	[namedType]
+        [standardType]
+    |   [subrangeType] [opt storageSize]
+    |   [enumeratedType]
+    |   [arrayType]
+    |   set of [baseType]
+    |   [recordType]
+    |   [unionType]
+    |   [pointerType]
+    |   [subprogramType]
+    |   [namedType]
 end define
 
 
 define standardType
-	int
-    |	int1
-    |	int2
-    |	int4
-    |	nat
-    |	nat1
-    |	nat2
-    |	nat4
-    |	real
-    |	real4
-    |	real8
-    |	boolean
-    |	string	[opt parenthesizedCompileTimeExpn]
-    |	char	[opt parenthesizedExpn]
-    |	addressint
+        int
+    |   int1
+    |   int2
+    |   int4
+    |   nat
+    |   nat1
+    |   nat2
+    |   nat4
+    |   real
+    |   real4
+    |   real8
+    |   boolean
+    |   string  [opt parenthesizedCompileTimeExpn]
+    |   char    [opt parenthesizedExpn]
+    |   addressint
 end define
 
 
 define subprogramType
-	[procSpec] [id] [opt parameterListDeclaration]
-    |	[fcnSpec] [id] [opt parameterListDeclaration] [opt id] : [typeSpec]
+        [procSpec] [id] [opt parameterListDeclaration]
+    |   [fcnSpec] [id] [opt parameterListDeclaration] [opt id] : [typeSpec]
 end define
 
 
 define storageSize
-	: [compileTimeExpn]
+        : [compileTimeExpn]
 end define
 
 
 define parenthesizedCompileTimeExpn
-	( [compileTimeExpn] )
+        ( [compileTimeExpn] )
 end define
 
 define parenthesizedExpn
-	( [expn] )
+        ( [expn] )
 end define
 
 
 define subrangeType
-	[compileTimeExpn] .. [expn]
+        [compileTimeExpn] .. [expn]
 end define
 
 
 define enumeratedType
-	enum ( [list id+] )
+        enum ( [list id+] )
 end define
 
 
 define arrayType
-	array [list indexType+] of [typeSpec]
-    |	{ [list indexType+] } [typeSpec]
+        array [list indexType+] of [typeSpec]
+    |   { [list indexType+] } [typeSpec]
 end define
 
 
 define baseType
-	[indexType]
+        [indexType]
 end define
 
 
 define indexType
-	[subrangeType]
-    |	[enumeratedType]
+        [subrangeType]
+    |   [enumeratedType]
     |   [namedType]
 end define
 
 
 define recordType
-	record [NL]
-	    [repeat recordFieldDeclaration+]
-	'end record
+        record [NL]
+            [repeat recordFieldDeclaration+]
+        'end record
 end define
 
 
 define recordFieldDeclaration
-	[list id+]  : [typeSpec] [opt ';] [NL]
+        [list id+]  : [typeSpec] [opt ';] [NL]
 end define
 
 
 define unionType
-	union [opt id] : [indexType] of [IN] [IN] [NL]
-	    [repeat unionAlternativeDeclaration+]
-	    [opt unionOtherwiseDeclaration] [EX] [EX]
-	'end union
+        union [opt id] : [indexType] of [IN] [IN] [NL]
+            [repeat unionAlternativeDeclaration+]
+            [opt unionOtherwiseDeclaration] [EX] [EX]
+        'end union
 end define
 
 
 define unionAlternativeDeclaration
-	[EX] [label_or_bar] [list compileTimeExpn+] : [IN] [NL]
-	    [repeat unionFieldDeclaration+]
+        [EX] [label_or_bar] [list compileTimeExpn+] : [IN] [NL]
+            [repeat unionFieldDeclaration+]
 end define
 
 
 define unionOtherwiseDeclaration
-	[EX] [label_or_bar] : [IN] [NL]
-	    [repeat unionFieldDeclaration+]
+        [EX] [label_or_bar] : [IN] [NL]
+            [repeat unionFieldDeclaration+]
 end define
 
 
 define label_or_bar
-	label 
-    |	'|
+        label 
+    |   '|
 end define
 
 
 define unionFieldDeclaration
-	[list id+] : [typeSpec] [opt ';] [NL]
+        [list id+] : [typeSpec] [opt ';] [NL]
 end define
 
 
 define pointerType
-	pointer to [collectionId]
+        pointer to [collectionId]
 end define
 
 
 define namedType
-	[reference]
+        [reference]
 end define
 
 
 define collectionId
-	[id]
+        [id]
 end define
 
 
@@ -388,211 +388,211 @@ end define
 
 
 define subprogramDeclaration
-	[subprogramHeader] [opt importList] [subprogramBody]
-    |	forward [subprogramHeader] [forwardImportList]
-    |	body [procSpec] [id] [IN] [NL] [subprogramBody]
-    |	body [fcnSpec] [id] [IN] [NL] [subprogramBody]
+        [subprogramHeader] [opt importList] [subprogramBody]
+    |   forward [subprogramHeader] [forwardImportList]
+    |   body [procSpec] [id] [IN] [NL] [subprogramBody]
+    |   body [fcnSpec] [id] [IN] [NL] [subprogramBody]
 end define
 
 
 define processDeclaration
-	[processHeader]
-	[subprogramBody]
+        [processHeader]
+        [subprogramBody]
 end define
 
 
 define subprogramHeader
-	[procSpec] [id] [opt parameterListDeclaration] [IN][NL]
-    |	[procSpec] [id] : [compileTimeExpn] [IN][NL]
-    |	[fcnSpec] [id] [opt parameterListDeclaration] [opt id] : [typeSpec] [IN][NL]
+        [procSpec] [id] [opt parameterListDeclaration] [IN][NL]
+    |   [procSpec] [id] : [compileTimeExpn] [IN][NL]
+    |   [fcnSpec] [id] [opt parameterListDeclaration] [opt id] : [typeSpec] [IN][NL]
 end define
 
 
 define extendedSubprogramHeader
-	[subprogramHeader]
-	[opt importList]
-	[opt preClause]
-	[opt initClause]
-	[opt postClause]
+        [subprogramHeader]
+        [opt importList]
+        [opt preClause]
+        [opt initClause]
+        [opt postClause]
 end define
 
 
 define subprogramImplementation
-	[fcnSpec] [id] [IN] [NL]
-	    [opt exceptionHandler]
-	    [repeat declarationOrStatement] [EX]
-	'end [id]
+        [fcnSpec] [id] [IN] [NL]
+            [opt exceptionHandler]
+            [repeat declarationOrStatement] [EX]
+        'end [id]
 
-    |	[procSpec] [id] [IN] [NL]
-	    [opt exceptionHandler]
-	    [repeat declarationOrStatement] [EX]
-	'end [id]
+    |   [procSpec] [id] [IN] [NL]
+            [opt exceptionHandler]
+            [repeat declarationOrStatement] [EX]
+        'end [id]
 end define
 
 
 define processHeader
-	process [id] [opt parameterListDeclaration] [opt colonExpn] [IN] [NL]
+        process [id] [opt parameterListDeclaration] [opt colonExpn] [IN] [NL]
 end define
 
 
 define parameterListDeclaration
-	( [parameterDeclarationList] )
+        ( [parameterDeclarationList] )
 end define
 
 
 define parameterDeclarationList
-	[list parameterDeclaration+] [opt commaVaryingParameterDeclaration]
-    |	[id] : ..	% (only) varying parameter
+        [list parameterDeclaration+] [opt commaVaryingParameterDeclaration]
+    |   [id] : ..       % (only) varying parameter
 end define
 
 
 define commaVaryingParameterDeclaration
-	, [id] : ..	% (last) varying parameter
+        , [id] : ..     % (last) varying parameter
 end define
 
 
 define parameterDeclaration
-	[subprogramHeader]
-    |	[opt 'register] [opt 'var] [list id+] : [parameterType]
+        [subprogramHeader]
+    |   [opt 'register] [opt 'var] [list id+] : [parameterType]
 end define
 
 
 define parameterType
-     	[typeSpec]
-    |	type [typeSpec]
-    |	[stringCharStar]
-    |	array [list compileTimeExpnDotDotStar+] of [typeSpec]
-    |	{ [list compileTimeExpnDotDotStar+] } [typeSpec]
-    |	array [list compileTimeExpnDotDotStar+] of [stringCharStar]
-    |	{ [list compileTimeExpnDotDotStar+] } [stringCharStar]
+        [typeSpec]
+    |   type [typeSpec]
+    |   [stringCharStar]
+    |   array [list compileTimeExpnDotDotStar+] of [typeSpec]
+    |   { [list compileTimeExpnDotDotStar+] } [typeSpec]
+    |   array [list compileTimeExpnDotDotStar+] of [stringCharStar]
+    |   { [list compileTimeExpnDotDotStar+] } [stringCharStar]
 end define
 
 
 define compileTimeExpnDotDotStar
-    	[compileTimeExpn] .. *
+        [compileTimeExpn] .. *
 end define
 
 
 define stringCharStar
-	string ( * )
-    | 	char   ( * )
+        string ( * )
+    |   char   ( * )
 end define
 
 
 define importList
-	'import ( [list importItem] ) [NL]
+        'import ( [list importItem] ) [NL]
 end define
 
 
 define importItem
-	[opt 'var] [id] 
+        [opt 'var] [id] 
 end define
 
 
 define forwardImportList
-	'import ( [list forwardImport] ) [EX] [NL]
+        'import ( [list forwardImport] ) [EX] [NL]
 end define
 
 
 define forwardImport
-	[opt varOrForward] [id]
+        [opt varOrForward] [id]
 end define
 
 
 define varOrForward
-	forward
-    |	var
+        forward
+    |   var
 end define
 
 
 define procSpec
-    	proc
-    |	procedure
+        proc
+    |   procedure
 end define
 
 
 define fcnSpec
-    	fcn
-    |	'function
+        fcn
+    |   'function
 end define
 
 
 define subprogramBody
-	[opt preClause]
-	[opt initClause]
-	[opt postClause]
-	[opt exceptionHandler]
-	[repeat declarationOrStatement] [EX]
+        [opt preClause]
+        [opt initClause]
+        [opt postClause]
+        [opt exceptionHandler]
+        [repeat declarationOrStatement] [EX]
     'end [id]
 end define
 
 
 define preClause
-	pre [booleanExpn] [NL]
+        pre [booleanExpn] [NL]
 end define
 
 
 define initClause
-	init [list idColonEqualExpn+] [NL]
+        init [list idColonEqualExpn+] [NL]
 end define
 
 
 define idColonEqualExpn
-	[id] := [compileTimeExpn] 
+        [id] := [compileTimeExpn] 
 end define
     
 
 define postClause
-	post [booleanExpn] [NL]
+        post [booleanExpn] [NL]
 end define
 
 
 define exceptionHandler
-	handler ( [id] ) [NL] [IN]
-	    [repeat declarationOrStatement] [EX]
-	'end handler [NL]
+        handler ( [id] ) [NL] [IN]
+            [repeat declarationOrStatement] [EX]
+        'end handler [NL]
 end define
 
 
 define moduleDeclaration
-	module [id] [IN] [NL]
-	    [opt importList]
-	    [opt exportList]
-	    [opt grantList]
-	    [opt preClause]
-	    [repeat declarationOrStatement]
-	    [opt postClause] [EX]
-	'end [id]
+        module [id] [IN] [NL]
+            [opt importList]
+            [opt exportList]
+            [opt grantList]
+            [opt preClause]
+            [repeat declarationOrStatement]
+            [opt postClause] [EX]
+        'end [id]
 end define
 
 
 define monitorDeclaration
-	monitor [id] [IN] [NL]
-	    [opt colonExpn]
-	    [opt importList]
-	    [opt exportList]
-	    [opt grantList]
-	    [opt preClause]
-	    [repeat declarationOrStatement]
-	    [opt postClause] [EX]
-	'end [id]
+        monitor [id] [IN] [NL]
+            [opt colonExpn]
+            [opt importList]
+            [opt exportList]
+            [opt grantList]
+            [opt preClause]
+            [repeat declarationOrStatement]
+            [opt postClause] [EX]
+        'end [id]
 end define
 
 
 define exportList
-	'export ( [list exportItem+] ) [NL]
+        'export ( [list exportItem+] ) [NL]
 end define
 
 
 define exportItem
-	[opt 'opaque] [opt unqualifiedSpec] [id]
+        [opt 'opaque] [opt unqualifiedSpec] [id]
 end define
 
 
 define unqualifiedSpec
-	unqualified
-    |	~ .
-    |	not .
+        unqualified
+    |   ~ .
+    |   not .
 end define
 
 
@@ -600,176 +600,176 @@ end define
 % Statements 
 
 define declarationOrStatement
-	[declaration]		[opt ';] [NL] 
-    |	[variableBinding]	[opt ';] [NL] 
-    |	[statement]		[opt ';] [NL] 
+        [declaration]           [opt ';] [NL] 
+    |   [variableBinding]       [opt ';] [NL] 
+    |   [statement]             [opt ';] [NL] 
 end define
 
 
 define statement
-	[assignmentStatement]
-    |	[callStatement]
-    |	assert [booleanExpn]
-    |	[returnStatement]
-    |	[resultStatement]
-    |	[ifStatement]
-    |	[loopStatement]
-    |	[exitStatement]
-    |	[caseStatement]
-    |	begin [IN] [NL]
-	    [repeat declarationOrStatement] [EX]
-	'end
-    |	new [id] , [variableReference]
-    |	free [id] , [variableReference]
-    |	[forStatement]
-    |	tag [variableReference] , [expn]
-    |	[putStatement]
-    |	[getStatement]
-    |	[readOrWriteStatement]
-    |	[seekStatement]
-    |	[tellStatement]
-    |	[openStatement]
-    |	close : [expn]
-    |	close ( [expn] )
-    |	[quitStatement]
-    |	[forkStatement]
-    |	[assemblerStatement]
-    |	[signalStatement]
-    |	[waitStatement]
-    |	[pauseStatement]
-    |	unchecked
-    |	checked
-    |	invariant [booleanExpn]  [opt ';]
-    |	'include [stringlit]
+        [assignmentStatement]
+    |   [callStatement]
+    |   assert [booleanExpn]
+    |   [returnStatement]
+    |   [resultStatement]
+    |   [ifStatement]
+    |   [loopStatement]
+    |   [exitStatement]
+    |   [caseStatement]
+    |   begin [IN] [NL]
+            [repeat declarationOrStatement] [EX]
+        'end
+    |   new [id] , [variableReference]
+    |   free [id] , [variableReference]
+    |   [forStatement]
+    |   tag [variableReference] , [expn]
+    |   [putStatement]
+    |   [getStatement]
+    |   [readOrWriteStatement]
+    |   [seekStatement]
+    |   [tellStatement]
+    |   [openStatement]
+    |   close : [expn]
+    |   close ( [expn] )
+    |   [quitStatement]
+    |   [forkStatement]
+    |   [assemblerStatement]
+    |   [signalStatement]
+    |   [waitStatement]
+    |   [pauseStatement]
+    |   unchecked
+    |   checked
+    |   invariant [booleanExpn]  [opt ';]
+    |   'include [stringlit]
 end define
 
 
 define assignmentStatement
-	[variableReference] [assignmentOperator] [expn]
+        [variableReference] [assignmentOperator] [expn]
 end define
 
 
 define ifStatement
-	if [booleanExpn] then [IN] [NL]
-	    [repeat declarationOrStatement] [EX]
-	  [repeat elsifClause] 
-	  [opt elseClause]
-	'end if
+        if [booleanExpn] then [IN] [NL]
+            [repeat declarationOrStatement] [EX]
+          [repeat elsifClause] 
+          [opt elseClause]
+        'end if
 
-    |	'[ [booleanExpn] : [IN] [NL]
-	    [repeat declarationOrStatement] [EX]
-	  [repeat shortElsifClause] 
-	  [opt shortElseClause]
-	']
+    |   '[ [booleanExpn] : [IN] [NL]
+            [repeat declarationOrStatement] [EX]
+          [repeat shortElsifClause] 
+          [opt shortElseClause]
+        ']
 end define
 
 
 define elsifClause 
-	elsif [booleanExpn] then  [IN] [NL]
-	    [repeat declarationOrStatement] [EX]
+        elsif [booleanExpn] then  [IN] [NL]
+            [repeat declarationOrStatement] [EX]
 end define
 
 
 define elseClause
-	else  [IN] [NL]
-	    [repeat declarationOrStatement] [EX]
+        else  [IN] [NL]
+            [repeat declarationOrStatement] [EX]
 end define
 
 
 define shortElsifClause
-	'| [booleanExpn] : [IN] [NL]
-	    [repeat declarationOrStatement] [EX]
+        '| [booleanExpn] : [IN] [NL]
+            [repeat declarationOrStatement] [EX]
 end define
 
 
 define shortElseClause
-	'| : [IN] [NL]
-	    [repeat declarationOrStatement] [EX]
+        '| : [IN] [NL]
+            [repeat declarationOrStatement] [EX]
 end define
 
 
 define loopStatement
-	loop [IN] [NL]
-	    [opt invariantClause]
-	    [repeat declarationOrStatement] [EX]
-	'end loop
+        loop [IN] [NL]
+            [opt invariantClause]
+            [repeat declarationOrStatement] [EX]
+        'end loop
 
-    |	{  [IN] [NL]
-	    [opt invariantClause]
-	    [repeat declarationOrStatement] [EX]
-	}
+    |   {  [IN] [NL]
+            [opt invariantClause]
+            [repeat declarationOrStatement] [EX]
+        }
 end define
 
 
 define invariantClause
-	invariant [booleanExpn] [NL]
+        invariant [booleanExpn] [NL]
 end define
 
 
 define returnStatement
-	return
-    |	>>>
+        return
+    |   >>>
 end define
 
 
 define resultStatement
-	result [expn]
-    |	>>> : [expn]
+        result [expn]
+    |   >>> : [expn]
 end define
 
 
 define exitStatement
-	exit [opt whenBooleanExpn]
-    |	>> [opt colonBooleanExpn]
+        exit [opt whenBooleanExpn]
+    |   >> [opt colonBooleanExpn]
 end define
 
 
 define whenBooleanExpn
-	when [booleanExpn]
+        when [booleanExpn]
 end define
 
 
 define colonBooleanExpn
-	: [booleanExpn]
+        : [booleanExpn]
 end define
 
 
 define caseStatement
-	case [expn] of [IN] [IN] [NL]
-	    [repeat caseAlternative]
-	    [opt caseOtherwise] [EX] [EX]
-	'end case
+        case [expn] of [IN] [IN] [NL]
+            [repeat caseAlternative]
+            [opt caseOtherwise] [EX] [EX]
+        'end case
 end define
 
 
 define caseAlternative
-	[EX] [label_or_bar] [list compileTimeExpn+] : [IN] [NL]
-	    [repeat declarationOrStatement] 
+        [EX] [label_or_bar] [list compileTimeExpn+] : [IN] [NL]
+            [repeat declarationOrStatement] 
 end define
 
 
 define caseOtherwise
-	[EX] [label_or_bar] : [IN] [NL]
-	    [repeat declarationOrStatement]
+        [EX] [label_or_bar] : [IN] [NL]
+            [repeat declarationOrStatement]
 end define
 
 
 define forStatement
-	for [opt 'decreasing] [opt id] : [forRange] [IN] [NL]
-	    [opt invariantClause]
-	    [repeat declarationOrStatement] [EX]
-	'end for
+        for [opt 'decreasing] [opt id] : [forRange] [IN] [NL]
+            [opt invariantClause]
+            [repeat declarationOrStatement] [EX]
+        'end for
 
-    |	{ [plusOrMinus] [opt id] : [forRange] [IN] [NL]
-	    [opt invariantClause]
-	    [repeat declarationOrStatement] [EX]
-	}
+    |   { [plusOrMinus] [opt id] : [forRange] [IN] [NL]
+            [opt invariantClause]
+            [repeat declarationOrStatement] [EX]
+        }
 end define
 
 
 define forRange
-	[expn] .. [expn]
-    |	[namedType]
+        [expn] .. [expn]
+    |   [namedType]
 end define
 
 
@@ -779,125 +779,125 @@ end define
 
 
 define callStatement
-	[reference]
+        [reference]
 end define
 
 
 define putStatement
-	put [opt streamSpec] [list putItem+] [opt '..]
-    |	! [opt streamSpec] [list putItem+] [opt '..]
+        put [opt streamSpec] [list putItem+] [opt '..]
+    |   ! [opt streamSpec] [list putItem+] [opt '..]
 end define
 
 
 define streamSpec
-	: [expn] ,
+        : [expn] ,
 end define
 
 
 define putItem
-	[expn] [opt colonExpn] [opt colonExpn] [opt colonExpn]
-    |	skip
+        [expn] [opt colonExpn] [opt colonExpn] [opt colonExpn]
+    |   skip
 end define
 
 
 define colonExpn
-	: [expn]
+        : [expn]
 end define
 
 
 define getStatement
-	get [opt streamSpec] [list getItem+]
-    |	? [opt streamSpec] [list getItem+]
+        get [opt streamSpec] [list getItem+]
+    |   ? [opt streamSpec] [list getItem+]
 end define
 
 
 define getItem
-	[variableReference] [opt getWidth]
-    |	skip
+        [variableReference] [opt getWidth]
+    |   skip
 end define
 
 
 define getWidth
-	: [expn]
-    |	: *
+        : [expn]
+    |   : *
 end define
 
 
 define readOrWriteStatement
-	read : [expn] [opt colonStatus] [list readWriteItem+]
-    |	write : [expn] [opt colonStatus] [list readWriteItem+]
+        read : [expn] [opt colonStatus] [list readWriteItem+]
+    |   write : [expn] [opt colonStatus] [list readWriteItem+]
 end define
 
 
 define colonStatus
-	: [variableReference]
+        : [variableReference]
 end define
 
 
 define readWriteItem
-	[variableReference] [opt colonExpn] [opt colonVariableReference]
+        [variableReference] [opt colonExpn] [opt colonVariableReference]
 end define
 
 
 define colonVariableReference
-  	: [variableReference]
+        : [variableReference]
 end define
 
 
 define seekStatement
-	seek : [expn] , [expn]
-    |	seek : [expn] , *
+        seek : [expn] , [expn]
+    |   seek : [expn] , *
 end define
 
 
 define tellStatement
-	tell : [expn] , [variableReference]
+        tell : [expn] , [variableReference]
 end define
 
 
 define openStatement
-	open : [variableReference] , [expn] , [list ioCapability+]
-    |	open ( [variableReference] , [expn] , [expn] )
+        open : [variableReference] , [expn] , [list ioCapability+]
+    |   open ( [variableReference] , [expn] , [expn] )
 end define
 
 
 define ioCapability
-	get
-    |	put
-    |	read
-    |	write
-    |	seek
+        get
+    |   put
+    |   read
+    |   write
+    |   seek
 end define
 
 
 define quitStatement
-	quit [opt guiltyParty] [opt colonExpn]
+        quit [opt guiltyParty] [opt colonExpn]
 end define
 
 
 define guiltyParty
-	>
-    |	<
+        >
+    |   <
 end define
 
 
 define forkStatement
-	fork [id] [opt parameters] [opt forkParameters]
+        fork [id] [opt parameters] [opt forkParameters]
 end define
 
 
 define forkParameters
-	: [variableReference] [opt commaExpn] [opt commaVariableReference]
+        : [variableReference] [opt commaExpn] [opt commaVariableReference]
 end define
 
 
 define commaExpn
-	, [expn]
+        , [expn]
 end define
 
 
 define commaVariableReference
- 	, [variableReference]
+        , [variableReference]
 end define
 
 
@@ -907,214 +907,214 @@ end define
 
 
 define assemblerStatement
-	asm [stringlit] [opt colonStringLit] [repeat commaExpn]
+        asm [stringlit] [opt colonStringLit] [repeat commaExpn]
 end define
 
 
 define colonStringLit
- 	: [stringlit]
+        : [stringlit]
 end define
 
 
 define signalStatement
-	signal [variableReference]
+        signal [variableReference]
 end define
 
 
 define waitStatement
-	wait [variableReference] [opt commaExpn]
+        wait [variableReference] [opt commaExpn]
 end define
 
 
 define pauseStatement
-	pause [expn]
+        pause [expn]
 end define
 
 
 % References 
 
 define variableReference
-    	[reference]
-    |	# [variableReference]
-    |	bits ( [variableReference] , [bitsRange] )
+        [reference]
+    |   # [variableReference]
+    |   bits ( [variableReference] , [bitsRange] )
 end define
 
 
 define reference
-	[id] [repeat componentSelector]
-    |	type ( [typeCheatSpec] , [variableReference] ) [repeat componentSelector]
-    |	[typeCheatSpec] @ ( [expn] ) [repeat componentSelector]
+        [id] [repeat componentSelector]
+    |   type ( [typeCheatSpec] , [variableReference] ) [repeat componentSelector]
+    |   [typeCheatSpec] @ ( [expn] ) [repeat componentSelector]
 end define
 
 
 define typeCheatSpec
-	[standardType]
-    |	[id]
+        [standardType]
+    |   [id]
 end define
 
 
 define bitsRange
-	[subrangeType]
-    |	[compileTimeExpn]  % namedType is a subset of compileTimeExpn -- handle semantically
+        [subrangeType]
+    |   [compileTimeExpn]  % namedType is a subset of compileTimeExpn -- handle semantically
 end define
     
 
 define componentSelector
-	( [list expn] ) 
-    |	. [id] 
+        ( [list expn] ) 
+    |   . [id] 
 end define
 
 
 % Expressions 
 
 define booleanExpn
-	[expn]
+        [expn]
 end define
 
 
 define compileTimeExpn
-	[expn]
+        [expn]
 end define
 
 
 define expn
-    	[implication]
+        [implication]
 end define
 
 
 define explicitConstant
-	[integernumber]
-    |	[floatnumber]
-    |	[stringlit]
-    |	[charlit]	
-    |	true
-    |	false
+        [integernumber]
+    |   [floatnumber]
+    |   [stringlit]
+    |   [charlit]       
+    |   true
+    |   false
 end define
 
 
 define implication
-    	[disjunction] [repeat impliesDisjunction]
+        [disjunction] [repeat impliesDisjunction]
 end define
 
 define impliesDisjunction
-    	=> [disjunction]
+        => [disjunction]
 end define
 
 
 define disjunction
-	[conjunction] [repeat orOpConjunction]
+        [conjunction] [repeat orOpConjunction]
 end define
 
 define orOpConjunction
-    	or [conjunction]
-    |	xor [conjunction]
+        or [conjunction]
+    |   xor [conjunction]
 end define
 
 
 define conjunction
-	[negation] [repeat andOpNegation]
+        [negation] [repeat andOpNegation]
 end define
 
 define andOpNegation
-	and [negation]
-    |	& [negation]
+        and [negation]
+    |   & [negation]
 end define
 
 
 define negation
-	[opt notSpec] [relation]
+        [opt notSpec] [relation]
 end define
 
 define notSpec
-	not | ~
+        not | ~
 end define
 
 
 define relation
-	[sum] [repeat relOpSum]
+        [sum] [repeat relOpSum]
 end define
 
 define relOpSum
-	< [sum]
-    |	> [sum]
-    |	= [sum]
-    |	<= [sum]
-    |	>= [sum]
-    |	[notSpec] = [sum]
-    |	in [sum]
-    |	[notSpec] in [sum]
+        < [sum]
+    |   > [sum]
+    |   = [sum]
+    |   <= [sum]
+    |   >= [sum]
+    |   [notSpec] = [sum]
+    |   in [sum]
+    |   [notSpec] in [sum]
 end define
 
 
 define sum
-	[product] [repeat addOpProduct]
+        [product] [repeat addOpProduct]
 end define
 
 define addOpProduct
-	+ [product]
-    |	- [product]
+        + [product]
+    |   - [product]
 end define
 
 
 define product
-	[exponential] [repeat multOpExponential]
+        [exponential] [repeat multOpExponential]
 end define
 
 define multOpExponential
-	* [exponential]
-    |	/ [exponential]
-    |	div [exponential]
-    |	mod [exponential]
-    |	shl [exponential]
-    |	shr [exponential]
+        * [exponential]
+    |   / [exponential]
+    |   div [exponential]
+    |   mod [exponential]
+    |   shl [exponential]
+    |   shr [exponential]
 end define
 
 
 define exponential
-	[prefix] [repeat starStarPrefix]
+        [prefix] [repeat starStarPrefix]
 end define
 
 define starStarPrefix
-	** [prefix]
+        ** [prefix]
 end define
 
 
 define prefix
-	[opt prefixOp] [subExpn]
+        [opt prefixOp] [subExpn]
 end define
 
 define prefixOp
-    	+ | - | # 
+        + | - | # 
 end define
 
 
 define assignmentOperator
-	:= | += | -= | xor= | *= | /= | div= | mod= 
-    |	shl= | shr= | **= | and= | or=
+        := | += | -= | xor= | *= | /= | div= | mod= 
+    |   shl= | shr= | **= | and= | or=
 end define
 
 
 define subExpn
-	[reference] [opt substringOrSetConstructor]
-    |	[explicitConstant]
-    |	( [expn] )
+        [reference] [opt substringOrSetConstructor]
+    |   [explicitConstant]
+    |   ( [expn] )
 end define
 
 
 define substringOrSetConstructor
-    	( [substringPosition] [opt dotDotSubstringPosition] )
-    |	( [opt 'all] )
+        ( [substringPosition] [opt dotDotSubstringPosition] )
+    |   ( [opt 'all] )
 end define
 
 define substringPosition
-    	* [opt minusExpn]
-    |	[expn]
+        * [opt minusExpn]
+    |   [expn]
 end define
 
 define dotDotSubstringPosition
-	.. [substringPosition]
+        .. [substringPosition]
 end define
 
 define minusExpn
-	- [expn]
+        - [expn]
 end define

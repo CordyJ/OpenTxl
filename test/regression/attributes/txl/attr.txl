@@ -6,20 +6,20 @@
 % every such item with the number 1.
 
 define program
-	[repeat attributedtoken]
+        [repeat attributedtoken]
 end define
 
 % [attr 'IS_ONE] has the same meaning as [opt 'IS_ONE] except that
 % it never appears in output unless the -attr flag is given.
 
 define attributedtoken
-	[unattributedtoken] [attr 'IS_ONE]
+        [unattributedtoken] [attr 'IS_ONE]
 end define
 
 define unattributedtoken
-	[id]
-    |	[number]
-    |	[stringlit]
+        [id]
+    |   [number]
+    |   [stringlit]
 end define
 
 % external function message M [stringlit]
@@ -28,61 +28,61 @@ end define
 
 function main
     replace [program]
-	Input [repeat attributedtoken]
+        Input [repeat attributedtoken]
     by
-	% Show the original input ...
-	Input [message '"Original input:"] [print]	
-	    % ... we can see the attribution with [printattr] ...
-	    [attributeOnes] [message '"Attributed input:"] [printattr] 
-	    % ... and convert all tokens attributed IS_ONE to 1
-	    [normalizeOnes] [message '"Normalized output:"] 
+        % Show the original input ...
+        Input [message '"Original input:"] [print]      
+            % ... we can see the attribution with [printattr] ...
+            [attributeOnes] [message '"Attributed input:"] [printattr] 
+            % ... and convert all tokens attributed IS_ONE to 1
+            [normalizeOnes] [message '"Normalized output:"] 
 end function
 
 rule attributeOnes
     replace [attributedtoken]
-	AT [attributedtoken]
+        AT [attributedtoken]
     where
-	AT [?attributeids] [?attributestrings] [?attributenumbers]
+        AT [?attributeids] [?attributestrings] [?attributenumbers]
     by
-	AT [attributeids]
-	   [attributestrings]
-	   [attributenumbers]
+        AT [attributeids]
+           [attributestrings]
+           [attributenumbers]
 end rule
 
 function attributeids
     % We only attribute those ids that are equal to IS_ONE
     replace [attributedtoken]
-	Id [id]
+        Id [id]
     where
-	Id [= 'one] 
+        Id [= 'one] 
     by
-	Id 'IS_ONE
+        Id 'IS_ONE
 end function
 
 function attributestrings
     % We only attribute those strings that are equal to IS_ONE
     replace [attributedtoken]
-	S [stringlit]
+        S [stringlit]
     where
-	S [= '"1"] [= '"one"]
+        S [= '"1"] [= '"one"]
     by
-	S 'IS_ONE
+        S 'IS_ONE
 end function
 
 function attributenumbers
     % We attribute those number that are equal to IS_ONE
     replace [attributedtoken]
-	N [number]
+        N [number]
     where
-	N [= 1] 
+        N [= 1] 
     by
-	N 'IS_ONE
+        N 'IS_ONE
 end function
 
 rule normalizeOnes
     % We turn everything attributed as IS_ONE into the literal number 1.
     replace [attributedtoken]
-	T [unattributedtoken] 'IS_ONE
+        T [unattributedtoken] 'IS_ONE
     by
-	1
+        1
 end rule

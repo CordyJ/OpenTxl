@@ -1,23 +1,23 @@
 #pragma -analyze
 define program
-	[repeat X]
-	[repeat Y]
-	'end
+        [repeat X]
+        [repeat Y]
+        'end
 end define
 
 define X
-	[repeat Z+]
+        [repeat Z+]
 end define
 
 define Z
-	[number]
+        [number]
 end define
 
 define Y
-	[repeat number+]
+        [repeat number+]
 end define
 
 function main
-	match [program]
-		P [program]
+        match [program]
+                P [program]
 end function

@@ -23,11 +23,11 @@
 const numBootstrapTokens := %%NUMINDEXES%%
 var bootstrapToken := 0
 const bootstrapTokens : array 1 .. numBootstrapTokens of nat1 := init (
-	%%BOOTINDEXES%%
+        %%BOOTINDEXES%%
     )
 
 const numBootstrapStrings := %%NUMTOKENS%%
 const bootstrapStrings: array 1 .. numBootstrapStrings of string (50) := init (
-	%%BOOTTOKENS%%
+        %%BOOTTOKENS%%
     )
 

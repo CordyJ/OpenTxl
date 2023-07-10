@@ -66,14 +66,14 @@ tokens
                      |   "&[hH][abcdefABCDEF\d]+&?"
         octnumber        "0[oO]\d+"
                      |   "&[oO]\d+&?"
-	datelit          "\##\#*\#"                % handles both #2/1/1950# and #10:24:00 PM#
+        datelit          "\##\#*\#"                % handles both #2/1/1950# and #10:24:00 PM#
         returncode       "\d+&"
         id           |   "[_\a]\i*[%&@!\#$]"
         comment          "_\n"                     % treat continuations as (ignored) comments
-	preproc		 "\#if" 
-		     |	 "\#elseif"
-		     |	 "\#else"
-		     |	 "\#end"
+        preproc          "\#if" 
+                     |   "\#elseif"
+                     |   "\#else"
+                     |   "\#end"
 end tokens
 
 compounds
@@ -122,7 +122,7 @@ end define
 
 define class_file_header
         'version [number] 'class [repeat eol+]
-	[class_begin_block]
+        [class_begin_block]
 end define
 
 define class_begin_block
@@ -132,9 +132,9 @@ define class_begin_block
 end define
 
 define class_begin_item
-	  [assignment_statement]
-	| [class_begin_block]
-	| [eol]
+          [assignment_statement]
+        | [class_begin_block]
+        | [eol]
 end define
 
 
@@ -329,7 +329,7 @@ define primary
         | [number]
         | [hexnumber]
         | [octnumber]
-	| [datelit]
+        | [datelit]
         | [returncode]
         | [filenumber]
         | [prefix_op] [primary]
@@ -807,8 +807,8 @@ define while_statement
 end define
 
 define call_statement
-         [not assignment_statement] 	% there is a nasty ambiguity about this
-	 [opt 'call] [reference] [opt subroutine_bracketless_params]
+         [not assignment_statement]     % there is a nasty ambiguity about this
+         [opt 'call] [reference] [opt subroutine_bracketless_params]
 end define
 
 define subroutine_bracketless_params

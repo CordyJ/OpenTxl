@@ -1,23 +1,23 @@
 TXL Example Specification
 -------------------------
 
-Name:	
-	C++.Txl
+Name:   
+        C++.Txl
 
 Description:
-	A basis grammar and pretty printer for C++ 2.0 programs.
-	
+        A basis grammar and pretty printer for C++ 2.0 programs.
+        
 Author:
-   	Jim Cordy
+        Jim Cordy
 
 Affiliation:
-	Programming Language Technology Project
-	Dept. of Computing and Information Science
-	Queen's University
-	Kingston, Canada
+        Programming Language Technology Project
+        Dept. of Computing and Information Science
+        Queen's University
+        Kingston, Canada
 
 Date:
-	February 1992
+        February 1992
 
 Example:
-	txl groff.C++
+        txl groff.C++

@@ -1,0 +1,18 @@
+procedure level1
+    procedure level2_1
+        procedure level3_1
+            put "inner"
+        end level3_1
+        procedure level3_2
+            put "inner"
+        end level3_2
+    end level2_1
+    procedure level2_2
+        procedure level3_1
+            put "inner"
+        end level3_1
+        procedure level3_2
+            put "inner"
+        end level3_2
+    end level2_2
+end level1

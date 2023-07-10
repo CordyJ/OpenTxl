@@ -9,13 +9,13 @@
 %    Derived from BNS Version 4.2,  17 Dec 1995 by removing metaCobol keywords
 %    v3.1 Added GOBACK - JRC 13.5.96
 %  6.7 (parent grammar version) T.D. Dec 9, 1996
-%	- Added INITIALIZE to prevent misparsing, FE will look after macro keywords
-%	  and CI identifiers.
+%       - Added INITIALIZE to prevent misparsing, FE will look after macro keywords
+%         and CI identifiers.
 %  7.0 (parent grammar version) T.D. Jan 8, 1997
-%	- Removed FILLER from keyword list for new DD definition
+%       - Removed FILLER from keyword list for new DD definition
 % 7.0.1 - T.D. Feb 6, 1997
-%	- Removed keywords for compiler directives from list
-%		BASIS, PROCESS, READY, TRACE, INSERT
+%       - Removed keywords for compiler directives from list
+%               BASIS, PROCESS, READY, TRACE, INSERT
 
 % ----- ANCIENT HISTORY -----
 % Revision history for BNS 4.2:

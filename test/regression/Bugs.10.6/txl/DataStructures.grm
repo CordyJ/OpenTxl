@@ -4,15 +4,15 @@
 
 
 define optRight-brace
-	[opt '{]
+        [opt '{]
 end define
 define optLeft-brace
-	[opt '}]
+        [opt '}]
 end define
 % for using in class and interface body section
 % C# seperates the modifiers applied to classes from those to interfaces and methods
 redefine modifier
-    ...	% java
+    ... % java
     |[class_modifier]     % C#
     |[interface_modifier] % C#
     |[method_modifier]    % C#
@@ -20,7 +20,7 @@ redefine modifier
 end redefine
 % new C# set of modifiers
 define interface_modifier
-    'new 	
+    'new        
     |'public 
     |'protected 
     |'internal 
@@ -57,14 +57,14 @@ end define
 
 % for using in data types section
 redefine primitive_type
-	...	% java
-	|'sbyte % C#
-    	|'bool  % C#
+        ...     % java
+        |'sbyte % C#
+        |'bool  % C#
 end redefine
 % for using in constructor section
 define constructor_initializer
-	 ': 'base [repeat component]
-	|': 'this [repeat component]
+         ': 'base [repeat component]
+        |': 'this [repeat component]
 end define
 % to add the inheritance syntax of C#
 redefine constructor_declarator
@@ -79,8 +79,8 @@ define goto_statement:
     | 'goto [switch_label] [NL] % to allow putting the label and the : will be removed
 end define
 redefine statement
-	...
-	|[goto_statement]
+        ...
+        |[goto_statement]
 end redefine
 % For synchronize statement
 keys
@@ -95,41 +95,41 @@ end define
 % The data structures
 % contains an entry for every java modifier and the equivelant C# one.
 define entries
-	[modifier]
-	|[primary]
-	|[reference]
-end define	
+        [modifier]
+        |[primary]
+        |[reference]
+end define      
 
 define table_entry
-	[entries] '-> [entries]
+        [entries] '-> [entries]
 end define
 define Mapper
-	[repeat table_entry]
+        [repeat table_entry]
 end define
 define StmtMapper
-	[repeat table_entry]
+        [repeat table_entry]
 end define
 
 % Data types
 define primitive_entry
-	[primitive_type]
+        [primitive_type]
 end define
 define primitiveTable
-	[primitive_entry] '-> [primitive_entry]
+        [primitive_entry] '-> [primitive_entry]
 end define
 define DataMapper
-	[repeat primitiveTable]
+        [repeat primitiveTable]
 end define
 
 % Exceptions
 define exceptionEntries
-	[qualified_name]
+        [qualified_name]
 end define
 define exceptionTable
-	[exceptionEntries] '-> [exceptionEntries]
+        [exceptionEntries] '-> [exceptionEntries]
 end define
 
 define ExceptionMapper
-	[repeat exceptionTable]
+        [repeat exceptionTable]
 end define
 

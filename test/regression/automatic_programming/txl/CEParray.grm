@@ -1,38 +1,38 @@
 % C entry point array glue syntax
 
 compounds
-	[] 
+        [] 
 end compounds
 
 define program
-	[repeat functionSpec_or_CEParray]
+        [repeat functionSpec_or_CEParray]
 end define
 
 define functionSpec_or_CEParray
-	[functionSpec]
-    |	[CEParray]
+        [functionSpec]
+    |   [CEParray]
 end define
 
 define CEParray
-	struct				[NL]
-	{				[IN][NL]
-	    char name[];		[NL]
-	    int *addr;			[EX][NL]
-	} func[] =			[NL]
-	{				[IN]
-	    [list EParrayEntry]		[EX][NL]
-	};				[NL]
+        struct                          [NL]
+        {                               [IN][NL]
+            char name[];                [NL]
+            int *addr;                  [EX][NL]
+        } func[] =                      [NL]
+        {                               [IN]
+            [list EParrayEntry]         [EX][NL]
+        };                              [NL]
 end define
 
-define EParrayEntry			 [NL]	
-	{ [functionString] , [functionName_or_zero] }
+define EParrayEntry                      [NL]   
+        { [functionString] , [functionName_or_zero] }
 end define
 
 define functionName_or_zero
-	[functionName]
-    |	0
+        [functionName]
+    |   0
 end define
 
 define functionString
-	[stringlit]
+        [stringlit]
 end define

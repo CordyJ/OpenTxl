@@ -19,14 +19,14 @@ void TL_TLS_TLSBXS (target, endOffset, startIndex, source)
     int endOffset, startIndex;
     char * source;
     {
-	register char *dst = target;
-	register char *src = source + startIndex - 1;
-	char *lastAddr = source + strlen(source) + endOffset;
+        register char *dst = target;
+        register char *src = source + startIndex - 1;
+        char *lastAddr = source + strlen(source) + endOffset;
 
-	while (src < lastAddr) {
-	    *dst++ = *src++;
-	}
-	*dst = '\0';
+        while (src < lastAddr) {
+            *dst++ = *src++;
+        }
+        *dst = '\0';
     }
 
 void TL_TLS_TLSBXX (target, endIndex, startIndex, source)
@@ -34,14 +34,14 @@ void TL_TLS_TLSBXX (target, endIndex, startIndex, source)
     int endIndex, startIndex;
     char * source;
     {
-	register char *dst = target;
-	register char *src = source + startIndex - 1;
-	char *lastAddr = source + endIndex;
+        register char *dst = target;
+        register char *src = source + startIndex - 1;
+        char *lastAddr = source + endIndex;
 
-	while (src < lastAddr) {
-	    *dst++ = *src++;
-	}
-	*dst = '\0';
+        while (src < lastAddr) {
+            *dst++ = *src++;
+        }
+        *dst = '\0';
     }
 
 void TL_TLS_TLSBSS (target, endOffset, startOffset, source)
@@ -49,48 +49,48 @@ void TL_TLS_TLSBSS (target, endOffset, startOffset, source)
     int endOffset, startOffset;
     char * source;
     {
-	int srcLength = strlen (source);
-	register char *dst = target;
-	register char *src = source + srcLength + startOffset - 1;
-	char *lastAddr = source + srcLength + endOffset;
+        int srcLength = strlen (source);
+        register char *dst = target;
+        register char *src = source + srcLength + startOffset - 1;
+        char *lastAddr = source + srcLength + endOffset;
 
-	while (src < lastAddr) {
-	    *dst++ = *src++;
-	}
-	*dst = '\0';
+        while (src < lastAddr) {
+            *dst++ = *src++;
+        }
+        *dst = '\0';
     }
 
 int TL_TLS_TLSIND (source, pattern)
     char * source, * pattern;
     {
-	char firstPatternChar = *pattern;
-	register char *src;
+        char firstPatternChar = *pattern;
+        register char *src;
 
-	if (firstPatternChar == '\0') {
-	    return (1);
-	}
+        if (firstPatternChar == '\0') {
+            return (1);
+        }
 
-	src = source;
+        src = source;
 
-	while (*src != '\0') {
-	    if (*src == firstPatternChar) {
-		register char *chk = src + 1;
-		register char *pat = pattern + 1;
+        while (*src != '\0') {
+            if (*src == firstPatternChar) {
+                register char *chk = src + 1;
+                register char *pat = pattern + 1;
 
-		for (;;) {
-		    if (*pat == '\0') {
-			return (src - source + 1);
-		    }
-		    if (*pat != *chk) break;
-		    pat++;
-		    chk++;
-		}
-	    }
+                for (;;) {
+                    if (*pat == '\0') {
+                        return (src - source + 1);
+                    }
+                    if (*pat != *chk) break;
+                    pat++;
+                    chk++;
+                }
+            }
 
-	    src++;
-	}
+            src++;
+        }
 
-	return (0);
+        return (0);
     }
 
 void TL_TLS_TLSRPT (source, count, target)
@@ -98,114 +98,114 @@ void TL_TLS_TLSRPT (source, count, target)
     int count;
     char *target;
     {
-	register char *dst = target;
-	int c;
+        register char *dst = target;
+        int c;
 
-	if ((count <= 0) || (*source == '\0')) {
-	    *dst = '\0';
-	    return;
-	}
+        if ((count <= 0) || (*source == '\0')) {
+            *dst = '\0';
+            return;
+        }
 
-	c = count;
-	while (count--) {
-	    register char *src = source;
-	    for (;;) {
-		*dst++ = *src++;
-		if (*src == '\0') break;
-	    }
-	}
-	*dst = '\0';
+        c = count;
+        while (count--) {
+            register char *src = source;
+            for (;;) {
+                *dst++ = *src++;
+                if (*src == '\0') break;
+            }
+        }
+        *dst = '\0';
     }
 
 void TL_TLS_TLSVIS (value, width, base, target)
     int value, width, base;
     char * target;
     {
-	char buffer[255];
-	register char *buf = buffer + 255;
-	register int count	= 1;
-	register char *dst;
+        char buffer[255];
+        register char *buf = buffer + 255;
+        register int count      = 1;
+        register char *dst;
 
-	if (value < 0) {
-	    register int tmp = value;
-	    for (;;) {
-		buf--;
-		*buf = - (tmp % base);
-		if (*buf < 10) {
-		    *buf += '0';
-		} else {
-		    *buf += 'A' - 10;
-		}
-		tmp /= base;
-		if (tmp == 0) break;
-		count++;
-	    }
-	    buf--;
-	    *buf = '-';
-	    count++;
-	} else {
-	    register int tmp = value;
+        if (value < 0) {
+            register int tmp = value;
+            for (;;) {
+                buf--;
+                *buf = - (tmp % base);
+                if (*buf < 10) {
+                    *buf += '0';
+                } else {
+                    *buf += 'A' - 10;
+                }
+                tmp /= base;
+                if (tmp == 0) break;
+                count++;
+            }
+            buf--;
+            *buf = '-';
+            count++;
+        } else {
+            register int tmp = value;
 
-	    for (;;) {
-		buf--;
-		*buf = tmp % base;
-		if (*buf < 10) {
-		    *buf += '0';
-		} else {
-		    *buf += 'A' - 10;
-		}
-		tmp /= base;
-		if (tmp == 0) break;
-		count++;
-	    }
-	}
+            for (;;) {
+                buf--;
+                *buf = tmp % base;
+                if (*buf < 10) {
+                    *buf += '0';
+                } else {
+                    *buf += 'A' - 10;
+                }
+                tmp /= base;
+                if (tmp == 0) break;
+                count++;
+            }
+        }
 
-	dst = target;
-	for (;;) {
-	    *dst++ = *buf++;
-	    count--;
-	    if (count == 0) break;
-	}
-	*dst = '\0';
+        dst = target;
+        for (;;) {
+            *dst++ = *buf++;
+            count--;
+            if (count == 0) break;
+        }
+        *dst = '\0';
     }
 
 void TL_TLS_TLSVNS (value, width, base, target)
     unsigned int value, width, base;
     char * target;
     {
-	char buffer[255];
-	register char *buf = buffer + 255;
-	register int count	= 1;
-	register char *dst;
+        char buffer[255];
+        register char *buf = buffer + 255;
+        register int count      = 1;
+        register char *dst;
 
-	register unsigned int tmp = value;
+        register unsigned int tmp = value;
 
-	for (;;) {
-	    buf--;
-	    *buf = tmp % base;
-	    if (*buf < 10) {
-		*buf += '0';
-	    } else {
-		*buf += 'A' - 10;
-	    }
-	    tmp /= base;
-	    if (tmp == 0) break;
-	    count++;
-	}
+        for (;;) {
+            buf--;
+            *buf = tmp % base;
+            if (*buf < 10) {
+                *buf += '0';
+            } else {
+                *buf += 'A' - 10;
+            }
+            tmp /= base;
+            if (tmp == 0) break;
+            count++;
+        }
 
-	dst = target;
-	for (;;) {
-	    *dst++ = *buf++;
-	    count--;
-	    if (count == 0) break;
-	}
-	*dst = '\0';
+        dst = target;
+        for (;;) {
+            *dst++ = *buf++;
+            count--;
+            if (count == 0) break;
+        }
+        *dst = '\0';
     }
 
 double TL_TLS_TLSVS8 (source)
 char *source;
 {
-    double	answer;
+    double      answer;
     sscanf (source, "%le", &answer);
     return (answer);
 }
@@ -214,7 +214,7 @@ int TL_TLS_TLSVSI (source, base)
 char *source;
 int base; /* 10 */
 {
-    int	answer;
+    int answer;
     sscanf (source, "%i", &answer);
     return (answer);
 }

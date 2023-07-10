@@ -4,146 +4,146 @@
 % % *****
 % % common to instance initializer, static initializer
 % ----------------------------------------------------------------------------
-%  *********	[1]INSTANCE INITIALIZER	*********
+%  *********    [1]INSTANCE INITIALIZER *********
 % ----------------------------------------------------------------------------
 % [0]find the initializers 
 function translateInstanceInit
-	replace[repeat class_body_declaration]
-	   ClassBodyDecl[repeat class_body_declaration] 
-	where ClassBodyDecl[containInitBlock] 
-	% change initializers by methods
-	construct NewClassBodyDecl[repeat class_body_declaration]
-		ClassBodyDecl[toMethods]
-	
-	by
-	% add all the methods calls in all constructors
-		NewClassBodyDecl[setDefaultConstructor]
-				[addCalls][addCallsToSuper]
+        replace[repeat class_body_declaration]
+           ClassBodyDecl[repeat class_body_declaration] 
+        where ClassBodyDecl[containInitBlock] 
+        % change initializers by methods
+        construct NewClassBodyDecl[repeat class_body_declaration]
+                ClassBodyDecl[toMethods]
+        
+        by
+        % add all the methods calls in all constructors
+                NewClassBodyDecl[setDefaultConstructor]
+                                [addCalls][addCallsToSuper]
 end function
 % [1-1]change initializer block to method block------------------------------
 rule toMethods 
-	replace[class_body_declaration]
-		Block[block]
-	% name begin with initialMethod
-	construct MethodID[id]
-		initialMethod
-	% find a number to add it to the name to be unique
-	construct MethodName[id]
-		MethodID[!]
-	construct MethodCall[declaration_or_statement]
-		MethodName();
-	import InitCalls [repeat declaration_or_statement]
-	% add the new method call to the brevious calls
-	export InitCalls 
-		InitCalls [. MethodCall]
-	% lastly the method itself
-	construct initialMethod[member_declaration]
-		'private 'void MethodName() Block
-	by
-		initialMethod
+        replace[class_body_declaration]
+                Block[block]
+        % name begin with initialMethod
+        construct MethodID[id]
+                initialMethod
+        % find a number to add it to the name to be unique
+        construct MethodName[id]
+                MethodID[!]
+        construct MethodCall[declaration_or_statement]
+                MethodName();
+        import InitCalls [repeat declaration_or_statement]
+        % add the new method call to the brevious calls
+        export InitCalls 
+                InitCalls [. MethodCall]
+        % lastly the method itself
+        construct initialMethod[member_declaration]
+                'private 'void MethodName() Block
+        by
+                initialMethod
 end rule
 % [1-2]add a method call to constructors------------------------------------
 function addCallsToSuper
-	replace*[repeat class_body_declaration]
-		Modifiers[repeat modifier] 
-		ConDeclar[constructor_declarator] 
-		ThrowsClause[opt throws] 
-		ConBody[constructor_body]
-		Remaining[repeat class_body_declaration]
-	%  does the constructor calls its base class?
-	where ConBody[containSuper][containThis]
-		% yes by a call to this or super
-		deconstruct ConBody
-		'{
-		       SuperCallStmt [declaration_or_statement]
-		       RemainingStmts[repeat declaration_or_statement]
-		'}
-		% all initialMethods calls
-		import InitCalls [repeat declaration_or_statement]
-		% join the methods calls within the constructor body
-		construct NewBlock[repeat declaration_or_statement]
-			InitCalls [. RemainingStmts]
-	by
-		% the constructor again in the new look
-		Modifiers ConDeclar ThrowsClause 
-		'{
-			% a call to base class must be the first stmt	      
-		       SuperCallStmt
-		       NewBlock
-		'}
-		Remaining[addCallsToSuper]
+        replace*[repeat class_body_declaration]
+                Modifiers[repeat modifier] 
+                ConDeclar[constructor_declarator] 
+                ThrowsClause[opt throws] 
+                ConBody[constructor_body]
+                Remaining[repeat class_body_declaration]
+        %  does the constructor calls its base class?
+        where ConBody[containSuper][containThis]
+                % yes by a call to this or super
+                deconstruct ConBody
+                '{
+                       SuperCallStmt [declaration_or_statement]
+                       RemainingStmts[repeat declaration_or_statement]
+                '}
+                % all initialMethods calls
+                import InitCalls [repeat declaration_or_statement]
+                % join the methods calls within the constructor body
+                construct NewBlock[repeat declaration_or_statement]
+                        InitCalls [. RemainingStmts]
+        by
+                % the constructor again in the new look
+                Modifiers ConDeclar ThrowsClause 
+                '{
+                        % a call to base class must be the first stmt         
+                       SuperCallStmt
+                       NewBlock
+                '}
+                Remaining[addCallsToSuper]
 end function
 % [1-3]add a method call to constructors------------------------------------
 function addCalls
-	replace*[repeat class_body_declaration]
-		Modifiers[repeat modifier] 
-		ConDeclar[constructor_declarator] 
-		ThrowsClause[opt throws] 
-		ConBody[constructor_body]
-		Remaining[repeat class_body_declaration]
-	%  does the constructor calls its base class?
-	where not ConBody[containSuper][containThis]
-		% No, there is no a call to this or super
-		deconstruct ConBody
-		'{
-			Stmts[repeat declaration_or_statement]
-		'}
-		% all initialMethods calls
-		import InitCalls [repeat declaration_or_statement]
-		% join the methods calls within the constructor body
-		construct NewBlock[repeat declaration_or_statement]
-			InitCalls [. Stmts]
-	by
-		% the constructor again in the new look
-		Modifiers ConDeclar ThrowsClause 
-		'{
-		       NewBlock
-		'}
-		Remaining[addCalls]
+        replace*[repeat class_body_declaration]
+                Modifiers[repeat modifier] 
+                ConDeclar[constructor_declarator] 
+                ThrowsClause[opt throws] 
+                ConBody[constructor_body]
+                Remaining[repeat class_body_declaration]
+        %  does the constructor calls its base class?
+        where not ConBody[containSuper][containThis]
+                % No, there is no a call to this or super
+                deconstruct ConBody
+                '{
+                        Stmts[repeat declaration_or_statement]
+                '}
+                % all initialMethods calls
+                import InitCalls [repeat declaration_or_statement]
+                % join the methods calls within the constructor body
+                construct NewBlock[repeat declaration_or_statement]
+                        InitCalls [. Stmts]
+        by
+                % the constructor again in the new look
+                Modifiers ConDeclar ThrowsClause 
+                '{
+                       NewBlock
+                '}
+                Remaining[addCalls]
 end function
 % [1-4] if no constructor is specified create it
 function setDefaultConstructor
-	replace [repeat class_body_declaration]
-		ClassBodyDecl[repeat class_body_declaration] 
-	% get all constructors
-	construct Cons[repeat constructor_declaration]
-		_[^ ClassBodyDecl]
-	construct ConsCount[number]
-		_[length Cons]
-	where  ConsCount[< 1]% Not specified
-	import ClassName[class_name]	
-	construct NewConstructor[constructor_declaration]
-		ClassName() {}
-	by
-		NewConstructor
-		ClassBodyDecl
+        replace [repeat class_body_declaration]
+                ClassBodyDecl[repeat class_body_declaration] 
+        % get all constructors
+        construct Cons[repeat constructor_declaration]
+                _[^ ClassBodyDecl]
+        construct ConsCount[number]
+                _[length Cons]
+        where  ConsCount[< 1]% Not specified
+        import ClassName[class_name]    
+        construct NewConstructor[constructor_declaration]
+                ClassName() {}
+        by
+                NewConstructor
+                ClassBodyDecl
 end function
 % [1-5] if there is at least one initial block
 function containInitBlock
-	match*[repeat class_body_declaration]
-		Block[block]
-		remaining[repeat class_body_declaration]
+        match*[repeat class_body_declaration]
+                Block[block]
+                remaining[repeat class_body_declaration]
 end function
 % ----------------------------------------------------------------------------
-%  *********	[2]STATIC INITIALIZER	*********
+%  *********    [2]STATIC INITIALIZER   *********
 % ----------------------------------------------------------------------------
 % [0]find the static initializers --------------------------------------------
 function translateStaticInit
-	replace[repeat class_body_declaration]
-	   ClassBodyDecl[repeat class_body_declaration] 
-	by
-	   ClassBodyDecl[toStaticConstructor]
+        replace[repeat class_body_declaration]
+           ClassBodyDecl[repeat class_body_declaration] 
+        by
+           ClassBodyDecl[toStaticConstructor]
 end function
 % [2-1]change static initializer block to static constructor------------------------------
 rule toStaticConstructor 
-	replace[class_body_declaration]
-		'static Block[block]
-	% constructor name is same as class name
-	import ClassName[class_name]	
-	construct NewStaticConstructor[constructor_declaration]
-	   'static ClassName() 
-	      Block				
-	by
-	   NewStaticConstructor
+        replace[class_body_declaration]
+                'static Block[block]
+        % constructor name is same as class name
+        import ClassName[class_name]    
+        construct NewStaticConstructor[constructor_declaration]
+           'static ClassName() 
+              Block                             
+        by
+           NewStaticConstructor
 end rule
 
