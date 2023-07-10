@@ -36,7 +36,7 @@ define program
 end define
 
 define statement
-	[declaration]
+        [declaration]
     |   [assignment_statement]
     |   [if_statement]
     |   [while_statement]
@@ -56,27 +56,27 @@ end define
 
 define if_statement
     'if [expression] 'then        [IN][NL]
-	[statement*]              [EX]
+        [statement*]              [EX]
     [opt else_statement]
     'end                          [NL]
 end define
 
 define else_statement
     'else                        [IN][NL]
-	[statement*]             [EX]
+        [statement*]             [EX]
 end define
 
 % While loop 
 define while_statement
     'while [expression] 'do      [IN][NL]
-	[statement*]             [EX]
+        [statement*]             [EX]
     'end                         [NL]
 end define
 
 % Declaring for
 define for_statement
     'for [id] := [expression] 'to [expression] 'do      [IN][NL]
-	[statement*]                                    [EX]
+        [statement*]                                    [EX]
     'end                                                [NL]
 end define
 
@@ -91,12 +91,12 @@ end define
 #if not PRIORITY then
 % Simple nonpriority expression grammar, as specified
 define expression
-	[primary]
+        [primary]
     |   [expression] [op] [expression]
 end define
 
 define op 
-	= | !=       
+        = | !=       
     |   + | -
     |   * | /        
 end define
@@ -104,7 +104,7 @@ end define
 #else PRIORITY
 % Alternative traditional priority expression grammar
 define expression
-	[term]
+        [term]
     |   [expression] [eqop] [term]
 end define
 
@@ -113,32 +113,32 @@ define eqop
 end define
 
 define term
-	[factor]
+        [factor]
     |   [term] [addop] [factor]
 end define
 
 define addop
-	+ | -
+        + | -
 end define
 
 define factor
-	[primary]
+        [primary]
     |   [factor] [mulop] [primary]
 end define
 
 define mulop
-	* | /
+        * | /
 end define
 #end if PRIORITY
 
 define primary
-	[id]
-    |	[literal]
+        [id]
+    |   [literal]
     |   ( [expression] )
 end define
 
 define literal
         [integernumber]
-    |	[stringlit]
+    |   [stringlit]
 end define
 

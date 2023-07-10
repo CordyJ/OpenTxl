@@ -3,13 +3,13 @@ MODULE query;
 
 FROM XdrM2_query IMPORT TelNo, message;
 FROM InOut   IMPORT Read, ReadCard, 
-		    WriteBf, WriteString, WriteLn, WriteInt;
+                    WriteBf, WriteString, WriteLn, WriteInt;
 
 
-VAR	i : TelNo;
-	m : message;
-	j : CARDINAL;
-	c : CHAR;
+VAR     i : TelNo;
+        m : message;
+        j : CARDINAL;
+        c : CHAR;
 
 BEGIN
 
@@ -25,21 +25,21 @@ BEGIN
     WriteLn(); WriteLn();
     IF m.tag = 1 THEN
       WITH m.some DO
-	WriteString("ChName: "); 
-	WriteString(ChName); 
-	WriteLn();
+        WriteString("ChName: "); 
+        WriteString(ChName); 
+        WriteLn();
 
-	WriteString("FaName: "); 
-	WriteString(FaName); 
-	WriteLn();
+        WriteString("FaName: "); 
+        WriteString(FaName); 
+        WriteLn();
 
-	WriteString("project: "); 
-	WriteString(project); 
-	WriteLn();
+        WriteString("project: "); 
+        WriteString(project); 
+        WriteLn();
 
-	WriteString("tel: "); 
-	WriteInt(tel,0); 
-	WriteLn();
+        WriteString("tel: "); 
+        WriteInt(tel,0); 
+        WriteLn();
       END;
     ELSE
       WriteString("No entry for telephone number "); 

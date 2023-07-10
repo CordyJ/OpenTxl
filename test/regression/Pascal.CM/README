@@ -1,25 +1,25 @@
 TXL Example Specification
 -------------------------
 
-Name:	
-	pcm.Txl
+Name:   
+        pcm.Txl
 
 Description:
-	Loop code motion optimization for Pascal programs,
-	demonstrating how to get the effect of dataflow analysis
-	in TXL.  Codemotion.Txl moves the computation of all 
-	loop-independent assignment statements outside of repeat,
-	while and for loops.  
+        Loop code motion optimization for Pascal programs,
+        demonstrating how to get the effect of dataflow analysis
+        in TXL.  Codemotion.Txl moves the computation of all 
+        loop-independent assignment statements outside of repeat,
+        while and for loops.  
 
 Author:
-	Jim Cordy
+        Jim Cordy
 
 Affiliation:
-	Software Technology Laboratory, Queen's University
+        Software Technology Laboratory, Queen's University
 
 Date:
-	May 1993
+        May 1993
 
 Example:
-	txl test.pcm
+        txl test.pcm
 

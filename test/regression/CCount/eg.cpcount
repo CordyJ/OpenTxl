@@ -100,16 +100,16 @@ struct {
   const char *pseudo_name;
   const char *real_name;
   const char *description;  // Description of device (used in help message).
-  const char **driver;	    // Driver argument vector.
-  unsigned flags;	    // Bitwise OR of 
-#define EQN_D_OPTION 01	    /* Add -D option to eqn. */
-#define PIC_X_OPTION 02	    /* Add -x option to pic. */
-#define PIC_P_OPTION 04	    /* Add -p option to pic. */
+  const char **driver;      // Driver argument vector.
+  unsigned flags;           // Bitwise OR of 
+#define EQN_D_OPTION 01     /* Add -D option to eqn. */
+#define PIC_X_OPTION 02     /* Add -x option to pic. */
+#define PIC_P_OPTION 04     /* Add -p option to pic. */
 #define GROFF_OPTIONS 010   /* Driver understands -F and -v options. */
-#define XT_OPTION 020	    /* Driver understands -title and -xrm options. */
+#define XT_OPTION 020       /* Driver understands -title and -xrm options. */
 #define PRINT_OPTION 040    /* Understands -printCommand. */
   const char *macro_file;   // -m option to pass to troff
-  const char **spooler;	    // Spooler argument vector.
+  const char **spooler;     // Spooler argument vector.
 } device_table[] = {
   {
     "ps",
@@ -255,8 +255,8 @@ int main(int argc, char **argv)
     device = DEVICE;
   commands[TROFF_INDEX].set_name("gtroff");
   while ((opt = getopt(argc, argv,
-		       "itpeRszavVhblCENZH:F:m:T:f:w:W:M:d:r:n:o:P:L:"))
-	 != EOF) {
+                       "itpeRszavVhblCENZH:F:m:T:f:w:W:M:d:r:n:o:P:L:"))
+         != EOF) {
     char buf[3];
     buf[0] = '-';
     buf[1] = opt;
@@ -364,7 +364,7 @@ int main(int argc, char **argv)
   device = device_table[device_index].real_name;
   if (device_table[device_index].macro_file != 0)
     commands[TROFF_INDEX].prepend_arg("-m",
-				      device_table[device_index].macro_file);
+                                      device_table[device_index].macro_file);
   commands[POST_INDEX].set_name(device_table[device_index].driver[0]);
   if (!(device_table[device_index].flags & GROFF_OPTIONS))
     commands[POST_INDEX].clear_args();
@@ -379,8 +379,8 @@ int main(int argc, char **argv)
     found = 0;
     for (int di = 0; di < sizeof(device_table)/sizeof(device_table[0]); di++) {
       if (strcmp(device, device_table[di].pseudo_name) == 0) {
-	found = 1;
-	break;
+        found = 1;
+        break;
       }
     }
     assert(found);
@@ -391,7 +391,7 @@ int main(int argc, char **argv)
     if (device_table[di].spooler) {
       print_string += " |";
       for (i = 0; device_table[di].spooler[i]; i++)
-	append_arg_to_string(device_table[di].spooler[i], print_string);
+        append_arg_to_string(device_table[di].spooler[i], print_string);
     }
     print_string += '\0';
     commands[POST_INDEX].append_arg("-printCommand");
@@ -437,7 +437,7 @@ int main(int argc, char **argv)
     if (fp) {
       fclose(fp);
       if (path[0] == '-' && path[1] != '\0')
-	commands[EQN_INDEX].append_arg("--");
+        commands[EQN_INDEX].append_arg("--");
       commands[EQN_INDEX].append_arg(path);
       delete path;
       have_eqnchar = 1;
@@ -448,7 +448,7 @@ int main(int argc, char **argv)
       break;
   if (optind < argc) {
     if (argv[optind][0] == '-' && argv[optind][1] != '\0'
-	&& (!have_eqnchar || first_index != EQN_INDEX))
+        && (!have_eqnchar || first_index != EQN_INDEX))
       commands[first_index].append_arg("--");
     for (i = optind; i < argc; i++)
       commands[first_index].append_arg(argv[i]);
@@ -488,49 +488,49 @@ int run_commands()
       proc_count++;
       int pdes[2];
       if (i != last) {
-	if (pipe(pdes) < 0)
-	  sys_fatal("pipe");
+        if (pipe(pdes) < 0)
+          sys_fatal("pipe");
       }
 #ifdef HAVE_VFORK
       PID_T pid = vfork();
       if (pid < 0)
-	sys_fatal("vfork");
+        sys_fatal("vfork");
 #else /* !HAVE_VFORK */
       PID_T pid = fork();
       if (pid < 0)
-	sys_fatal("fork");
+        sys_fatal("fork");
 #endif /* !HAVE_VFORK */
       if (pid == 0) {
-	// child
-	if (last_input != 0) {
-	  if (close(0) < 0)
-	    sys_fatal("close");
-	  if (dup(last_input) < 0)
-	    sys_fatal("dup");
-	  if (close(last_input) < 0)
-	    sys_fatal("close");
-	}
-	if (i != last) {
-	  if (close(1) < 0)
-	    sys_fatal("close");
-	  if (dup(pdes[1]) < 0)
-	    sys_fatal("dup");
-	  if (close(pdes[1]) < 0)
-	    sys_fatal("close");
-	  if (close(pdes[0]))
-	    sys_fatal("close");
-	}
-	commands[i].execp();
+        // child
+        if (last_input != 0) {
+          if (close(0) < 0)
+            sys_fatal("close");
+          if (dup(last_input) < 0)
+            sys_fatal("dup");
+          if (close(last_input) < 0)
+            sys_fatal("close");
+        }
+        if (i != last) {
+          if (close(1) < 0)
+            sys_fatal("close");
+          if (dup(pdes[1]) < 0)
+            sys_fatal("dup");
+          if (close(pdes[1]) < 0)
+            sys_fatal("close");
+          if (close(pdes[0]))
+            sys_fatal("close");
+        }
+        commands[i].execp();
       }
       // in the parent
       if (last_input != 0) {
-	if (close(last_input) < 0)
-	  sys_fatal("close");
+        if (close(last_input) < 0)
+          sys_fatal("close");
       }
       if (i != last) {
-	if (close(pdes[1]) < 0)
-	  sys_fatal("close");
-	last_input = pdes[0];
+        if (close(pdes[1]) < 0)
+          sys_fatal("close");
+        last_input = pdes[0];
       }
       commands[i].pid = pid;
     }
@@ -542,27 +542,27 @@ int run_commands()
       sys_fatal("wait");
     for (i = 0; i < NCOMMANDS; i++)
       if (commands[i].pid == pid) {
-	--proc_count;
-	if (WIFSIGNALED(status)) {
-	  int sig = WTERMSIG(status);
-	  if (sig != SIGPIPE) {
-	    error("%1: %2%3",
-		  commands[i].get_name(),
-		  strsignal(sig),
-		  WCOREDUMPED(status) ? " (core dumped)" : "");
-	    ret |= 2;
-	  }
-	}
-	else if (WIFEXITED(status)) {
-	  int exit_status = WEXITSTATUS(status);
-	  if (exit_status == EXEC_FAILED_EXIT_STATUS)
-	    ret |= 4;
-	  else if (exit_status != 0)
-	    ret |= 1;
-	}
-	else
-	  error("unexpected status %1", WTOI(status));
-	break;
+        --proc_count;
+        if (WIFSIGNALED(status)) {
+          int sig = WTERMSIG(status);
+          if (sig != SIGPIPE) {
+            error("%1: %2%3",
+                  commands[i].get_name(),
+                  strsignal(sig),
+                  WCOREDUMPED(status) ? " (core dumped)" : "");
+            ret |= 2;
+          }
+        }
+        else if (WIFEXITED(status)) {
+          int exit_status = WEXITSTATUS(status);
+          if (exit_status == EXEC_FAILED_EXIT_STATUS)
+            ret |= 4;
+          else if (exit_status != 0)
+            ret |= 1;
+        }
+        else
+          error("unexpected status %1", WTOI(status));
+        break;
       }
   }
   return ret;
@@ -622,7 +622,7 @@ void possible_command::build_argv()
     p = &args[0];
     for (int i = 0; i < len; i++)
       if (p[i] == '\0')
-	argc++;
+        argc++;
   }
   // Build an argument vector.
   argv = new char *[argc + 1];
@@ -684,11 +684,11 @@ void append_arg_to_string(const char *arg, string &str)
       case '"':
       case '\\':
       case '$':
-	str += '\\';
-	// fall through
+        str += '\\';
+        // fall through
       default:
-	str += *p;
-	break;
+        str += *p;
+        break;
       }
     str += '"';
   }
@@ -707,7 +707,7 @@ void possible_command::execp()
   build_argv();
   execvp(name, argv);
   error("couldn't exec %1: %2", name, strerror(errno));
-  fflush(stderr);		// just in case
+  fflush(stderr);               // just in case
   _exit(EXEC_FAILED_EXIT_STATUS);
 }
 
@@ -717,7 +717,7 @@ void synopsis()
 "usage: %s [-abehilpstvzCENRVZ] [-Hfile] [-Fdir] [-mname] [-Tdev] [-ffam]\n"
 "       [-wname] [-Wname] [ -Mdir] [-dcs] [-rcn] [-nnum] [-olist] [-Parg]\n"
 "       [-Larg] [files...]\n",
-	  program_name);
+          program_name);
 }
 
 void devices()
@@ -725,8 +725,8 @@ void devices()
   fputs("Available devices are:\n", stderr);
   for (int i = 0; i < sizeof(device_table)/sizeof(device_table[0]); i++)
     fprintf(stderr, "%s\t%s\n",
-	    device_table[i].pseudo_name,
-	    device_table[i].description);
+            device_table[i].pseudo_name,
+            device_table[i].description);
 }
 
 void help()
@@ -765,7 +765,7 @@ void help()
 "-Larg\tpass arg to the spooler\n"
 "-N\tdon't allow newlines within eqn delimiters\n"
 "\n",
-	stderr);
+        stderr);
   devices();
   exit(0);
 }

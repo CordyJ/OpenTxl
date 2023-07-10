@@ -32,15 +32,15 @@ redefine BEGIN_StatementSequence
 end redefine
 
 redefine const_type_or_var_declaration
-	[commenting?] ...
+        [commenting?] ...
 end redefine
 
 redefine ConstantDeclaration
-	[commenting?] ...
+        [commenting?] ...
 end redefine
 
 redefine TypeDeclaration
-	[commenting?] ...
+        [commenting?] ...
 end redefine
 
 redefine factor 
@@ -76,9 +76,9 @@ redefine ForwardDeclaration
 end redefine
 
 redefine statement
-    	[commenting?] ...
+        [commenting?] ...
 end redefine
 
 redefine StatementSequence
-    	... [commenting?] 
+        ... [commenting?] 
 end redefine

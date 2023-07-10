@@ -6,115 +6,115 @@ include "Tplus.Grammar"
 
 % Make variable declaration syntax easy to deal with
 define variableDeclaration
-    	[opt 'MARK] var [id] [opt colonTypeSpec ]
+        [opt 'MARK] var [id] [opt colonTypeSpec ]
                 [opt colonEqualInitializingValue]
 end define
 
 define constantDeclaration
-    	[opt 'MARK] const [id] [opt pervasiveSpec] [opt colonTypeSpec ]
+        [opt 'MARK] const [id] [opt pervasiveSpec] [opt colonTypeSpec ]
                 := [initializingValue]
 end define
 
 define colonTypeSpec
-	: [typeSpec]
+        : [typeSpec]
 end define
 
 define parameterListDeclaration
-	( [opt 'MARK] [parameterDeclarationList] )
+        ( [opt 'MARK] [parameterDeclarationList] )
 end define
 
 
 % Do it once for the whole program
 function mainRule
     replace [program]
-	C [compilation]
+        C [compilation]
     by
-	C [uniquelyNameProcedureLocals]
-	  [uniquelyNameProcedureParameters]
-	  [cleanupMarks]
+        C [uniquelyNameProcedureLocals]
+          [uniquelyNameProcedureParameters]
+          [cleanupMarks]
 end function
 
 
 % Find each procedure declaration
 rule uniquelyNameProcedureLocals
     replace [repeat declarationOrStatement]
-	procedure P [id] ParmList [opt parameterListDeclaration]
+        procedure P [id] ParmList [opt parameterListDeclaration]
             Scope [repeat declarationOrStatement] 
         'end P
-	RestOfScope [repeat declarationOrStatement]
+        RestOfScope [repeat declarationOrStatement]
     where
-	Scope [?nameProcedureVariables P]
-	      [?nameProcedureConsts P]
+        Scope [?nameProcedureVariables P]
+              [?nameProcedureConsts P]
     by
-	procedure P ParmList 
+        procedure P ParmList 
             Scope [nameProcedureVariables P] 
                   [nameProcedureConsts P] 
         'end P
-	RestOfScope 
+        RestOfScope 
 end rule
 
 
 % Unqiuely name the variables in it
 rule nameProcedureVariables P [id] 
     replace [repeat declarationOrStatement]
-	var V [id] VTS [opt colonTypeSpec] VIV [opt colonEqualInitializingValue]
-	Scope [repeat declarationOrStatement]
+        var V [id] VTS [opt colonTypeSpec] VIV [opt colonEqualInitializingValue]
+        Scope [repeat declarationOrStatement]
     construct Vprime [id]
-	P [+ V] [!]
+        P [+ V] [!]
     construct Result [repeat declarationOrStatement]
-	MARK var Vprime VTS VIV
-	Scope [$ V Vprime]
+        MARK var Vprime VTS VIV
+        Scope [$ V Vprime]
     by
-	Result
+        Result
 end rule
 
 % and the constants in it
 rule nameProcedureConsts P [id] 
     replace [repeat declarationOrStatement]
-	const C [id] CTS [opt colonTypeSpec] := CV [initializingValue]
-	Scope [repeat declarationOrStatement]
+        const C [id] CTS [opt colonTypeSpec] := CV [initializingValue]
+        Scope [repeat declarationOrStatement]
     construct Cprime [id]
-	P [+ C] [!]
+        P [+ C] [!]
     construct Result [repeat declarationOrStatement]
-	MARK const Cprime CTS := CV
-	Scope [$ C Cprime]
+        MARK const Cprime CTS := CV
+        Scope [$ C Cprime]
     by
-	Result
+        Result
 end rule
 
 
 % Find each procedure with parameters
 rule uniquelyNameProcedureParameters
     replace [repeat declarationOrStatement]
-	procedure P [id] ( ParmList [list parameterDeclaration+] ) 
+        procedure P [id] ( ParmList [list parameterDeclaration+] ) 
             Scope [repeat declarationOrStatement] 
         'end P
-	RestOfScope [repeat declarationOrStatement]
+        RestOfScope [repeat declarationOrStatement]
     construct ProcDeclPrime [subprogramDeclaration]
-	procedure P ( 'MARK ParmList ) 
+        procedure P ( 'MARK ParmList ) 
             Scope 
         'end P
     by
-	ProcDeclPrime [nameProcedureParameter P each ParmList] 
-	RestOfScope 
+        ProcDeclPrime [nameProcedureParameter P each ParmList] 
+        RestOfScope 
 end rule
 
 % uniquely name its parameters
 rule nameProcedureParameter P [id] ParmDecl [parameterDeclaration]
     deconstruct ParmDecl
-	OptVar [opt 'var] ParmId [id] : ParmType [parameterType]
+        OptVar [opt 'var] ParmId [id] : ParmType [parameterType]
     construct ParmIdPrime [id]
-	P [+ ParmId] [!]
+        P [+ ParmId] [!]
     replace [id]
-	ParmId
+        ParmId
     by
-	ParmIdPrime
+        ParmIdPrime
 end rule
 
 rule cleanupMarks
     replace [opt 'MARK]
-	MARK
+        MARK
     by
-	% nothing
+        % nothing
 end rule
 

@@ -8,58 +8,58 @@ include "Turing.Grammar"
 % Syntactic forms to add object types
 
 define typeSpec 
-	[objectType]       	% added new syntactic form     
-    |	[standardType]     	% original Turing 
-    |	[arrayType]        	%        type spec syntactic forms 
-    |	[recordType]
-    |	[enumeratedType]
-    |	[setType]
-    |	[unionType]
-    |	[collectionType]
-    |	[pointerType]
-    |	[subrangeType]
-    |	[namedType]
+        [objectType]            % added new syntactic form     
+    |   [standardType]          % original Turing 
+    |   [arrayType]             %        type spec syntactic forms 
+    |   [recordType]
+    |   [enumeratedType]
+    |   [setType]
+    |   [unionType]
+    |   [collectionType]
+    |   [pointerType]
+    |   [subrangeType]
+    |   [namedType]
 end define 
 
 keys
-	'object
+        'object
 end keys
 
 define objectType 
-						[IN][NL]
-	'object 				[NL][IN]
-            [importList]   	% contents same as original Turing module form
+                                                [IN][NL]
+        'object                                 [NL][IN]
+            [importList]        % contents same as original Turing module form
             [exportList]     
-            [repeat declarationOrStatement] 	[EX]
-        'end [id] 				[EX][NL]
+            [repeat declarationOrStatement]     [EX]
+        'end [id]                               [EX][NL]
 end define 
 
 
 % Type class polymorphism syntactic forms
 
 define declaration
-	[typeClassDeclaration]	% new added syntactic form
-    |	[moduleDeclaration]	% original Turing declaration
-    |	[constantDeclaration]	%	syntactic forms
-    |	[typeDeclaration]
-    |	[variableDeclaration]
-    |	[variableBinding]
-    |	[subprogramDeclaration]
+        [typeClassDeclaration]  % new added syntactic form
+    |   [moduleDeclaration]     % original Turing declaration
+    |   [constantDeclaration]   %       syntactic forms
+    |   [typeDeclaration]
+    |   [variableDeclaration]
+    |   [variableBinding]
+    |   [subprogramDeclaration]
 end define
 
 define typeSpec
-	[instanceType]		% new added
-    |	[objectType]       	%	syntactic forms
-    |	[standardType]		% original Turing syntactic			
-    |	[arrayType]		% 	forms
-    |	[recordType]
-    |	[enumeratedType]
-    |	[setType]
-    |	[unionType]
-    |	[collectionType]
-    |	[pointerType]
-    |	[subrangeType]
-    |	[namedType]
+        [instanceType]          % new added
+    |   [objectType]            %       syntactic forms
+    |   [standardType]          % original Turing syntactic                     
+    |   [arrayType]             %       forms
+    |   [recordType]
+    |   [enumeratedType]
+    |   [setType]
+    |   [unionType]
+    |   [collectionType]
+    |   [pointerType]
+    |   [subrangeType]
+    |   [namedType]
 end define
 
 define typeClassDeclaration 
@@ -67,83 +67,83 @@ define typeClassDeclaration
 end define 
 
 keys
-    	'instance
+        'instance
 end keys
 
 define instanceType 
-	instance [id]  ( [list expnOrTypeSpec] ) 
+        instance [id]  ( [list expnOrTypeSpec] ) 
 end define 
 
 define expnOrTypeSpec
-	[id]			% This is the ambiguous case - could be either.
-    |	[typeSpec]	% All types
-    |	[expn]		% All expressions
+        [id]                    % This is the ambiguous case - could be either.
+    |   [typeSpec]      % All types
+    |   [expn]          % All expressions
 end define
 
 
 % Inheritance syntactic forms
 
 define objectType 
-						[IN][NL]
-	'object					[NL][IN]
-            [optRefinementClause] 	% added to objectType form
+                                                [IN][NL]
+        'object                                 [NL][IN]
+            [optRefinementClause]       % added to objectType form
             [importList] 
             [exportList]     
-            [repeat declarationOrStatement] 	[EX]
-        'end [id] 				[EX][NL]
+            [repeat declarationOrStatement]     [EX]
+        'end [id]                               [EX][NL]
 end define 
 
 define optRefinementClause
-	[refinementClause]
-    |	[empty]
+        [refinementClause]
+    |   [empty]
 end define
 
 keys
-	'refines
+        'refines
 end keys
 
 define refinementClause
-	'refines [id]	[NL]
+        'refines [id]   [NL]
 end define
 
 
 % Modified syntax of declarations to allow easy sorting
 
 define declaration
-	[constantTypeOrModuleDeclaration]
-    |	[variableOrSubprogramDeclaration]
+        [constantTypeOrModuleDeclaration]
+    |   [variableOrSubprogramDeclaration]
 end define
 
 define variableOrSubprogramDeclaration
-	[variableDeclaration]
-    |	[variableBinding]
-    |	[subprogramDeclaration]
+        [variableDeclaration]
+    |   [variableBinding]
+    |   [subprogramDeclaration]
 end define
 
 define constantTypeOrModuleDeclaration
-	[constantDeclaration]
-    |	[typeClassDeclaration]	
-    |	[typeDeclaration]
-    |	[moduleDeclaration]
+        [constantDeclaration]
+    |   [typeClassDeclaration]  
+    |   [typeDeclaration]
+    |   [moduleDeclaration]
 end define
 
 
 % Modified syntax of import and export lists to allow splicing
 
 define importList 
-	'import ( [importItems] )	[NL]
+        'import ( [importItems] )       [NL]
 end define
 
 define importItems
-	 [list optVarOrForwardId] 
+         [list optVarOrForwardId] 
 end define
 
 define exportList 
-	'export ( [exportItems] )	[NL]
+        'export ( [exportItems] )       [NL]
 end define
 
 define exportItems
-	[list optOpaqueId] 
+        [list optOpaqueId] 
 end define
 
 
@@ -183,7 +183,7 @@ rule fixObjects
         'end ObName 
         RestOfScope     
                 [transformObjectReferences ObName]
-	        [transformCollectionObjects ObName]
+                [transformCollectionObjects ObName]
 end rule 
 
 
@@ -194,7 +194,7 @@ function addObjectAndInitializerExport
     replace [exportList] 
        'export ( OldExports [list optOpaqueId] ) 
     construct NewExports [list optOpaqueId]
-	'DataRecordType, 'InitializeDataRecord
+        'DataRecordType, 'InitializeDataRecord
     by
         'export ( NewExports [, OldExports] )
 end function
@@ -212,9 +212,9 @@ rule sortDeclarationsAndStatements
                         %        variables and procedures 
             [sortVP]    % then variables, then procs 
     where not
-	NewBody [= ObBody]
+        NewBody [= ObBody]
     by
-	NewBody
+        NewBody
 end rule 
 
 rule sortDS 
@@ -265,14 +265,14 @@ end function
 rule makeObjectRecordType 
     replace [repeat declarationOrStatement] 
         V [variableDeclaration] 
-	P [subprogramDeclaration]
+        P [subprogramDeclaration]
         Rest  [repeat declarationOrStatement] 
     by
         V 
         type 'DataRecordType : 
             record 
             'end record 
-	P
+        P
         Rest 
 end rule 
 
@@ -299,9 +299,9 @@ end rule
 
 rule fixObjectVariableReferences Var [id] 
     replace [reference]
-	Var Rest [repeat componentSelector]
+        Var Rest [repeat componentSelector]
     by
-	DataRecord . Var Rest
+        DataRecord . Var Rest
 end rule
 
 % Step 6.  Gather the Object Module's Initializing Statements into the 
@@ -343,7 +343,7 @@ end rule
 
 
 % Step 8. Transform Declarations of Instances of the Object Type into Declarations of 
-%	Object DataRecords.  
+%       Object DataRecords.  
 
 rule transformObjectReferences  ObName [id] 
     replace [repeat declarationOrStatement] 
@@ -384,9 +384,9 @@ rule fixInstantiations TCname [id] Formals [list id] TCbody [typeSpec]
     by
         type ITname : 
             TCbody  [substituteId TCname ITname]
-	    		[substituteAmbiguousArgs each Formals Actuals]
-	    		[substituteExpnArgs each Formals Actuals]
-	    		[substituteTypeArgs each Formals Actuals]
+                        [substituteAmbiguousArgs each Formals Actuals]
+                        [substituteExpnArgs each Formals Actuals]
+                        [substituteTypeArgs each Formals Actuals]
 end rule 
 
 rule substituteId Old [id] New [id] 
@@ -398,29 +398,29 @@ end rule
 
 rule substituteAmbiguousArgs Old [id] New [expnOrTypeSpec]
     deconstruct New
-	NewName [id]
+        NewName [id]
     replace [id]
-	Old
+        Old
     by
-	NewName
+        NewName
 end rule
 
 rule substituteExpnArgs Old [id] New [expnOrTypeSpec]
     deconstruct New
-	NewExpn [expn]
+        NewExpn [expn]
     replace [primary]
-	Old
+        Old
     by
-	( NewExpn )
+        ( NewExpn )
 end rule
 
 rule substituteTypeArgs Old [id] New [expnOrTypeSpec]
     deconstruct New
-	NewTypeSpec [typeSpec]
+        NewTypeSpec [typeSpec]
     replace [typeSpec]
-	Old
+        Old
     by
-	NewTypeSpec
+        NewTypeSpec
 end rule
 
 
@@ -436,7 +436,7 @@ rule fixInheritedObjectTypes
             'end Oname
         RestOfScope [repeat declarationOrStatement]
     where
-	RestOfScope [hasRefines Oname]
+        RestOfScope [hasRefines Oname]
     by
         type Oname  :
             object
@@ -449,7 +449,7 @@ end rule
 
 function hasRefines OName [id]
     match * [refinementClause]
-	'refines OName
+        'refines OName
 end function
 
 rule fixInheritedObjectTypeRefinements  Oname [id] Oimp [importList] Oexp [exportList] 
@@ -457,7 +457,7 @@ rule fixInheritedObjectTypeRefinements  Oname [id] Oimp [importList] Oexp [expor
     replace [repeat declarationOrStatement]
         type ORname [id] :
             object 
-		refines Oname 
+                refines Oname 
                 'import ( ORimports [list optVarOrForwardId] )
                 'export ( ORexports [list optOpaqueId] ) 
                 ORbody [repeat declarationOrStatement]
@@ -475,16 +475,16 @@ end rule
 
 function spliceBody ORbody [repeat declarationOrStatement]
     replace [repeat declarationOrStatement]
-	OBfirst [declarationOrStatement] OBrest [repeat declarationOrStatement]
+        OBfirst [declarationOrStatement] OBrest [repeat declarationOrStatement]
     by
-	OBfirst OBrest [spliceBody ORbody] [catenateBody ORbody]
+        OBfirst OBrest [spliceBody ORbody] [catenateBody ORbody]
 end function
 
 function catenateBody ORbody [repeat declarationOrStatement]
     replace [repeat declarationOrStatement]
-	OBtail [empty] 
+        OBtail [empty] 
     by
-	ORbody 
+        ORbody 
 end function
 
 function addNewImports ORimports [list optVarOrForwardId] 
@@ -509,7 +509,7 @@ rule transformCollectionObjects ObName [id]
         var ObVar [id] : collection of ObName
         RestOfScope [repeat declarationOrStatement]
     construct NewObVar [id]
-    	ObVar [!]
+        ObVar [!]
     by
         var ObVar : collection of ObName . DataRecordType
         RestOfScope 

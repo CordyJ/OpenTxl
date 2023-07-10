@@ -1,6 +1,6 @@
 define program 
-	[repeat thingie+] : [number] [number]
-    |	[repeat thingie+]
+        [repeat thingie+] : [number] [number]
+    |   [repeat thingie+]
 end define
 
 define thingie
@@ -13,11 +13,11 @@ end define
 
 rule main
     replace [program]
-	RT [repeat thingie+] : Lower [number] Upper [number]
+        RT [repeat thingie+] : Lower [number] Upper [number]
     construct RTlength [number]
-	_ [length RT] [print]
+        _ [length RT] [print]
     by
-	RT [select Lower Upper]
+        RT [select Lower Upper]
 end rule
 
     

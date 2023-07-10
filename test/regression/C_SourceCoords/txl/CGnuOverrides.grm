@@ -95,19 +95,19 @@ tokens
                 | "__FUNCTION__"            %% CSD - 2
                 | "__PRETTY_FUNCTION__"     %% CSD - 2
                 | "__func__"                %% CSD - 2
-    float		"\d+.\d*([eE][+-]?\d+)?[FLfl]?"         %% CSD - 4
-           	|	"\d+(.\d*)?[eE][+-]?\d+[FLfl]?"
-           	|	"\d+(.\d*)?([eE][+-]?\d+)?[FLfl]"
+    float               "\d+.\d*([eE][+-]?\d+)?[FLfl]?"         %% CSD - 4
+                |       "\d+(.\d*)?[eE][+-]?\d+[FLfl]?"
+                |       "\d+(.\d*)?([eE][+-]?\d+)?[FLfl]"
     id            "[\u$][\i$]*"             %% CSD - 3
 #ifdef PREPROCESSOR
-    		|	"\#\i+"
+                |       "\#\i+"
 #endif
 end tokens
 
 % TXL claims there is ambiguity with the definition in C.Grm, this fixes it.
 redefine type_specifiers
-	[repeat type_qualifier] [type_specifier] [repeat type_qualifier]
-    |	[repeat type_qualifier]
+        [repeat type_qualifier] [type_specifier] [repeat type_qualifier]
+    |   [repeat type_qualifier]
 end redefine
 
 % 1. Allows for empty declarations.
@@ -235,7 +235,7 @@ end define
 % 2. "Specifying Attributes of Types"
 % 3. General use of GNU extensions
 redefine decl_qualifier
-        [sc_specifier]		% In ANSI C, not allowed for member_declaraton.
+        [sc_specifier]          % In ANSI C, not allowed for member_declaraton.
     |   [type_qualifier]
     |   [attribute_spec]     %% CSD - 1,2
     |   [extension_specifier]    %% CSD - 3
@@ -893,8 +893,8 @@ end redefine
 
 % 1. "Labels as Values"
 redefine unary_operator
-	...
-    |	'&&              %% CSD - 1
+        ...
+    |   '&&              %% CSD - 1
 end redefine
 
 redefine for_statement
@@ -922,7 +922,7 @@ end define
 % 1. "Mixed Declarations and Code" 3.0.4
 redefine compound_statement
     { [NL] 
-	[repeat compound_statement_body]        %% CSD - 1
+        [repeat compound_statement_body]        %% CSD - 1
     } [opt ';] [NL]
 end redefine
  
@@ -1025,7 +1025,7 @@ end define
 
 % 1. GNU preprocessor statements have extra information in them
 redefine preprocessor
-	...
+        ...
     |   '# [integernumber] [string] [repeat integernumber] [NL] %% CSD 1
     |   '#pragma [SPON] [repeat id] '( [list id] ') [NL]          %% CSD-1
 end redefine

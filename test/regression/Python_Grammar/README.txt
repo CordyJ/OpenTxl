@@ -16,10 +16,10 @@ Description:
           INDENT / DEDENT implicit symbols of Python, and 
 
         - python.grm, a Python 2.5 grammar that parses Python programs
-	  with explicit INDENT / DEDENT smbols.
+          with explicit INDENT / DEDENT smbols.
 
     The two can be used as a pipeline to process raw Python code using TXL:
-	txl input.py pyindent.txl | txl stdin my_python_transform.txl > output.py
+        txl input.py pyindent.txl | txl stdin my_python_transform.txl > output.py
 
     When writing transformations using this grammar, patterns and replacements 
     involving INDENT / DEDENT must explicitly include them.  But because they

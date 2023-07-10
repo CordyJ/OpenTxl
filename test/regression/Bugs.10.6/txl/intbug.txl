@@ -1,14 +1,14 @@
 define program
-	[repeat number]
+        [repeat number]
 end define
 
 function main
     replace [program]
-	Nums [repeat number]
+        Nums [repeat number]
     construct _ [repeat number]
-	Nums [message "Inputs"] [print]
+        Nums [message "Inputs"] [print]
     construct Sum [number]
-	_ [+ each Nums]
+        _ [+ each Nums]
     by
-	Sum [message "Output"] [print]
+        Sum [message "Output"] [print]
 end function

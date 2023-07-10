@@ -17,12 +17,12 @@ end keys
 
 
 compounds
-	':: '<> '<= '>= 
+        ':: '<> '<= '>= 
 end compounds
 
 tokens 
-	hexnumber   "0x[\dabcdefABCDEF]+"
-	label_id    "&\u\i+"
+        hexnumber   "0x[\dabcdefABCDEF]+"
+        label_id    "&\u\i+"
 end tokens
 
 define new_line
@@ -31,34 +31,34 @@ end define
 
 
 define string_or_id
-	  [stringlit]
-	| [id]
+          [stringlit]
+        | [id]
 end define
 
 define program
-	[bal_program_header]
-	[repeat bal_segment]
-	'END [new_line] [NL]
+        [bal_program_header]
+        [repeat bal_segment]
+        'END [new_line] [NL]
 end define
 
 define bal_program_header
-	'PROGRAM [list string_or_id] [new_line] [NL]
-	[IN]
-		[repeat bal_declaration]
-	[EX]
+        'PROGRAM [list string_or_id] [new_line] [NL]
+        [IN]
+                [repeat bal_declaration]
+        [EX]
 end define
 
 define bal_segment
-	'SEGMENT [number] [new_line] [NL]
-	[IN]
-		[repeat bal_declaration]
-		[repeat bal_instruction]
-	[EX]
-	[opt label]	'ESEG [number] [new_line] [NL]
+        'SEGMENT [number] [new_line] [NL]
+        [IN]
+                [repeat bal_declaration]
+                [repeat bal_instruction]
+        [EX]
+        [opt label]     'ESEG [number] [new_line] [NL]
 end define
 
 define bal_declaration
-	[ dcl_list ]
+        [ dcl_list ]
       | [ field_stm ]
       | [ const_list ]
       | 'ARG [id]  [new_line] [NL]
@@ -66,69 +66,69 @@ define bal_declaration
 end define
 
 define dcl_list
-	'DCL [list var_decl] [new_line] [NL]
+        'DCL [list var_decl] [new_line] [NL]
 end define
 
 define field_stm
-	'FIELD '= 'M [opt comma_varref] [new_line] [NL]
+        'FIELD '= 'M [opt comma_varref] [new_line] [NL]
 end define
 
 define comma_varref
-	', [id] [opt subscript]
+        ', [id] [opt subscript]
 end define
 
 define function_dcl
-	'FUNCTION [id] [opt typespec] '( [repeat param_list] ')  [new_line] [NL]
-	[IN]
-		[repeat bal_declaration]
-		[repeat bal_instruction]
-	[EX]
-	[opt label]	'ENDF [new_line] [NL]
+        'FUNCTION [id] [opt typespec] '( [repeat param_list] ')  [new_line] [NL]
+        [IN]
+                [repeat bal_declaration]
+                [repeat bal_instruction]
+        [EX]
+        [opt label]     'ENDF [new_line] [NL]
 end define
 
 define param_list
-	'VAR [list var_decl]
+        'VAR [list var_decl]
       | [opt 'DCL] [list var_decl]
 end define
 
 define const_list
-	'CONST [list var_decl] [new_line] [NL]
+        'CONST [list var_decl] [new_line] [NL]
 end define
 
 define var_decl
-	[id] [opt typespec] [opt dimension] [opt initialization]
+        [id] [opt typespec] [opt dimension] [opt initialization]
 end define
 
 define typespec
-	'#
+        '#
       | '%
       | '$ [opt eq_id_or_number]
       | [opt '&] [opt eq_id_or_number]
 end define
 
 define id_or_number
-	[id] | [number]
+        [id] | [number]
 end define
 
 define eq_id_or_number
-	'= [id_or_number]
+        '= [id_or_number]
 end define
 
 define dimension
-	'( [list id_or_number] ')
+        '( [list id_or_number] ')
 end define
 
 % da sostituire con espressione
 define initialization
-	'= [expression]
+        '= [expression]
 end define
 
 define bal_instruction
-	[opt label] [opt bal_statement] [new_line] [NL]
+        [opt label] [opt bal_statement] [new_line] [NL]
 end define
 
 define label
-	[number]
+        [number]
       | [label_id]
     %  | '& [number] %deprecated
 end define
@@ -168,28 +168,28 @@ define control_stm
 end define
 
 define select_stm
-	'SELECT [expression] [new_line] [NL]
-	[repeat case_stm]
-	[opt default_stm]
-[opt label]	'ENDSEL
+        'SELECT [expression] [new_line] [NL]
+        [repeat case_stm]
+        [opt default_stm]
+[opt label]     'ENDSEL
 end define
 
 define case_stm
-	'CASE [list expression] [opt new_line] [NL]
-	[IN]
-	   [repeat bal_instruction]
-	[EX]
+        'CASE [list expression] [opt new_line] [NL]
+        [IN]
+           [repeat bal_instruction]
+        [EX]
 end define
 
 define default_stm
-	'DEFAULT [new_line] [NL]
-	[IN]
-	   [repeat bal_instruction]
-	[EX]
+        'DEFAULT [new_line] [NL]
+        [IN]
+           [repeat bal_instruction]
+        [EX]
 end define
 
 define if_stm
-	'IF [expression] ': [bal_statement]
+        'IF [expression] ': [bal_statement]
       | 'IF [expression] 'GOTO [label]
       | 'IF [expression] 'GOSUB [label]
       | 'IF [expression] 'THEN [bal_statement]
@@ -198,63 +198,63 @@ define if_stm
 end define
 
 define if_control
-	'IF [expression]  [opt lost_then] [new_line] [NL]
-	[IN]
-	   [repeat bal_instruction]
-	[EX]
-	[repeat elsif_stm]
-	[opt else_stm]
-	[opt label] 'ENDIF %non standard label usage
+        'IF [expression]  [opt lost_then] [new_line] [NL]
+        [IN]
+           [repeat bal_instruction]
+        [EX]
+        [repeat elsif_stm]
+        [opt else_stm]
+        [opt label] 'ENDIF %non standard label usage
 end define
 
 define lost_then % to remove from the source
-	'THEN
+        'THEN
 end define
 
 define elsif_stm
-	'ELSE '. 'IF [expression] [new_line] [NL]
-	[IN]
-	   [repeat bal_instruction]
-	[EX]
+        'ELSE '. 'IF [expression] [new_line] [NL]
+        [IN]
+           [repeat bal_instruction]
+        [EX]
 end define
 
 define else_stm
-	'ELSE [new_line] [NL]
-	[IN]
-	   [repeat bal_instruction]
-	[EX]
+        'ELSE [new_line] [NL]
+        [IN]
+           [repeat bal_instruction]
+        [EX]
 end define
 
 define for_stm
-	'FOR [id] '= [expression] 'TO [expression] [opt step_expr] [new_line] [NL]
-	[IN]
-	   [repeat bal_instruction]
-	[EX]
-    [opt label]	'NEXT [id]   %non-standard label usage
+        'FOR [id] '= [expression] 'TO [expression] [opt step_expr] [new_line] [NL]
+        [IN]
+           [repeat bal_instruction]
+        [EX]
+    [opt label] 'NEXT [id]   %non-standard label usage
 end define
 
 define step_expr
-	'STEP [expression]
+        'STEP [expression]
 end define
 
 define while_stm
-	'WHILE [conditional_expression] [new_line] [NL]
-	[IN]
-	   [repeat bal_instruction]
-	[EX]
-	[opt label]	'WEND 
+        'WHILE [conditional_expression] [new_line] [NL]
+        [IN]
+           [repeat bal_instruction]
+        [EX]
+        [opt label]     'WEND 
 end define
 
 define Repeat_stm
-	'REPEAT [new_line] [NL]
-	[IN]
-	   [repeat bal_instruction]
-	[EX]
-	[opt label]	'UNTIL [conditional_expression]
+        'REPEAT [new_line] [NL]
+        [IN]
+           [repeat bal_instruction]
+        [EX]
+        [opt label]     'UNTIL [conditional_expression]
 end define
 
 define basic_stm
-	'ON 'ERROR 'GOTO [label] ', [id]
+        'ON 'ERROR 'GOTO [label] ', [id]
       | 'ON 'ERROR 'ABORT
       | 'DATA [list expression]
       | 'MASK [expression]
@@ -296,58 +296,58 @@ define file_stm
 end define
 
 define cfile_attr
-	', [id] '= [expression]
+        ', [id] '= [expression]
 end define
 
 define marker
-	[expression]
+        [expression]
 end define
 
 define dot_id
-	'. [id]
+        '. [id]
 end define
 
 % ----------------------------------
 % ASK & PRINT
 
 define ask_stm
-	'ASK '= '1 [opt comma_jump] ': [list printdir] [opt lost_comma] '= [opt printdir_comma] [opt inputform_comma] [id] [opt subscript]
+        'ASK '= '1 [opt comma_jump] ': [list printdir] [opt lost_comma] '= [opt printdir_comma] [opt inputform_comma] [id] [opt subscript]
 end define
 
 define comma_jump
-	', [list ask_jump]
+        ', [list ask_jump]
 end define
 
 define ask_jump
-	'( [expression] ') '= [ask_label]
-	| [stringlit] '= [ask_label]
-	| [id] '= [ask_label]
-	| [numeric_literal] '= [ask_label]
+        '( [expression] ') '= [ask_label]
+        | [stringlit] '= [ask_label]
+        | [id] '= [ask_label]
+        | [numeric_literal] '= [ask_label]
 end define
 
 define ask_label
-	[label]
-	| '( [label] ')
+        [label]
+        | '( [label] ')
 end define
 
 define printdir_comma
-	[list printdir] ',
+        [list printdir] ',
 end define
 
 define inputform_comma
-	inputform ',
+        inputform ',
 end define
 
 define inputform
-	'( [list format] ')
+        '( [list format] ')
 end define
 
 define format
-	[repeat format_element]
+        [repeat format_element]
 end define
 
 define format_element
-	[id] 
+        [id] 
     | [stringlit]
     | '.
     | '+
@@ -358,77 +358,77 @@ define format_element
 end define
 
 define print_stm
-	'PRINT '= [expression] ': [list printdir]
+        'PRINT '= [expression] ': [list printdir]
 end define
 
 define printdir
-	'CLEAR
-	| 'PAGE
-	| 'HOME
-	| 'TAB '( [expression] ')
-	| 'TAB '( [expression] ', [expression] ')
-	| 'TABV '( [expression] ')
-	| 'PAINT '( [expression] ')
-	| 'PAINT '( [expression] ', [expression] ')
-	| 'ATB '( [expression] ')
-	| '( [list format] ')
-	| '( '( [expression] ') ')
-	| [expression]
+        'CLEAR
+        | 'PAGE
+        | 'HOME
+        | 'TAB '( [expression] ')
+        | 'TAB '( [expression] ', [expression] ')
+        | 'TABV '( [expression] ')
+        | 'PAINT '( [expression] ')
+        | 'PAINT '( [expression] ', [expression] ')
+        | 'ATB '( [expression] ')
+        | '( [list format] ')
+        | '( '( [expression] ') ')
+        | [expression]
 end define
 
 %--------------------------------------
 
 
 define comma_id
-	', [id]
+        ', [id]
 end define
 
 
 define err_buf
-	': [err_spec] [opt lost_comma] 
+        ': [err_spec] [opt lost_comma] 
       | ': [buf_spec]
       | ': [err_spec] ', [buf_spec]
 end define
 
 define lost_comma %TODO to remove from the source
-	',
+        ',
 end define
 
 define err_spec
-	[label] ', [id]
+        [label] ', [id]
     | 'NEXT ', [id]
     | [label]
 end define
 
 define buf_spec
-%	[id] [opt comma_expr]
+%       [id] [opt comma_expr]
       [expression] [opt comma_expr]
 end define
 
 define comma_expr
-	', [expression]
+        ', [expression]
 end define
 
 define function_call
     % Reordered cases by frequency of use to speed up parsing - JRC 6.3.07
-	[id] [opt '$] '( [list expression_or_label] ')
-    | 	'PRINT '( [inputform] ', [list expression] ')
-    |	'FM  [inputform] 
+        [id] [opt '$] '( [list expression_or_label] ')
+    |   'PRINT '( [inputform] ', [list expression] ')
+    |   'FM  [inputform] 
     %  | [id]   %function call without arguments
 end define
 
 define expression_or_label
-	  [expression] %precedence is given to expression to resolve number as expression an not as label
-	| [label]
+          [expression] %precedence is given to expression to resolve number as expression an not as label
+        | [label]
 end define
 
 
 define assign_stm
-	[opt 'LET ] [id] [opt subscript] '= [expression]
+        [opt 'LET ] [id] [opt subscript] '= [expression]
 end define
 
 define expression
-	[conditional_expression]
+        [conditional_expression]
     % Removed redundant [unary_expression].  Everything parsed by it is already parsed by
     % [conditional_expression] above, so it can never match anything.  All it does is slow
     % down parsing a lot when backtracking - JRC 6.3.07
@@ -496,7 +496,7 @@ define relational_expression
 end define
 
 define relational_op_additive
-	[relational_op] [additive_expression]
+        [relational_op] [additive_expression]
 end define
 
 define relational_op
@@ -539,19 +539,19 @@ define unary_op
 end define
 
 define subscript
-	'( [expression] [opt comma_expr] ')
+        '( [expression] [opt comma_expr] ')
 end define
 
 define primary
     % Reordered cases by frequency of use to speed up parsing - JRC 6.3.07
-	[id] [opt subscript]
-    |	[literal]
+        [id] [opt subscript]
+    |   [literal]
     |   [function_call]
     |   '( [expression] ')
 end define
 
 define literal
-	[numeric_literal]
+        [numeric_literal]
     |   [string_literal]
 end define
 

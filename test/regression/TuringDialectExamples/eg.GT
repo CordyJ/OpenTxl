@@ -2,24 +2,24 @@
 
 generic stack (itemtype, stacksize)
     module stack 
-	export (empty, push, pop)
+        export (empty, push, pop)
 
-	var top : 0 .. stacksize := 0
-	var contents : array 1 .. 50 of itemtype
+        var top : 0 .. stacksize := 0
+        var contents : array 1 .. 50 of itemtype
 
-	procedure push (item : itemtype)
-	    top := top + 1
-	    contents (top) := item
-	end push
+        procedure push (item : itemtype)
+            top := top + 1
+            contents (top) := item
+        end push
 
-	procedure pop (var item : itemtype)
-	    item := contents (top)
-	    top := top - 1
-	end pop
+        procedure pop (var item : itemtype)
+            item := contents (top)
+            top := top - 1
+        end pop
 
-	function empty : boolean
-	    result top = 0
-	end empty
+        function empty : boolean
+            result top = 0
+        end empty
     end stack
 
 % A module supporting a stack of strings
@@ -28,8 +28,8 @@ instance stringstack : stack (string, 50)
 % Another module supporting a stack of records
 type pervasive symbolinfo:
     record
-	symbol : string
-	number : int
+        symbol : string
+        number : int
     end record
 instance symbolstack : stack (symbolinfo, 100)
 

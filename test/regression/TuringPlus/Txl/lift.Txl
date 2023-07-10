@@ -8,42 +8,42 @@ include "Tplus.Grammar"
 
 function main
     replace [program]
-	C [compilation]
+        C [compilation]
     by
-	C [liftExpressions]
+        C [liftExpressions]
 end function
 
 rule liftExpressions
     replace [repeat declarationOrStatement]
-	loop
-	    Body [repeat declarationOrStatement]
-	'end loop
-	Rest [repeat declarationOrStatement]
+        loop
+            Body [repeat declarationOrStatement]
+        'end loop
+        Rest [repeat declarationOrStatement]
     construct AllExpressions [repeat expn]
-	_ [^ Body]
+        _ [^ Body]
     construct LiftedLoop [repeat declarationOrStatement]
-	loop
-	    Body
-	'end loop
+        loop
+            Body
+        'end loop
     where
-	LiftedLoop [?lift each AllExpressions]
+        LiftedLoop [?lift each AllExpressions]
     by
-	LiftedLoop [lift each AllExpressions]
-	[. Rest]
+        LiftedLoop [lift each AllExpressions]
+        [. Rest]
 end rule
 
 function lift Expression [expn]
     deconstruct * [binaryOperator] Expression
-	_ [binaryOperator]
+        _ [binaryOperator]
     replace [repeat declarationOrStatement]
-	Scope [repeat declarationOrStatement]
+        Scope [repeat declarationOrStatement]
     construct LE [id]
-	'E
+        'E
     construct LiftedExpnId [id]
-	LE [!]
+        LE [!]
     construct LiftedExpn [expn]
-	LiftedExpnId
+        LiftedExpnId
     by
-	const LiftedExpnId := Expression
-	Scope [$ Expression LiftedExpn]
+        const LiftedExpnId := Expression
+        Scope [$ Expression LiftedExpn]
 end function

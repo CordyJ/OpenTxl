@@ -14,17 +14,17 @@ end define
 
 function main
     replace [program]
-	AllOfThem [thing*]
+        AllOfThem [thing*]
 
     construct Jim [thing]
-	'Jim
+        'Jim
 
     % Note the use of the 'where all' form to achieve the 'and' 
     % of the condition - without 'all', the condition would test if
     % *any* of the things were equal to Jim.
     where all
-	Jim [= each AllOfThem]
+        Jim [= each AllOfThem]
 
     by
-	They were 'all Jims
+        They were 'all Jims
 end function

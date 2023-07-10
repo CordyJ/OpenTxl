@@ -36,14 +36,14 @@ comments
 end comments
 
 tokens
-    hex			"0[xX][\dAaBbCcDdEeFf]+[LUlu]*"
-    dotfloat	 	".\d+([eE][+-]?\d+)?[FLfl]?"
-    float		"\d+.\d*([eE][+-]?\d+)?[FLfl]?"
-           	|	"\d+(.\d*)?[eE][+-]?\d+[FLfl]?"
-           	|	"\d+(.\d*)?([eE][+-]?\d+)?[FLfl]"
-    long    	        "\d+[LUlu]+"
+    hex                 "0[xX][\dAaBbCcDdEeFf]+[LUlu]*"
+    dotfloat            ".\d+([eE][+-]?\d+)?[FLfl]?"
+    float               "\d+.\d*([eE][+-]?\d+)?[FLfl]?"
+                |       "\d+(.\d*)?[eE][+-]?\d+[FLfl]?"
+                |       "\d+(.\d*)?([eE][+-]?\d+)?[FLfl]"
+    long                "\d+[LUlu]+"
 #ifdef PREPROCESSOR
-    id		|	"\#\i+"
+    id          |       "\#\i+"
 #endif
 end tokens
 
@@ -78,13 +78,13 @@ define constant
 |   [float]
 |   [hex]
 |   [long]
-|   [SP] [dotfloat]		    % TXL doesn't defaultly space before .
+|   [SP] [dotfloat]                 % TXL doesn't defaultly space before .
 |   [charlit]                       % "single" character constant
 |   [string]
 end define
 
 define string
-    [repeat stringlit+]			% Includes implicit concatenation
+    [repeat stringlit+]                 % Includes implicit concatenation
 end define
 
 % Expressions
@@ -225,7 +225,7 @@ end define
 
 define struct_or_union_specifier
     [struct_or_union] [opt tagged_reference_id] {   [IN] [NL]
-	[repeat member_declaration]                 [EX]
+        [repeat member_declaration]                 [EX]
     }
 |   [struct_or_union] [tagged_reference_id]
 end define
@@ -254,7 +254,7 @@ define bitfieldsize
 end define
 
 define decl_qualifier
-    [sc_specifier]		% In ANSI C, not allowed for member_declaraton.
+    [sc_specifier]              % In ANSI C, not allowed for member_declaraton.
 |   [cv_qualifier]
 |   [type_qualifier]
 end define
@@ -375,7 +375,7 @@ end define
 
 define argument_declaration
     [decl_specifiers] [opt argument_declarator]
-|   '...		% Only allowed last in a non-empty list, never mind.
+|   '...                % Only allowed last in a non-empty list, never mind.
 end define
 
 define argument_declarator
@@ -429,13 +429,13 @@ end define
 
 define compound_statement
     { [IN] [NL] 
-	[compound_statement_body]
+        [compound_statement_body]
     } [opt ';] [NL]
 end define
  
 define compound_statement_body
     [repeat statement]        [EX] 
-|   [declaration]		% Prefer statements if possible.
+|   [declaration]               % Prefer statements if possible.
     [compound_statement_body]
 end define
 
@@ -465,7 +465,7 @@ end define
 
 define for_statement
     'for ( [opt expression] '; [opt expression] '; [opt expression] )
-	[statement]
+        [statement]
 end define
 
 define jump_statement

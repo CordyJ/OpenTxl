@@ -38,7 +38,7 @@ Step 3. Visit TXL World
     many examples of what others have done with TXL and how they
     have done it, on the TXL World page,
 
-	http://www.txl.ca/txl-resources.html
+        http://www.txl.ca/txl-resources.html
 
     There you will also find grammars and rulesets that will help
     you to get started in whatever line of source transformation
@@ -51,6 +51,6 @@ Step 4. Away You Go!
     ask your own questions, and report problems and bugs on the
     TXL Support page,
 
-	http://www.txl.ca/txl-support.html
+        http://www.txl.ca/txl-support.html
 
 Rev 17.10.22

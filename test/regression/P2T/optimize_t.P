@@ -1,76 +1,76 @@
 % TXL 7.7a4
 % Andy Maloney, Queen's University, March 1995
-%	[part of 499 project]
+%       [part of 499 project]
 %
 %  This file contains the optimizing functions for Turing.
 
 
 
 function optimizeTuring
-	replace [program]
-		Program [program]
+        replace [program]
+                Program [program]
 
-		
-	by
-		Program [changeToFor]
+                
+        by
+                Program [changeToFor]
 end function
 
 
 rule changeToFor
-	replace [repeat p_statement]
-		S [repeat p_statement]
-		
-	deconstruct S
- 		'% due to an error, this comment is required for the program to compile
-		ID1 [id] ':= E1 [p_expression]	
-		'loop
-			RS2 [repeat p_statement]
-		'end 'loop
-		RestOfScope [repeat p_statement]
-	
-	where not
-		RestOfScope [references ID1]
-		
-	deconstruct RS2
-		S2 [p_statement]
-		RS3 [repeat p_statement]
-	
-	deconstruct S2
-		'exit 'when '( ID2 [id] '> E2 [p_simpleExpression] ')
+        replace [repeat p_statement]
+                S [repeat p_statement]
+                
+        deconstruct S
+                '% due to an error, this comment is required for the program to compile
+                ID1 [id] ':= E1 [p_expression]  
+                'loop
+                        RS2 [repeat p_statement]
+                'end 'loop
+                RestOfScope [repeat p_statement]
+        
+        where not
+                RestOfScope [references ID1]
+                
+        deconstruct RS2
+                S2 [p_statement]
+                RS3 [repeat p_statement]
+        
+        deconstruct S2
+                'exit 'when '( ID2 [id] '> E2 [p_simpleExpression] ')
 
-	construct N [number]
-		_ [length RS3]
-	
-	construct N2 [number]
-		N [- 1]
-		
-	construct RS4 [repeat p_statement]	%% NOTE: need to check these for assignments and NOT change 
-						%% to a for loop if any exist
-		RS3 [select 1 N2]
+        construct N [number]
+                _ [length RS3]
+        
+        construct N2 [number]
+                N [- 1]
+                
+        construct RS4 [repeat p_statement]      %% NOTE: need to check these for assignments and NOT change 
+                                                %% to a for loop if any exist
+                RS3 [select 1 N2]
 
-	construct S3 [repeat p_statement]
-		RS3 [select N N]
-		
-	deconstruct S3
-		ID3 [id] ':= ID4 [id] OP [p_termOperator] '1	
-	
-	construct newID [id]
-		ID1 [!]
-		
-	construct newS [repeat p_statement]
-		'for newID : E1 '.. E2
-			RS4 [$ ID1 newID]
-		'end 'for
-		RestOfScope
-	
-	where not
-		newS [= S]
-		
-	by
-		newS
+        construct S3 [repeat p_statement]
+                RS3 [select N N]
+                
+        deconstruct S3
+                ID3 [id] ':= ID4 [id] OP [p_termOperator] '1    
+        
+        construct newID [id]
+                ID1 [!]
+                
+        construct newS [repeat p_statement]
+                'for newID : E1 '.. E2
+                        RS4 [$ ID1 newID]
+                'end 'for
+                RestOfScope
+        
+        where not
+                newS [= S]
+                
+        by
+                newS
 end rule
 
 rule references ID [id]
-	match [id]
-		ID
+        match [id]
+                ID
 end rule

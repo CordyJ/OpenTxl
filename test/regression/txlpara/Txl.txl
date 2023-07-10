@@ -15,23 +15,23 @@ include "Txl.grm"
 
 function main
     replace [program]
-	P [program]
+        P [program]
     by
-	P [fixEmptyReplacements]
-	  [fixQuotedPercents]
+        P [fixEmptyReplacements]
+          [fixQuotedPercents]
 end function
 
 rule fixEmptyReplacements
     replace [expsAndLits]
-	% an empty one
+        % an empty one
     by
-	'% '( 'empty ')
+        '% '( 'empty ')
 end rule
 
 rule fixQuotedPercents
     replace [literal]
-	'%
+        '%
     by
-	''
-	'%
+        ''
+        '%
 end rule

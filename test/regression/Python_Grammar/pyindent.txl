@@ -47,14 +47,14 @@
 % We need to expand tabs and count spaces, so override [space] to be a single blank
 % and define a [tab] token for a single tab character
 tokens
-    space 	" "
-    tab		"	"	% ASCII TAB (ctrl-i) character
+    space       " "
+    tab         "       "       % ASCII TAB (ctrl-i) character
 end tokens
 
 % Python long tokens
 tokens 
-    longstringlit	"\"\"\"#[(\"\"\")]*\"\"\""
-    longcharlit		"'''#[(''')]*'''"
+    longstringlit       "\"\"\"#[(\"\"\")]*\"\"\""
+    longcharlit         "'''#[(''')]*'''"
 end tokens
 
 % Python comemnts
@@ -93,40 +93,40 @@ define tab_space
 end define
 
 define linetoken
-	[tab_space]
+        [tab_space]
     |   [nonblank_token]
 end define
 
 define nonblank_token
         [compound]
-    | 	[not newline] [not comment] [token]
+    |   [not newline] [not comment] [token]
 end define
 
 % We need to be careful to treat Python atomic structures specially,
 % so that we don't mistake the newlines and indentations in them as
 % meaningful
 define compound
-	'{ [repeat compoundtoken] '}
-    | 	'[ [repeat compoundtokensquare] ']
-    | 	'( [repeat compoundtokenround] ')
+        '{ [repeat compoundtoken] '}
+    |   '[ [repeat compoundtokensquare] ']
+    |   '( [repeat compoundtokenround] ')
 end define
 
 define compoundtoken
-	[not '}] [linetoken]
-    |	[newline]
-    |	[comment]
+        [not '}] [linetoken]
+    |   [newline]
+    |   [comment]
 end define
 
 define compoundtokensquare
-	[not ']] [linetoken]
-    |	[newline]
-    |	[comment]
+        [not ']] [linetoken]
+    |   [newline]
+    |   [comment]
 end define
 
 define compoundtokenround
-	[not ')] [linetoken]
-    |	[newline]
-    |	[comment]
+        [not ')] [linetoken]
+    |   [newline]
+    |   [comment]
 end define
 
 % The main program - expands tabs to spaces, then infers where INDENT / DEDENT
@@ -135,11 +135,11 @@ function main
     replace [program]
         Lines [repeat line]
     by
-	Lines [markEOF]
-	      [deleteRedundantSpaces]
-	      [expandTabs]
-	      [insertIndents]
-	      [unmarkEOF]
+        Lines [markEOF]
+              [deleteRedundantSpaces]
+              [expandTabs]
+              [insertIndents]
+              [unmarkEOF]
 end function
 
 % Leading spaces before a tab are assumed meaningless
@@ -164,16 +164,16 @@ end rule
 rule insertIndents
     replace [repeat line]
         Space1 [repeat tab_space] Content1 [repeat linetoken] NL [repeat endofline+] Dedents1 [repeat dedent] 
-	Rest [repeat line]
+        Rest [repeat line]
     deconstruct * [nonblank_token] Content1
-    	_ [nonblank_token]
+        _ [nonblank_token]
     deconstruct not * [nonblank_token] Content1
-    	'\
+        '\
     deconstruct Rest
         Space2 [repeat tab_space] Content2 [repeat linetoken] _ [opt indent] _ [repeat endofline+] _ [repeat dedent]
-	_ [repeat line]
+        _ [repeat line]
     deconstruct * [nonblank_token] Content2
-    	_ [nonblank_token]
+        _ [nonblank_token]
     construct LengthSpace1 [number]
         _ [length Space1]
     construct LengthSpace2 [number]
@@ -182,19 +182,19 @@ rule insertIndents
         LengthSpace2 [> LengthSpace1]
     by
         Space1 Content1 'INDENT NL Dedents1 
-	Rest [insertDedent Space1]
+        Rest [insertDedent Space1]
 end rule
 
 % ... and a } before the corresponding dedent from that level
 function insertDedent Space [repeat tab_space]
     replace * [repeat line]
-	Space1 [repeat tab_space] Content1 [repeat linetoken] Indent1 [opt indent] NL [repeat
-	endofline+] Dedents1 [repeat dedent]  
+        Space1 [repeat tab_space] Content1 [repeat linetoken] Indent1 [opt indent] NL [repeat
+        endofline+] Dedents1 [repeat dedent]  
         Space2 [repeat tab_space] Content2 [repeat linetoken] Indent2 [opt indent] NL2 [repeat
-	endofline+]  Dedents2 [repeat dedent]  
-	Rest [repeat line]
+        endofline+]  Dedents2 [repeat dedent]  
+        Rest [repeat line]
     deconstruct * [nonblank_token] Content2
-    	_ [nonblank_token]
+        _ [nonblank_token]
     construct LengthSpace [number]
         _ [length Space]
     construct LengthSpace2 [number]
@@ -204,14 +204,14 @@ function insertDedent Space [repeat tab_space]
     by
         Space1 Content1 Indent1 NL 'DEDENT Dedents1  
         Space2 Content2 Indent2 NL2 Dedents2 
-	Rest
+        Rest
 end function
 
 function markEOF
     construct OptNL [opt newline]
         _ [parse ""]
     deconstruct OptNL
-	NL [newline]
+        NL [newline]
     replace [repeat line]
         Lines [repeat line]
     construct EOFline [line]

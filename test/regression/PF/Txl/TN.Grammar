@@ -25,7 +25,7 @@ end define
 
 
 %
-%	DECLARATIONS
+%       DECLARATIONS
 %
 define declaration
     [functionDeclaration]
@@ -37,15 +37,15 @@ define functionDeclaration
 end define
 
 define fDeclaration
-    'function [id] [parameterList] 	[NL][IN]
-	[expression]			[EX][NL]
+    'function [id] [parameterList]      [NL][IN]
+        [expression]                    [EX][NL]
     'end [id]
 end define
 
 define operationDeclaration
-    operation [id] [parameterList]	[NL]
-    {					[NL][IN]
-	[expression]			[EX][NL]
+    operation [id] [parameterList]      [NL]
+    {                                   [NL][IN]
+        [expression]                    [EX][NL]
     }
 end define
 
@@ -71,7 +71,7 @@ define followingParm
 end define
 
 %
-%	VALUES
+%       VALUES
 %
 define value
     [number]
@@ -93,8 +93,8 @@ end define
 
 
 %
-%	Lists:
-%		'[' [<value> {, <value>}] ']'
+%       Lists:
+%               '[' [<value> {, <value>}] ']'
 %
 define constructedList
     [nullList]
@@ -118,31 +118,31 @@ define followingListElement
 end define
 
 %
-%	Stuff with lists
+%       Stuff with lists
 %
 
 define ifValue
-				[IN][NL]
-    if [value] then		[NL][IN]
-	[expression]		[EX][NL]
+                                [IN][NL]
+    if [value] then             [NL][IN]
+        [expression]            [EX][NL]
     [repeat elseifClause]
     [opt elseClause]
-    endif			[EX]
+    endif                       [EX]
 end define
 
 define elseifClause
-    elseif [value] then		[NL][IN]
-	[expression]		[EX][NL]
+    elseif [value] then         [NL][IN]
+        [expression]            [EX][NL]
 end define
 
 define elseClause
-    else [expression]		[NL]
+    else [expression]           [NL]
 end define
 
 
 %
-%	Application:
-%		<fn id> <value>
+%       Application:
+%               <fn id> <value>
 %
 
 define functionApplication

@@ -19,7 +19,7 @@ end function
 function dummy
     replace [program] _ [program]
     construct X [id]
-	'bar
+        'bar
     where not X [= 'foo]
     by
 end function

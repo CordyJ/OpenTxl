@@ -5,9 +5,9 @@ end define
 
 function main
     match [program]
-	_ [program]
+        _ [program]
     construct CopyFiles [id]
-	_ [CopyLines "fputsinput.txt" "fputsoutput.txt"]
+        _ [CopyLines "fputsinput.txt" "fputsoutput.txt"]
 end function
 
 rule CopyLines InputFile [stringlit] OutputFile [stringlit] 
@@ -16,14 +16,14 @@ rule CopyLines InputFile [stringlit] OutputFile [stringlit]
         Scope [any]
     % get the next line from our input file 
     construct NextInputLine [stringlit]
-	_ [fgets InputFile]
+        _ [fgets InputFile]
     % if it's empty we're done 
     deconstruct not NextInputLine
-	"" 
+        "" 
     % output it to our output file
     construct NextOutputLine [stringlit] 
-	NextInputLine [fputs OutputFile]
-		      [puts]  % show result for testing
+        NextInputLine [fputs OutputFile]
+                      [puts]  % show result for testing
     by 
-	Scope
+        Scope
 end rule

@@ -1,60 +1,60 @@
 % Ryman Prolog interface specfication syntax
 
 comments
-	'%
+        '%
 end comments
 
 define program
-	[repeat functionSpec]
+        [repeat functionSpec]
 end define
 
 define functionSpec
-	[functionNameSpec]
-	[repeat parameterSpec]
-	[opt returnsSpec]
-	[opt failsSpec]
+        [functionNameSpec]
+        [repeat parameterSpec]
+        [opt returnsSpec]
+        [opt failsSpec]
 end define
 
 define functionNameSpec
-	'function ( [functionName] ).	[NL]
+        'function ( [functionName] ).   [NL]
 end define
 
 define parameterSpec
-	'parameter ( [functionName] , [inOut] , [typeSpec] , [parameterName] ).	[NL]
+        'parameter ( [functionName] , [inOut] , [typeSpec] , [parameterName] ). [NL]
 end define
 
 define returnsSpec
-	'returns ( [functionName] , [typeSpec] , [returnsName] ).	[NL]
+        'returns ( [functionName] , [typeSpec] , [returnsName] ).       [NL]
 end define
 
 define failsSpec
-	'fails ( [functionName] , [condition] ).	[NL]
+        'fails ( [functionName] , [condition] ).        [NL]
 end define
 
 define functionName
-	[id]
+        [id]
 end define
 
 define inOut
-	'in | 'out
+        'in | 'out
 end define
 
 define typeSpec
-	[id] [opt widthSpec] [opt '*]
+        [id] [opt widthSpec] [opt '*]
 end define
 
 define widthSpec
-	( [number] )
+        ( [number] )
 end define
 
 define parameterName
-	[id]
+        [id]
 end define
 
 define returnsName
-	[id]
+        [id]
 end define
 
 define condition
-	[stringlit]
+        [stringlit]
 end define

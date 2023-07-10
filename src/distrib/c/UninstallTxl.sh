@@ -23,23 +23,23 @@ unset noclobber
 # Check what kind of installation we have here
 if [ "`whoami`" != "root" ] 
 then
-	echo ""
-	echo "Warning - you are not running as root, so you can uninstall TXL for yourself only."
-	echo "If you intend to uninstall a copy TXL installed for all users on this machine,"
-	echo "you will have to run this install script as root, for example using 'sudo ./UninstallTxl'."
-	echo ""
-	echo "Do you want to continue to uninstall TXL for yourself only? (y/n) :"
-	read YESNO
-	if [ "$YESNO" = "y" ] 
-	then
-		echo ""
-		echo "Uninstalling TXL for $USER only."
-		DEFAULT=false
-		TXLBIN=$HOME/bin
-		TXLLIB=$HOME/txl/lib
-	else
-		exit 99
-	fi
+        echo ""
+        echo "Warning - you are not running as root, so you can uninstall TXL for yourself only."
+        echo "If you intend to uninstall a copy TXL installed for all users on this machine,"
+        echo "you will have to run this install script as root, for example using 'sudo ./UninstallTxl'."
+        echo ""
+        echo "Do you want to continue to uninstall TXL for yourself only? (y/n) :"
+        read YESNO
+        if [ "$YESNO" = "y" ] 
+        then
+                echo ""
+                echo "Uninstalling TXL for $USER only."
+                DEFAULT=false
+                TXLBIN=$HOME/bin
+                TXLLIB=$HOME/txl/lib
+        else
+                exit 99
+        fi
 fi
 
 sleep 1

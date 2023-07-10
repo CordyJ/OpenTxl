@@ -21,5 +21,5 @@ Date:
     June 2004
 
 Example:
-    txl Examples/user.c			(no comments preserved)
-    txl -comment Examples/user.c	(comments preserved)
+    txl Examples/user.c                 (no comments preserved)
+    txl -comment Examples/user.c        (comments preserved)

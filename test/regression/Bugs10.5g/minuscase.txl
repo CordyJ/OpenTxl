@@ -15,30 +15,30 @@ function main
 
     % Create an id
     construct InternalId [id]
-	'EfGh
+        'EfGh
     construct _ [id]
-	InternalId [putp "The internal id is: % (should be EfGh)"]
+        InternalId [putp "The internal id is: % (should be EfGh)"]
 
     % Test all the operations
     where
-	InputId [TestEquals InternalId]
+        InputId [TestEquals InternalId]
     where 
-	InputId [TestConcat InternalId]
+        InputId [TestConcat InternalId]
     where
-	InputId [TestUnderscore InternalId]
+        InputId [TestUnderscore InternalId]
     where
-	InputId [TestSubstr InternalId]
+        InputId [TestSubstr InternalId]
 
     % Everything ok!
     construct _ [id]
-	_ [message ""]
+        _ [message ""]
     by
-	'All_OK
+        'All_OK
 end function
 
 function TestEquals InternalId [id]
     match [id]
-	InputId [id]
+        InputId [id]
 
     % Test [=]
     construct _ [id]
@@ -72,7 +72,7 @@ end function
 
 function TestConcat InternalId [id]
     match [id]
-	InputId [id]
+        InputId [id]
 
     % Test [+]
     construct _ [id]
@@ -83,7 +83,7 @@ function TestConcat InternalId [id]
     construct SNullInputId [stringlit] _ [unparse NullInputId]
     where SNullInputId [= "AbCd"]
     construct _ [id] _ [message "OK"]
-	
+        
     construct InputIdNull [id] InputId [+ ""]
          [message "construct InputIdNull [id] InputId [+ \"\"]"]
     construct SInputIdNull [stringlit] _ [unparse InputIdNull]
@@ -118,7 +118,7 @@ end function
 
 function TestUnderscore InternalId [id]
     match [id]
-	InputId [id]
+        InputId [id]
 
     % Test [_]
     construct _ [id]
@@ -129,7 +129,7 @@ function TestUnderscore InternalId [id]
     construct SUSNullInputId [stringlit] _ [unparse USNullInputId]
     where SUSNullInputId [= "_AbCd"]
     construct _ [id] _ [message "OK"]
-	
+        
     construct USInputIdInputId [id] InputId [_ InputId]
          [message "construct USInputIdInputId [id] InputId [_ InputId]"]
     construct SUSInputIdInputId [stringlit] _ [unparse USInputIdInputId]
@@ -158,7 +158,7 @@ end function
 
 function TestSubstr InternalId [id]
     match [id]
-	InputId [id]
+        InputId [id]
 
     % Test [:]
     construct _ [id]

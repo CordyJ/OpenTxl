@@ -1,6 +1,6 @@
-	tokens
-		number		"\d*(.\d+)?([eE][+-]?\d+)?"
-	end tokens
+        tokens
+                number          "\d*(.\d+)?([eE][+-]?\d+)?"
+        end tokens
 
 define program
 [repeat number]

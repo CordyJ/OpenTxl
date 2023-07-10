@@ -4,19 +4,19 @@ end define
 
 #pragma -comment
 comments
-	'%
+        '%
 end comments
 
 function main
     % should allow comparison of different types of text tokens
     construct Id [id]
-	'Jim
+        'Jim
     construct String [stringlit]
-	"Jim"
+        "Jim"
     construct Char [charlit]
-	''Jim'
+        ''Jim'
     construct Comment [comment]
-	'% Jim
+        '% Jim
     % test mixes
     where Id [= 'Jim]
     where not Id [< "Jim"]
@@ -39,7 +39,7 @@ function main
     where Comment [= Comment]
 
     replace [program]
-	_ [program]
+        _ [program]
     by
-	42
+        42
 end function

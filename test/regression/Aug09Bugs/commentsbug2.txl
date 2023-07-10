@@ -1,5 +1,5 @@
 comments 
-	 '%	% The TXL comment convention
+         '%     % The TXL comment convention
 end comments 
 
 define program 

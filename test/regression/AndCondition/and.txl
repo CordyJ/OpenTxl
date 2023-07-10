@@ -9,11 +9,11 @@ end define
 
 function main
     replace [program]
-	AllOfThem [thing*]
+        AllOfThem [thing*]
     construct Jim [thing]
-	'Jim
+        'Jim
     where all
-	Jim [= each AllOfThem]
+        Jim [= each AllOfThem]
     by
-	They were 'all Jims
+        They were 'all Jims
 end function

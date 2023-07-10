@@ -8,41 +8,41 @@ include "Turing.Grammar"
 % Syntactic forms
 
 define declaration
-	[moduleDeclaration]
-    |	[constantDeclaration]
-    |	[typeDeclaration]
-    |	[parameterizedTypeDeclaration]
-    |	[variableDeclaration]
-    |	[variableBinding]
-    |	[subprogramDeclaration]
+        [moduleDeclaration]
+    |   [constantDeclaration]
+    |   [typeDeclaration]
+    |   [parameterizedTypeDeclaration]
+    |   [variableDeclaration]
+    |   [variableBinding]
+    |   [subprogramDeclaration]
 end define
 
 define parameterizedTypeDeclaration
-	'type [opt Pervasive] [id] ( [list id] ) : [typeSpec]
+        'type [opt Pervasive] [id] ( [list id] ) : [typeSpec]
 end define
 
 define typeSpec
-	[standardType]			
-    |	[arrayType]			
-    |	[recordType]
-    |	[enumeratedType]
-    |	[setType]
-    |	[unionType]
-    |	[collectionType]
-    |	[pointerType]
-    |	[subrangeType]
-    |	[parameterizedTypeInstance]
-    |	[namedType]
+        [standardType]                  
+    |   [arrayType]                     
+    |   [recordType]
+    |   [enumeratedType]
+    |   [setType]
+    |   [unionType]
+    |   [collectionType]
+    |   [pointerType]
+    |   [subrangeType]
+    |   [parameterizedTypeInstance]
+    |   [namedType]
 end define
 
 define parameterizedTypeInstance
-	[id] ( [list expnOrTypeSpec] )
+        [id] ( [list expnOrTypeSpec] )
 end define
 
 define expnOrTypeSpec
-	[id]		% We'll separate the ambiguous case here.
-    |	[typeSpec]
-    |	[expn]	
+        [id]            % We'll separate the ambiguous case here.
+    |   [typeSpec]
+    |   [expn]  
 end define
 
 
@@ -51,45 +51,45 @@ end define
 
 rule mainRule
     replace [repeat declarationOrStatement] 
-	'type OP [opt Pervasive] PTname [id] ( Formals [list id] ) : 
-	    PTBody [typeSpec]
-	RestOfScope [repeat declarationOrStatement]
+        'type OP [opt Pervasive] PTname [id] ( Formals [list id] ) : 
+            PTBody [typeSpec]
+        RestOfScope [repeat declarationOrStatement]
     by
-	RestOfScope [fixInstances PTname Formals PTBody]
+        RestOfScope [fixInstances PTname Formals PTBody]
 end rule
 
 rule fixInstances PTname [id] Formals [list id] PTBody [typeSpec]
     replace [typeSpec]
-	PTname ( Actuals [list expnOrTypeSpec] )
+        PTname ( Actuals [list expnOrTypeSpec] )
     by
-	PTBody [subsId each Formals Actuals]
-		[subsType each Formals Actuals] 
-		[subsExpn each Formals Actuals]
+        PTBody [subsId each Formals Actuals]
+                [subsType each Formals Actuals] 
+                [subsExpn each Formals Actuals]
 end rule
 
 rule subsId Old [id] New [expnOrTypeSpec]
     deconstruct New 
-	NewName [id]
+        NewName [id]
     replace [id] 
-	Old 
+        Old 
     by
-	NewName
+        NewName
 end rule
 
 rule subsType Old [id] New [expnOrTypeSpec]
     deconstruct New 
-	NewType [typeSpec]
+        NewType [typeSpec]
     replace [typeSpec] 
-	Old 
+        Old 
     by
-	NewType
+        NewType
 end rule
 
 rule subsExpn Old [id] New [expnOrTypeSpec]
     deconstruct New 
-	NewExpn [expn]
+        NewExpn [expn]
     replace [primary] 
-	Old 
+        Old 
     by
-	( NewExpn )
+        ( NewExpn )
 end rule

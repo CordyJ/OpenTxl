@@ -6,14 +6,14 @@
 % We demonstrate with the example of annotating every identifer in
 % a scope with "_ident", creating new identifiers as we go.
 define program
-	[repeat token]
+        [repeat token]
 end define
 
 function main
     replace [program]
-	Input [repeat token]
+        Input [repeat token]
     by
-	Input [annotateidents] 
+        Input [annotateidents] 
 end function
 
 % The basic trick of the paradigm is to create a sequence of all
@@ -22,11 +22,11 @@ end function
 
 function annotateidents
     replace [repeat token]
-	All [repeat token]
+        All [repeat token]
     construct AllIds [repeat id]
-	_ [^ All]
+        _ [^ All]
     by
-	All [annotateident each AllIds]
+        All [annotateident each AllIds]
 end function
 
 % It is important that the rule be changed to a searching function.
@@ -35,7 +35,7 @@ end function
 
 function annotateident Id [id]
     replace * [id] 
-	Id
+        Id
     by
-	Id [_ 'ident]
+        Id [_ 'ident]
 end function

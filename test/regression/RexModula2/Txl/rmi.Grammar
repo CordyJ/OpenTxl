@@ -8,32 +8,32 @@ include "Modula2.Grammar"
 
 % New compound tokens 
 compounds
-	=>  &&
+        =>  &&
 end compounds
 
 % New keywords
 keys
-	CALL WAIT ACCEPT REPLY SELECT
+        CALL WAIT ACCEPT REPLY SELECT
 end keys
 
 define statement
-	[assignment]
+        [assignment]
     |   [ProcedureCall]
-    |	[CommunicationCall]	% New statement form
-    |	[IfStatement]
-    |	[CaseStatement]
-    |   [SelectStatement] 	% New statement form
-    |	[WhileStatement]
-    |	[RepeatStatement]
-    |	[LoopStatement]
-    |	[ForStatement]
-    |	[WithStatement]
-    |	EXIT
-    |	RETURN [opt expression]
+    |   [CommunicationCall]     % New statement form
+    |   [IfStatement]
+    |   [CaseStatement]
+    |   [SelectStatement]       % New statement form
+    |   [WhileStatement]
+    |   [RepeatStatement]
+    |   [LoopStatement]
+    |   [ForStatement]
+    |   [WithStatement]
+    |   EXIT
+    |   RETURN [opt expression]
 end define
 
 define CommunicationCall
-  	[CommName]  ( [id] , [ExpList] ) [opt handle]
+        [CommName]  ( [id] , [ExpList] ) [opt handle]
 end define
 
 define CommName
@@ -44,64 +44,64 @@ define CommName
 end define
 
 define CommunicationPrimitive
-	[DelayStatement]
-    |	[AbortStatement]
-    |	[ForwardStatement]
-    |	[ValidStatement]
-    |	[TimeoutStatement]
+        [DelayStatement]
+    |   [AbortStatement]
+    |   [ForwardStatement]
+    |   [ValidStatement]
+    |   [TimeoutStatement]
 end define
 
 define DelayStatement
-   	'DELAY ( [expression] )
+        'DELAY ( [expression] )
 end define
 
 define AbortStatement
-     	'ABORT ( [qualident] ) [opt handle]
+        'ABORT ( [qualident] ) [opt handle]
 end define
 
 define ForwardStatement
-	'FORWARD ( [qualident] , [qualident] , [ExpList] ) [opt handle]
+        'FORWARD ( [qualident] , [qualident] , [ExpList] ) [opt handle]
 end define
 
 define ValidStatement
-	'VALID ( [qualident] , [expression] )
+        'VALID ( [qualident] , [expression] )
 end define
 
 define TimeoutStatement
-     	'TIMEOUT ( [expression] )
+        'TIMEOUT ( [expression] )
 end define
 
 define handle
-    	WITH [id]	
+        WITH [id]       
 end define
 
 % Modified syntax of statement sequences - requires semicolons
 % on all statements (to make transforms simpler)
 define StatementSequence
-	[repeat statement_semi]
+        [repeat statement_semi]
 end define
 
 define statement_semi
-	[statement] ;	[NL]
+        [statement] ;   [NL]
 end define
 
 % New statement SELECT
 define SelectStatement
-	SELECT 				[IN][NL]
-	  [alternative]
-	  [repeat or_alternative]
-	  [opt else_StatementSequence]	[EX]
-	END				
+        SELECT                          [IN][NL]
+          [alternative]
+          [repeat or_alternative]
+          [opt else_StatementSequence]  [EX]
+        END                             
 end define
 
 define or_alternative
-			[NL]
-	'| [alternative]
+                        [NL]
+        '| [alternative]
 end define
 
 define alternative
-	[guard] : 		[IN][NL]
-	    [StatementSequence]	[EX]
+        [guard] :               [IN][NL]
+            [StatementSequence] [EX]
 end define
 
 define guard

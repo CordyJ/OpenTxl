@@ -8,7 +8,7 @@
 % JRC 26.10.94
 
 % Suitable input to this program is:
-%	Jim Jim Jim
+%       Jim Jim Jim
 % The output should be unchanged.
 
 define program
@@ -21,17 +21,17 @@ end define
 
 function main
     replace [program]
-	Things [repeat thing]
+        Things [repeat thing]
     where
-	Things [willChange]
+        Things [willChange]
     by
-	Things
+        Things
 end function
 
 rule willChange
     match [repeat thing]
-	'Jim
-	MoreThings [repeat thing]
+        'Jim
+        MoreThings [repeat thing]
     construct Result [repeat thing]
-	MoreThings [$ 'Jim 'OH_NOOOO]
+        MoreThings [$ 'Jim 'OH_NOOOO]
 end rule

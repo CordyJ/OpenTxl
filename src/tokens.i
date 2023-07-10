@@ -25,42 +25,42 @@
 
 % Modification Log
 
-% v11.0	Initial revision, revised from FreeTXL 10.8b (c) 1988-2022 Queen's University at Kingston
-%	Removed unused external rule statement.
-%	Removed old COBOL specializations.
+% v11.0 Initial revision, revised from FreeTXL 10.8b (c) 1988-2022 Queen's University at Kingston
+%       Removed unused external rule statement.
+%       Removed old COBOL specializations.
 
 % Tokens are represented by their ident table index for efficiency
-type * tokenT : int		% allows maxIdents as large as we like
-const * NOT_FOUND := 0		% actually index of chr (0), but that is meaningless
+type * tokenT : int             % allows maxIdents as large as we like
+const * NOT_FOUND := 0          % actually index of chr (0), but that is meaningless
 
 % Trees are represented by their tree table index
-type * treePT : int		% allows maxTrees as large as we like
+type * treePT : int             % allows maxTrees as large as we like
 
 % Kinds of trees in TXL trees - defined here so that we can encode
 % literal kinds in the token table
 type * kindT :
     packed enum (
-	% structuring trees
-	    order, choose, repeat, list,
-	% structure generator trees
-	    leftchoose, generaterepeat, generatelist, lookahead, push, pop,
-	% the empty tree
-	    empty, 
-	% leaf trees 
-	    literal, stringlit, charlit, token, id, upperlowerid, upperid, 
-	    lowerupperid, lowerid, number, floatnumber, decimalnumber, 
-	    integernumber, comment, key, space, newline, srclinenumber, srcfilename,
-	% user specified leaves
-	    usertoken1, usertoken2, usertoken3, usertoken4, usertoken5, 
-	    usertoken6, usertoken7, usertoken8, usertoken9, usertoken10,
-	    usertoken11, usertoken12, usertoken13, usertoken14, usertoken15, 
-	    usertoken16, usertoken17, usertoken18, usertoken19, usertoken20,
-	    usertoken21, usertoken22, usertoken23, usertoken24, usertoken25, 
-	    usertoken26, usertoken27, usertoken28, usertoken29, usertoken30,
-	% special trees 
-	    firstTime, subsequentUse, expression, lastExpression, ruleCall, 
-	    undefined)
-	    
+        % structuring trees
+            order, choose, repeat, list,
+        % structure generator trees
+            leftchoose, generaterepeat, generatelist, lookahead, push, pop,
+        % the empty tree
+            empty, 
+        % leaf trees 
+            literal, stringlit, charlit, token, id, upperlowerid, upperid, 
+            lowerupperid, lowerid, number, floatnumber, decimalnumber, 
+            integernumber, comment, key, space, newline, srclinenumber, srcfilename,
+        % user specified leaves
+            usertoken1, usertoken2, usertoken3, usertoken4, usertoken5, 
+            usertoken6, usertoken7, usertoken8, usertoken9, usertoken10,
+            usertoken11, usertoken12, usertoken13, usertoken14, usertoken15, 
+            usertoken16, usertoken17, usertoken18, usertoken19, usertoken20,
+            usertoken21, usertoken22, usertoken23, usertoken24, usertoken25, 
+            usertoken26, usertoken27, usertoken28, usertoken29, usertoken30,
+        % special trees 
+            firstTime, subsequentUse, expression, lastExpression, ruleCall, 
+            undefined)
+            
 % Order of the above is very important - it is used to optimize the transformation!
 const * firstTreeKind := kindT.order
 const * firstStructureKind := kindT.order
@@ -75,7 +75,7 @@ const * lastTreeKind := kindT.undefined
 
 assert lastStructureKind < firstLeafKind and ord (firstLiteralKind) = ord (firstLeafKind) + 1
     and firstLeafKind = kindT.empty and firstLiteralKind = kindT.literal and lastLeafKind < firstSpecialKind
-	    
+            
 const * firstUserTokenKind : kindT := kindT.usertoken1
 const * lastUserTokenKind : kindT := kindT.usertoken30
 
@@ -85,11 +85,11 @@ var kindType : array ord (firstTreeKind) .. ord (lastTreeKind) of tokenT
 % The input token table - assists in full backup parsing of both input and tokenPatterns
 type * tokenTableT :
     record
-	token :	    tokenT	% ident index
-	rawtoken:   tokenT	% raw ident index
-	kind :	    kindT	% token/tree kind
-	linenum :   int		% source file and line number
-	tree :	    treePT	% shared tree optimization - all instances of the same token share one tree
+        token :     tokenT      % ident index
+        rawtoken:   tokenT      % raw ident index
+        kind :      kindT       % token/tree kind
+        linenum :   int         % source file and line number
+        tree :      treePT      % shared tree optimization - all instances of the same token share one tree
     end record
 
 type * tokenIndexT : int

@@ -1,484 +1,484 @@
 % Die Syntax von Modula-2
-%	aus Anhang 1, Niklaus Wirth,
-%	"Programmieren in Modula-2", Springer-Verlag 1985
+%       aus Anhang 1, Niklaus Wirth,
+%       "Programmieren in Modula-2", Springer-Verlag 1985
 % J.R. Cordy, GMD Karlsruhe, 23.10.90
 
 compounds
-	<>  <=  >=  ..  := 
+        <>  <=  >=  ..  := 
 end compounds
 
 comments
-  	(* *)
+        (* *)
 end comments
 
 keys
-	IN  OR  DIV  MOD  AND  NOT 
-	ARRAY  OF  RECORD  END  CASE  ELSE  SET  POINTER  TO  PROCEDURE 
-	VAR  EXIT  RETURN  IF  THEN  WHILE  DO  REPEAT  UNTIL  FOR  BY 
-	LOOP  WITH  BEGIN  MODULE  EXPORT  QUALIFIED 
-	FROM  IMPORT  DEFINITION  IMPLEMENTATION
+        IN  OR  DIV  MOD  AND  NOT 
+        ARRAY  OF  RECORD  END  CASE  ELSE  SET  POINTER  TO  PROCEDURE 
+        VAR  EXIT  RETURN  IF  THEN  WHILE  DO  REPEAT  UNTIL  FOR  BY 
+        LOOP  WITH  BEGIN  MODULE  EXPORT  QUALIFIED 
+        FROM  IMPORT  DEFINITION  IMPLEMENTATION
 end keys
 
 define program 
-	[CompilationUnit]
+        [CompilationUnit]
 end define
 
 define qualident
-	[id] [repeat dot_Ident]
+        [id] [repeat dot_Ident]
 end define
 
 define dot_Ident
-	. [id]
+        . [id]
 end define
 
 define ConstantDeclaration
-	[id] = [ConstExpression]	
+        [id] = [ConstExpression]        
 end define
 
 define ConstExpression
-	[SimpleConstExpr] [repeat relation_SimpleConstExpr]
+        [SimpleConstExpr] [repeat relation_SimpleConstExpr]
 end define
 
 define relation_SimpleConstExpr
-  	[relation] [SimpleConstExpr]
+        [relation] [SimpleConstExpr]
 end define
 
 define relation
-	= | # | <> | < | <= | > | >= | IN
+        = | # | <> | < | <= | > | >= | IN
 end define
 
 define SimpleConstExpr
-  	[opt sign]  [ConstTerm] [repeat AddOperator_ConstTerm]
+        [opt sign]  [ConstTerm] [repeat AddOperator_ConstTerm]
 end define
 
 define sign
-	+ | -
+        + | -
 end define
 
 define AddOperator_ConstTerm
-	[AddOperator] [ConstTerm]
+        [AddOperator] [ConstTerm]
 end define
 
 define AddOperator
-	+ | - | OR
+        + | - | OR
 end define
 
 define ConstTerm
-	[ConstFactor] [repeat MulOperator_ConstFactor]
+        [ConstFactor] [repeat MulOperator_ConstFactor]
 end define
 
 define MulOperator_ConstFactor
-	[MulOperator] [ConstFactor]
+        [MulOperator] [ConstFactor]
 end define
 
 define MulOperator
-	* | / | DIV | MOD | AND | &
+        * | / | DIV | MOD | AND | &
 end define
 
 define ConstFactor
-	[qualident]
-    |	[number]
-    |	[stringlit]
-    |	[ConstSet]
-    |	( [ConstExpression] )
-    |	NOT [ConstFactor]
+        [qualident]
+    |   [number]
+    |   [stringlit]
+    |   [ConstSet]
+    |   ( [ConstExpression] )
+    |   NOT [ConstFactor]
 end define
 
 define ConstSet
-	[qualident] { [list ConstElement] }
+        [qualident] { [list ConstElement] }
 end define
 
 define ConstElement
-	[ConstExpression] [opt dotdot_ConstExpression]
+        [ConstExpression] [opt dotdot_ConstExpression]
 end define
 
 define dotdot_ConstExpression
-	.. [ConstExpression]
+        .. [ConstExpression]
 end define
 
 define TypeDeclaration
-	[id] = [type]
+        [id] = [type]
 end define
 
 define type 
-	[SimpleType]
-    |	[ArrayType]
-    |	[RecordType]
-    |	[SetType]
-    |	[PointerType]
-    |	[ProcedureType]
+        [SimpleType]
+    |   [ArrayType]
+    |   [RecordType]
+    |   [SetType]
+    |   [PointerType]
+    |   [ProcedureType]
 end define
 
 define SimpleType
-	[qualident]
-    |	[enumeration]
-    |	[SubrangeType]
+        [qualident]
+    |   [enumeration]
+    |   [SubrangeType]
 end define
 
 define enumeration
-	( [IdentList] )
+        ( [IdentList] )
 end define
 
 define IdentList
-	[list id+]
+        [list id+]
 end define
 
 define SubrangeType
-	[opt id] '[ [ConstExpression] .. [ConstExpression] ']
+        [opt id] '[ [ConstExpression] .. [ConstExpression] ']
 end define
 
 define ArrayType
-	ARRAY [list SimpleType+] OF [type]
+        ARRAY [list SimpleType+] OF [type]
 end define
 
 define RecordType
-			        [IN][NL]
-	RECORD 			[NL][IN]
-	    [FieldListSequence]	[NL][EX]
-	END			[EX]
+                                [IN][NL]
+        RECORD                  [NL][IN]
+            [FieldListSequence] [NL][EX]
+        END                     [EX]
 end define
 
 define FieldListSequence
-	[FieldList] [repeat semi_FieldList]	
+        [FieldList] [repeat semi_FieldList]     
 end define
 
 define semi_FieldList
-	;		[NL]
-	[FieldList]
+        ;               [NL]
+        [FieldList]
 end define
 
 define FieldList
-	[IdentList] : [type]
-    |	CASE [opt id] : [qualident] OF 		[IN][NL]
-	    [variant] 				
-	    [repeat or_variant]
-	    [opt else_FieldListSequence]	[EX]
-	END
+        [IdentList] : [type]
+    |   CASE [opt id] : [qualident] OF          [IN][NL]
+            [variant]                           
+            [repeat or_variant]
+            [opt else_FieldListSequence]        [EX]
+        END
 end define
 
 define or_variant
-	OR [variant]	
+        OR [variant]    
 end define
 
 define else_FieldListSequence
-	ELSE 			[IN][NL]
-	    [FieldListSequence]	[EX][NL]
+        ELSE                    [IN][NL]
+            [FieldListSequence] [EX][NL]
 end define
 
 define variant
-	[CaseLabelList] : 	[IN][NL]
-	    [FieldListSequence]	[EX][NL]
+        [CaseLabelList] :       [IN][NL]
+            [FieldListSequence] [EX][NL]
 end define
 
 define CaseLabelList
-	[list CaseLabels+]
+        [list CaseLabels+]
 end define
 
 define CaseLabels
-	[ConstExpression] [opt dotdot_ConstExpression]
+        [ConstExpression] [opt dotdot_ConstExpression]
 end define
 
 define SetType
-	SET OF [SimpleType]
+        SET OF [SimpleType]
 end define
 
 define PointerType
-	POINTER TO [type]
+        POINTER TO [type]
 end define
 
 define ProcedureType
-	PROCEDURE [FormalTypeList]
+        PROCEDURE [FormalTypeList]
 end define
 
 define FormalTypeList
-	( [list optVar_FormalType+] ) [opt ProcedureResult]
+        ( [list optVar_FormalType+] ) [opt ProcedureResult]
 end define
 
 define optVar_FormalType
-	[opt 'VAR] [FormalType]
+        [opt 'VAR] [FormalType]
 end define
 
 define VariableDeclaration
-	[IdentList] : [type]
+        [IdentList] : [type]
 end define
 
 define designator
-	[qualident] [repeat dotSubscriptOrArrow]
+        [qualident] [repeat dotSubscriptOrArrow]
 end define
 
 define dotSubscriptOrArrow
-	. [id]
-    |	'[ [ExpList] ']
-    |	^
+        . [id]
+    |   '[ [ExpList] ']
+    |   ^
 end define
 
 define ExpList
-	[list expression+]
+        [list expression+]
 end define
 
 define expression
-	[SimpleExpression] [opt relation_SimpleExpression]
+        [SimpleExpression] [opt relation_SimpleExpression]
 end define
 
 define relation_SimpleExpression
-	[relation] [SimpleExpression]
+        [relation] [SimpleExpression]
 end define
 
 define SimpleExpression
-	[opt sign] [term] [repeat AddOperator_term]
+        [opt sign] [term] [repeat AddOperator_term]
 end define
 
 define AddOperator_term
-	[AddOperator] [term]
+        [AddOperator] [term]
 end define
 
 define term
-	[factor] [repeat MulOperator_factor]
+        [factor] [repeat MulOperator_factor]
 end define
 
 define MulOperator_factor
-	[MulOperator] [factor]
+        [MulOperator] [factor]
 end define
 
 define factor
-	[number]
-    |	[stringlit]
-    |	[set]
-    |	[designator] [opt ActualParameters]
-    |	( [expression] )
-    |	NOT [factor]
+        [number]
+    |   [stringlit]
+    |   [set]
+    |   [designator] [opt ActualParameters]
+    |   ( [expression] )
+    |   NOT [factor]
 end define
 
 define set
-	[opt qualident] { [list element] }
+        [opt qualident] { [list element] }
 end define
 
 define element
-	[expression] [opt dotdot_expression]
+        [expression] [opt dotdot_expression]
 end define
 
 define dotdot_expression
-	.. [expression]
+        .. [expression]
 end define
 
 define ActualParameters
-	( [opt ExpList] )
+        ( [opt ExpList] )
 end define
 
 define statement
-	[assignment]
-    |	[ProcedureCall]
-    |	[IfStatement]
-    |	[CaseStatement]
-    |	[WhileStatement]
-    |	[RepeatStatement]
-    |	[LoopStatement]
-    |	[ForStatement]
-    |	[WithStatement]
-    |	EXIT
-    |	RETURN [opt expression]
+        [assignment]
+    |   [ProcedureCall]
+    |   [IfStatement]
+    |   [CaseStatement]
+    |   [WhileStatement]
+    |   [RepeatStatement]
+    |   [LoopStatement]
+    |   [ForStatement]
+    |   [WithStatement]
+    |   EXIT
+    |   RETURN [opt expression]
 end define
 
 define assignment
-	[designator] := [expression]
+        [designator] := [expression]
 end define
 
 define ProcedureCall
-	[designator] [opt ActualParameters]
+        [designator] [opt ActualParameters]
 end define
 
 define StatementSequence
-	[statement] [repeat semi_statement]	[NL]
+        [statement] [repeat semi_statement]     [NL]
 end define
 
 define semi_statement
-	; 		[NL]
-	[statement]
+        ;               [NL]
+        [statement]
 end define
 
 define IfStatement
-	IF [expression] THEN		[IN][NL]
-	    [StatementSequence]		[EX]
-	[repeat elsif_clause]
-	[opt else_StatementSequence]
-	END	
+        IF [expression] THEN            [IN][NL]
+            [StatementSequence]         [EX]
+        [repeat elsif_clause]
+        [opt else_StatementSequence]
+        END     
 end define
 
 define elsif_clause
-	ELSIF [expression] THEN 	[IN][NL]
-	    [StatementSequence]		[EX]
+        ELSIF [expression] THEN         [IN][NL]
+            [StatementSequence]         [EX]
 end define
 
 define else_StatementSequence
-	ELSE 				[IN][NL]
-	    [StatementSequence]		[EX]
+        ELSE                            [IN][NL]
+            [StatementSequence]         [EX]
 end define
 
 define CaseStatement
-	CASE [expression] OF			[IN][NL]
-		[case] 
-		[repeat or_case]
-		[opt else_StatementSequence]	[EX]
-	END
+        CASE [expression] OF                    [IN][NL]
+                [case] 
+                [repeat or_case]
+                [opt else_StatementSequence]    [EX]
+        END
 end define
 
 define or_case
-	'| [case]
+        '| [case]
 end define
 
 define case
-	[CaseLabelList] : 	[IN][NL]
-	    [StatementSequence]	[EX]
+        [CaseLabelList] :       [IN][NL]
+            [StatementSequence] [EX]
 end define
 
 define WhileStatement
-	WHILE [expression] DO	[IN][NL]
-	    [StatementSequence]	[EX]
-	END
+        WHILE [expression] DO   [IN][NL]
+            [StatementSequence] [EX]
+        END
 end define
 
 define RepeatStatement
-	REPEAT			[IN][NL]
-	    [StatementSequence]	[EX]
-	UNTIL [expression]
+        REPEAT                  [IN][NL]
+            [StatementSequence] [EX]
+        UNTIL [expression]
 end define
 
 define ForStatement
-	FOR [id] := [expression] TO [expression] [opt by_ConstExpression] DO	[IN][NL]
-	    [StatementSequence]	[EX]
-	END
+        FOR [id] := [expression] TO [expression] [opt by_ConstExpression] DO    [IN][NL]
+            [StatementSequence] [EX]
+        END
 end define
 
 define by_ConstExpression
-	BY [ConstExpression]
+        BY [ConstExpression]
 end define
 
 define LoopStatement
-	LOOP			[IN][NL]
-	    [StatementSequence]	[EX]
-	END
+        LOOP                    [IN][NL]
+            [StatementSequence] [EX]
+        END
 end define
 
 define WithStatement
-	WITH [designator] DO	[IN][NL]
-	    [StatementSequence]	[EX]
-	END
+        WITH [designator] DO    [IN][NL]
+            [StatementSequence] [EX]
+        END
 end define
 
 define ProcedureDeclaration
-				[NL]
-	[ProcedureHeading] ;	
-	[block] [id]		
+                                [NL]
+        [ProcedureHeading] ;    
+        [block] [id]            
 end define
 
 define ProcedureHeading
-	PROCEDURE [id] [opt FormalParameters]
+        PROCEDURE [id] [opt FormalParameters]
 end define
 
 define block
-				[NL]
-	[repeat declaration]	
-	BEGIN			[IN][NL]
-	    [StatementSequence]	[EX]
-	END
+                                [NL]
+        [repeat declaration]    
+        BEGIN                   [IN][NL]
+            [StatementSequence] [EX]
+        END
 end define
 
 define declaration
-	CONST 					[IN][NL]
-	    [repeat ConstantDeclaration_semi]	[EX]
-    |	TYPE 					[IN][NL]
-	    [repeat TypeDeclaration_semi]	[EX]
-    |	VAR 					[IN][NL]
-	    [repeat VariableDeclaration_semi]	[EX]
-    |	[ProcedureDeclaration] ;		[NL][NL]
-    |	[ModuleDeclaration] ;			[NL][NL]
+        CONST                                   [IN][NL]
+            [repeat ConstantDeclaration_semi]   [EX]
+    |   TYPE                                    [IN][NL]
+            [repeat TypeDeclaration_semi]       [EX]
+    |   VAR                                     [IN][NL]
+            [repeat VariableDeclaration_semi]   [EX]
+    |   [ProcedureDeclaration] ;                [NL][NL]
+    |   [ModuleDeclaration] ;                   [NL][NL]
 end define
 
 define ConstantDeclaration_semi
-	[ConstantDeclaration] ;	[NL]
+        [ConstantDeclaration] ; [NL]
 end define
 
 define TypeDeclaration_semi
-	[TypeDeclaration] ;	[NL]
+        [TypeDeclaration] ;     [NL]
 end define
 
 define VariableDeclaration_semi
-	[VariableDeclaration] ;	[NL]
+        [VariableDeclaration] ; [NL]
 end define
 
 define FormalParameters
-	( [FPSection] [repeat semi_FPSection] ) [opt ProcedureResult]
+        ( [FPSection] [repeat semi_FPSection] ) [opt ProcedureResult]
 end define
 
 define semi_FPSection
-	; [FPSection]
+        ; [FPSection]
 end define
 
 define FPSection
-	[opt 'VAR] [IdentList] : [FormalType]
+        [opt 'VAR] [IdentList] : [FormalType]
 end define
 
 define FormalType
-	[opt array_of] [qualident]
+        [opt array_of] [qualident]
 end define
 
 define ProcedureResult
-	: [qualident]
+        : [qualident]
 end define
 
 define array_of
-	ARRAY OF
+        ARRAY OF
 end define
 
 define ModuleDeclaration
-					[NL]
-	MODULE [id] [opt priority] ;	[NL][NL]
-		[repeat import_item]
-		[opt export_item]
-		[block] [id] ;		[NL]
+                                        [NL]
+        MODULE [id] [opt priority] ;    [NL][NL]
+                [repeat import_item]
+                [opt export_item]
+                [block] [id] ;          [NL]
 end define
 
 define priority
-	'[ [ConstExpression] ']
+        '[ [ConstExpression] ']
 end define
 
 define export_item
-	EXPORT [opt 'QUALIFIED] [IdentList] ;	[NL]
+        EXPORT [opt 'QUALIFIED] [IdentList] ;   [NL]
 end define
 
 define import_item
-	[opt from_ident] IMPORT [IdentList] ;	[NL]
+        [opt from_ident] IMPORT [IdentList] ;   [NL]
 end define
 
 define from_ident
-	FROM [id]
+        FROM [id]
 end define
 
 define DefinitionModule
-					[NL]
-	DEFINITION MODULE [id] ;	[NL][NL]
-		[repeat import_item]
-		[repeat definition]
-	END [id] .			[NL]
+                                        [NL]
+        DEFINITION MODULE [id] ;        [NL][NL]
+                [repeat import_item]
+                [repeat definition]
+        END [id] .                      [NL]
 end define
 
 define definition
-	CONST 					[IN][NL]
-	    [repeat ConstantDeclaration_semi]	[EX]
-    |	TYPE 					[IN][NL]
-	    [repeat TypeDeclaration_semi]	[EX]
-    |	VAR 					[IN][NL]
-	    [repeat VariableDeclaration_semi]	[EX]
-    |	[ProcedureHeading] ;			[NL]
+        CONST                                   [IN][NL]
+            [repeat ConstantDeclaration_semi]   [EX]
+    |   TYPE                                    [IN][NL]
+            [repeat TypeDeclaration_semi]       [EX]
+    |   VAR                                     [IN][NL]
+            [repeat VariableDeclaration_semi]   [EX]
+    |   [ProcedureHeading] ;                    [NL]
 end define
 
 define ProgramModule
-	MODULE [id] [opt priority] ;	[NL][NL]
-		[repeat import_item]
-		[block] [id] .		
+        MODULE [id] [opt priority] ;    [NL][NL]
+                [repeat import_item]
+                [block] [id] .          
 end define
 
 define CompilationUnit
-	[DefinitionModule] 
-    |	[opt 'IMPLEMENTATION] [ProgramModule]
+        [DefinitionModule] 
+    |   [opt 'IMPLEMENTATION] [ProgramModule]
 end define

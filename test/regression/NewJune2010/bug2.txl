@@ -3,7 +3,7 @@
 
 % This shuld be accepted
 tokens
-	comment  "/\*#(\*/)*\*/"
+        comment  "/\*#(\*/)*\*/"
 end tokens
 
 define program
@@ -11,6 +11,6 @@ define program
 end define
 
 function main
-	match [program]
-		P [program]
+        match [program]
+                P [program]
 end function

@@ -58,12 +58,12 @@ end define
 
 define productionDefinition
     [yac_id] ': [NL] [IN]
-	[SP] [SP] [literalsAndTypes]
-	[repeat barLiteralsAndTypes] [opt ';] [NL] [EX]
+        [SP] [SP] [literalsAndTypes]
+        [repeat barLiteralsAndTypes] [opt ';] [NL] [EX]
  | 
     'define [yac_id] [NL] [IN]
-	[SP] [SP] [literalsAndTypes] [NL]
-	[repeat barLiteralsAndTypes] [EX]
+        [SP] [SP] [literalsAndTypes] [NL]
+        [repeat barLiteralsAndTypes] [EX]
     'end 'define [NL] [NL]
 end define
 
@@ -81,7 +81,7 @@ end define
 
 define literalOrType
       [literal] | [type] 
-    | [attr prec] | [attr Ccode]	% deleted in output
+    | [attr prec] | [attr Ccode]        % deleted in output
 end define
 
 define prec
@@ -137,9 +137,9 @@ end define
 % Transformation grammar
 
 define Yacc_Txl_Grammar
-    [attr tokenDefinitions] 	% deleted in output
+    [attr tokenDefinitions]     % deleted in output
     [productionDefinitions]
-    [attr Cdefinitions]		% deleted in output
+    [attr Cdefinitions]         % deleted in output
 end define
 
 define Cdefinitions
@@ -154,9 +154,9 @@ end define
 
 define tokenDefinition
     [yac_tokenDefinition]
- | 	
+ |      
     'define [yac_id] [NL] [IN]
-	[yac_tokenDefinition] [EX]
+        [yac_tokenDefinition] [EX]
     'end 'define [NL] [NL]
 end define
 
@@ -170,104 +170,104 @@ end define
 
 function main
     replace [program]
-	P [program]
+        P [program]
     by 
-	P [convertYacIds]
-	  [convertListProductions]
-	  [convertSequenceProductions]
-	  [convertDirectLeftRecursions]
-	  [convertOtherProductions] 
-	  [convertEmptyAlternatives]
+        P [convertYacIds]
+          [convertListProductions]
+          [convertSequenceProductions]
+          [convertDirectLeftRecursions]
+          [convertOtherProductions] 
+          [convertEmptyAlternatives]
 end function
 
 rule convertYacIds
     replace [yac_id]
-	Id [id] '. Id2 [id] More [repeat dot_id]
+        Id [id] '. Id2 [id] More [repeat dot_id]
     by
-	Id [_ Id2] More 
+        Id [_ Id2] More 
 end rule
 
 rule convertDirectLeftRecursions
     replace [repeat productionDefinition]
-	ProdId [id] ': 
-	    FirstAlternative [repeat literalOrType]
-	    RestOfAlternatives [repeat barLiteralsAndTypes] _ [opt ';]
-	    RestOfProductions [repeat productionDefinition]
+        ProdId [id] ': 
+            FirstAlternative [repeat literalOrType]
+            RestOfAlternatives [repeat barLiteralsAndTypes] _ [opt ';]
+            RestOfProductions [repeat productionDefinition]
     deconstruct RestOfAlternatives
-	'| ProdId TailOfSecondAlternative [repeat literalOrType]
+        '| ProdId TailOfSecondAlternative [repeat literalOrType]
     construct NewId [id]
-	ProdId [_ ProdId]
+        ProdId [_ ProdId]
     construct NewIdType [literalOrType]
-	NewId
+        NewId
     by
-	ProdId ': 
-	    FirstAlternative [. NewIdType]
-	NewId ': 
-	    TailOfSecondAlternative [. NewIdType]
-	    '| '[ 'empty ']
-	RestOfProductions 
+        ProdId ': 
+            FirstAlternative [. NewIdType]
+        NewId ': 
+            TailOfSecondAlternative [. NewIdType]
+            '| '[ 'empty ']
+        RestOfProductions 
 end rule
 
 
 rule convertListProductions
     replace [productionDefinition]
-	ProdId [id] ': 
-	    FirstAlternative [repeat literalOrType]
-	    RestOfAlternatives [repeat barLiteralsAndTypes] _ [opt ';]
+        ProdId [id] ': 
+            FirstAlternative [repeat literalOrType]
+            RestOfAlternatives [repeat barLiteralsAndTypes] _ [opt ';]
     deconstruct FirstAlternative
-	ElementId [id]
+        ElementId [id]
     deconstruct RestOfAlternatives
-	'| ProdId '',' ElementId
+        '| ProdId '',' ElementId
     by
-	'define ProdId 
-	    '[ 'list ElementId '] 
-	'end 'define
+        'define ProdId 
+            '[ 'list ElementId '] 
+        'end 'define
 end rule 
 
 
 rule convertSequenceProductions
     replace [productionDefinition]
-	ProdId [id] ': 
-	    ElementId [id]
-	    '|	ProdId ElementId  _ [opt ';]
+        ProdId [id] ': 
+            ElementId [id]
+            '|  ProdId ElementId  _ [opt ';]
     by
-	'define ProdId 
-	    '[ 'repeat ElementId '] 
-	'end 'define
+        'define ProdId 
+            '[ 'repeat ElementId '] 
+        'end 'define
 end rule  
 
 
 rule convertOtherProductions
     replace [productionDefinition]
-	ProdId [id] ': FirstAlternative [repeat literalOrType] 
-	    RestOfAlternatives [repeat barLiteralsAndTypes] _ [opt ';]
+        ProdId [id] ': FirstAlternative [repeat literalOrType] 
+            RestOfAlternatives [repeat barLiteralsAndTypes] _ [opt ';]
     by 
-	'define ProdId  
-	    FirstAlternative [convert_charlit] [convert_type] 
-	    RestOfAlternatives [convert_charlit] [convert_type] 
-	'end 'define
+        'define ProdId  
+            FirstAlternative [convert_charlit] [convert_type] 
+            RestOfAlternatives [convert_charlit] [convert_type] 
+        'end 'define
 end rule
 
 rule convert_charlit
     replace [literalOrType]
-	CharLit [charlit]
+        CharLit [charlit]
     construct CharLitAsId [id]
-	_ [unquote CharLit]
+        _ [unquote CharLit]
     by
-	'' CharLitAsId
+        '' CharLitAsId
 end rule 
 
 rule convert_type
     replace [literalOrType]
-	ProdId [id]
+        ProdId [id]
     by
-	'[ ProdId ']
+        '[ ProdId ']
 end rule
 
 
 rule convertEmptyAlternatives
     replace [literalsAndTypes]
-	_ [Ccode]
+        _ [Ccode]
     by
-	'[ 'empty ']
+        '[ 'empty ']
 end rule

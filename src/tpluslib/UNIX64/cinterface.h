@@ -58,8 +58,8 @@ typedef char            *TLADDRESSINT;
 /* TLE - Signal handling routines */
 #include <setjmp.h>
 extern struct TLHAREA {
-        int     	quitCode;
-        jmp_buf 	quit_env;
+        int             quitCode;
+        jmp_buf         quit_env;
         struct TLHAREA *old_handlerArea;
 } *TL_handlerArea;
 extern struct TLHAREA *TL_currentHandlerArea;
@@ -70,20 +70,20 @@ extern struct TLHAREA defaultHandlerArea;
             handlerArea.old_handlerArea = TL_handlerArea, \
             TL_handlerArea = &handlerArea, \
             TL_handlerArea->quitCode = 0, \
-	    setjmp (TL_handlerArea->quit_env) \
+            setjmp (TL_handlerArea->quit_env) \
         )
 
 #define TL_TLE_TLEHX()  \
         { \
-	    TL_handlerArea = TL_handlerArea->old_handlerArea; \
+            TL_handlerArea = TL_handlerArea->old_handlerArea; \
         }
 
 #define TL_TLE_TLEQUIT(code, place, qtype)  \
         { \
-	    TL_currentHandlerArea = TL_handlerArea; \
-	    TL_currentHandlerArea->quitCode = code; \
+            TL_currentHandlerArea = TL_handlerArea; \
+            TL_currentHandlerArea->quitCode = code; \
             if (TL_currentHandlerArea != &defaultHandlerArea) \
-	        TL_handlerArea = TL_handlerArea->old_handlerArea; \
+                TL_handlerArea = TL_handlerArea->old_handlerArea; \
             longjmp (TL_currentHandlerArea->quit_env, code); \
         }
 
@@ -105,7 +105,7 @@ extern int TL_nextmalloc;
                 fprintf (stderr, "TXL ERROR : (Fatal) Available heap space too small for TXL heap at this size\n"); \
                 exit (1); \
             } \
-	    TL_mallocs[TL_nextmalloc++] = (void *) (*addr); \
+            TL_mallocs[TL_nextmalloc++] = (void *) (*addr); \
         }
 
 /* TLI - I/O routines */
@@ -123,8 +123,8 @@ extern int TL_TLI_lookahead;
         fscanf (TL_files[stream+2], "%s", target)
 #define TL_TLI_TLIEOF(streamNo) \
         ((((TL_TLI_lookahead = (getc (TL_files [streamNo+2]))) != EOF) \
-			? (ungetc (TL_TLI_lookahead, TL_files [streamNo+2])) : 1), \
-		 (feof (TL_files [streamNo+2])))
+                        ? (ungetc (TL_TLI_lookahead, TL_files [streamNo+2])) : 1), \
+                 (feof (TL_files [streamNo+2])))
 #define TL_TLI_TLICL(streamNo)  \
         fclose (TL_files [streamNo+2]), \
         TL_files [streamNo+2] = NULL, \
@@ -135,23 +135,23 @@ extern int TL_TLI_lookahead;
 #define TL_TLI_TLIGN(getItem, getItemSize, streamNo) \
         fscanf (TL_files[streamNo+2], "%lu", getItem)
 #define TL_TLI_TLIGSS(itemSize, getItem, streamNo) \
-	if (fgets (getItem, itemSize+1, TL_files [streamNo+2]) == NULL) { \
+        if (fgets (getItem, itemSize+1, TL_files [streamNo+2]) == NULL) { \
             *getItem = '\0'; \
-	} else { \
-	    int i = strlen(getItem)-1; \
-	    if (getItem[i] == '\n') \
-		getItem[i] = '\0'; \
-	}
+        } else { \
+            int i = strlen(getItem)-1; \
+            if (getItem[i] == '\n') \
+                getItem[i] = '\0'; \
+        }
 #define TL_TLI_TLIPI(putWidth, putItem, streamNo) \
-	    fprintf (TL_files [streamNo+2], "%*i", putWidth, putItem)
+            fprintf (TL_files [streamNo+2], "%*i", putWidth, putItem)
 #define TL_TLI_TLIPN(putWidth, putItem, streamNo) \
-	    fprintf (TL_files [streamNo+2], "%*u", putWidth, putItem)
+            fprintf (TL_files [streamNo+2], "%*u", putWidth, putItem)
 #define TL_TLI_TLIPF(putPrec, putWidth, putItem, streamNo) \
-	    fprintf (TL_files [streamNo+2], "%*.*f", putWidth, putPrec, putItem)
+            fprintf (TL_files [streamNo+2], "%*.*f", putWidth, putPrec, putItem)
 #define TL_TLI_TLIPK(streamNo) \
         fputc ('\n', TL_files [streamNo+2]) 
 #define TL_TLI_TLIPS( putWidth, putItem, streamNo) \
-	    fprintf (TL_files [streamNo+2], "%-*s", putWidth, putItem)
+            fprintf (TL_files [streamNo+2], "%-*s", putWidth, putItem)
 #define TL_TLI_TLIRE(readItem, itemSize, status, streamNo) \
          fread (readItem, itemSize, 1, TL_files [streamNo+2])
 #define TL_TLI_TLIWR(writeItem, itemSize, status, streamNo) \

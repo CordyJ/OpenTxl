@@ -24,8 +24,8 @@
 
 % Modification Log
 
-% v11.0	Initial revision, revised from FreeTXL 10.8b (c) 1988-2022 Queen's University at Kingston
-% 	Retired obsolete hard time limit. 
+% v11.0 Initial revision, revised from FreeTXL 10.8b (c) 1988-2022 Queen's University at Kingston
+%       Retired obsolete hard time limit. 
 
 
 % Global symbols granted to all child modules

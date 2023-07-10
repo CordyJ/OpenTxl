@@ -25,42 +25,42 @@
 
 % Modification Log
 
-% v11.0	Initial revision, revised from FreeTXL 10.8b.
+% v11.0 Initial revision, revised from FreeTXL 10.8b.
 
 comments
-	'%
+        '%
 end comments
 
 tokens
-	quote		"'"
-	dotdotdot	"..."
+        quote           "'"
+        dotdotdot       "..."
 end tokens
 
 define program
-	[repeat token_NL]
+        [repeat token_NL]
 end define
 
 define token_NL
-	[token_or_string] [NL]
+        [token_or_string] [NL]
 end define
 
 define token_or_string
-	[token]
-    |	[stringlit]
+        [token]
+    |   [stringlit]
 end define
 
 function main
-	replace [program] 
-		Tokens [repeat token_NL]
-	by
-		Tokens [convertToStrings]
+        replace [program] 
+                Tokens [repeat token_NL]
+        by
+                Tokens [convertToStrings]
 end function
 
 rule convertToStrings
-	replace $ [token_or_string]
-		T [token_or_string]
-	construct S [stringlit]
-		_ [quote T]
-	by
-		S	
+        replace $ [token_or_string]
+                T [token_or_string]
+        construct S [stringlit]
+                _ [quote T]
+        by
+                S       
 end rule

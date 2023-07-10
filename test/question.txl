@@ -2,82 +2,82 @@
 
 % Part I.  Syntax specification
 define program
-	[expression]
+        [expression]
 end define
 
 define expression
-    	[expression] + [term]
-    |	[expression] - [term]
-    |	[term]
+        [expression] + [term]
+    |   [expression] - [term]
+    |   [term]
 end define
 
 define term
-    	[term] * [primary]
-    |	[term] / [primary]
-    |	[primary]
+        [term] * [primary]
+    |   [term] / [primary]
+    |   [primary]
 end define
 
 define primary 
-    	[number]
-    |	( [expression] )
+        [number]
+    |   ( [expression] )
 end define
 
 
 % Part 2.  Transformation rules
 rule main
     replace [expression]
-	E [expression]
+        E [expression]
     construct NewE [expression]
-	E [resolveAddition]
-	  [resolveSubtraction]
-	  [resolveMultiplication]
-	  [resolveDivision]
-	  [resolveBracketedExpressions]
-	  %[goonForever]
+        E [resolveAddition]
+          [resolveSubtraction]
+          [resolveMultiplication]
+          [resolveDivision]
+          [resolveBracketedExpressions]
+          %[goonForever]
     where not
-	NewE [= E]
+        NewE [= E]
     by
-	NewE
+        NewE
 end rule
 
 rule resolveAddition
     replace [expression]
-	N1 [number] + N2 [number]
+        N1 [number] + N2 [number]
     by
-	N1 [+ N2]
+        N1 [+ N2]
 end rule
 
 rule resolveSubtraction
     replace [expression]
-	N1 [number] - N2 [number]
+        N1 [number] - N2 [number]
     by
-	N1 [- N2]
+        N1 [- N2]
 end rule 
 
 rule resolveMultiplication
     replace [term]
-	N1 [number] * N2 [number]
+        N1 [number] * N2 [number]
     by
-	N1 [* N2]
+        N1 [* N2]
 end rule 
 
 rule resolveDivision
     replace [term]
-	N1 [number] / N2 [number]
+        N1 [number] / N2 [number]
     by
-	N1 [/ N2]
+        N1 [/ N2]
 end rule
 
 rule resolveBracketedExpressions
     replace [primary]
-	( N [number] )
+        ( N [number] )
     by
-	N
+        N
 end rule
 
 function goonForever
     replace [expression]
         E [expression]
     by
-	E [goonForever]
+        E [goonForever]
 end function

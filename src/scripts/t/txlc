@@ -28,17 +28,17 @@ TXLOPTIONS=""
 while [ "$1" != "" ]
 do
     case "$1" in
-	*.[Tt]xl)
-		TXLPROG="$1"
-		;;
-	-help)
-		echo "Usage:  txlc [txloptions] txlprog.txl" 1>&2
-		echo "('txl -help' for TXL options)" 1>&2
-		exit 99
-		;;
-	*) 
-		TXLOPTIONS="$TXLOPTIONS $1"
-		;;
+        *.[Tt]xl)
+                TXLPROG="$1"
+                ;;
+        -help)
+                echo "Usage:  txlc [txloptions] txlprog.txl" 1>&2
+                echo "('txl -help' for TXL options)" 1>&2
+                exit 99
+                ;;
+        *) 
+                TXLOPTIONS="$TXLOPTIONS $1"
+                ;;
     esac
     shift
 done
@@ -70,15 +70,15 @@ if [ ! -r $TXLNAME.ctxl ]
 then
     if [ -r Txl/$TXLNAME.ctxl ]
     then
-	/bin/mv Txl/$TXLNAME.ctxl $TXLNAME.ctxl
+        /bin/mv Txl/$TXLNAME.ctxl $TXLNAME.ctxl
     else 
-	if [ -r txl/$TXLNAME.ctxl ]
-	then
-	    /bin/mv txl/$TXLNAME.ctxl $TXLNAME.ctxl
-	else
-	    echo "TXL compile failed" 1>&2
-	    exit 99
-	fi
+        if [ -r txl/$TXLNAME.ctxl ]
+        then
+            /bin/mv txl/$TXLNAME.ctxl $TXLNAME.ctxl
+        else
+            echo "TXL compile failed" 1>&2
+            exit 99
+        fi
     fi
 fi
 

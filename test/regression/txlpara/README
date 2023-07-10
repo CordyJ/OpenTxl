@@ -1,28 +1,28 @@
 TXL Example Specification
 -------------------------
 
-Name:	
-	Txlpara.Txl
+Name:   
+        Txlpara.Txl
 
 Description:
-	A TXL program to pretty-print TXL programs.
-	Uses some tricky (and obtuse) grammatical formatting 
-	techniques to paragraph TXL programs into a pleasing 
-	standard form.  
-	
-	NOTE: Since TXL syntax is so inherently ambiguous and 
-	dependent on the target language, the output from 
-	txlpara often needs a small amount of hand tuning.
+        A TXL program to pretty-print TXL programs.
+        Uses some tricky (and obtuse) grammatical formatting 
+        techniques to paragraph TXL programs into a pleasing 
+        standard form.  
+        
+        NOTE: Since TXL syntax is so inherently ambiguous and 
+        dependent on the target language, the output from 
+        txlpara often needs a small amount of hand tuning.
 
 Author:
-	J.R. Cordy
+        J.R. Cordy
 
 Affiliation:
-	Software Technology Laboratory, Queen's University
+        Software Technology Laboratory, Queen's University
 
 Date:
-	March 1992
-	Revised Sept 1995
+        March 1992
+        Revised Sept 1995
 
 Examples:
-	txlpara test.Txl
+        txlpara test.Txl

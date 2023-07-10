@@ -6,7 +6,7 @@ After the SDF PHP grammar by Eric Bouwers and Martin Bravenboer in PhpFront
 http://www.program-transformation.org/PHP/PhpFront
 
 Example:
-	txl Examples/ApiBase.php
+        txl Examples/ApiBase.php
 
 This is an analysis grammar for PHP versions 3,4 and 5 derived from the source
 above.  It has been tested on over 500 examples from open source PHP applications, 

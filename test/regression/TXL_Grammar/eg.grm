@@ -130,7 +130,7 @@ define access_specifier
 end define
 
 define member
-	[opt access_specifier_colon] [member_declaration] 
+        [opt access_specifier_colon] [member_declaration] 
 end define
 
 define access_specifier_colon
@@ -278,7 +278,7 @@ define init_declarator
 end define
 
 define declarator
-	[repeat pointer_operator] [declared_item] [repeat declarator_extension]
+        [repeat pointer_operator] [declared_item] [repeat declarator_extension]
 end define
 
 define declared_item
@@ -350,8 +350,8 @@ define parameter_declaration
 end define
 
 define parameter_declarator
-		[declarator]
-	|	[opt abstract_declarator]
+                [declarator]
+        |       [opt abstract_declarator]
 end define
 
 define equal_expression
@@ -526,8 +526,8 @@ define exception_declaration
 end define
 
 define exception_declarator
-		[declarator]
-	|	[abstract_declarator]
+                [declarator]
+        |       [abstract_declarator]
 end define
 
 define label

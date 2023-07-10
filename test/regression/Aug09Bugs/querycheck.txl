@@ -16,7 +16,7 @@ end function
 
 function transformAssignments X [id] Statement [declaration_or_statement] 
     construct _ [id]
- 	X [putp "X is '%'"]
+        X [putp "X is '%'"]
     deconstruct Statement 
         X := _ [expn] 
     replace * [declaration_or_statement] 
