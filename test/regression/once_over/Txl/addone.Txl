@@ -7,13 +7,13 @@
 % any.
 
 define program
-        [repeat attributedtoken]
+	[repeat attributedtoken]
 end define
 
 define attributedtoken
-        [number] [attr 'DONE]
-    |   [id]
-    |   [stringlit]
+	[number] [attr 'DONE]
+    |	[id]
+    |	[stringlit]
 end define
 
 % % external function message M [stringlit]
@@ -21,11 +21,11 @@ end define
 
 function main
     replace [program]
-        Input [repeat attributedtoken]
+	Input [repeat attributedtoken]
     by
-        Input [message "Original input:"] [print]
-              [addonetonumbers] 
-              [message "Final output:"]
+	Input [message "Original input:"] [print]
+	      [addonetonumbers] 
+	      [message "Final output:"]
 end function
 
 rule addonetonumbers
@@ -34,7 +34,7 @@ rule addonetonumbers
     % The replacement then adds the attribute so that we remember we
     % have done this one and don't match it again.
     replace [attributedtoken]
-        N [number]
+	N [number]
     by
-        N [+ 1] DONE
+	N [+ 1] DONE
 end rule

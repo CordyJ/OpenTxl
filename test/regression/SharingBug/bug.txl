@@ -5,33 +5,33 @@
 % The output should be 6 1 1, but it will be 6 6 6 instead!
 
 define program
-        [repeat element]
+	[repeat element]
 end define
 
 define element
-        [number]
+	[number]
 end define
 
 function main
     replace [program]
-        P [repeat element]
+	P [repeat element]
     by
-        P [createAliases]
-          [changeFirstAlias]
+	P [createAliases]
+	  [changeFirstAlias]
 end function
 
 function createAliases
     % create a DAG with E at the bottom
     replace [repeat element]
-        E [element] R [repeat element]
+	E [element] R [repeat element]
     by
-        E E E
+	E E E
 end function
 
 function changeFirstAlias
     % now try to change just the first E ...
     replace * [number]
-        1
+	1
     by
-        6
+	6
 end function

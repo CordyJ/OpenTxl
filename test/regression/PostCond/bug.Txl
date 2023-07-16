@@ -4,30 +4,30 @@ end define
 
 function main
     replace [program]
-        RN [repeat number]
+	RN [repeat number]
     by
-        RN [trybutfail each RN] 
+	RN [trybutfail each RN] 
 end function
 
 function trybutfail N [number]
     replace [repeat number]
-        RN [repeat number]
+	RN [repeat number]
     construct Result [repeat number]
-        RN [trashit N] 
+	RN [trashit N] 
     construct one [number] 1
     where not
-        one [= one]
+	one [= one]
     by
-        Result
+	Result
 end function
 
 % external rule print
 
 rule trashit N [number]
     replace [repeat number]
-        N 
-        RN [repeat number]
+	N 
+	RN [repeat number]
     by
-        RN
+	RN
 end rule
 

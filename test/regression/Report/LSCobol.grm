@@ -15,12 +15,12 @@
 %
 % LSCobol format has the following properties:
 %
-%       Col 1-6 and 73-80 stripped
-%       Comments, REMARKS and NOTES statements removed
-%       Compiler directives removed
-%       All COPY,  COPY REPLACING, and REPLACE statements interpreted and removed
-%       Continuation markers interpreted and removed
-%       All missing and extra periods corrected
+%	Col 1-6 and 73-80 stripped
+%	Comments, REMARKS and NOTES statements removed
+%	Compiler directives removed
+%	All COPY,  COPY REPLACING, and REPLACE statements interpreted and removed
+%	Continuation markers interpreted and removed
+%	All missing and extra periods corrected
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -29,44 +29,44 @@
 %
 % Revision History:
 %
-% 5.0   DAJ     1 Feb 1996      
-%       Initial revision, from BNS Cobol Grammar 4.2 with RBC changes
+% 5.0	DAJ	1 Feb 1996	
+%	Initial revision, from BNS Cobol Grammar 4.2 with RBC changes
 %
-% 5.0d1 DAJ/AJM 13 Feb 1996
-%       Relation Condition grammar revised by AJM Jan 26 1996, for parsing Cobol 1 and Cobol 2
+% 5.0d1	DAJ/AJM	13 Feb 1996
+%	Relation Condition grammar revised by AJM Jan 26 1996, for parsing Cobol 1 and Cobol 2
 %
-% 5.0d2 TD      12 March 1996   
-%       Newlines to break up long lists (> 255 chars)
-%       Changed 77_or_88 back to 77, and added 88 as subordinate to 77. 
-%       Put compounds back in for <= >= 
-%       Aimed in general direction of LS Cobol by removing BNS_dot, USW_Dot, etc. 
-%       Removed [dot] from ON statement
+% 5.0d2	TD	12 March 1996	
+%	Newlines to break up long lists (> 255 chars)
+%	Changed 77_or_88 back to 77, and added 88 as subordinate to 77. 
+%	Put compounds back in for <= >=	
+%	Aimed in general direction of LS Cobol by removing BNS_dot, USW_Dot, etc. 
+%	Removed [dot] from ON statement
 %
-% 5.1   TD      20 March 1996
-%       New Version Numbers, changed number in subscript to numeric_literal.
+% 5.1	TD	20 March 1996
+%	New Version Numbers, changed number in subscript to numeric_literal.
 %
-% 5.2   TD      20 March 1996
-%       Added rule to report grammar version number
+% 5.2	TD	20 March 1996
+%	Added rule to report grammar version number
 %
-% 5.3   TD      5 May 1996
-%       Corrected SD section grammar
+% 5.3	TD	5 May 1996
+%	Corrected SD section grammar
 %
-% 5.4   JRC     7 May 1996
-%       Added EXEC CICS statement
-%       Added missing [dot] to section headers in DECLARATIVES
+% 5.4	JRC	7 May 1996
+%	Added EXEC CICS statement
+%	Added missing [dot] to section headers in DECLARATIVES
 %
-% 5.5   JRC     10 May 96
-%       Added ENTER LINKAGE
+% 5.5	JRC	10 May 96
+%	Added ENTER LINKAGE
 %
-% 5.6   JRC     12 May 96
-%       Integrated new section/paragraph grammar into main grammar
-%       Corrected formatting of paragraphs
+% 5.6	JRC	12 May 96
+%	Integrated new section/paragraph grammar into main grammar
+%	Corrected formatting of paragraphs
 %
-% 5.7   JRC     22 May 1996
-%       Updated CICS grammar to IBM CICS manual specs
+% 5.7	JRC	22 May 1996
+%	Updated CICS grammar to IBM CICS manual specs
 %
-% 6.0   JRC/AJM 24 May 1996
-%       General cleanup of entire grammar
+% 6.0	JRC/AJM	24 May 1996
+%	General cleanup of entire grammar
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -77,9 +77,9 @@
 
 function GrammarVersion
     replace [stringlit]
-        CurString [stringlit]
+    	CurString [stringlit]
     by
-        CurString [+ "LSCobol.Grammar v6.0 (May 24, 1996)"]
+    	CurString [+ "LSCobol.Grammar v6.0 (May 24, 1996)"]
 end function
 
 define GrammarVersion
@@ -91,28 +91,28 @@ end define
 % Lexical specification of LSCobol
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%% #pragma      -lscobol  -idchars '-/'
-#pragma -idchars '-/'
+%% #pragma	-lscobol  -idchars '-/'
+#pragma	-idchars '-/'
 
 % Token extensions to handle Cobol identifiers and numbers
 tokens 
-        id      + "\d[\d-]*\a\i*"       % allow Cobol hyphenated identifiers as well as default
-        number  + ".\d+"                % allow Cobol numbers (e.g., .23) as well as default 
-        charlit "'[(\\\c)('')#']*'"     % allow escaped quotes in Cobol - DAJ 29.12.95
+	id 	+ "\d[\d-]*\a\i*"	% allow Cobol hyphenated identifiers as well as default
+	number	+ ".\d+"		% allow Cobol numbers (e.g., .23) as well as default 
+	charlit "'[(\\\c)('')#']*'"     % allow escaped quotes in Cobol - DAJ 29.12.95
 
-        %       Explanation of charlit token
+    	%	Explanation of charlit token
         %        ' ... '         - start and end with a quote
         %        [ ... ]*        - inside the quotes, have any number
         %                          of any of the following three things:
-        %        (\\\c)          - first thing: a backslash followed by any character at all (for TXL compatibility)
+	%        (\\\c)          - first thing: a backslash followed by any character at all (for TXL compatibility)
         %        ('')            - second thing: two quotes in a row (the Cobol internal quote convention)
         %        #'              - third thing: any character that is not a quote
 end tokens
 
 % Cobol compound symbols. These must not have an intervening space.
 compounds 
-        <=  >= 
-end compounds   
+	<=  >= 
+end compounds	
 
 % Keywords of LSCobol
 % Any that can appear in identifier contexts should not be keywords.
@@ -125,16 +125,16 @@ include "LSCobol.KW"
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % =================================================
-%               LSCobol Programs
+% 		LSCobol Programs
 % =================================================
 
 define program
-        [LSCobol_program]
+	[LSCobol_program]
 end define
 
 define LSCobol_program
-        [identification_division]
-        [opt environment_division]                      
+	[identification_division]
+        [opt environment_division]			
         [opt data_division]
         [opt procedure_division]
         [repeat nested_source_program]
@@ -142,17 +142,17 @@ define LSCobol_program
 end define
 
 define nested_source_program 
-        [identification_division]
-        [opt environment_division]                      
+	[identification_division]
+        [opt environment_division]			
         [opt data_division]
         [opt procedure_division]
         [repeat nested_source_program]
-        [end_clause]
+	[end_clause]
 end define
 
 define end_clause
-                                                [NL] 
-        'END 'PROGRAM [id] [dot]                [NL] [NL]
+						[NL] 
+	'END 'PROGRAM [id] [dot]		[NL] [NL]
 end define
 
 
@@ -161,9 +161,9 @@ end define
 % =================================================
     
 define identification_division
-                                                        [NL] [NL] [NL]
-        [IDENTIFICATION_or_ID] 'DIVISION [dot]          
-            [program_id_paragraph]
+						    	[NL] [NL] [NL]
+	[IDENTIFICATION_or_ID] 'DIVISION [dot] 		
+	    [program_id_paragraph]
 end define
 
 define IDENTIFICATION_or_ID 
@@ -171,12 +171,12 @@ define IDENTIFICATION_or_ID
 end define 
 
 define program_id_paragraph
-        [NL] 
-        'PROGRAM-ID [dot] [SP] [SP] [program_name] [opt common_initial_clause] [dot]
+	[NL] 
+	'PROGRAM-ID [dot] [SP] [SP] [program_name] [opt common_initial_clause] [dot]
 end define
 
 define program_name
-        [id_or_literal]
+	[id_or_literal]
 end define
 
 define common_initial_clause
@@ -184,7 +184,7 @@ define common_initial_clause
 end define 
 
 define COMMON_or_INITIAL
-        'COMMON | 'INITIAL
+	'COMMON | 'INITIAL
 end define
 
 
@@ -193,11 +193,11 @@ end define
 % =================================================
 
 define environment_division
-                                                [NL] [NL] [NL]
-        'ENVIRONMENT 'DIVISION [dot]
-        [opt configuration_section]
-        [opt input_output_section]
-        [opt io_control_paragraph]
+				    		[NL] [NL] [NL]
+    	'ENVIRONMENT 'DIVISION [dot]
+    	[opt configuration_section]
+    	[opt input_output_section]
+    	[opt io_control_paragraph]
 end define
 
 
@@ -206,15 +206,15 @@ end define
 % =================================================
 
 define configuration_section
-                                                [NL] [NL]
-        [opt CONFIGURATION_SECTION_dot]                                 
-            [repeat configuration_paragraph]    
+				    		[NL] [NL]
+    	[opt CONFIGURATION_SECTION_dot] 				
+	    [repeat configuration_paragraph]	
 end define
 
 define CONFIGURATION_SECTION_dot
-        'CONFIGURATION 'SECTION [dot]
+	'CONFIGURATION 'SECTION [dot]
 end define
-        
+	
 define configuration_paragraph
         [source_computer_paragraph]
     |   [object_computer_paragraph]
@@ -223,7 +223,7 @@ define configuration_paragraph
 end define 
 
 define source_computer_paragraph
-        [NL] 'SOURCE-COMPUTER [dot] [SP] [SP] [opt source_computer_entry]
+	[NL] 'SOURCE-COMPUTER [dot] [SP] [SP] [opt source_computer_entry]
 end define
 
 define source_computer_entry
@@ -253,17 +253,17 @@ define WORDS_or_CHARACTERS_or_MODULES
 end define 
 
 define special_names_paragraph 
-                                                        [NL] 
-        'SPECIAL-NAMES [dot]                            [IN]                            
-            [opt special_names_clauses]                 [EX] 
+        						[NL] 
+	'SPECIAL-NAMES [dot] 				[IN] 				
+	    [opt special_names_clauses]			[EX] 
 end define
 
 define special_names_clauses
-        [repeat special_names_clause+] [dot]
+	[repeat special_names_clause+] [dot]
 end define
 
 define special_names_clause
-          [NL] [implementor_clause]
+    	  [NL] [implementor_clause]
         | [NL] [alphabet_clause]
         | [NL] [symbolic_characters_clause]
         | [NL] [class_clause]
@@ -273,16 +273,16 @@ define special_names_clause
 end define 
 
 define implementor_clause
-        [id] [opt IS_id] [repeat ON_OFF_STATUS]
+	[id] [opt IS_id] [repeat ON_OFF_STATUS]
 end define 
 
 define IS_id
-        'IS [id]
+	'IS [id]
 end define
 
 define ON_OFF_STATUS
         'ON [opt STATUS_IS] [id]
-    |   'OFF [opt STATUS_IS] [id]
+    |	'OFF [opt STATUS_IS] [id]
 end define
 
 define STATUS_IS
@@ -295,8 +295,8 @@ end define
 
 define alphabet_type 
         'STANDARD | 'STANDARD-1 | 'STANDARD-2 | 'NATIVE | 'EBCDIC 
-    |   [id] 
-    |   [repeat explicit_alphabet_type+]
+    |	[id] 
+    |	[repeat explicit_alphabet_type+]
 end define 
 
 define explicit_alphabet_type 
@@ -305,7 +305,7 @@ end define
 
 define THROUGH_or_ALSO_literal
         [THROUGH_or_THRU] [literal]
-    |   [repeat ALSO_literal+]
+    |	[repeat ALSO_literal+]
 end define
 
 define ALSO_literal
@@ -350,27 +350,27 @@ end define
 % =================================================
 
 define input_output_section
-                                                [NL] [NL]
-        'INPUT-OUTPUT 'SECTION [dot]                                                                            
-            [opt file_control_paragraph]        
-            [opt io_control_paragraph]          
+						[NL] [NL]
+	'INPUT-OUTPUT 'SECTION [dot]							 			
+	    [opt file_control_paragraph] 	
+	    [opt io_control_paragraph] 		
 end define
 
 define file_control_paragraph
-                                                [NL]
-        'FILE-CONTROL [dot]                     [IN]                             
-            [repeat file_control_entry]         [EX]
+    						[NL]
+	'FILE-CONTROL [dot] 			[IN]				 
+	    [repeat file_control_entry] 	[EX]
 end define
 
 define file_control_entry
-                                                [NL] 
+    						[NL] 
         'SELECT [opt 'OPTIONAL] [id] [TAB_25] 
-            'ASSIGN [opt 'TO] [repeat id_or_literal+]
-            [repeat file_control_clause] [dot]
+	    'ASSIGN [opt 'TO] [repeat id_or_literal+]
+	    [repeat file_control_clause] [dot]
 end define
 
 define file_control_clause
-        [reserve_clause]
+     	[reserve_clause]
     |   [organization_clause]
     |   [padding_clause]
     |   [record_delimiter_clause]
@@ -400,8 +400,8 @@ end define
 
 define file_organization
         [opt 'LINE] 'SEQUENTIAL 
-    |   'RELATIVE 
-    |   'INDEXED
+    |	'RELATIVE 
+    |	'INDEXED
 end define
 
 define padding_clause
@@ -453,9 +453,9 @@ define WITH_DUPLICATES
 end define
 
 define io_control_paragraph
-                                                [NL]
-        'I-O-CONTROL [dot]                      [IN]                             
-            [opt io_control_clauses]            [EX]
+						[NL]
+	'I-O-CONTROL [dot]			[IN]				 
+	    [opt io_control_clauses]		[EX]
 end define
 
 define io_control_clauses
@@ -487,7 +487,7 @@ define rerun_criterion
 end define
 
 define END_OF
-        'END [opt 'OF]
+	'END [opt 'OF]
 end define
 
 define REEL_or_UNIT
@@ -495,7 +495,7 @@ define REEL_or_UNIT
 end define
 
 define OF_file_name
-        [opt 'OF] [id]
+	[opt 'OF] [id]
 end define
 
 define same_clause
@@ -531,39 +531,39 @@ end define
 
 
 % =================================================
-%               Data Division 
+%            	Data Division 
 % =================================================
 
 define data_division
-                                        [NL] [NL] [NL]
-        'DATA 'DIVISION [dot]
-        [opt file_section]              
-        [opt working_storage_section]   
-        [opt linkage_section]           
-        [opt communication_section]             
-        [opt report_section]            
+					[NL] [NL] [NL]
+	'DATA 'DIVISION [dot]
+        [opt file_section]		
+        [opt working_storage_section]	
+        [opt linkage_section]		
+        [opt communication_section]		
+        [opt report_section]		
 end define
 
 
 % =================================================
-%       Data Division - File Section 
+%      	Data Division - File Section 
 % =================================================
 
 define file_section
-                                        [NL] [NL] 
-        'FILE 'SECTION [dot]                                            
-        [repeat file_description_entry]
+					[NL] [NL] 
+	'FILE 'SECTION [dot] 						
+	[repeat file_description_entry]
 end define
 
 define file_description_entry
-        [file_description]
-    |   [sort_merge_file_description]    
+	[file_description]
+    |	[sort_merge_file_description]    
 end define
 
 define file_description
-                                                                [NL] [NL]
-        'FD [SP] [id] [opt IS_EXTERNAL] [opt IS_GLOBAL]         [IN] 
-            [repeat file_description_clause] [dot]              [EX]
+								[NL] [NL]
+    	'FD [SP] [id] [opt IS_EXTERNAL] [opt IS_GLOBAL] 	[IN] 
+	    [repeat file_description_clause] [dot]		[EX]
         [repeat record_description]
 end define
 
@@ -604,8 +604,8 @@ end define
 define record_clause
         'RECORD [opt 'CONTAINS] [number] [opt TO_integer] [opt 'CHARACTERS]
    |    'RECORD [opt 'IS] 'VARYING [opt 'IN] [opt 'SIZE] 
-                [opt FROM_integer] [opt TO_integer] [opt 'CHARACTERS]
-                [opt depending_clause]
+   		[opt FROM_integer] [opt TO_integer] [opt 'CHARACTERS]
+		[opt depending_clause]
 end define
 
 define FROM_integer
@@ -621,7 +621,7 @@ define depending_clause
 end define
 
 define label_clause
-        'LABEL [RECORD_or_RECORDS] [opt IS_or_ARE] [label_type]
+       	'LABEL [RECORD_or_RECORDS] [opt IS_or_ARE] [label_type]
 end define
 
 define RECORD_or_RECORDS
@@ -648,7 +648,7 @@ end define
 
 define linage_clause
         'LINAGE [opt 'IS] [id_or_integer] [opt 'LINES] 
-            [opt footing_clause] [opt top_clause] [opt bottom_clause]
+	    [opt footing_clause] [opt top_clause] [opt bottom_clause]
 end define
 
 define footing_clause
@@ -676,7 +676,7 @@ define report_clause
 end define
 
 define REPORT_or_REPORTS
-        'REPORT | 'REPORTS
+	'REPORT | 'REPORTS
 end define
 
 define code_set_clause
@@ -684,9 +684,9 @@ define code_set_clause
 end define
 
 define sort_merge_file_description
-                                                                [NL] [NL]
-        'SD [SP] [id]                                           [IN] 
-            [repeat sort_merge_description_clause] [dot]        [EX]
+    	   							[NL] [NL]
+    	'SD [SP] [id] 						[IN] 
+	    [repeat sort_merge_description_clause] [dot]	[EX]
         [repeat record_description]
 end define
 
@@ -703,7 +703,7 @@ define sort_merge_description_clause
 end define
 
 define sort_option_clause
-        'SORT-OPTION [opt 'IS] [id]
+	'SORT-OPTION [opt 'IS] [id]
 end define
 
 
@@ -712,8 +712,8 @@ end define
 % =================================================
 
 define  working_storage_section
-                                                [NL] [NL]
-        'WORKING-STORAGE 'SECTION [dot]
+						[NL] [NL]
+	'WORKING-STORAGE 'SECTION [dot]
         [repeat record_description]
 end define
 
@@ -723,9 +723,9 @@ end define
 % =================================================
 
 define linkage_section
-                                                [NL] [NL]
-        'LINKAGE 'SECTION [dot]         
-        [repeat record_description]     
+						[NL] [NL]
+	'LINKAGE 'SECTION [dot]		
+	[repeat record_description]	
 end define
 
 
@@ -734,52 +734,52 @@ end define
 % =================================================
 
 define communication_section
-                                                        [NL] [NL]
-        'COMMUNICATION 'SECTION [dot]           
-        [repeat communication_description_entry]        
+							[NL] [NL]
+	'COMMUNICATION 'SECTION [dot]		
+	[repeat communication_description_entry]	
 end define
 
 define communication_description_entry
-        [communication_description]
+	[communication_description]
     
 end define
 
 define communication_description
-                                                                                [NL] [NL]
-        'CD [SP] [id] [opt 'FOR] [opt 'INITIAL] [INPUT_or_OUTPUT_or_I_O]        [IN] 
-             [opt initial_properties] [dot]                                     [EX]
+       										[NL] [NL]
+        'CD [SP] [id] [opt 'FOR] [opt 'INITIAL] [INPUT_or_OUTPUT_or_I_O]	[IN] 
+	     [opt initial_properties] [dot]					[EX]
 end define
 
 define INPUT_or_OUTPUT_or_I_O
-        'INPUT | 'OUTPUT | 'I_O
+	'INPUT | 'OUTPUT | 'I_O
 end define
 
 define initial_properties
-        [repeat initial_property+]
-    |   [repeat id+]
+	[repeat initial_property+]
+    |	[repeat id+]
 end define
 
 define initial_property
-        [TAB_25] [opt 'SYMBOLIC] 'QUEUE [opt 'IS] [id]
-    |   [TAB_25] [opt 'SYMBOLIC] 'SUB-QUEUE-1 [opt 'IS] [id]
-    |   [TAB_25] [opt 'SYMBOLIC] 'SUB-QUEUE-2 [opt 'IS] [id]
-    |   [TAB_25] [opt 'SYMBOLIC] 'SUB-QUEUE-3 [opt 'IS] [id]
-    |   [TAB_25] [opt 'SYMBOLIC] 'SOURCE [opt 'IS] [id]
-    |   [TAB_25] [opt 'SYMBOLIC] 'DESTINATION [opt 'IS] [id]
-    |   [TAB_25] [opt 'SYMBOLIC] 'TERMINAL [opt 'IS] [id]
-    |   [TAB_25] 'MESSAGE 'DATE [opt 'IS] [id]
-    |   [TAB_25] 'MESSAGE 'TIME [opt 'IS] [id]
-    |   [TAB_25] [opt 'MESSAGE] 'COUNT [opt 'IS] [id]
-    |   [TAB_25] 'STATUS 'KEY [opt 'IS] [id]
-    |   [TAB_25] 'ERROR 'KEY [opt 'IS] [id]
-    |   [TAB_25] 'END 'KEY [opt 'IS] [id]
-    |   [TAB_25] 'DESTINATION 'COUNT [opt 'IS] [id]
-    |   [TAB_25] 'DESTINATION 'TABLE 'OCCURS [number] [opt 'TIMES] [opt INDEXED_BY_id]
-    |   [TAB_25] 'TEXT 'LENGTH [opt 'IS] [id]
+	[TAB_25] [opt 'SYMBOLIC] 'QUEUE [opt 'IS] [id]
+    |	[TAB_25] [opt 'SYMBOLIC] 'SUB-QUEUE-1 [opt 'IS] [id]
+    |	[TAB_25] [opt 'SYMBOLIC] 'SUB-QUEUE-2 [opt 'IS] [id]
+    |	[TAB_25] [opt 'SYMBOLIC] 'SUB-QUEUE-3 [opt 'IS] [id]
+    |	[TAB_25] [opt 'SYMBOLIC] 'SOURCE [opt 'IS] [id]
+    |	[TAB_25] [opt 'SYMBOLIC] 'DESTINATION [opt 'IS] [id]
+    |	[TAB_25] [opt 'SYMBOLIC] 'TERMINAL [opt 'IS] [id]
+    |	[TAB_25] 'MESSAGE 'DATE [opt 'IS] [id]
+    |	[TAB_25] 'MESSAGE 'TIME [opt 'IS] [id]
+    |	[TAB_25] [opt 'MESSAGE] 'COUNT [opt 'IS] [id]
+    |	[TAB_25] 'STATUS 'KEY [opt 'IS] [id]
+    |	[TAB_25] 'ERROR 'KEY [opt 'IS] [id]
+    |	[TAB_25] 'END 'KEY [opt 'IS] [id]
+    |	[TAB_25] 'DESTINATION 'COUNT [opt 'IS] [id]
+    |	[TAB_25] 'DESTINATION 'TABLE 'OCCURS [number] [opt 'TIMES] [opt INDEXED_BY_id]
+    |	[TAB_25] 'TEXT 'LENGTH [opt 'IS] [id]
 end define
 
 define INDEXED_BY_id
-        'INDEXED [opt 'BY] [repeat id+]
+	'INDEXED [opt 'BY] [repeat id+]
 end define
 
 
@@ -788,23 +788,23 @@ end define
 % =================================================
 
 define report_section
-                                                [NL] [NL] 
-        'REPORT 'SECTION [dot]          
-        [repeat report_description_entry]       
+						[NL] [NL] 
+	'REPORT 'SECTION [dot]		
+	[repeat report_description_entry]	
 end define
 
 define report_description_entry
-        [report_description] [repeat report_group_description]
+	[report_description] [repeat report_group_description]
     
 end define
 
 define report_description
-                                                [NL] [NL]
-        'RD [SP] [id] [opt IS_GLOBAL]           [IN]
-                [opt code_clause]          
-                [opt controls_clause]
-                [opt page_clause] [dot]
-                [repeat record_description]     [EX]
+       						[NL] [NL]
+        'RD [SP] [id] [opt IS_GLOBAL] 		[IN]
+		[opt code_clause]          
+		[opt controls_clause]
+		[opt page_clause] [dot]
+        	[repeat record_description]	[EX]
 end define
 
 define code_clause
@@ -821,8 +821,8 @@ end define
 
 define page_clause
         'PAGE [opt LIMIT_or_LIMITS] [opt IS_or_ARE] [number] [LINE_or_LINES] 
-            [opt page_heading] [opt first_detail_clause] [opt last_detail_clause] 
-            [opt page_footing_clause]
+	    [opt page_heading] [opt first_detail_clause] [opt last_detail_clause] 
+	    [opt page_footing_clause]
 end define
 
 define LIMIT_or_LIMITS
@@ -850,164 +850,164 @@ define page_footing_clause
 end define
 
 define report_group_description
-        [level_1] [opt id]                                              [IN] 
-            [repeat report_group_description_clause] [dot]              [EX]
-    |   
-        [level_number] [opt id]                                         [IN]
-            [repeat report_group_description_clause] [dot]              [EX]
+	[level_1] [opt id]						[IN] 
+	    [repeat report_group_description_clause] [dot]		[EX]
+    |	
+    	[level_number] [opt id] 					[IN]
+	    [repeat report_group_description_clause] [dot]		[EX]
 end define
 
 define report_group_description_clause
-        [NL] [line_number_clause]
-    |   [NL] [next_group_clause]
-    |   [NL] [type_clause]
-    |   [NL] [report_usage_clause]
-    |   [NL] [report_picture_clause]
-    |   [NL] [report_sign_clause]
-    |   [NL] [report_justification_clause]
-    |   [NL] [blank_when_clause]
-    |   [NL] [column_number_clause]
-    |   [NL] [source_clause]
-    |   [NL] [group_indicate_clause]
-    |   [NL] [picture_clause]
-    |   [NL] [value_clause]
+	[NL] [line_number_clause]
+    |	[NL] [next_group_clause]
+    |	[NL] [type_clause]
+    |	[NL] [report_usage_clause]
+    |	[NL] [report_picture_clause]
+    |	[NL] [report_sign_clause]
+    |	[NL] [report_justification_clause]
+    |	[NL] [blank_when_clause]
+    |	[NL] [column_number_clause]
+    |	[NL] [source_clause]
+    |	[NL] [group_indicate_clause]
+    |	[NL] [picture_clause]
+    |	[NL] [value_clause]
 end define
 
 define line_number_clause
-        'LINE [opt 'NUMBER] [opt 'IS] [line_number]
+	'LINE [opt 'NUMBER] [opt 'IS] [line_number]
 end define
 
 define line_number
-        [number] [opt ON_NEXT_PAGE]
-    |   'PLUS [number]
-    |   'NEXT 'PAGE
+	[number] [opt ON_NEXT_PAGE]
+    |	'PLUS [number]
+    |	'NEXT 'PAGE
 end define
 
 define ON_NEXT_PAGE
-        [opt 'ON] 'NEXT 'PAGE
+	[opt 'ON] 'NEXT 'PAGE
 end define
 
 define next_group_clause
-        'NEXT 'GROUP [opt 'IS] [next_group]
+	'NEXT 'GROUP [opt 'IS] [next_group]
 end define
 
 define next_group
-        [number]
-    |   'PLUS [number]
-    |   'NEXT 'PAGE
+	[number]
+    |	'PLUS [number]
+    |	'NEXT 'PAGE
 end define
 
 define type_clause
-        'TYPE [opt 'IS] [type]
+	'TYPE [opt 'IS] [type]
 end define
 
 define type
-        [REPORT_HEADING]
-    |   [PAGE_HEADING]
-    |   [CONTROL_HEADING] [id_or_FINAL]
-    |   [DETAIL]
-    |   [CONTROL_FOOTING] [id_or_FINAL]
-    |   [PAGE_FOOTING]
-    |   [REPORT_FOOTING]
+	[REPORT_HEADING]
+    |	[PAGE_HEADING]
+    |	[CONTROL_HEADING] [id_or_FINAL]
+    |	[DETAIL]
+    |	[CONTROL_FOOTING] [id_or_FINAL]
+    |	[PAGE_FOOTING]
+    |	[REPORT_FOOTING]
 end define
 
 define REPORT_HEADING
-        'REPORT 'HEADING  |  'RH
+	'REPORT 'HEADING  |  'RH
 end define
 
 define PAGE_HEADING
-        'PAGE 'HEADING  |  'PH
+	'PAGE 'HEADING  |  'PH
 end define
 
 define CONTROL_HEADING
-        'CONTROL 'HEADING  |  'CH
+	'CONTROL 'HEADING  |  'CH
 end define
 
 define id_or_FINAL
-        [id]  |  'FINAL
+	[id]  |  'FINAL
 end define
 
 define DETAIL
-        'DETAIL |  'DE
+	'DETAIL |  'DE
 end define
 
 define CONTROL_FOOTING
-        'CONTROL 'FOOTING  |  'CF
+	'CONTROL 'FOOTING  |  'CF
 end define
 
 define PAGE_FOOTING
-        'PAGE 'FOOTING  |  'PF
+	'PAGE 'FOOTING  |  'PF
 end define
 
 define REPORT_FOOTING
-        'REPORT 'FOOTING  |  'RF
+	'REPORT 'FOOTING  |  'RF
 end define
 
 define report_usage_clause
-        'USAGE [opt 'IS] [DISPLAY_or_DISPLAY_1]
+	'USAGE [opt 'IS] [DISPLAY_or_DISPLAY_1]
 end define
 
 define DISPLAY_or_DISPLAY_1
-        'DISPLAY  |  'DISPLAY-1
+	'DISPLAY  |  'DISPLAY-1
 end define
 
 define report_picture_clause
-        [PICTURE_or_PIC] [opt 'IS] [stringlit_or_charlit]
+	[PICTURE_or_PIC] [opt 'IS] [stringlit_or_charlit]
 end define
 
 define stringlit_or_charlit
-        [stringlit]  |  [charlit]
+	[stringlit]  |  [charlit]
 end define
 
 define report_sign_clause
-        'SIGN [opt 'IS] [LEADING_or_TRAILING] 'SEPARATE [opt 'CHARACTER]
+	'SIGN [opt 'IS] [LEADING_or_TRAILING] 'SEPARATE [opt 'CHARACTER]
 end define
 
 define LEADING_or_TRAILING
-        'LEADING  |  'TRAILING
+	'LEADING  |  'TRAILING
 end define
 
 define report_justification_clause
-        [JUSTIFIED_or_JUST] [opt 'RIGHT]
+	[JUSTIFIED_or_JUST] [opt 'RIGHT]
 end define
 
 define JUSTIFIED_or_JUST
-        'JUSTIFIED  |  'JUST
+	'JUSTIFIED  |  'JUST
 end define
 
 define blank_when_clause
-        'BLANK [opt 'WHEN] [ZERO_or_ZEROES]
+    	'BLANK [opt 'WHEN] [ZERO_or_ZEROES]
 end define
 
 define column_number_clause
-        'COLUMN [opt 'NUMBER] [opt 'IS] [number]
+	'COLUMN [opt 'NUMBER] [opt 'IS] [number]
 end define
 
 define source_clause
-        'SOURCE [opt 'IS] [identifier]
-        [opt source_value]
-        [repeat sum_clause]
-        [opt reset_clause]
+	'SOURCE [opt 'IS] [identifier]
+	[opt source_value]
+	[repeat sum_clause]
+	[opt reset_clause]
 end define
 
 define source_value
-        'VALUE [opt 'IS] [literal]
+	'VALUE [opt 'IS] [literal]
 end define
 
 define sum_clause
-        'SUM [repeat identifier+] [opt upon_clause]
+	'SUM [repeat identifier+] [opt upon_clause]
 end define
 
 define upon_clause
-        'UPON [repeat id+]
+	'UPON [repeat id+]
 end define
 
 define reset_clause
-        'RESET [opt 'ON] [id_or_FINAL]
+	'RESET [opt 'ON] [id_or_FINAL]
 end define
 
 define group_indicate_clause
-        'GROUP [opt 'INDICATE]
+	'GROUP [opt 'INDICATE]
 end define
 
 
@@ -1022,46 +1022,46 @@ end define
 % **********************************************************************
 
 define record_description        
-        [level_1_description]
+	[level_1_description]
     |   [level_77_description]
     |   [exec_sql_clause]  
         
 end define
 
 define level_1_description
-                [level_1_group_item]
-    |   [level_1_data_item]             
+		[level_1_group_item]
+    |	[level_1_data_item]		
 end define
 
 define level_1_group_item
         [NL] [NL] [level_1] [SP] [id_or_FILLER] 
-            [repeat group_description_clause] [dot]             [IN]
-            [repeat level_66_or_88_description]
-            [SP] '[ [repeat record_item] [SP] ']                [EX]
+	    [repeat group_description_clause] [dot]		[IN]
+	    [repeat level_66_or_88_description]
+	    [SP] '[ [repeat record_item] [SP] ']		[EX]
 end define
 
 define level_1_data_item
         [NL] [NL] [level_1] [SP] 
-            [opt id_or_FILLER] [repeat picture_or_description_clause+] [dot]    [IN] 
-                 [repeat level_66_or_88_description]                            [EX]
+	    [opt id_or_FILLER] [repeat picture_or_description_clause+] [dot]	[IN] 
+	    	 [repeat level_66_or_88_description]				[EX]
 end define
 
 define record_item
-                [record_group_item]
-    |   [record_data_item]
+		[record_group_item]
+    |	[record_data_item]
 end define
 
 define record_group_item
-        [NL] [level_number] [SP] 
-            [id_or_FILLER]  [repeat group_description_clause] [dot]     [IN] 
-                 [repeat level_66_or_88_description]
-                 [SP] '[ [repeat record_item] [SP] ']                   [EX]
+    	[NL] [level_number] [SP] 
+	    [id_or_FILLER]  [repeat group_description_clause] [dot]	[IN] 
+	    	 [repeat level_66_or_88_description]
+	         [SP] '[ [repeat record_item] [SP] ']			[EX]
 end define
 
 define record_data_item
-        [NL] [level_number] [SP] 
-            [id_or_FILLER] [repeat picture_or_description_clause] [dot] [IN] 
-                 [repeat level_66_or_88_description]                    [EX]
+	[NL] [level_number] [SP] 
+	    [id_or_FILLER] [repeat picture_or_description_clause] [dot]	[IN] 
+	    	 [repeat level_66_or_88_description]			[EX]
 end define
 
 % Explicit definition of the enumerated set of levels allows the parser
@@ -1084,23 +1084,23 @@ define level_number
 end define
 
 define level_66_or_88_description
-        [level_66_description]
-    |   [level_88_description]
+	[level_66_description]
+    |	[level_88_description]
 end define
 
 define level_66_description
-        [NL] '66 [SP] [id_or_FILLER] [TAB_38] [renames_clause] [dot]
+	[NL] '66 [SP] [id_or_FILLER] [TAB_38] [renames_clause] [dot]
 end define
 
 define level_88_description
-        [NL] '88 [SP] [id_or_FILLER] [TAB_38] [value_clause] [dot]  
+	[NL] '88 [SP] [id_or_FILLER] [TAB_38] [value_clause] [dot]  
 end define
 
 define level_77_description
-                                                                        [NL] 
-        '77 [SP] [id_or_FILLER] 
-             [repeat picture_or_description_clause] [dot]               [IN] 
-             [repeat level_88_description]                              [EX]
+									[NL] 
+	'77 [SP] [id_or_FILLER] 
+	     [repeat picture_or_description_clause] [dot]		[IN] 
+	     [repeat level_88_description] 				[EX]
 end define
 
 define id_or_FILLER
@@ -1123,7 +1123,7 @@ define picture_clause
 end define
 
 define PICTURE_or_PIC
-        'PICTURE  |  'PIC
+	'PICTURE  |  'PIC
 end define
 
 define picture
@@ -1136,39 +1136,39 @@ end define
 % =================================================
  
 define description_clause
-        [redefines_clause]
+	[redefines_clause]
     |   [opt 'IS] 'EXTERNAL
     |   [opt 'IS] 'GLOBAL
     |   [usage_clause]
     |   [sign_clause]
-    |   [synchronization_clause]
-    |   [justification_clause]
-    |   [blank_when_clause]
+    |	[synchronization_clause]
+    |	[justification_clause]
+    |	[blank_when_clause]
     |   [value_clause]
-    |   [occurs_clause]
-                                
+    |	[occurs_clause]
+       				
 end define
 
 define group_description_clause
-        [redefines_clause]
+	[redefines_clause]
     |   [opt 'IS] 'EXTERNAL
     |   [opt 'IS] 'GLOBAL
     |   [usage_clause]
-    |   [synchronization_clause]
+    |	[synchronization_clause]
     |   [value_clause]
-    |   [occurs_clause]                         
+    |	[occurs_clause]				
 end define
 
 define redefines_clause
-        [TAB_32] 'REDEFINES [id] [opt library]
+    	[TAB_32] 'REDEFINES [id] [opt library]
 end define
 
 define usage_clause
-        [opt USAGE_IS] [usage_type]
+    	[opt USAGE_IS] [usage_type]
 end define
 
 define USAGE_IS
-        'USAGE [opt 'IS]
+	'USAGE [opt 'IS]
 end define
 
 define usage_type
@@ -1184,42 +1184,42 @@ define usage_type
 end define
 
 define usage_comp
-        'COMPUTATIONAL    |  'COMP    | 'BINARY          
+	'COMPUTATIONAL    |  'COMP    | 'BINARY          
 end define
 
 define usage_comp_1
-        'COMPUTATIONAL-1  |  'COMP-1
+	'COMPUTATIONAL-1  |  'COMP-1
 end define
 
 define usage_comp_2
-        'COMPUTATIONAL-2  |  'COMP-2
+	'COMPUTATIONAL-2  |  'COMP-2
 end define
 
 define usage_comp_3
-        'COMPUTATIONAL-3  |  'COMP-3  |  'PACKED-DECIMAL
+	'COMPUTATIONAL-3  |  'COMP-3  |  'PACKED-DECIMAL
 end define
 
 define usage_comp_4
-        'COMPUTATIONAL-4  |  'COMP-4          
+	'COMPUTATIONAL-4  |  'COMP-4          
 end define
 
-define occurs_clause                                    
-        [TAB_32] 'OCCURS [number] [opt TO_number] [opt 'TIMES]
-            [repeat depending_ordering_indexed_clause]  
+define occurs_clause					
+	[TAB_32] 'OCCURS [number] [opt TO_number] [opt 'TIMES]
+	    [repeat depending_ordering_indexed_clause] 	
 end define
 
 define depending_ordering_indexed_clause
-        [TAB_32] [DEPENDING_ON_id] 
-    |   [TAB_32] [ordering_clause] 
-    |   [TAB_32] [indexed_clause]
+	[TAB_32] [DEPENDING_ON_id] 
+    |	[TAB_32] [ordering_clause] 
+    |	[TAB_32] [indexed_clause]
 end define
 
 define TO_number
-        'TO [number]
+	'TO [number]
 end define
 
 define DEPENDING_ON_id
-        'DEPENDING [opt 'ON] [id]
+	'DEPENDING [opt 'ON] [id]
 end define
 
 define ordering_clause
@@ -1232,15 +1232,15 @@ end define
 
 define indexed_clause
         'INDEXED [opt 'BY] 
-                [repeat id+]
+		[repeat id+]
 end define
 
 define sign_clause
-        [opt 'SIGN] [opt 'IS] [LEADING_or_TRAILING] [opt SEPARATE_CHARACTER]
+	[opt 'SIGN] [opt 'IS] [LEADING_or_TRAILING] [opt SEPARATE_CHARACTER]
 end define
 
 define SEPARATE_CHARACTER
-        'SEPARATE [opt 'CHARACTER]
+	'SEPARATE [opt 'CHARACTER]
 end define
 
 define synchronization_clause
@@ -1256,7 +1256,7 @@ define LEFT_or_RIGHT
 end define
 
 define justification_clause
-        [JUSTIFIED_or_JUST] [opt 'RIGHT]
+    	[JUSTIFIED_or_JUST] [opt 'RIGHT]
 end define
 
 define ZERO_or_ZEROES
@@ -1267,21 +1267,21 @@ end define
 
 define value_clause
         [TAB_43] [VALUE_or_VALUES] [opt IS_or_ARE] 
-            [IN] [IN] [IN] [literal_operands] [EX] [EX] [EX]
+	    [IN] [IN] [IN] [literal_operands] [EX] [EX] [EX]
 end define
 
 define VALUE_or_VALUES
-        'VALUE  |  'VALUES
+	'VALUE  |  'VALUES
 end define
 
 define renames_clause
-        'RENAMES [id] [opt THROUGH_id]
+	'RENAMES [id] [opt THROUGH_id]
 end define
-        
+	
 define exec_sql_clause
-        [NL] 'EXEC 'SQL                 [IN]
-            [repeat sql_statement]      [EX] [NL] 
-        'END-EXEC [dot]                 [NL]
+        [NL] 'EXEC 'SQL 		[IN]
+            [repeat sql_statement]	[EX] [NL] 
+	'END-EXEC [dot]			[NL]
 end define
 
 define sql_statement
@@ -1291,41 +1291,41 @@ end define
 
 
 % =================================================
-%               Procedure Division 
+%      		Procedure Division 
 % =================================================
 
 define procedure_division
-                                                                [NL] [NL] [NL]
-        'PROCEDURE 'DIVISION [opt using_clause] [dot]                                                           
+				    				[NL] [NL] [NL]
+	'PROCEDURE 'DIVISION [opt using_clause] [dot]					 			
         [opt declaratives]
-        [opt section_body]
+	[opt section_body]
         [repeat section]
 end define
 
 define using_clause
-        'USING [IN] [repeat procedure_parameter_item+] [EX]
+	'USING [IN] [repeat procedure_parameter_item+] [EX]
 end define
 
 define procedure_parameter_item
-        [opt BY_REFERENCE_or_VALUE] [id]
+	[opt BY_REFERENCE_or_VALUE] [id]
 end define
 
 define BY_REFERENCE_or_VALUE
-        [opt 'BY] 'REFERENCE
-    |   [opt 'BY] 'VALUE
+	[opt 'BY] 'REFERENCE
+    |	[opt 'BY] 'VALUE
 end define
 
 define declaratives
-                                                [NL]
-        'DECLARATIVES [dot]                     [IN]                                              
-            [repeat declarative_clause]         [EX] [NL]
-        'END 'DECLARATIVES [dot]
+				    		[NL]
+	'DECLARATIVES [dot]			[IN]						  
+	    [repeat declarative_clause]		[EX] [NL]
+	'END 'DECLARATIVES [dot]
 end define
 
 define declarative_clause
-                                                [NL] [NL] 
-        [id] 'SECTION [opt number] [dot]        [NL]                                    
-            'USE [use_clause] [dot] 
+						[NL] [NL] 
+	[id] 'SECTION [opt number] [dot]	[NL]					
+	    'USE [use_clause] [dot] 
         [repeat paragraph]
 end define
 
@@ -1365,33 +1365,33 @@ define debugged_procedures
 end define
 
 define section
-        [repeat section_header+]
-        [section_body]
+	[repeat section_header+]
+	[section_body]
 end define
 
 define section_header
-                                                [NL] [NL] 
-        [id] 'SECTION [opt number] [dot]                                                        
+						[NL] [NL] 
+	[id] 'SECTION [opt number] [dot]			 				
 end define
 
 define section_body
-        [NL]
-        [opt paragraph_body]
-        [repeat paragraph]
+	[NL]
+	[opt paragraph_body]
+	[repeat paragraph]
 end define
 
 define paragraph
-        [NL]
-        [repeat paragraph_header+]
-        [paragraph_body]
+	[NL]
+	[repeat paragraph_header+]
+	[paragraph_body]
 end define
 
 define paragraph_header
-        [NL] [id_or_integer] [dot] 
+	[NL] [id_or_integer] [dot] 
 end define
 
 define paragraph_body
-        [IN] [repeat sentence] [EX]
+	[IN] [repeat sentence] [EX]
 end define
 
 define sentence
@@ -1400,67 +1400,67 @@ end define
 
 
 % =================================================
-%       Procedure Division -- Statements 
+% 	Procedure Division -- Statements 
 % =================================================
 
 define statement
-        [accept_statement]
-    |   [add_statement]
-    |   [alter_statement]
-    |   [call_statement]
-    |   [cancel_statement]
-    |   [close_statement]
-    |   [compute_statement]
-    |   [continue_statement]
-    |   [delete_statement]
-    |   [disable_statement]
-    |   [display_statement]
-    |   [divide_statement]
-    |   [enable_statement]
-    |   [enter_statement]
-    |   [entry_statement]
-    |   [evaluate_statement]
-    |   [examine_statement]
-    |   [exhibit_statement]
-    |   [exit_statement]
-    |   [exit_program_statement]
-    |   [generate_statement]
-    |   [goback_statement]
-    |   [goto_statement]
-    |   [if_statement]                  
-    |   [initialize_statement]
-    |   [initiate_statement]
-    |   [inspect_statement]
-    |   [merge_statement]
-    |   [move_statement]
-    |   [multiply_statement]
-    |   [next_statement]
-    |   [note_statement]
-    |   [on_statement]
-    |   [open_statement]
-    |   [perform_statement]
-    |   [purge_statement]
-    |   [read_statement]
-    |   [receive_statement]
-    |   [release_statement]
-    |   [return_statement]
-    |   [rewrite_statement]
-    |   [search_statement]              
-    |   [send_statement]
-    |   [service_statement]
-    |   [set_statement]
-    |   [sort_statement]
-    |   [start_statement]
-    |   [stop_statement]
-    |   [string_statement]
-    |   [subtract_statement]
-    |   [suppress_statement]
-    |   [terminate_statement]
-    |   [trace_statement]
-    |   [transform_statement]
-    |   [unstring_statement]
-    |   [write_statement]
-    |   [CICS_statement]   
+	[accept_statement]
+    |	[add_statement]
+    |	[alter_statement]
+    |	[call_statement]
+    |	[cancel_statement]
+    |	[close_statement]
+    |	[compute_statement]
+    |	[continue_statement]
+    |	[delete_statement]
+    |	[disable_statement]
+    |	[display_statement]
+    |	[divide_statement]
+    |	[enable_statement]
+    |	[enter_statement]
+    |	[entry_statement]
+    |	[evaluate_statement]
+    |	[examine_statement]
+    |	[exhibit_statement]
+    |	[exit_statement]
+    |	[exit_program_statement]
+    |	[generate_statement]
+    |	[goback_statement]
+    |	[goto_statement]
+    |	[if_statement]			
+    |	[initialize_statement]
+    |	[initiate_statement]
+    |	[inspect_statement]
+    |	[merge_statement]
+    |	[move_statement]
+    |	[multiply_statement]
+    |	[next_statement]
+    |	[note_statement]
+    |	[on_statement]
+    |	[open_statement]
+    |	[perform_statement]
+    |	[purge_statement]
+    |	[read_statement]
+    |	[receive_statement]
+    |	[release_statement]
+    |	[return_statement]
+    |	[rewrite_statement]
+    |	[search_statement]		
+    |	[send_statement]
+    |	[service_statement]
+    |	[set_statement]
+    |	[sort_statement]
+    |	[start_statement]
+    |	[stop_statement]
+    |	[string_statement]
+    |	[subtract_statement]
+    |	[suppress_statement]
+    |	[terminate_statement]
+    |	[trace_statement]
+    |	[transform_statement]
+    |	[unstring_statement]
+    |	[write_statement]
+    |	[CICS_statement]   
 end define
 
 
@@ -1468,35 +1468,35 @@ end define
 % Revised to avoid parsing problems with [key] - JRC 22.5.96
 
 define CICS_statement
-                                                [NL]
-        'EXEC 'CICS                             [IN]
-                [repeat CICS_commands]          [NL][EX]
-        'END-EXEC
+						[NL]
+	'EXEC 'CICS				[IN]
+		[repeat CICS_commands]		[NL][EX]
+	'END-EXEC
 end define
 
 define CICS_commands
-        [NL] [CICS_command] [repeat CICS_options]
+	[NL] [CICS_command] [repeat CICS_options]
 end define
 
 define CICS_options
-        [CICS_option] [opt CICS_argument]
+	[CICS_option] [opt CICS_argument]
 end define
 
 define CICS_option
-        [id] | 'AFTER | 'ALTER | 'ALTERNATE | 'AT | 'CANCEL | 'CONTROL
-    |   'COPY | 'DELETE | 'ENTER | 'ENTRY | 'EQUAL | 'FILE
-    |   'FOR | 'FROM | 'INTO | 'LABEL | 'LAST | 'LIST
-    |   'NEXT | 'NOTE | 'PAGE | 'PASSWORD | 'PROGRAM | 'READ
-    |   'RECEIVE | 'RELEASE | 'REPLACE | 'RESET | 'SET | 'TERMINAL
-    |   'TIME | 'TITLE | 'UNTIL | 'USING
+	[id] | 'AFTER | 'ALTER | 'ALTERNATE | 'AT | 'CANCEL | 'CONTROL
+    |	'COPY | 'DELETE | 'ENTER | 'ENTRY | 'EQUAL | 'FILE
+    |	'FOR | 'FROM | 'INTO | 'LABEL | 'LAST | 'LIST
+    |	'NEXT | 'NOTE | 'PAGE | 'PASSWORD | 'PROGRAM | 'READ
+    |	'RECEIVE | 'RELEASE | 'REPLACE | 'RESET | 'SET | 'TERMINAL
+    |	'TIME | 'TITLE | 'UNTIL | 'USING
 end define
 
 define CICS_argument
-        '( [CICS_datavalue_or_name] ')
+	'( [CICS_datavalue_or_name] ')
 end define
 
 define CICS_datavalue_or_name
-        [id] | [number] | [charlit] | [stringlit]
+	[id] | [number] | [charlit] | [stringlit]
 end define
 
 define CICS_command
@@ -1507,200 +1507,200 @@ define CICS_command
     % they perform.
 
     % 1.12.1  Abend support
-        'ABEND
-    |   'HANDLE 'ABEND
+	'ABEND
+    |	'HANDLE 'ABEND
 
     % 1.12.2  APPC basic conversation
-        'GDS 'ALLOCATE
-    |   'GDS 'ASSIGN
-    |   'GDS 'CONNECT 'PROCESS
-    |   'GDS 'EXTRACT 'ATTRIBUTES
-    |   'GDS 'EXTRACT 'PROCESS
-    |   'GDS 'FREE
-    |   'GDS 'ISSUE 'ABEND
-    |   'GDS 'ISSUE 'CONFIRMATION
-    |   'GDS 'ISSUE 'ERROR
-    |   'GDS 'ISSUE 'PREPARE
-    |   'GDS 'ISSUE 'SIGNAL
-    |   'GDS 'RECEIVE
-    |   'GDS 'SEND
-    |   'GDS 'WAIT
+	'GDS 'ALLOCATE
+    |	'GDS 'ASSIGN
+    |	'GDS 'CONNECT 'PROCESS
+    |	'GDS 'EXTRACT 'ATTRIBUTES
+    |	'GDS 'EXTRACT 'PROCESS
+    |	'GDS 'FREE
+    |	'GDS 'ISSUE 'ABEND
+    |	'GDS 'ISSUE 'CONFIRMATION
+    |	'GDS 'ISSUE 'ERROR
+    |	'GDS 'ISSUE 'PREPARE
+    |	'GDS 'ISSUE 'SIGNAL
+    |	'GDS 'RECEIVE
+    |	'GDS 'SEND
+    |	'GDS 'WAIT
 
     % 1.12.3  APPC mapped conversation
-    |   'ALLOCATE
-    |   'CONNECT 'PROCESS
-    |   'CONVERSE
-    |   'EXTRACT 'ATTRIBUTES
-    |   'EXTRACT 'PROCESS
-    |   'FREE
-    |   'ISSUE 'ABEND
-    |   'ISSUE 'CONFIRMATION
-    |   'ISSUE 'ERROR
-    |   'ISSUE 'PREPARE
-    |   'ISSUE 'SIGNAL
-    |   'RECEIVE
-    |   'SEND
-    |   'WAIT 'CONVID
+    |	'ALLOCATE
+    |	'CONNECT 'PROCESS
+    |	'CONVERSE
+    |	'EXTRACT 'ATTRIBUTES
+    |	'EXTRACT 'PROCESS
+    |	'FREE
+    |	'ISSUE 'ABEND
+    |	'ISSUE 'CONFIRMATION
+    |	'ISSUE 'ERROR
+    |	'ISSUE 'PREPARE
+    |	'ISSUE 'SIGNAL
+    |	'RECEIVE
+    |	'SEND
+    |	'WAIT 'CONVID
 
     % 1.12.4  Authentication
-    |   'CHANGE 'PASSWORD
-    |   'SIGNOFF
-    |   'SIGNON
-    |   'VERIFY 'PASSWORD
+    |	'CHANGE 'PASSWORD
+    |	'SIGNOFF
+    |	'SIGNON
+    |	'VERIFY 'PASSWORD
 
     % 1.12.5  Batch data interchange
-    |   'ISSUE 'ABORT
-    |   'ISSUE 'ADD
-    |   'ISSUE 'END
-    |   'ISSUE 'ERASE
-    |   'ISSUE 'NOTE
-    |   'ISSUE 'QUERY
-    |   'ISSUE 'RECEIVE
-    |   'ISSUE 'REPLACE
-    |   'ISSUE 'SEND
-    |   'ISSUE 'WAIT
+    |	'ISSUE 'ABORT
+    |	'ISSUE 'ADD
+    |	'ISSUE 'END
+    |	'ISSUE 'ERASE
+    |	'ISSUE 'NOTE
+    |	'ISSUE 'QUERY
+    |	'ISSUE 'RECEIVE
+    |	'ISSUE 'REPLACE
+    |	'ISSUE 'SEND
+    |	'ISSUE 'WAIT
 
     % 1.12.6  BMS
-    |   'PURGE 'MESSAGE
-    |   'RECEIVE 'MAP
-    |   'RECEIVE 'PARTN
-    |   'ROUTE
-    |   'SEND 'CONTROL
-    |   'SEND 'MAP
-    |   'SEND 'PAGE
-    |   'SEND 'PARTNSET
-    |   'SEND 'TEXT
-    |   'SEND 'TEXT 'MAPPED
-    |   'SEND 'TEXT 'NOEDIT
+    |	'PURGE 'MESSAGE
+    |	'RECEIVE 'MAP
+    |	'RECEIVE 'PARTN
+    |	'ROUTE
+    |	'SEND 'CONTROL
+    |	'SEND 'MAP
+    |	'SEND 'PAGE
+    |	'SEND 'PARTNSET
+    |	'SEND 'TEXT
+    |	'SEND 'TEXT 'MAPPED
+    |	'SEND 'TEXT 'NOEDIT
 
     % 1.12.7  Built-in functions
-    |   'BIF 'DEEDIT
+    |	'BIF 'DEEDIT
 
     % 1.12.8  Console support
-    |   'WRITE 'OPERATOR
+    |	'WRITE 'OPERATOR
 
     % 1.12.9  Diagnostic services
-    |   'DUMP 'TRANSACTION
-    |   'ENTER 'TRACENUM
+    |	'DUMP 'TRANSACTION
+    |	'ENTER 'TRACENUM
 
     % 1.12.10  Environment services
-    |   'ADDRESS
-    |   'ADDRESS 'SET
-    |   'ASSIGN
+    |	'ADDRESS
+    |	'ADDRESS 'SET
+    |	'ASSIGN
 
     % 1.12.11  Exception support
-    |   'HANDLE 'CONDITION
-    |   'IGNORE 'CONDITION
-    |   'POP 'HANDLE
-    |   'PUSH 'HANDLE
+    |	'HANDLE 'CONDITION
+    |	'IGNORE 'CONDITION
+    |	'POP 'HANDLE
+    |	'PUSH 'HANDLE
 
     % 1.12.12  File control
-    |   'DELETE
-    |   'ENDBR
-    |   'READ
-    |   'READNEXT
-    |   'READPREV
-    |   'RESETBR
-    |   'REWRITE
-    |   'STARTBR
-    |   'UNLOCK
-    |   'WRITE
+    |	'DELETE
+    |	'ENDBR
+    |	'READ
+    |	'READNEXT
+    |	'READPREV
+    |	'RESETBR
+    |	'REWRITE
+    |	'STARTBR
+    |	'UNLOCK
+    |	'WRITE
 
     % 1.12.13  Interval control
-    |   'ASKTIME
-    |   'CANCEL
-    |   'DELAY
-    |   'FORMATTIME
-    |   'POST
-    |   'RETRIEVE
-    |   'START
-    |   'WAIT EVENT
+    |	'ASKTIME
+    |	'CANCEL
+    |	'DELAY
+    |	'FORMATTIME
+    |	'POST
+    |	'RETRIEVE
+    |	'START
+    |	'WAIT EVENT
 
     % 1.12.14  Journaling
-    |   'WAIT 'JOURNALNUM
-    |   'WRITE 'JOURNALNUM
+    |	'WAIT 'JOURNALNUM
+    |	'WRITE 'JOURNALNUM
 
     % 1.12.15  Monitoring
-    |   'MONITOR
+    |	'MONITOR
 
     % 1.12.16  Program control
-    |   'LINK
-    |   'LOAD
-    |   'RELEASE
-    |   'RETURN
-    |   'XCTL
+    |	'LINK
+    |	'LOAD
+    |	'RELEASE
+    |	'RETURN
+    |	'XCTL
 
     % 1.12.17  Security
-    |   'QUERY 'SECURITY
+    |	'QUERY 'SECURITY
 
     % 1.12.18  Spool Interface (JES)
-    |   'SPOOLCLOSE
-    |   'SPOOLOPEN 'INPUT
-    |   'SPOOLOPEN 'OUTPUT
-    |   'SPOOLREAD
-    |   'SPOOLWRITE
+    |	'SPOOLCLOSE
+    |	'SPOOLOPEN 'INPUT
+    |	'SPOOLOPEN 'OUTPUT
+    |	'SPOOLREAD
+    |	'SPOOLWRITE
 
     % 1.12.19  Storage control
-    |   'FREEMAIN
-    |   'GETMAIN
+    |	'FREEMAIN
+    |	'GETMAIN
 
     % 1.12.20  Syncpoint
-    |   'SYNCPOINT
-    |   'SYNCPOINT 'ROLLBACK
+    |	'SYNCPOINT
+    |	'SYNCPOINT 'ROLLBACK
 
     % 1.12.21  Task control
-    |   'CHANGE 'TASK
-    |   'DEQ
-    |   'ENQ
-    |   'SUSPEND
-    |   'WAIT 'EXTERNAL
-    |   'WAITCICS
+    |	'CHANGE 'TASK
+    |	'DEQ
+    |	'ENQ
+    |	'SUSPEND
+    |	'WAIT 'EXTERNAL
+    |	'WAITCICS
 
     % 1.12.22  Temporary storage control
-    |   'DELETEQ 'TS
-    |   'READQ 'TS
-    |   'WRITEQ 'TS
+    |	'DELETEQ 'TS
+    |	'READQ 'TS
+    |	'WRITEQ 'TS
 
     % 1.12.23  Terminal control
-    |   'ALLOCATE
-    |   'BUILD 'ATTACH
-    |   'CONVERSE
-    |   'EXTRACT 'ATTACH
-    |   'EXTRACT 'ATTRIBUTES
-    |   'EXTRACT 'LOGONMSG
-    |   'EXTRACT 'TCT
-    |   'FREE
-    |   'HANDLE 'AID
-    |   'ISSUE 'COPY
-    |   'ISSUE 'DISCONNECT
-    |   'ISSUE 'ENDFILE
-    |   'ISSUE 'ENDOUTPUT
-    |   'ISSUE 'EODS
-    |   'ISSUE 'ERASEAUP
-    |   'ISSUE 'LOAD
-    |   'ISSUE 'PASS
-    |   'ISSUE 'PRINT
-    |   'ISSUE 'RESET
-    |   'ISSUE 'SIGNAL
-    |   'POINT
-    |   'RECEIVE
-    |   'SEND
-    |   'WAIT 'SIGNAL
-    |   'WAIT 'TERMINAL
+    |	'ALLOCATE
+    |	'BUILD 'ATTACH
+    |	'CONVERSE
+    |	'EXTRACT 'ATTACH
+    |	'EXTRACT 'ATTRIBUTES
+    |	'EXTRACT 'LOGONMSG
+    |	'EXTRACT 'TCT
+    |	'FREE
+    |	'HANDLE 'AID
+    |	'ISSUE 'COPY
+    |	'ISSUE 'DISCONNECT
+    |	'ISSUE 'ENDFILE
+    |	'ISSUE 'ENDOUTPUT
+    |	'ISSUE 'EODS
+    |	'ISSUE 'ERASEAUP
+    |	'ISSUE 'LOAD
+    |	'ISSUE 'PASS
+    |	'ISSUE 'PRINT
+    |	'ISSUE 'RESET
+    |	'ISSUE 'SIGNAL
+    |	'POINT
+    |	'RECEIVE
+    |	'SEND
+    |	'WAIT 'SIGNAL
+    |	'WAIT 'TERMINAL
 
     % 1.12.24  Transient data
-    |   'DELETEQ 'TD
-    |   'READQ 'TD
-    |   'WRITEQ 'TD
+    |	'DELETEQ 'TD
+    |	'READQ 'TD
+    |	'WRITEQ 'TD
 end define
 
 define trace_statement
-        [ready_trace_statement]
-|       [reset_trace_statement]
+	[ready_trace_statement]
+|	[reset_trace_statement]
 end define
 
 define move_statement
-        [NL] 'MOVE [move_clause]
+    	[NL] 'MOVE [move_clause]
 end define
 
 define move_clause
@@ -1709,7 +1709,7 @@ define move_clause
 end define
 
 define TO_operands
-        'TO [operands]
+    	'TO [operands]
 end define
 
 define CORRESPONDING_or_CORR
@@ -1717,21 +1717,21 @@ define CORRESPONDING_or_CORR
 end define
 
 define if_statement
-        [NL] 'IF [condition_expression]
-            [then_clause]
-            [opt else_clause]
-        [opt END_IF]
+    	[NL] 'IF [condition_expression]
+	    [then_clause]
+	    [opt else_clause]
+	[opt END_IF]
 end define
 
-define then_clause              
-        [opt 'THEN]                     [IN_3] 
-            [repeat statement]          [EX_3]
+define then_clause		
+	[opt 'THEN] 			[IN_3] 
+	    [repeat statement]		[EX_3]
 end define
 
 define else_clause
-                                        [NL] 
-        [ELSE_or_OTHERWISE]             [IN_3] 
-            [repeat statement]          [EX_3]
+					[NL] 
+	[ELSE_or_OTHERWISE]		[IN_3] 
+	    [repeat statement]		[EX_3]
 end define
 
 define ELSE_or_OTHERWISE
@@ -1739,23 +1739,23 @@ define ELSE_or_OTHERWISE
 end define
 
 define END_IF
-        [NL] 'END-IF
+	[NL] 'END-IF
 end define
 
 define perform_statement
-        [NL] 'PERFORM [perform_clause]
+    	[NL] 'PERFORM [perform_clause]
 end define
 
 define perform_clause
         [id] [opt THROUGH_id] [opt times_phrase]
     |   
-        [opt times_phrase]              [IN_3]
-            [repeat statement]          [EX_3]
-        [END_PERFORM]
+        [opt times_phrase] 		[IN_3]
+    	    [repeat statement]		[EX_3]
+	[END_PERFORM]
 end define
 
 define END_PERFORM
-        [NL] 'END-PERFORM
+	[NL] 'END-PERFORM
 end define
 
 define times_phrase
@@ -1763,29 +1763,29 @@ define times_phrase
     |   [opt WITH_TEST] 'UNTIL [condition_expression]
     |   [opt WITH_TEST] 'VARYING [identifier] 'FROM [identifier_or_literal] 
             'BY [identifier_or_literal] 'UNTIL [condition_expression]
-            [repeat after_clause] 
+	    [repeat after_clause] 
 end define
 
 define WITH_TEST
-        [opt 'WITH] 'TEST [BEFORE_or_AFTER]
+    	[opt 'WITH] 'TEST [BEFORE_or_AFTER]
 end define
  
 define BEFORE_or_AFTER
-        'BEFORE | 'AFTER
+    	'BEFORE | 'AFTER
 end define
 
 define after_clause
-        [NL] 'AFTER [identifier] 'FROM [identifier_or_literal]
-            'BY [identifier_or_literal] 'UNTIL [condition_expression]
+    	[NL] 'AFTER [identifier] 'FROM [identifier_or_literal]
+	    'BY [identifier_or_literal] 'UNTIL [condition_expression]
 end define
 
 define accept_statement
-        [NL] 'ACCEPT [id] [opt accept_clause]
+    	[NL] 'ACCEPT [id] [opt accept_clause]
 end define
 
 define accept_clause
         'FROM [accept_source]
-    |   [opt 'MESSAGE] 'COUNT
+    |	[opt 'MESSAGE] 'COUNT
 end define
 
 define accept_source
@@ -1794,13 +1794,13 @@ define accept_source
 end define
 
 define add_statement
-        [NL] 'ADD [add_clause]          [IN_3] 
-            [repeat size_error]         [EX_3]
-        [opt END_ADD]
+    	[NL] 'ADD [add_clause]		[IN_3] 
+	    [repeat size_error]		[EX_3]
+	[opt END_ADD]
 end define
 
 define END_ADD
-        [NL] 'END-ADD
+    	[NL] 'END-ADD
 end define
 
 define add_clause
@@ -1818,7 +1818,7 @@ define size_error
 end define
 
 define alter_statement
-        [NL] 'ALTER [id] 'TO [opt PROCEED_TO] [id]
+    	[NL] 'ALTER [id] 'TO [opt PROCEED_TO] [id]
 end define
 
 define PROCEED_TO
@@ -1826,40 +1826,40 @@ define PROCEED_TO
 end define
 
 define call_statement
-        [NL] 'CALL [identifier_or_literal]      [IN_3] 
-            [opt call_using_clause] 
-            [opt on_exception]                  [EX_3]
-        [opt END_CALL]
+    	[NL] 'CALL [identifier_or_literal]	[IN_3] 
+	    [opt call_using_clause] 
+	    [opt on_exception] 			[EX_3]
+	[opt END_CALL]
 end define
 
 define END_CALL
-        [NL] 'END-CALL
+    	[NL] 'END-CALL
 end define
 
 define call_using_clause
-        'USING [call_arguments] 
+	'USING [call_arguments] 
 end define
 
 define call_arguments
-        [repeat argument_clause+]
+    	[repeat argument_clause+]
 end define
 
 define argument_clause
-        [by_reference_clause] 
-    |   [by_content_clause] 
+	[by_reference_clause] 
+    |	[by_content_clause] 
 end define
 
 define by_reference_clause
         [opt BY_REFERENCE] [identifier]
-    |   [opt BY_REFERENCE] 'ADDRESS 'OF [id]
+    |	[opt BY_REFERENCE] 'ADDRESS 'OF [id]
 end define
 
 define BY_REFERENCE
-        [opt 'BY] 'REFERENCE
+	[opt 'BY] 'REFERENCE
 end define
 
 define by_content_clause
-        [opt 'BY] 'CONTENT [repeat content_item]
+    	[opt 'BY] 'CONTENT [repeat content_item]
 end define
 
 define content_item
@@ -1877,15 +1877,15 @@ define on_exception
 end define
 
 define cancel_statement
-        [NL] 'CANCEL [repeat identifier_or_literal+]
+    	[NL] 'CANCEL [repeat identifier_or_literal+]
 end define
 
 define close_statement
-        [NL] 'CLOSE [close_items]
+    	[NL] 'CLOSE [close_items]
 end define
 
 define close_items
-        [repeat close_item+]
+	[repeat close_item+]
 end define
 
 define close_item
@@ -1898,33 +1898,33 @@ define close_disposition
 end define
 
 define disposition
-        [opt 'WITH] 'LOCK
-    |   [opt 'WITH] 'NO 'REWIND
-    |   [opt 'WITH] 'DISP
-    |   [opt 'FOR] 'REMOVAL
+	[opt 'WITH] 'LOCK
+    |	[opt 'WITH] 'NO 'REWIND
+    |	[opt 'WITH] 'DISP
+    |	[opt 'FOR] 'REMOVAL
 end define
 
 define compute_statement
-        [NL] 'COMPUTE [operands] [equal] [arithmetic_expression]        [IN_3]
-                [repeat size_error]                                     [EX_3]
-        [opt END_COMPUTE]
+    	[NL] 'COMPUTE [operands] [equal] [arithmetic_expression]	[IN_3]
+            	[repeat size_error] 					[EX_3]
+	[opt END_COMPUTE]
 end define
 
 define END_COMPUTE
-        [NL] 'END-COMPUTE
+    	[NL] 'END-COMPUTE
 end define
 
 define operands                                                  
-        [repeat operand+]
+	[repeat operand+]
 end define  
 
 define operand
-        [function_reference]
-    |   [identifier_or_literal] [opt 'ROUNDED] 
+	[function_reference]
+    |	[identifier_or_literal] [opt 'ROUNDED] 
 end define
                                                                          
 define literal_operands
-        [repeat literal_THROUGH_literal+]
+	[repeat literal_THROUGH_literal+]
 end define
 
 define literal_THROUGH_literal
@@ -1940,64 +1940,64 @@ define equal
 end define
 
 define continue_statement
-        [NL] 'CONTINUE
+    	[NL] 'CONTINUE
 end define
 
 define delete_statement
-        [NL] 'DELETE [id] [opt 'RECORD]         [IN_3] 
-            [repeat invalid_key]        [EX_3]
-        [opt END_DELETE]
+    	[NL] 'DELETE [id] [opt 'RECORD]		[IN_3] 
+	    [repeat invalid_key] 	[EX_3]
+	[opt END_DELETE]
 end define
 
 define END_DELETE
-        [NL] 'END-DELETE
+    	[NL] 'END-DELETE
 end define
 
 define invalid_key
-        [NL] [opt 'NOT] 'INVALID [opt 'KEY]     [IN_3] 
-            [repeat statement+]                 [EX_3] 
+        [NL] [opt 'NOT] 'INVALID [opt 'KEY] 	[IN_3] 
+	    [repeat statement+] 		[EX_3] 
 end define
 
 define display_statement
-        [NL] 'DISPLAY [IN] [IN] [display_arguments] [EX] [opt UPON_id] [opt WITH_NO_ADVANCING] [EX]
+    	[NL] 'DISPLAY [IN] [IN] [display_arguments] [EX] [opt UPON_id] [opt WITH_NO_ADVANCING] [EX]
 end define
 
 define display_arguments
-        [repeat identifier_or_literal+]
+	[repeat identifier_or_literal+]
 end define
 
 define UPON_id
-        [NL] 'UPON [id]
+	[NL] 'UPON [id]
 end define
 
 define WITH_NO_ADVANCING
-        [NL] [opt 'WITH] 'NO 'ADVANCING
+	[NL] [opt 'WITH] 'NO 'ADVANCING
 end define
 
 define disable_statement
-        'DISABLE [terminal] [id] [opt 'WITH] 'KEY [identifier_or_literal]
+	'DISABLE [terminal] [id] [opt 'WITH] 'KEY [identifier_or_literal]
 end define
 
 define terminal
-        'INPUT [opt 'TERMINAL]
-    |   'I-O 'TERMINAL
-    |   'OUTPUT
+	'INPUT [opt 'TERMINAL]
+    |	'I-O 'TERMINAL
+    |	'OUTPUT
 end define
 
 define divide_statement
-        [NL] 'DIVIDE [divide_clause]    [IN_3]
-            [repeat size_error]         [EX_3]
-        [opt END_DIVIDE] 
+    	[NL] 'DIVIDE [divide_clause]	[IN_3]
+	    [repeat size_error]		[EX_3]
+	[opt END_DIVIDE] 
 end define
 
 define divide_clause
-        [operand] [INTO_or_BY] [operands]
-            [opt GIVING_operands] 
-            [opt REMAINDER_operand] 
+	[operand] [INTO_or_BY] [operands]
+	    [opt GIVING_operands] 
+	    [opt REMAINDER_operand] 
 end define
 
 define END_DIVIDE
-        [NL] 'END-DIVIDE
+    	[NL] 'END-DIVIDE
 end define
 
 define INTO_or_BY
@@ -2005,15 +2005,15 @@ define INTO_or_BY
 end define
 
 define REMAINDER_operand
-        'REMAINDER [operand]
+	'REMAINDER [operand]
 end define
 
 define enable_statement
-        'ENABLE [terminal] [id] [opt 'WITH] 'KEY [identifier_or_literal]
+	'ENABLE [terminal] [id] [opt 'WITH] 'KEY [identifier_or_literal]
 end define
 
 define enter_statement
-        [NL] 'ENTER [opt enter_target] 
+    	[NL] 'ENTER [opt enter_target] 
 end define
 
 define enter_target
@@ -2021,47 +2021,47 @@ define enter_target
 end define
 
 define entry_statement
-        [NL] 'ENTRY [entry_name] [opt using_clause]
+    	[NL] 'ENTRY [entry_name] [opt using_clause]
 end define
 
 define entry_name
-        [id_or_literal]
+	[id_or_literal]
 end define
 
 define evaluate_statement
-                                                                        [NL] 
-        'EVALUATE [tag_expression] [repeat ALSO_tag_expression]         [IN_3] 
-            [repeat when_clause]
-            [opt when_other]                                            [EX_3]
-        [opt END_EVALUATE]
+    									[NL] 
+	'EVALUATE [tag_expression] [repeat ALSO_tag_expression] 	[IN_3] 
+	    [repeat when_clause]
+	    [opt when_other] 						[EX_3]
+	[opt END_EVALUATE]
 end define
 
 define END_EVALUATE
-        [NL] 'END-EVALUATE
+    	[NL] 'END-EVALUATE
 end define
 
 define tag_expression
         [identifier_or_literal]
     |   [arithmetic_expression]
     |   [condition_expression]
-    |   [TRUE_or_FALSE]
+    |	[TRUE_or_FALSE]
 end define
 
 define ALSO_tag_expression
-        'ALSO [tag_expression]
+	'ALSO [tag_expression]
 end define
 
 define when_clause
-                                                                        [NL] 
-        'WHEN [label_expression] [repeat ALSO_label_expression]         [IN_3] 
-            [repeat statement]                                          [EX_3]
+        								[NL] 
+	'WHEN [label_expression] [repeat ALSO_label_expression] 	[IN_3] 
+	    [repeat statement]						[EX_3]
 end define
  
 define label_expression
         'ANY
     |   [condition_expression]
-    |   'TRUE
-    |   'FALSE
+    |	'TRUE
+    |	'FALSE
     |   [opt 'NOT] [label_value] [opt THROUGH_label_value]
 end define
 
@@ -2078,13 +2078,13 @@ define ALSO_label_expression
 end define
 
 define when_other
-                                [NL] 
-        'WHEN 'OTHER            [IN_3]
-            [repeat statement]  [EX_3]
+				[NL] 
+	'WHEN 'OTHER 		[IN_3]
+	    [repeat statement]	[EX_3]
 end define
 
 define examine_statement
-        [NL] 'EXAMINE [identifier] [tallying_or_replacing_clause]
+    	[NL] 'EXAMINE [identifier] [tallying_or_replacing_clause]
 end define
 
 define tallying_or_replacing_clause
@@ -2101,7 +2101,7 @@ define REPLACING_BY_literal
 end define
 
 define exhibit_statement
-        [NL] 'EXHIBIT [opt NAMED_or_CHANGED] [repeat identifier_or_literal+]
+    	[NL] 'EXHIBIT [opt NAMED_or_CHANGED] [repeat identifier_or_literal+]
 end define
 
 define NAMED_or_CHANGED
@@ -2109,36 +2109,36 @@ define NAMED_or_CHANGED
 end define
 
 define exit_statement
-        [NL] 'EXIT
+    	[NL] 'EXIT
 end define
 
 define exit_program_statement
-        [NL] 'EXIT 'PROGRAM
+     	[NL] 'EXIT 'PROGRAM
 end define
 
 define generate_statement
-        [NL] 'GENERATE [repeat id+] 
+	[NL] 'GENERATE [repeat id+] 
 end define
 
 define goback_statement
-        [NL] 'GOBACK
+    	[NL] 'GOBACK
 end define
 
 define goto_statement
-        [NL] 'GO [opt 'TO] [id]
-    |   [NL] 'GO [opt 'TO] [repeat id+]'DEPENDING [opt 'ON] [identifier]
+    	[NL] 'GO [opt 'TO] [id]
+    |	[NL] 'GO [opt 'TO] [repeat id+]'DEPENDING [opt 'ON] [identifier]
 end define
 
 define initialize_statement
-        [NL] 'INITIALIZE [repeat identifier+] [opt REPLACING_replace_items]
+    	[NL] 'INITIALIZE [repeat identifier+] [opt REPLACING_replace_items]
 end define
 
 define REPLACING_replace_items
-        'REPLACING [repeat replace_item+]
+	'REPLACING [repeat replace_item+]
 end define
 
 define replace_item
-        [replaced_type] [opt 'DATA] 'BY [identifier_or_literal]
+	[replaced_type] [opt 'DATA] 'BY [identifier_or_literal]
 end define
 
 define replaced_type
@@ -2152,18 +2152,18 @@ define replaced_type
 end define
 
 define initiate_statement
-        [NL] 'INITIATE [repeat id+]
+	[NL] 'INITIATE [repeat id+]
 end define
 
 define inspect_statement
-        [NL] 'INSPECT [identifier] [converting_or_replacing_or_tallying_clause]
+    	[NL] 'INSPECT [identifier] [converting_or_replacing_or_tallying_clause]
 end define
 
 define converting_or_replacing_or_tallying_clause
-        'TALLYING  [repeat tallying_clause+] 
-    |   'REPLACING [repeat replacing_clause+]
-    |   'CONVERTING [identifier_or_literal] 'TO [identifier_or_literal] 
-            [repeat position_criterion]
+    	'TALLYING  [repeat tallying_clause+] 
+    |	'REPLACING [repeat replacing_clause+]
+    |	'CONVERTING [identifier_or_literal] 'TO [identifier_or_literal] 
+    	    [repeat position_criterion]
 end define
 
 define tallying_clause
@@ -2201,8 +2201,8 @@ define replacing_all_criterion
 end define
 
 define merge_statement
-        [NL] 'MERGE [id] [repeat merge_order+] [opt collating_sequence] 
-            'USING [repeat id+] [merge_output]
+    	[NL] 'MERGE [id] [repeat merge_order+] [opt collating_sequence] 
+	    'USING [repeat id+] [merge_output]
 end define
 
 define merge_order
@@ -2223,13 +2223,13 @@ define THROUGH_id
 end define
 
 define multiply_statement
-        [NL] 'MULTIPLY [multiply_clause]        [IN_3]
-            [repeat size_error]                 [EX_3]
-        [opt END_MULTIPLY]
+    	[NL] 'MULTIPLY [multiply_clause] 	[IN_3]
+	    [repeat size_error]			[EX_3]
+	[opt END_MULTIPLY]
 end define
 
 define END_MULTIPLY
-        [NL] 'END-MULTIPLY
+    	[NL] 'END-MULTIPLY
 end define
 
 define multiply_clause
@@ -2237,25 +2237,25 @@ define multiply_clause
 end define
 
 define next_statement
-        [NL] 'NEXT 'SENTENCE
+	[NL] 'NEXT 'SENTENCE
 end define
 
 define note_statement
-        [NL] 'NOTE [stringlit_or_charlit]
+	[NL] 'NOTE [stringlit_or_charlit]
 end define
 
 define on_statement
-        [NL] 'ON [repeat identifier_or_literal+] 
-            [opt AND_EVERY_identifier_or_literal] 
-            [opt UNTIL_identifier_or_literal]           [IN_3] 
-                [repeat statement+]                     [EX_3]
-            [opt on_else_clause]
+    	[NL] 'ON [repeat identifier_or_literal+] 
+	    [opt AND_EVERY_identifier_or_literal] 
+	    [opt UNTIL_identifier_or_literal] 		[IN_3] 
+		[repeat statement+]			[EX_3]
+	    [opt on_else_clause]
 end define
 
-define on_else_clause                                   
-                                                        [NL]
-            [ELSE_or_OTHERWISE]                         [IN_3]
-                [repeat statement+]                     [EX_3]
+define on_else_clause					
+	    						[NL]
+	    [ELSE_or_OTHERWISE] 			[IN_3]
+		[repeat statement+]			[EX_3]
 end define
 
 define AND_EVERY_identifier_or_literal
@@ -2267,200 +2267,200 @@ define UNTIL_identifier_or_literal
 end define
 
 define open_statement
-        [NL] 'OPEN [open_items]
+    	[NL] 'OPEN [open_items]
 end define
 
 define open_items
-        [repeat open_item+]
+	[repeat open_item+]
 end define
 
 define open_item
-        [opt open_kind] [id] [opt open_disposition]
+	[opt open_kind] [id] [opt open_disposition]
 end define
 
 define open_kind
-        'INPUT | 'OUTPUT | 'I-O | 'EXTEND
+	'INPUT | 'OUTPUT | 'I-O | 'EXTEND
 end define
 
 define open_disposition
-        'REVERSED 
-    |   [opt 'WITH] 'NO 'REWIND
-    |   [opt 'WITH] 'LOCK
+	'REVERSED 
+    |	[opt 'WITH] 'NO 'REWIND
+    |	[opt 'WITH] 'LOCK
 end define
 
 define purge_statement
-        [NL] 'PURGE [id]
+	[NL] 'PURGE [id]
 end define
 
 define read_statement
-        [NL] 'READ [id] [opt 'NEXT] [opt 'RECORD] 
-            [opt INTO_identifier]                       [IN_3]
-            [repeat read_option]                        [EX_3]
-        [opt END_READ]
+    	[NL] 'READ [id] [opt 'NEXT] [opt 'RECORD] 
+	    [opt INTO_identifier]			[IN_3]
+	    [repeat read_option]			[EX_3]
+	[opt END_READ]
 end define
 
 define END_READ
-        [NL] 'END-READ
+    	[NL] 'END-READ
 end define
 
 define read_option
-        [invalid_key]
-    |   [at_end]
-    |   [key_is]
+    	[invalid_key]
+    |	[at_end]
+    |	[key_is]
 end define
 
 define key_is
-        [NL] [IN] 'KEY [opt 'IS] [id] [EX]
+	[NL] [IN] 'KEY [opt 'IS] [id] [EX]
 end define
 
 define at_end
-        [NL] [opt 'NOT] [opt 'AT] 'END [IN_3] [repeat statement+] [EX_3]
+       	[NL] [opt 'NOT] [opt 'AT] 'END [IN_3] [repeat statement+] [EX_3]
 end define
 
 define INTO_identifier
-        'INTO [identifier]
+	'INTO [identifier]
 end define
 
 define ready_trace_statement
-        [NL] 'READY 'TRACE
+	[NL] 'READY 'TRACE
 end define
 
 define receive_statement
-        [NL] 'RECEIVE [id] [MESSAGE_or_SEGMENT] 'INTO [identifier]      [IN_3]
-            [repeat no_data]                                            [EX_3]
-        [opt END_RECEIVE]
+	[NL] 'RECEIVE [id] [MESSAGE_or_SEGMENT] 'INTO [identifier]	[IN_3]
+	    [repeat no_data] 						[EX_3]
+	[opt END_RECEIVE]
 end define
 
 define END_RECEIVE
-        [NL] 'END-RECEIVE
+    	[NL] 'END-RECEIVE
 end define
 
 define MESSAGE_or_SEGMENT
-        'MESSAGE  |  'SEGMENT
+	'MESSAGE  |  'SEGMENT
 end define
 
 define no_data
-        [opt 'WITH] [opt 'NO] 'DATA [repeat statement+]
+	[opt 'WITH] [opt 'NO] 'DATA [repeat statement+]
 end define
 
 define release_statement
-        [NL] 'RELEASE [identifier] [opt FROM_identifier]
+    	[NL] 'RELEASE [identifier] [opt FROM_identifier]
 end define
 
 define FROM_identifier
-        'FROM [identifier]
+	'FROM [identifier]
 end define
 
 define reset_trace_statement
-        [NL] 'RESET 'TRACE
+	[NL] 'RESET 'TRACE
 end define
 
 define return_statement
-        [NL] 'RETURN [id] [opt 'RECORD] [opt INTO_identifier]           [IN_3]
-            [repeat at_end]                                             [EX_3] 
-        [opt END_RETURN]
+    	[NL] 'RETURN [id] [opt 'RECORD] [opt INTO_identifier]		[IN_3]
+	    [repeat at_end]						[EX_3] 
+	[opt END_RETURN]
 end define
 
 define END_RETURN
-        [NL] 'END-RETURN
+    	[NL] 'END-RETURN
 end define
 
 define rewrite_statement
-        [NL] 'REWRITE [id] [opt FROM_identifier]                        [IN_3]
-            [repeat invalid_key]                                        [EX_3]
-        [opt END_REWRITE]
+    	[NL] 'REWRITE [id] [opt FROM_identifier]			[IN_3]
+	    [repeat invalid_key] 					[EX_3]
+	[opt END_REWRITE]
 end define
 
 define END_REWRITE
-        [NL] 'END-REWRITE
+    	[NL] 'END-REWRITE
 end define
 
 define search_statement
-        [NL] 'SEARCH [opt 'ALL] [identifier] [opt varying_clause]       [IN_3] 
-            [repeat at_end] 
-            [repeat search_when_clause]                                 [EX_3]
-        [opt END_SEARCH]                
+    	[NL] 'SEARCH [opt 'ALL] [identifier] [opt varying_clause]	[IN_3] 
+	    [repeat at_end] 
+	    [repeat search_when_clause] 				[EX_3]
+	[opt END_SEARCH]		
 end define
 
 define varying_clause
-        'VARYING [identifier]
+    	'VARYING [identifier]
 end define
 
 define search_when_clause
-                                                        [NL] 
-        'WHEN [condition_expression]                    [IN_3] 
-            [repeat statement+]                         [EX_3]
+        						[NL] 
+	'WHEN [condition_expression]	 		[IN_3] 
+	    [repeat statement+]				[EX_3]
 end define
 
 define END_SEARCH
-        [NL] 'END-SEARCH
+    	[NL] 'END-SEARCH
 end define
 
 define send_statement
-        [NL] 'SEND [id] 'FROM [identifier]
-    |   [NL] 'SEND [id] [opt FROM_identifier] 'WITH [send_property]
-            [opt advancing_clause] [opt REPLACING_LINE]
+	[NL] 'SEND [id] 'FROM [identifier]
+    |	[NL] 'SEND [id] [opt FROM_identifier] 'WITH [send_property]
+       	    [opt advancing_clause] [opt REPLACING_LINE]
 end define
 
 define send_property
-        [identifier]
-    |   'ESI | 'EMI | 'EGI
+	[identifier]
+    |	'ESI | 'EMI | 'EGI
 end define
 
 define advancing_clause
-        [BEFORE_or_AFTER] [opt 'ADVANCING] [advancing_unit]
+	[BEFORE_or_AFTER] [opt 'ADVANCING] [advancing_unit]
 end define
 
 define advancing_unit
-        [identifier_or_integer] [opt LINE_or_LINES]
-    |   'PAGE
+	[identifier_or_integer] [opt LINE_or_LINES]
+    |	'PAGE
 end define
 
 define identifier_or_integer
-        [identifier] | [number]
+	[identifier] | [number]
 end define
 
 define REPLACING_LINE
-        'REPLACING [opt 'LINE]
+	'REPLACING [opt 'LINE]
 end define
 
 define service_statement
-        [NL] 'SERVICE 'LABEL
-    |   [NL] 'SERVICE 'RELOAD [identifier]
+	[NL] 'SERVICE 'LABEL
+    |	[NL] 'SERVICE 'RELOAD [identifier]
 end define
 
 define set_statement
-        [NL] 'SET [repeat set_clause+]
+    	[NL] 'SET [repeat set_clause+]
 end define
 
 define set_clause
-        [repeat set_operand+] [opt UP_or_DOWN] [TO_or_BY] [set_value]
+	[repeat set_operand+] [opt UP_or_DOWN] [TO_or_BY] [set_value]
 end define
 
 define set_operand
-        [opt ADDRESS_OF] [identifier]
+	[opt ADDRESS_OF] [identifier]
 end define
 
 define set_value
-        [opt ADDRESS_OF] [identifier]
-    |   [numeric_literal]
-    |   'ON | 'OFF | 'TRUE | 'NULL | 'NULLS
+	[opt ADDRESS_OF] [identifier]
+    |	[numeric_literal]
+    |	'ON | 'OFF | 'TRUE | 'NULL | 'NULLS
 end define
 
 define ADDRESS_OF
-        'ADDRESS 'OF
+	'ADDRESS 'OF
 end define
 
 define UP_or_DOWN
-        'UP | 'DOWN
+	'UP | 'DOWN
 end define
 
 define TO_or_BY
-        'TO | 'BY
+	'TO | 'BY
 end define
 
 define sort_statement
-        [NL] 'SORT [id] [repeat sort_order+] [opt with_duplicates]
+    	[NL] 'SORT [id] [repeat sort_order+] [opt with_duplicates]
             [opt collating_sequence] [sort_input] [sort_output]
 end define
 
@@ -2469,77 +2469,77 @@ define sort_order
 end define
 
 define with_duplicates
-        [opt 'WITH] 'DUPLICATES [opt IN_ORDER]
+	[opt 'WITH] 'DUPLICATES [opt IN_ORDER]
 end define
 
 define IN_ORDER
-        'IN 'ORDER
+	'IN 'ORDER
 end define
 
 define sort_input
-        'USING [operands]
+	'USING [operands]
     |   'INPUT 'PROCEDURE [opt 'IS] [id] [opt THROUGH_id]
 end define
 
 define sort_output
-        'GIVING [operands]
+	'GIVING [operands]
     |   'OUTPUT 'PROCEDURE [opt 'IS] [id] [opt THROUGH_id]
 end define
 
 define start_statement
-        [NL] 'START [id] [opt key_comparison]   [IN_3]
-            [repeat invalid_key]                [EX_3]
-        [opt END_START]
+    	[NL] 'START [id] [opt key_comparison]	[IN_3]
+            [repeat invalid_key] 		[EX_3]
+	[opt END_START]
 end define
 
 define END_START
-        [NL] 'END-START
+    	[NL] 'END-START
 end define
 
 define key_comparison
-        'KEY [opt 'IS] [opt 'NOT] [relational_operator] [identifier]
+	'KEY [opt 'IS] [opt 'NOT] [relational_operator] [identifier]
 end define
 
 define stop_statement
-        [NL] 'STOP 'RUN
-    |   [NL] 'STOP [literal]
+    	[NL] 'STOP 'RUN
+    |	[NL] 'STOP [literal]
 end define
 
 define string_statement
-        [NL] 'STRING [repeat delimit_clause+] 'INTO [identifier]        [IN_3]
+    	[NL] 'STRING [repeat delimit_clause+] 'INTO [identifier]	[IN_3]
             [opt with_pointer] 
-            [repeat on_overflow]                                        [EX_3]
-        [opt END_STRING]
+	    [repeat on_overflow] 					[EX_3]
+	[opt END_STRING]
 end define
 
 define END_STRING
-        [NL] 'END-STRING
+    	[NL] 'END-STRING
 end define
 
 define delimit_clause
-        [repeat identifier_or_literal+] 'DELIMITED [opt 'BY] [identifier_or_literal_or_SIZE]
+	[repeat identifier_or_literal+] 'DELIMITED [opt 'BY] [identifier_or_literal_or_SIZE]
 end define
 
 define identifier_or_literal_or_SIZE
-        'SIZE | [identifier_or_literal]
+	'SIZE | [identifier_or_literal]
 end define
 
 define with_pointer
-        [opt 'WITH] 'POINTER [identifier]
+	[opt 'WITH] 'POINTER [identifier]
 end define
 
 define on_overflow
-        [NL] [opt 'NOT] [opt 'ON] 'OVERFLOW [IN_3] [repeat statement+] [EX_3]
+    	[NL] [opt 'NOT] [opt 'ON] 'OVERFLOW [IN_3] [repeat statement+] [EX_3]
 end define
 
 define subtract_statement
-        [NL] 'SUBTRACT [subtract_clause]        [IN_3] 
-            [repeat size_error]                 [EX_3]
-        [opt END_SUBTRACT]
+    	[NL] 'SUBTRACT [subtract_clause]	[IN_3] 
+	    [repeat size_error]			[EX_3]
+	[opt END_SUBTRACT]
 end define
 
 define END_SUBTRACT
-        [NL] 'END-SUBTRACT
+    	[NL] 'END-SUBTRACT
 end define
 
 define subtract_clause
@@ -2548,95 +2548,95 @@ define subtract_clause
 end define
 
 define suppress_statement
-        [NL] 'SUPPRESS [opt 'PRINTING]
+	[NL] 'SUPPRESS [opt 'PRINTING]
 end define
 
 define terminate_statement
-        [NL] 'TERMINATE [repeat id+]
+	[NL] 'TERMINATE [repeat id+]
 end define
 
 define transform_statement
-        [NL] 'TRANSFORM [identifier] [opt 'CHARACTERS]
-            'FROM [identifier_or_literal] 'TO [identifier_or_literal]
+    	[NL] 'TRANSFORM [identifier] [opt 'CHARACTERS]
+	    'FROM [identifier_or_literal] 'TO [identifier_or_literal]
 end define
 
 define unstring_statement
-        [NL] 'UNSTRING [identifier] [opt unstring_delimit_clause]
-            'INTO [repeat identifier_opt_delimiter+]                    [IN_3] 
-            [opt with_pointer]                                   
-            [opt tallying] 
-            [repeat on_overflow]                                        [EX_3]
-        [opt END_UNSTRING]
+    	[NL] 'UNSTRING [identifier] [opt unstring_delimit_clause]
+	    'INTO [repeat identifier_opt_delimiter+]			[IN_3] 
+	    [opt with_pointer]					 
+	    [opt tallying] 
+	    [repeat on_overflow] 					[EX_3]
+	[opt END_UNSTRING]
 end define
 
 define END_UNSTRING
-        [NL] 'END-UNSTRING
+    	[NL] 'END-UNSTRING
 end define
 
 define unstring_delimit_clause
-        'DELIMITED [opt 'BY] [opt 'ALL] [identifier_or_literal] 
-            [repeat OR_ALL_identifier_or_literal]
+	'DELIMITED [opt 'BY] [opt 'ALL] [identifier_or_literal] 
+	    [repeat OR_ALL_identifier_or_literal]
 end define
 
 define OR_ALL_identifier_or_literal
-        'OR [opt 'ALL] [identifier_or_literal]
+	'OR [opt 'ALL] [identifier_or_literal]
 end define
 
 define identifier_opt_delimiter
-        [identifier] [opt DELIMITER_IN_identifier] [opt COUNT_IN_identifier]
+	[identifier] [opt DELIMITER_IN_identifier] [opt COUNT_IN_identifier]
 end define
 
 define DELIMITER_IN_identifier
-        'DELIMITER [opt 'IN] [identifier]
+	'DELIMITER [opt 'IN] [identifier]
 end define
 
 define COUNT_IN_identifier
-        'COUNT [opt 'IN] [identifier]
+	'COUNT [opt 'IN] [identifier]
 end define
 
 define tallying
-        'TALLYING [opt 'IN] [identifier]
+	'TALLYING [opt 'IN] [identifier]
 end define
 
 define write_statement
-        [NL] 'WRITE [id] [opt FROM_identifier]          [IN_3] 
-            [opt positioning_clause] 
-            [repeat at_end_of_page_or_invalid_key]      [EX_3]
-        [opt END_WRITE]
+    	[NL] 'WRITE [id] [opt FROM_identifier]		[IN_3] 
+	    [opt positioning_clause] 
+	    [repeat at_end_of_page_or_invalid_key] 	[EX_3]
+	[opt END_WRITE]
 end define
 
 define END_WRITE
-        [NL] 'END-WRITE
+    	[NL] 'END-WRITE
 end define
 
 define positioning_clause
-        [BEFORE_or_AFTER] [opt ADVANCING_or_POSITIONING] [advancing_unit]
+	[BEFORE_or_AFTER] [opt ADVANCING_or_POSITIONING] [advancing_unit]
 end define
 
 define ADVANCING_or_POSITIONING
-        'ADVANCING  |  'POSITIONING
+	'ADVANCING  |  'POSITIONING
 end define
 
 define at_end_of_page_or_invalid_key
-        [at_end_of_page]
-    |   [invalid_key]
+	[at_end_of_page]
+    |	[invalid_key]
 end define
 
 define at_end_of_page
-        [NL] [opt 'NOT] 'AT [END_OF_PAGE_or_EOP] [IN_3] [repeat statement+] [EX_3] 
+	[NL] [opt 'NOT] 'AT [END_OF_PAGE_or_EOP] [IN_3] [repeat statement+] [EX_3] 
 end define
 
 define END_OF_PAGE_or_EOP
-        'END-OF-PAGE  |  'EOP
+	'END-OF-PAGE  |  'EOP
 end define
 
 
 % =================================================
-%               Compiler Directives
+% 		Compiler Directives
 % =================================================
 
 define compiler_director
-                'BASIS [id] 
+		'BASIS [id] 
     |   'CBL [list id]
     |   'PROCESS [list id] 
     |   [include_statement]
@@ -2652,29 +2652,29 @@ define compiler_director
 end define
 
 define include_statement
-        [SPOFF] '- 'INC [SPON] [id_or_literal]
+	[SPOFF] '- 'INC [SPON] [id_or_literal]
 end define
 
 define EXCEPT_id
-        'EXCEPT [id]
+	'EXCEPT [id]
 end define
 
 define control_options
-        'SOURCE | 'NOSOURCE | 'LIST | 'NOLIST | 'MAP | 'NOMAP
+    	'SOURCE | 'NOSOURCE | 'LIST | 'NOLIST | 'MAP | 'NOMAP
 end define
 
 define library
-        [OF_or_IN] [id_or_literal]
+    	[OF_or_IN] [id_or_literal]
 end define
 
 define OF_or_IN
-        'OF | 'IN
+    	'OF | 'IN
 end define
 
 
 
 % ==========================================================
-%                       Expressions
+%			Expressions
 % ==========================================================
 
 define identifier
@@ -2688,7 +2688,7 @@ end define
 
 define id_or_integer
         [id] 
-    |   [number]
+    |	[number]
 end define
 
 define identifier_or_literal
@@ -2697,10 +2697,10 @@ define identifier_or_literal
 end define
 
 define literal
-        [stringlit_or_charlit]
+     	[stringlit_or_charlit]
     |   [fig_const]
     |   [numeric_literal]
-    |   [hex_literal]
+    |	[hex_literal]
 end define 
 
 define numeric_literal
@@ -2709,7 +2709,7 @@ define numeric_literal
 end define
 
 define hex_literal
-        'X [charlit]
+	'X [charlit]
 end define
 
 define fig_const
@@ -2719,11 +2719,11 @@ define fig_const
     |   'LOW-VALUE | 'LOW-VALUES 
     |   'QUOTE  | 'QUOTES
     |   'ALL [fig_const]
-    |   [charlit]
+    |	[charlit]
     |   'NULL  | 'NULLS
     |   'TRUE  | 'FALSE
-    |   'END |  'EOP  |  'END-OF-PAGE | 'INVALID [opt 'KEY] | 'DATA
-    |   'SIZE 'ERROR  |  'OVERFLOW    |   'EXCEPTION
+    | 	'END |  'EOP  |  'END-OF-PAGE | 'INVALID [opt 'KEY] | 'DATA
+    | 	'SIZE 'ERROR  |  'OVERFLOW    |   'EXCEPTION
 end define
 
 define qualifier
@@ -2737,19 +2737,19 @@ define OF_or_IN_id
 end define
 
 define position_selector
-        '( [left_char_position] ': [opt length] ')
+	'( [left_char_position] ': [opt length] ')
 end define
 
 define left_char_position
-        [arithmetic_expression]
+    	[arithmetic_expression]
 end define
 
 define length
-        [arithmetic_expression]
+    	[arithmetic_expression]
 end define
 
 define subscript
-           '( [repeat int_or_dataname_or_index_name+] ')
+	   '( [repeat int_or_dataname_or_index_name+] ')
 end define
 
 define int_or_dataname_or_index_name
@@ -2784,7 +2784,7 @@ define condition_expression
 end define
 
 define or_condition_term
-        [IN] [IN] [NL] 'OR [condition_term] [EX] [EX]
+	[IN] [IN] [NL] 'OR [condition_term] [EX] [EX]
 end define
 
 define condition_term
@@ -2792,43 +2792,43 @@ define condition_term
 end define
 
 define and_condition_factor
-        [IN] [IN] [NL] 'AND [condition_factor] [EX] [EX]
+	[IN] [IN] [NL] 'AND [condition_factor] [EX] [EX]
 end define
 
-define condition_factor 
-        [opt 'NOT] [condition_primary]
+define condition_factor	
+	[opt 'NOT] [condition_primary]
 end define
 
 define condition_primary
-        ( [condition_expression] )
-    |   [TRUE_or_FALSE]
-    |   [class_condition]
-    |   [sign_condition]
-    |   [relation_condition]
-    |   [io_condition]
-    |   [error_condition]
-    |   [identifier] [opt IS_TRUE_or_FALSE]
+	( [condition_expression] )
+    |	[TRUE_or_FALSE]
+    |	[class_condition]
+    |	[sign_condition]
+    |	[relation_condition]
+    |	[io_condition]
+    |	[error_condition]
+    |	[identifier] [opt IS_TRUE_or_FALSE]
 end define
 
 define TRUE_or_FALSE
-        'TRUE  |  'FALSE
+	'TRUE  |  'FALSE
 end define
 
 define io_condition
-        'EOF [opt IS_TRUE_or_FALSE] | 'END [opt IS_TRUE_or_FALSE] | 'INVALID [opt 'KEY]
+	'EOF [opt IS_TRUE_or_FALSE] | 'END [opt IS_TRUE_or_FALSE] | 'INVALID [opt 'KEY]
 end define
 
 define error_condition
-        'SIZE 'ERROR
+	'SIZE 'ERROR
 end define
 
 define IS_TRUE_or_FALSE
-        'IS 'FALSE
-    |   'IS 'TRUE
+	'IS 'FALSE
+    |	'IS 'TRUE
 end define
 
 define class_condition
-        [identifier] [opt 'IS] [opt 'NOT] [class_type]
+	[identifier] [opt 'IS] [opt 'NOT] [class_type]
 end define
 
 define class_type
@@ -2843,121 +2843,121 @@ end define
 
 
 define condition_factor
-        [opt 'NOT] [condition_primary]
+	[opt 'NOT] [condition_primary]
 end define
 
 define condition_primary
-        ( [condition_expression] )
-    |   [TRUE_or_FALSE]
-    |   [class_condition]
-    |   [sign_condition]
-    |   [relation_condition]
-    |   [io_condition]
-    |   [error_condition]
-    |   [identifier] [opt IS_TRUE_or_FALSE]
+	( [condition_expression] )
+    |	[TRUE_or_FALSE]
+    |	[class_condition]
+    |	[sign_condition]
+    |	[relation_condition]
+    |	[io_condition]
+    |	[error_condition]
+    |	[identifier] [opt IS_TRUE_or_FALSE]
 end define
 
 define relation_condition
-        [subject] [opt 'IS] [predicate] 
+	[subject] [opt 'IS] [predicate]	
 end define
 
 define subject
-        [arithmetic_expression]
-    |   'ADDRESS 'OF [identifier]
+	[arithmetic_expression]
+    |	'ADDRESS 'OF [identifier]
 end define
 
 define predicate
-        [predicate_term] [repeat OR_predicate_term]
+	[predicate_term] [repeat OR_predicate_term]
 end define
 
 define OR_predicate_term
-        'OR [opt 'IS] [predicate_term]
+	'OR [opt 'IS] [predicate_term]
 end define
 
 define predicate_term
-        [predicate_factor] [repeat AND_predicate_factor]
+	[predicate_factor] [repeat AND_predicate_factor]
 end define
 
 define AND_predicate_factor
-        'AND [opt 'IS] [predicate_factor]
+	'AND [opt 'IS] [predicate_factor]
 end define
 
 define predicate_factor
-        [opt 'NOT] [predicate_primary]
+	[opt 'NOT] [predicate_primary]
 end define
 
 define predicate_primary
-        [relational_operator] [objects]
-    |   ( [predicate] )
+	[relational_operator] [objects]
+    |	( [predicate] )
 end define
 
 define objects
-        [object_term] [repeat OR_object_term]
+	[object_term] [repeat OR_object_term]
 end define
 
 define OR_object_term
-        'OR [object_term]
+	'OR [object_term]
 end define
 
 define object_term
-        [object_factor] [repeat AND_object_factor]
+	[object_factor] [repeat AND_object_factor]
 end define
 
 define AND_object_factor
-        'AND [object_factor]
+	'AND [object_factor]
 end define
 
 define object_factor
-        [positive_object_factor]
-    |   [negative_object_factor]
+	[positive_object_factor]
+    |	[negative_object_factor]
 end define
 
 define negative_object_factor
-        [opt 'NOT] [opt 'IS] [object_primary]
+	[opt 'NOT] [opt 'IS] [object_primary]
 end define
 
 define positive_object_factor
-        [opt 'IS] [object_primary]
+	[opt 'IS] [object_primary]
 end define
 
 define object_primary
-        ( [objects] )
-    |   [subject] 
+	( [objects] )
+    |	[subject] 
 end define
 
 define relational_operator
-        [equality]
-    |   [inequality]
+	[equality]
+    |	[inequality]
 end define
 
 define inequality
-        [inequality_sign] [opt 'THAN] [opt OR_equality]
-    |   '>=
-    |   '<=
+	[inequality_sign] [opt 'THAN] [opt OR_equality]
+    |	'>=
+    |	'<=
 end define
 
 define inequality_sign
-        'GREATER | '> | 'LESS | '<
+	'GREATER | '> | 'LESS | '<
 end define
 
 define equality
-        [equality_sign] [opt 'TO]
+	[equality_sign] [opt 'TO]
 end define
 
 define equality_sign
-        '= | 'EQUAL | 'EQUALS
+	'= | 'EQUAL | 'EQUALS
 end define
 
 define OR_equality
-        'OR [equality]
+	'OR [equality]
 end define
 
 define sign_condition                                    
-        [arithmetic_expression] [opt 'IS] [opt 'NOT] [POSITIVE_or_NEGATIVE_or_ZERO]           
+    	[arithmetic_expression] [opt 'IS] [opt 'NOT] [POSITIVE_or_NEGATIVE_or_ZERO]           
 end define                                               
                                                          
 define POSITIVE_or_NEGATIVE_or_ZERO                                      
-        'POSITIVE | 'NEGATIVE | 'ZERO                        
+    	'POSITIVE | 'NEGATIVE | 'ZERO                        
 end define                                               
                                                          
 define arithmetic_expression
@@ -2965,11 +2965,11 @@ define arithmetic_expression
 end define
 
 define add_subtract_op_term
-        [add_or_subtract] [arithmetic_term]
+	[add_or_subtract] [arithmetic_term]
 end define
 
 define add_or_subtract
-        '+ | '-
+    	'+ | '-
 end define
 
 define arithmetic_term
@@ -2977,11 +2977,11 @@ define arithmetic_term
 end define
 
 define mult_div_factor
-        [multiply_or_divide] [arithmetic_factor]
+	[multiply_or_divide] [arithmetic_factor]
 end define
 
 define multiply_or_divide
-        '* | '/
+    	'* | '/
 end define
 
 define arithmetic_factor
@@ -2989,25 +2989,25 @@ define arithmetic_factor
 end define
 
 define exponentiation
-        [exponentiate] [arithmetic_primary]
+	[exponentiate] [arithmetic_primary]
 end define
 
 define exponentiate
-        [SPOFF] [SP] '** [SPON]
+    	[SPOFF] [SP] '** [SPON]
 end define
 
 define arithmetic_primary
-        [opt sign] [identifier_or_literal]
+	[opt sign] [identifier_or_literal]
     |   [opt sign] '( [arithmetic_expression] ')
     |   [function_reference]
 end define
 
 define sign
-        '+ | '-
+	'+ | '-
 end define
 
 define dot
-        '.
+	'.
 end define
 
 % ===== End of grammar =====

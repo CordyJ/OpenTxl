@@ -1,35 +1,35 @@
 TXL Example Specification
 -------------------------
 
-Name:   
-        onceover.Txl
-        addone.Txl
+Name:	
+	onceover.Txl
+	addone.Txl
 
 Description:
-        Trivial demonstration of two possible paradigms for applying a rule 
-        or function exactly once to each element of a given type in an 
-        arbitrary scope, even if the result of the rule or function matches 
-        the pattern.
+	Trivial demonstration of two possible paradigms for applying a rule 
+	or function exactly once to each element of a given type in an 
+	arbitrary scope, even if the result of the rule or function matches 
+	the pattern.
 
-        The first paradigm uses the strategy of enumerating all the instances
-        to be changed and then using 'each' to find and change each one.
-        'onceover.Txl' uses this paradigm to change the name of every 
-        identifier in a scope to 'name_ident', where 'name' is the original 
-        identifier.
+	The first paradigm uses the strategy of enumerating all the instances
+	to be changed and then using 'each' to find and change each one.
+	'onceover.Txl' uses this paradigm to change the name of every 
+	identifier in a scope to 'name_ident', where 'name' is the original 
+	identifier.
 
-        The second (more general) paradigm uses an invisible attribute
-        to mark each instance as it is changed.  'addone.Txl' uses this paradigm
-        to add one to every [number] in a scope exactly once.
+	The second (more general) paradigm uses an invisible attribute
+	to mark each instance as it is changed.  'addone.Txl' uses this paradigm
+	to add one to every [number] in a scope exactly once.
 
 Author:
-        J.R. Cordy
+   	J.R. Cordy
 
 Affiliation:
-        Queen's University, Kingston, Canada
+	Queen's University, Kingston, Canada
 
 Date:
-        December 1993
+	December 1993
 
 Example:
-        txl example.onceover
-        txl example.addone
+	txl example.onceover
+	txl example.addone

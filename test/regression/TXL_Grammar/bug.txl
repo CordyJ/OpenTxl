@@ -1,3 +1,3 @@
 define NEWoptNL
-        [not '|] [not 'end] [NL]
+	[not '|] [not 'end] [NL]
 end define

@@ -14,9 +14,9 @@ end matches;
 
 procedure accept (exists TokenList, MatchToken)
     if matches (MatchToken) then
-        advanceToken();
+	advanceToken();
     else
-        TokenList := "Parse Error";
+	TokenList := "Parse Error";
     endif;
 end accept;
 
@@ -27,19 +27,19 @@ end id;
 
 procedure singleParm (out Tree, exists TokenList)
     if matches ("exists") then
-        advanceToken();
-        id (Tree);
-        Tree := ["existsParm", Tree];
+	advanceToken();
+	id (Tree);
+	Tree := ["existsParm", Tree];
     elseif matches ("inout") then
-        advanceToken();
-        id (Tree);
-        Tree := ["inOutParm", Tree];
+	advanceToken();
+	id (Tree);
+	Tree := ["inOutParm", Tree];
     elseif matches ("out") then
-        advanceToken();
-        id (Tree);
-        Tree := ["outParm", Tree];
+	advanceToken();
+	id (Tree);
+	Tree := ["outParm", Tree];
     else
-        id (Tree);
+	id (Tree);
     endif;
     Tree := ["singleParm", Tree];
 end singleParm;
@@ -48,9 +48,9 @@ procedure followingParms (out Tree, exists TokenList)
     accept (",");
     singleParm (Tree);
     if matches (",") then
-        var F;
-        followingParms (F);
-        Tree := ["sfp", Tree, F];
+	var F;
+	followingParms (F);
+	Tree := ["sfp", Tree, F];
     endif;
     Tree := ["followingParms", Tree];
 end followingParms;
@@ -59,14 +59,14 @@ procedure parseParmList (out Tree, exists TokenList)
     var NodeContents;
     accept ("(");
     if matches (")") then
-        NodeContents := [];
+	NodeContents := [];
     else
-        singleParm (NodeContents);
-        if matches (",") then
-            var F;
-            followingParms (F);
-            NodeContents := ["sfp", NodeContents, F];
-        endif;
+	singleParm (NodeContents);
+	if matches (",") then
+	    var F;
+	    followingParms (F);
+	    NodeContents := ["sfp", NodeContents, F];
+	endif;
     endif;
     accept (")");
     Tree := ["parmList", NodeContents];

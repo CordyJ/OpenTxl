@@ -1,16 +1,16 @@
 % RPG II/III/400 Specification Grammar
 % Author: Andrew Malton
-%                       (based on D.A. Jardine V0.0 alpha)
+%			(based on D.A. Jardine V0.0 alpha)
 % Copyright (C) 1996 Legasys Corp.
 
 % This grammar defines the specification format for tokenized RPG.
 %
 % The languages covered are
-%       DOS/VS RPG II                                                                   II/VS
-%       AS/400 System/36-Compatible RPG II                              II/400
-%       System/38 RPG III                                                               III/38
-%       RPG/400 (which is RPG III for the AS/400)               III/400
-%       ILE RPG/400 (which is RPG IV)                                   IV/400
+%	DOS/VS RPG II									II/VS
+%	AS/400 System/36-Compatible RPG II				II/400
+%	System/38 RPG III								III/38
+%	RPG/400 (which is RPG III for the AS/400)		III/400
+%	ILE RPG/400 (which is RPG IV)					IV/400
 %
 % Extensions to the 'common core' are indicated in the grammar.
 % The 'common core' is hard to define, but reckon it as RPG III
@@ -24,57 +24,57 @@
 #pragma -width 200
 
 tokens
-        lexical_label           "\u\i*="
-        id                                      + "\*[$\#@-\i]+"
-        id                                      + "$[$\#@-\i]+"
-        id                                      + "[\#@\u][$\#@-\i]*"
-        hex_literal                     "X'[ABCDEFabcdef\d]*'"
-        allx_literal            "*ALLX'[ABCDEFabcdef\d]*'"
+	lexical_label		"\u\i*="
+	id					+ "\*[$\#@-\i]+"
+	id					+ "$[$\#@-\i]+"
+	id					+ "[\#@\u][$\#@-\i]*"
+	hex_literal			"X'[ABCDEFabcdef\d]*'"
+	allx_literal		"*ALLX'[ABCDEFabcdef\d]*'"
 end tokens
 
 compounds
-        **
+	**
 end compounds
 
 % RPG doesn't -need- to insist on the order of specifications which it seems to
 % insist on. We don't bother. Specifications are parsed structurally, not line by line.
 
 define program
-        [repeat specification]  
-        [main_procedure]
-        [trailing_block]        
+	[repeat specification]	
+	[main_procedure]
+	[trailing_block]	
 end define
 
 define trailing_block
-        [repeat trailing_specification]
+	[repeat trailing_specification]
 end define
 
 define trailing_specification
-    [opt control_specification] 
-        [opt file_specification]
+    [opt control_specification]	
+	[opt file_specification]
 end define
 
 define specification
-        [control_specification]
-|       [file_specification]
-|       [input_specification]
-|       [extension_specification]
-|       [main_procedure]
-|       [subroutine_definition]
-|       [output_specification]
-|       [data_block]
+	[control_specification]
+|	[file_specification]
+|	[input_specification]
+|	[extension_specification]
+|	[main_procedure]
+|	[subroutine_definition]
+|	[output_specification]
+|	[data_block]
 end define
 
 define data_block
-        [NL]
-        'data_start= **                         [NL] [IN]
-        [repeat data_line]                      [EX]
+	[NL]
+	'data_start= **				[NL] [IN]
+	[repeat data_line]			[EX]
 end define
 
 define data_line
-        'data= [charlit] [NL]
+	'data= [charlit] [NL]
 end define
-        
+	
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
@@ -90,92 +90,92 @@ end define
 % (Or, indeed, a name of a name of a name.)
 
 define internal_name
-        [id]
+	[id]
 end define
 
 define external_name
-        [id] | [charlit]
+	[id] | [charlit]
 end define
 
 % The various kinds of thing namable in RPG are as follows.
 
 define field_name
-        [internal_name]
+	[internal_name]
 end define
 
 define data_structure_name
-        [internal_name]
+	[internal_name]
 end define
 
 define array_name
-        [field_name]
-end define              
+	[field_name]
+end define		
 
 define file_name
-        [internal_name]
+	[internal_name]
 end define
 
 define external_record_name
-        [external_name]
+	[external_name]
 end define
 
 define external_field_name
-        [external_name]
+	[external_name]
 end define
 
 define indicator_name
-        [number] | KA | KB | KC |  KD | KE | KF | KG | KH | KI |
-        KJ | KK | KL |  KM | KN | KP | KQ | KR | KS | KT | KU |
-        KV | KW | KX | KY | 
-        L1 | L2 | L3 | L4 | L5 | L6 | L7 | L8 | L9 |
-        LR | MR | H1 | H2 | H3 | H4 | H5 | H6 | H7 | H8 | H9 |
-        RT | U1 | U2 | U3 | U4 | U5 | U6 | U7 | U8 | 
-        OA | OB | OC | OD | OE | OF | OG | OV |
-        M1 | M2 | M3 | M4 | M5 | M6 | M7 | M8 | M9 | '1P
+	[number] | KA | KB | KC |  KD | KE | KF | KG | KH | KI |
+	KJ | KK | KL |  KM | KN | KP | KQ | KR | KS | KT | KU |
+	KV | KW | KX | KY | 
+	L1 | L2 | L3 | L4 | L5 | L6 | L7 | L8 | L9 |
+	LR | MR | H1 | H2 | H3 | H4 | H5 | H6 | H7 | H8 | H9 |
+	RT | U1 | U2 | U3 | U4 | U5 | U6 | U7 | U8 | 
+	OA | OB | OC | OD | OE | OF | OG | OV |
+	M1 | M2 | M3 | M4 | M5 | M6 | M7 | M8 | M9 | '1P
 end define
 
 define device_name
-        DISK
-|       WORKSTN
-|       PRINTER
-|       SPECIAL
-|       CONSOLE
-|       KEYBOARD
-|       CRT
-|       BSCA
-|       SEQ                     % [IV/400 214]
+	DISK
+|	WORKSTN
+|	PRINTER
+|	SPECIAL
+|	CONSOLE
+|	KEYBOARD
+|	CRT
+|	BSCA
+|	SEQ			% [IV/400 214]
 end define
 
 define parameter_list_name
-        [internal_name]
+	[internal_name]
 end define
 
 define composite_key_name
-        [internal_name]
+	[internal_name]
 end define
 
 define except_name
-        [internal_name]
+	[internal_name]
 end define
 
 define subroutine_name
-        [internal_name]
+	[internal_name]
 end define
 
 define program_name
-        [external_name]
+	[external_name]
 end define
 
 define constant_name
-        [internal_name]
+	[internal_name]
 end define
 
 define member_name
-        [external_name]
+	[external_name]
 end define
 
 define label
-        [internal_name]
+	[internal_name]
 end define
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -183,52 +183,52 @@ end define
 % C O N T R O L
 
 define control_specification
-        [opt form_H] [NL] [IN]
-                [repeat control_option+]
-        [EX]
+	[opt form_H] [NL] [IN]
+		[repeat control_option+]
+	[EX]
 end define
 
 define form_H
-        'form= H
+	'form= H
 end define
 
 define control_option
-        'currency_symbol=       [currency_symbol]               [NL]
-|       'date_format=           [date_format]                   [NL]
-|       'date_edit=                     [date_edit]                             [NL]
-|       'inverted_print=                [inverted_print]                [NL]
-|       alt_'col_seq=           [alt_col_seq]                   [NL]
-|       'program_id=                    [program_name]                  [NL]
+	'currency_symbol=	[currency_symbol]		[NL]
+|	'date_format=		[date_format]			[NL]
+|	'date_edit=			[date_edit]				[NL]
+|	'inverted_print=		[inverted_print]		[NL]
+|	alt_'col_seq=		[alt_col_seq]			[NL]
+|	'program_id=			[program_name]			[NL]
 end define
 
 define currency_symbol
-        [charlit]
+	[charlit]
 end define
 
 define date_format
-        D                       % DDMMYY
-|       M                       % MMDDYY
-|       Y                       % YYMMDD
-|       [empty]         % MMDDYY unless overridden to DDMMYY by invertedpr
+	D			% DDMMYY
+|	M			% MMDDYY
+|	Y			% YYMMDD
+|	[empty]		% MMDDYY unless overridden to DDMMYY by invertedpr
 end define
 
 define date_edit
-        [charlit]
+	[charlit]
 end define
 
 define inverted_print
-        [empty]         % no override for dateformat, and DD/MM/YY
-|       D                       % DDMMYY override for UDATE
-|       I                       % ,37 format for fractions; DD.MM.YY
-|       J                       % 0,37 format for fractions; DD.MM.YY
+	[empty]		% no override for dateformat, and DD/MM/YY
+|	D			% DDMMYY override for UDATE
+|	I			% ,37 format for fractions; DD.MM.YY
+|	J			% 0,37 format for fractions; DD.MM.YY
 end define
 
 define alt_col_seq
-        S
+	S
 end define
 
 define program_id
-        [id] | [charlit]
+	[id] | [charlit]
 end define
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -236,138 +236,138 @@ end define
 % F I L E
 
 define file_specification
-        [NL]
-        [opt form_F]
-        'file_name=             [file_name]
-        'file_type=             [file_type]                                     [NL] [IN]
-                [repeat file_option]                                    [EX]
+	[NL]
+	[opt form_F]
+	'file_name=		[file_name]
+	'file_type=		[file_type]					[NL] [IN]
+		[repeat file_option]					[EX]
 end define
 
 define file_option
-        'file_designat=                 [file_designat]                 [NL]                                    % obligatory
-|       end_'of_file=                   [end_of_file]                   [NL]
-|       'sequence=                              [sequence]                              [NL]
-|       'file_format=                   [file_format]                   [NL]
-|       'block_length=                  [number]                                [NL]
-|       'record_length=                 [number]                                [NL]                                    % obligatory
-|       mode_'of_process=               [mode_of_process]               [NL]
-|       'key_length=                            [number]                                [NL]
-|       rec_'addr_type=                 [rec_addr_type]                 [NL]
-|       type_'of_organiz=               [type_of_organiz]               [NL]
-|       'overflow_indic=                        [indicator_name]                [NL]
-|       key_'field_start=               [number]                                [NL]
-|       key_'field_start=               KEXT                                    [NL]                                    % What does this mean?
-|       'extension_code=                        [extension_code]                [NL]
-|       'device=                                        [device_name]                   [NL]                                    % obligatory
-|       'file_addition=                 [file_addition]                 [NL]
-|       'file_condition=                        [file_condition]                [NL]
-|       'routine=                               [subroutine_name]               [NL]                                    % name of label exit
-|       [opt form_F] [file_continuation]                                [NL]
+	'file_designat=			[file_designat]			[NL]					% obligatory
+|	end_'of_file=			[end_of_file]			[NL]
+|	'sequence=				[sequence]				[NL]
+|	'file_format=			[file_format]			[NL]
+|	'block_length=			[number]				[NL]
+|	'record_length=			[number]				[NL]					% obligatory
+|	mode_'of_process=		[mode_of_process]		[NL]
+|	'key_length=				[number]				[NL]
+|	rec_'addr_type=			[rec_addr_type]			[NL]
+|	type_'of_organiz=		[type_of_organiz]		[NL]
+|	'overflow_indic=			[indicator_name]		[NL]
+|	key_'field_start=		[number]				[NL]
+|	key_'field_start=		KEXT					[NL]					% What does this mean?
+|	'extension_code=			[extension_code]		[NL]
+|	'device=					[device_name]			[NL]					% obligatory
+|	'file_addition=			[file_addition]			[NL]
+|	'file_condition=			[file_condition]		[NL]
+|	'routine=				[subroutine_name]		[NL]					% name of label exit
+|	[opt form_F] [file_continuation]				[NL]
 end define
 
 define form_F
-        'form= F
+	'form= F
 end define
 
 define file_type
-        I               % input
-|       O               % output
-|       C               % combined (input/output)
-|       U               % update
-|       D               % display [II/VS 18]
-%|      G
-end define              
+	I		% input
+|	O		% output
+|	C		% combined (input/output)
+|	U		% update
+|	D		% display [II/VS 18]
+%|	G
+end define		
 
 define file_designat
-        P               % Primary
-|       S               % Secondary
-|       C               % Chained [II/VS 19]
-|       D               % Demand [II/VS 19]
-|       R               % Record Address
-|       T               % Array or Table
-|       F               % Full-Procedural (Full-Function)
-|       [empty] % Output
+	P 		% Primary
+|	S		% Secondary
+|	C		% Chained [II/VS 19]
+|	D		% Demand [II/VS 19]
+|	R		% Record Address
+|	T		% Array or Table
+|	F		% Full-Procedural (Full-Function)
+|	[empty]	% Output
 end define
 
 
 define end_of_file
-        E                       % end must be reached
+	E			% end must be reached
 end define
 
 define sequence
-        A                       % Ascending
-|       D                       % Descending
+	A			% Ascending
+|	D			% Descending
 end define
 
 define file_format
-        F                       % Fixed
-|       V                       % Variable [II/VS 22]
-|       S                       % Spanned unblocked [II/VS 22]
-|       M                       % Spanned blocked [II/VS 22]
-|       D                       % D-type ASCII (=?) [II/VS 22]
-|       E                       % Externally described
+	F			% Fixed
+|	V			% Variable [II/VS 22]
+|	S			% Spanned unblocked [II/VS 22]
+|	M			% Spanned blocked [II/VS 22]
+|	D			% D-type ASCII (=?) [II/VS 22]
+|	E			% Externally described
 end define
 
 define mode_of_process
-        L                       % key-field limited sequential
-|       R                       % key-field random
+	L			% key-field limited sequential
+|	R			% key-field random
 end define
 
 define rec_addr_type
-        A                       % zoned-decimal key fields
-|       P                       % packed-decimal key fields
-%|      Q
-|       K                       % external-file key values [III/38 4-4]
-%|      D
-%|      T
-%|      Z
-|       I                       % relative-record number key fields
-end define              
+	A			% zoned-decimal key fields
+|	P			% packed-decimal key fields
+%|	Q
+|	K			% external-file key values [III/38 4-4]
+%|	D
+%|	T
+%|	Z
+|	I			% relative-record number key fields
+end define		
 
 define type_of_organiz
-        I                       % indexed 
-%|      X
-%|      D
-|       T                       % address output file
-|       [number]        % additional input/output area
-%|      R
+	I			% indexed 
+%|	X
+%|	D
+|	T			% address output file
+|	[number]	% additional input/output area
+%|	R
 end define
 
 define extension_code 
-        E                       % Extension specifications exist
-|       L                       % Line counter specifications exist
+	E			% Extension specifications exist
+|	L			% Line counter specifications exist
 end define
 
 define file_addition
-        A               % add new records
-|       U               % unordered indexed file
+	A		% add new records
+|	U		% unordered indexed file
 end define
 
 define file_condition
-        [indicator_name]
+	[indicator_name]
 end define
 
 define file_continuation
-        'k= K 'option= COMIT
-|       'k= K 'option= FMTS             'entry= [member_name]
-|       'k= K 'option= ID               'entry= [field_name]
-|       'external= [external_record_name]
-        'k= K 'option= IGNORE
-|       'k= K 'option= IND              'entry= [indicator_name]
-|       'k= K 'option= INDARA           'entry= [indicator_name]                                % [III/38 4-10]
-|       'k= K 'option= INFDS            'entry= [data_structure_name]
-|       'k= K 'option= INFSR            'entry= [subroutine_name]
-|       'k= K 'option= NUM              'entry= [number]
-|       'k= K 'option= PASS             'entry= *NOIND
-|       'k= K 'option= PLIST            'entry= [parameter_list_name]
-|       'k= K 'option= PRTCTL           'entry= [data_structure_name]
-|       'k= K 'option= RECNO            'entry= [field_name]
-|       'external= [external_record_name]
-        'k= K 'option= RENAME           'entry= [external_record_name]
-|       'k= K 'option= SAVDS            'entry= [data_structure_name]
-|       relat_'rec_field= [field_name]
-        'k= K 'option= SFILE            'entry= [external_record_name]
-|       'k= K 'option= SLN              'entry= [number]
+	'k= K 'option= COMIT
+|	'k= K 'option= FMTS		'entry= [member_name]
+|	'k= K 'option= ID 		'entry= [field_name]
+|	'external= [external_record_name]
+	'k= K 'option= IGNORE
+|	'k= K 'option= IND 		'entry= [indicator_name]
+|	'k= K 'option= INDARA		'entry= [indicator_name]				% [III/38 4-10]
+|	'k= K 'option= INFDS		'entry= [data_structure_name]
+|	'k= K 'option= INFSR		'entry= [subroutine_name]
+|	'k= K 'option= NUM		'entry= [number]
+|	'k= K 'option= PASS		'entry= *NOIND
+|	'k= K 'option= PLIST		'entry= [parameter_list_name]
+|	'k= K 'option= PRTCTL		'entry= [data_structure_name]
+|	'k= K 'option= RECNO		'entry= [field_name]
+|	'external= [external_record_name]
+	'k= K 'option= RENAME		'entry= [external_record_name]
+|	'k= K 'option= SAVDS		'entry= [data_structure_name]
+|	relat_'rec_field= [field_name]
+	'k= K 'option= SFILE		'entry= [external_record_name]
+|	'k= K 'option= SLN		'entry= [number]
 end define
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -378,66 +378,66 @@ end define
 % in ILE RPG/IV, which uses Definitions instead.
 
 define extension_specification
-        [array_specification]
-|       [record_address_specification]
+	[array_specification]
+|	[record_address_specification]
 end define
 
 % Arrays
 
 define array_specification
-        [NL]
-        [opt form_E] [opt from_file] [opt to_file] [array_description]                  [IN]
-                [opt alternating_array_description]                                                             [EX]
+	[NL]
+	[opt form_E] [opt from_file] [opt to_file] [array_description]			[IN]
+		[opt alternating_array_description]								[EX]
 end define
 
 define form_E
-        'form= E
+	'form= E
 end define
-        
+	
 define from_file
-        'from_file= [file_name]
+	'from_file= [file_name]
 end define
 
 define to_file
-        'to_file= [file_name]
+	'to_file= [file_name]
 end define
 
 define array_description
-        'name= [array_name] [repeat array_option]                                                       [NL]
+	'name= [array_name] [repeat array_option]							[NL]
 end define
 
 define alternating_array_description
-        'alt_name= [array_name] [repeat alt_array_option]                                       [NL]
+	'alt_name= [array_name] [repeat alt_array_option]					[NL]
 end define
 
 define array_option
-        num_'per_rec=   [number]
-|       'num_entries=   [number]                                % obligatory
-|       'length=                        [number]                                % obligatory
-|       [data_format_option]
-|       [decimal_positions_option]
-|       'sequence=              [sequence]
+	num_'per_rec=	[number]
+|	'num_entries=	[number]				% obligatory
+|	'length=			[number]				% obligatory
+|	[data_format_option]
+|	[decimal_positions_option]
+|	'sequence=		[sequence]
 end define
 
 define alt_array_option
-        'alt_length=                    [number]                                                % obligatory
-|       alt_'data_format=       [data_format]
-|       'alt_decimal=           [number]
-|       'alt_sequence=          [sequence]
+	'alt_length=			[number]						% obligatory
+|	alt_'data_format=	[data_format]
+|	'alt_decimal=		[number]
+|	'alt_sequence=		[sequence]
 end define
 
 define data_format
-        P                       % Packed Decimal
-|       B                       % Binary
-|       L                       % Zoned decimal, explicit left sign
-|       R                       % Zoned decimal, explicit right sign
+	P			% Packed Decimal
+|	B			% Binary
+|	L			% Zoned decimal, explicit left sign
+|	R			% Zoned decimal, explicit right sign
 end define
-        
+	
 % Record Address files.
 
 define record_address_specification
-        [NL]
-        [opt form_E] [from_file] [to_file]
+	[NL]
+	[opt form_E] [from_file] [to_file]
 end define
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -445,14 +445,14 @@ end define
 % L I N E   C O U N T E R
 
 define line_counter_specification
-        [NL]
-        [opt form_L] 'name= [file_name]
-                'line_number= [number] 'fl= FL
-                'overflow= [number] 'ol= OL
+	[NL]
+	[opt form_L] 'name= [file_name]
+		'line_number= [number] 'fl= FL
+		'overflow= [number] 'ol= OL
 end define
 
 define form_L
-        'form= L
+	'form= L
 end define
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -463,195 +463,195 @@ end define
 % structures. In IV, data structures are defined using D specifications.
 
 define input_specification
-        [program_described_file_specification]
-|       [external_record_specification]                 % [III/38 7-24ff]
-|       [data_structure_specification]
+	[program_described_file_specification]
+|	[external_record_specification]			% [III/38 7-24ff]
+|	[data_structure_specification]
 end define
 
 % Program-Described Files
 
 define program_described_file_specification
-        [NL]
-        [opt form_I] 'name= [file_name] [sequence_specification]                                                                                [NL] [IN]
-                [opt record_identification_expression]
-                [repeat input_field_description]                                                                                                        [EX]
-        [repeat subsequent_record_identification]
+	[NL]
+	[opt form_I] 'name= [file_name] [sequence_specification]										[NL] [IN]
+		[opt record_identification_expression]
+		[repeat input_field_description]													[EX]
+	[repeat subsequent_record_identification]
 end define
 
 define subsequent_record_identification
-        [opt form_I]                   [sequence_specification]                                                                         [NL] [IN]
-                [opt record_identification_expression]
-                [repeat input_field_description]                                                                                                        [EX]
+	[opt form_I]                   [sequence_specification]										[NL] [IN]
+		[opt record_identification_expression]
+		[repeat input_field_description]													[EX]
 end define
 
 define form_I
-        'form= I
+	'form= I
 end define
 
 define sequence_specification
-        'sequence= [input_sequence] [repeat sequence_option]
+	'sequence= [input_sequence] [repeat sequence_option]
 end define
 
 define input_sequence
-        [id]                    % "any two alphabetic characters" = no check for sequencing
-|       [number]                % "the program checks for special sequence within the group"
+	[id]			% "any two alphabetic characters" = no check for sequencing
+|	[number]		% "the program checks for special sequence within the group"
 end define
 
 define sequence_option
-        'number= [one_or_many]
-|       'option= O              % optional in sequence
+	'number= [one_or_many]
+|	'option= O		% optional in sequence
 end define
 
 define one_or_many
-        1 | N
+	1 | N
 end define
 
 define record_identification_expression
-        [record_identification_term]                                    [NL] [IN]
-                [repeat OR_record_identification_term]          [EX]
+	[record_identification_term]					[NL] [IN]
+		[repeat OR_record_identification_term]		[EX]
 end define
 
 define record_identification_term
-        [opt record_indication] [repeat record_identification]
+	[opt record_indication] [repeat record_identification]
 end define
 
 define record_indication
-        'record_ind= [indicator_name]
+	'record_ind= [indicator_name]
 end define
 
 define OR_record_identification_term
-        [OR_specification_connective] [record_identification_term]      [NL]
+	[OR_specification_connective] [record_identification_term]	[NL]
 end define
 
 define record_identification
-        [opt AND_specification_connective]
-        [position_specification]
-        [opt negation]
-        [match_type_label] [match_type]
-        [character_label] [charlit]
+	[opt AND_specification_connective]
+	[position_specification]
+	[opt negation]
+	[match_type_label] [match_type]
+	[character_label] [charlit]
 end define
 
 define position_specification
-        [position_label] [number]
+	[position_label] [number]
 end define
 
 define OR_specification_connective
-        [opt form_I] 'connective= OR
-|       [opt form_O] 'connective= OR
-|       [opt form_C] 'connective= OR
+	[opt form_I] 'connective= OR
+|	[opt form_O] 'connective= OR
+|	[opt form_C] 'connective= OR
 end define
 
 define AND_specification_connective
-        [opt form_I] 'connective= AND
-|       [opt form_O] 'connective= AND
-|       [opt form_C] 'connective= AN
+	[opt form_I] 'connective= AND
+|	[opt form_O] 'connective= AND
+|	[opt form_C] 'connective= AN
 end define
 
 define position_label
-        pos1= | pos2= | pos3=
+	pos1= | pos2= | pos3=
 end define
 
 define negation
-        [negation_label] N
+	[negation_label] N
 end define
 
 define negation_label
-        not1= | not2= | not3=
+	not1= | not2= | not3=
 end define
 
 define match_type_label
-        czd1= | czd2= | czd3=
+	czd1= | czd2= | czd3=
 end define
 
 define match_type
-        C                       % whole character
-|       Z                       % zone only
-|       D                       % digit only
+	C			% whole character
+|	Z			% zone only
+|	D			% digit only
 end define
-                
+		
 define character_label
-        char1= | char2= | char3=
+	char1= | char2= | char3=
 end define
 
 % External Record Descriptions
 
-define external_record_specification            % [III 7-6ff]
-        [NL]
-        [opt form_I] 'name= [external_record_name] 'record_ind= [indicator_name]                                [IN] [NL]
-                % No sequence specification
-                % No record identification codes
-                [repeat input_field_description]                                                                                        [EX]
+define external_record_specification 		% [III 7-6ff]
+	[NL]
+	[opt form_I] 'name= [external_record_name] 'record_ind= [indicator_name]				[IN] [NL]
+		% No sequence specification
+		% No record identification codes
+		[repeat input_field_description]											[EX]
 end define
-                
+		
 % Data Structure Specification
 
 define data_structure_specification
-        [NL]
-        [opt form_I] [repeat structure_description]                                                                                             [IN] [NL]
-                % No record identification, this is not a record.
-                [repeat input_field_description]                                                                                                [EX]
+	[NL]
+	[opt form_I] [repeat structure_description]												[IN] [NL]
+		% No record identification, this is not a record.
+		[repeat input_field_description]												[EX]
 end define
 
 define structure_description
-        'name= [data_structure_name]
-|       'ds= DS
-|       'option=                        [structure_option]
-|       [external_name_specification]
-|       number_'of_occs= [number]
-|       'length=                        [number]
+	'name= [data_structure_name]
+|	'ds= DS
+|	'option=			[structure_option]
+|	[external_name_specification]
+|	number_'of_occs= [number]
+|	'length=			[number]
 end define
 
 define external_name_specification
-        'rename= [external_record_name]
+	'rename= [external_record_name]
 end define
 
 define structure_option
-        S                       % program status area structure
-|       U                       % local data area structure
+	S			% program status area structure
+|	U			% local data area structure
 end define
 
 % Field Descriptions for Input Files, External Records, and Data Structures.
 
 define input_field_description
-        [opt form_I] [opt initializer] [field_description] 'name= [field_name] [repeat field_option]            [NL]
+	[opt form_I] [opt initializer] [field_description] 'name= [field_name] [repeat field_option]		[NL]
 end define
 
 define initializer
-        'initial= I 'value= [constant]
+	'initial= I 'value= [constant]
 end define
 
 define field_description
-        [program_field_description]
-|       [opt external_name_specification]
+	[program_field_description]
+|	[opt external_name_specification]
 end define
 
 define program_field_description
-        [opt data_format_option] [field_from] [field_to] [opt decimal_positions_option]
+	[opt data_format_option] [field_from] [field_to] [opt decimal_positions_option]
 end define
 
 define field_from
-        'from= [number]
+	'from= [number]
 end define
 
 define field_to
-        'to= [number]
+	'to= [number]
 end define
 
 define field_option
-        [control_level_indication]
-|       [result_indication]             
-|       'match=                 [indicator_name]
-|       field_'rec_rel= [indicator_name]
+	[control_level_indication]
+|	[result_indication]		
+|	'match=			[indicator_name]
+|	field_'rec_rel=	[indicator_name]
 end define
 
 define data_format_option
-        'data_format= [data_format]
+	'data_format= [data_format]
 end define
 
 define decimal_positions_option
-        'decimal_pos= [number]
+	'decimal_pos= [number]
 end define
-        
+	
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
 % C A L C U L A T I O N S
@@ -661,23 +661,23 @@ end define
 % (cf. [III/38 10-26], [II/400 7-45])
 
 define main_procedure
-        [NL]
-        [repeat calculation_specification]
+	[NL]
+	[repeat calculation_specification]
 end define
 
 define calculation_specification
-        % Sorted by frequency
-        [simple_calculation_specification]
-|       [if_group]
-|       [do_group]
-|       [keylist_specification]
-|       [define_specification]
-|       [case_group]
-|       [select_group]
+	% Sorted by frequency
+	[simple_calculation_specification]
+|	[if_group]
+|	[do_group]
+|	[keylist_specification]
+|	[define_specification]
+|	[case_group]
+|	[select_group]
 end define
 
 define form_C
-        'form= C
+	'form= C
 end define
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -687,46 +687,46 @@ end define
 % lines using 'control_level= AN and control_'level= OR, the former taking precedence.
 
 define indication
-        [opt control_level_indication]          % ...and...
-        [opt conditioning_indication]
+	[opt control_level_indication]		% ...and...
+	[opt conditioning_indication]
 end define
 
 define control_level_indication
-        'control_level= [indicator_name]
+	'control_level= [indicator_name]
 end define
 
 define conditioning_indication
-        [conditioning_indication_term]                                                  [IN] [IN]
-                [repeat OR_conditioning_indication_term]                        [EX] [EX]
+	[conditioning_indication_term]							[IN] [IN]
+		[repeat OR_conditioning_indication_term]			[EX] [EX]
 end define
 
 define conditioning_indication_term
-        [conditioning_indication_factor] [repeat AND_conditioning_indication_factor]
+	[conditioning_indication_factor] [repeat AND_conditioning_indication_factor]
 end define
 
 define OR_conditioning_indication_term
-        [NL] [OR_specification_connective] [conditioning_indication_term]
+	[NL] [OR_specification_connective] [conditioning_indication_term]
 end define
 
 define conditioning_indication_factor
-        [opt negation] [conditioning_label] [conditioning_indicator_name]
+	[opt negation] [conditioning_label] [conditioning_indicator_name]
 end define
 
 define AND_conditioning_indication_factor
-        [opt AND_specification_connective]
-        [conditioning_indication_factor]
+	[opt AND_specification_connective]
+	[conditioning_indication_factor]
 end define
 
 define conditioning_indicator_name
-        [indicator_name]
+	[indicator_name]
 end define
 
 define level_indicator_name
-        [indicator_name]
+	[indicator_name]
 end define
 
 define conditioning_label
-        ind1= | ind2= | ind3=
+	ind1= | ind2= | ind3=
 end define
 
 %%%%%%%%%%
@@ -734,313 +734,313 @@ end define
 
 % General result indications
 define result_indication
-        [opt plus_indication] [opt minus_indication] [opt zero_or_blank_indication]
+	[opt plus_indication] [opt minus_indication] [opt zero_or_blank_indication]
 end define
 
 define result_indicator_name
-        [indicator_name]
+	[indicator_name]
 end define
 
 define plus_indication
-        'ind_plus= [result_indicator_name]
+	'ind_plus= [result_indicator_name]
 end define
 
 define minus_indication
-        'ind_minus= [result_indicator_name]
+	'ind_minus= [result_indicator_name]
 end define
 
 define zero_or_blank_indication
-        'ind_zero= [result_indicator_name]
+	'ind_zero= [result_indicator_name]
 end define
 
 % File operation indications
 define file_result_indication
-        [no_record_indication] [opt error_indication]                   % II and III
-|       [opt error_indication] [end_of_file_indication]
+	[no_record_indication] [opt error_indication]			% II and III
+|	[opt error_indication] [end_of_file_indication]
 end define
 
 define no_record_indication
-        'ind_plus= [no_record_indicator_name]
+	'ind_plus= [no_record_indicator_name]
 end define
 
 define error_indication
-        'ind_minus= [error_indicator_name]
+	'ind_minus= [error_indicator_name]
 end define
 
 define end_of_file_indication
-        'ind_zero= [end_of_file_indicator_name]
+	'ind_zero= [end_of_file_indicator_name]
 end define
 
 define no_record_indicator_name
-        [indicator_name]
+	[indicator_name]
 end define
 
 define error_indicator_name
-        [indicator_name]
+	[indicator_name]
 end define
 
 define end_of_file_indicator_name
-        [indicator_name]
+	[indicator_name]
 end define
 
 define success_indication
-        'ind_zero= [success_indicator_name]
+	'ind_zero= [success_indicator_name]
 end define
 
 define success_indicator_name
-        [indicator_name]
+	[indicator_name]
 end define
-        
+	
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % If Group
 
 define if_group
-        [if_part]
-        [opt else_part]
-        [end_if]
+	[if_part]
+	[opt else_part]
+	[end_if]
 end define
 
 define if_part
-        [opt form_C] [indication] [if_condition]                [NL] [IN]
-                [repeat calculation_specification]                                              [EX]
+	[opt form_C] [indication] [if_condition]		[NL] [IN]
+		[repeat calculation_specification]						[EX]
 end define
 
 define if_condition
-        [if_condition_term] [repeat OR_condition_term]
+	[if_condition_term] [repeat OR_condition_term]
 end define
 
 define if_condition_term
-        [if_condition_factor] [repeat AND_condition_factor]
+	[if_condition_factor] [repeat AND_condition_factor]
 end define
 
 define if_condition_factor
-        f1= [subject] 'op= [IFxx] f2= [object]
+	f1= [subject] 'op= [IFxx] f2= [object]
 end define
 
 define AND_condition_factor
-        [opt form_C] f1= [subject] 'op= [ANDxx] f2= [object]
+	[opt form_C] f1= [subject] 'op= [ANDxx] f2= [object]
 end define
 
 define OR_condition_term
-        [opt form_C] f1= [subject] 'op= [ORxx] f2= [object]
-                [repeat AND_condition_factor]
+	[opt form_C] f1= [subject] 'op= [ORxx] f2= [object]
+		[repeat AND_condition_factor]
 end define
-        
+	
 define ANDxx
-        ANDGT | ANDEQ | ANDLT | ANDNE | ANDGE | ANDLE
+	ANDGT | ANDEQ | ANDLT | ANDNE | ANDGE | ANDLE
 end define
 
 define ORxx
-        ORGT | OREQ | ORLT | ORNE | ORGE | ORLE
+	ORGT | OREQ | ORLT | ORNE | ORGE | ORLE
 end define
 
 define else_part
-        [opt form_C] [opt control_level_indication] 'op= ELSE                           [NL] [IN]
-                [repeat calculation_specification]                                                              [EX]
+	[opt form_C] [opt control_level_indication] 'op= ELSE 				[NL] [IN]
+		[repeat calculation_specification]								[EX]
 end define
 
 define end_if
-        [opt form_C] [opt control_level_indication] 'op= [END_or_ENDIF]                 [NL]
-        % The indication is only documentation.
+	[opt form_C] [opt control_level_indication] 'op= [END_or_ENDIF]			[NL]
+	% The indication is only documentation.
 end define
 
 define END_or_ENDIF
-        END
-|       ENDIF                           % /400 only
+	END
+|	ENDIF				% /400 only
 end define
 
 define IFxx
-        IFGT
-|       IFEQ
-|       IFLT
-|       IFNE
-|       IFGE
-|       IFLE
+	IFGT
+|	IFEQ
+|	IFLT
+|	IFNE
+|	IFGE
+|	IFLE
 end define
 
 define subject
-        [expression]
+	[expression]
 end define
 
 define object
-        [expression]
+	[expression]
 end define
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Case Group
 
 define case_group
-        [case_statement]                                                        [NL] [IN]
-                [repeat case_statement]                                 [EX]
-        [end_case]
+	[case_statement] 							[NL] [IN]
+		[repeat case_statement]					[EX]
+	[end_case]
 end define
-        
+	
 define case_statement
-        [opt form_C] [indication] 'op= [CASxx] 'res= [subroutine_name] [result_indication]
+	[opt form_C] [indication] 'op= [CASxx] 'res= [subroutine_name] [result_indication]
 end define
 
 define CASxx
-        CASGT
-|       CASEQ
-|       CASLT
-|       CASNE
-|       CASGE
-|       CASLE
-|       CAS                     % otherwise...
+	CASGT
+|	CASEQ
+|	CASLT
+|	CASNE
+|	CASGE
+|	CASLE
+|	CAS			% otherwise...
 end define
 
 define end_case
-        [opt form_C] [opt control_level_indication] 'op= [END_or_ENDCS]                         [NL]
+	[opt form_C] [opt control_level_indication] 'op= [END_or_ENDCS]				[NL]
 end define
 
 define END_or_ENDCS
-        END
-|       ENDCS                           % /400 only
+	END
+|	ENDCS				% /400 only
 end define
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Do Group
 
 define do_group
-        [do_statement]                                                                  [NL] [IN]
-                [repeat calculation_specification]                      [EX]
-        [end_do]                
+	[do_statement]									[NL] [IN]
+		[repeat calculation_specification]			[EX]
+	[end_do]		
 end define
 
 define do_statement
-        [bounded_do_statement]
-|       [unbounded_do_statement]
+	[bounded_do_statement]
+|	[unbounded_do_statement]
 end define
 
 define bounded_do_statement
-        [opt form_C] [indication] [repeat bounded_do_option] [result_indication]
+	[opt form_C] [indication] [repeat bounded_do_option] [result_indication]
 end define
 
 % Bounded (for loops)
 
 define bounded_do_option
-        'op= DO
-|       f1= [starting_value]
-|       f2= [limit_value]
-|       'res= [index_field_name] [opt length_option] [opt decimal_positions_option]
+	'op= DO
+|	f1= [starting_value]
+|	f2= [limit_value]
+|	'res= [index_field_name] [opt length_option] [opt decimal_positions_option]
 end define
 
 define starting_value
-        [expression]
+	[expression]
 end define
 
 define limit_value
-        [expression]
+	[expression]
 end define
 
 define index_field_name
-        [field_name]
+	[field_name]
 end define
 
 % Unbounded (do while and do until)
 
 define unbounded_do_statement
-        [opt form_C] [indication] [do_condition] [result_indication]
+	[opt form_C] [indication] [do_condition] [result_indication]
 end define
 
 define do_condition
-        [do_condition_term] [repeat OR_condition_term]
+	[do_condition_term] [repeat OR_condition_term]
 end define
 
 define do_condition_term
-        [do_condition_factor] [repeat AND_condition_factor]
+	[do_condition_factor] [repeat AND_condition_factor]
 end define
 
 define do_condition_factor
-        f1= [subject] 'op= [DOaxx] f2= [object]
+	f1= [subject] 'op= [DOaxx] f2= [object]
 end define
 
 define DOaxx
-        [DOUxx]
-|       [DOWxx]
+	[DOUxx]
+|	[DOWxx]
 end define
 
 define DOUxx
-        DOUGT
-|       DOUEQ
-|       DOULT
-|       DOUNE
-|       DOUGE
-|       DOULE
+	DOUGT
+|	DOUEQ
+|	DOULT
+|	DOUNE
+|	DOUGE
+|	DOULE
 end define
 
 define DOWxx
-        DOWGT
-|       DOWEQ
-|       DOWLT
-|       DOWNE
-|       DOWGE
-|       DOWLE
+	DOWGT
+|	DOWEQ
+|	DOWLT
+|	DOWNE
+|	DOWGE
+|	DOWLE
 end define
 
 define end_do
-        [opt form_C] [opt control_level_indication] 'op= [END_or_ENDDO]                 [NL]
+	[opt form_C] [opt control_level_indication] 'op= [END_or_ENDDO]			[NL]
 end define
 
 define END_or_ENDDO
-        END
-|       ENDDO                                   % /400 only
+	END
+|	ENDDO					% /400 only
 end define
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Select Group
 
 define select_group
-        [opt form_C] [indication] 'op= SELEC                                            [NL] [IN]
-                [repeat when_group]
-                [opt other_group]                                                               [EX]
-        [end_select]
+	[opt form_C] [indication] 'op= SELEC						[NL] [IN]
+		[repeat when_group]
+		[opt other_group]								[EX]
+	[end_select]
 end define
 
 define when_group
-        [opt form_C] [opt control_level_indication] [when_condition]            [NL] [IN]
-                [repeat calculation_specification]
+	[opt form_C] [opt control_level_indication] [when_condition]		[NL] [IN]
+		[repeat calculation_specification]
 end define
-                
+		
 define other_group
-        [opt form_C] [opt control_level_indication] op1= OTHER [NL] [IN]
-                [repeat calculation_specification]
+	[opt form_C] [opt control_level_indication] op1= OTHER [NL] [IN]
+		[repeat calculation_specification]
 end define
 
 define end_select
-        [opt form_C] [opt control_level_indication] 'op= [END_or_ENDSL]                 [NL]
+	[opt form_C] [opt control_level_indication] 'op= [END_or_ENDSL]			[NL]
 end define
 
 define END_or_ENDSL
-        END
-|       ENDSL                                   % /400 only
+	END
+|	ENDSL					% /400 only
 end define
 
 
 define when_condition
-        [when_condition_term] [repeat OR_condition_term]
+	[when_condition_term] [repeat OR_condition_term]
 end define
 
 define when_condition_term
-        [when_condition_factor] [repeat AND_condition_factor]
+	[when_condition_factor] [repeat AND_condition_factor]
 end define
 
 define when_condition_factor
-        f1= [subject] 'op=[WHxx] f2= [object]
+	f1= [subject] 'op=[WHxx] f2= [object]
 end define
 
 define end_select
-                'ENDSL | 'END
+		'ENDSL | 'END
 end define
 
 define WHxx
-        WHENGT
-|       WHENEQ
-|       WHENLT
-|       WHENNE
-|       WHENGE
-|       WHENLE
-end define              
+	WHENGT
+|	WHENEQ
+|	WHENLT
+|	WHENNE
+|	WHENGE
+|	WHENLE
+end define		
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % S T A T E M E N T S
@@ -1052,338 +1052,338 @@ end define
 % Note that multiple AN and OR lines are parsed into one specification.
 
 define simple_calculation_specification
-        [opt form_C] [indication] [statement]                                                                   [NL]
+	[opt form_C] [indication] [statement] 									[NL]
 end define
 
 % Factors and results:
 
 define factor1
-        f1= [expression]
+	f1= [expression]
 end define
 
 define factor2
-        f2= [expression]
+	f2= [expression]
 end define
 
 define result
-        'res= [target] [opt length_option] [opt decimal_positions_option] [opt rounding_option]
+	'res= [target] [opt length_option] [opt decimal_positions_option] [opt rounding_option]
 end define
 
 define target
-        [reference]
+	[reference]
 end define
 
 define length_option
-        'length= [number]
+	'length= [number]
 end define
 
 define rounding_option
-        'half= H
+	'half= H
 end define
 
 define key_factor
-        f1= [key_reference]
+	f1= [key_reference]
 end define
 
 define key_reference
-        [reference]
+	[reference]
 end define
 
 define file_factor
-        f2= [file_name]
+	f2= [file_name]
 end define
 
 % Sorted by occurrence frequency in BNS code base, 1996/12/17.
 % If groups and subroutine definitions cover about 6% each; do groups about .5%; case is negligible.
 
 define statement
-        [move_statement]                                        % 18%
-|       [z_add_statement]                                       % 17%
-|       [compare_statement]                                     % 9.5%
-|       [execute_subroutine_statement]          % 7.5%
-|       [set_statement]                                         % 7%
-|       [add_statement]                                         % 6.5%
-|       [goto_statement]                                        % 6.5%
-|       [except_statement]                                      % 4%
-|       [chain_statement]                                       % 2.5%
-|       [subtract_statement]                            % 1.5%
-|       [tag_statement]                                         % 1%
-|       [divide_statement]                                      % .5%
-|       [multiply_statement]                            % .5%
-|       [lookup_statement]                                      % .5%
-|       [time_statement]                                        % .2%
-|       [set_lower_statement]                           % .2%
-|       [read_statement]                                        % .2%
+	[move_statement]					% 18%
+|	[z_add_statement]					% 17%
+|	[compare_statement]					% 9.5%
+|	[execute_subroutine_statement]		% 7.5%
+|	[set_statement]						% 7%
+|	[add_statement]						% 6.5%
+|	[goto_statement]					% 6.5%
+|	[except_statement]					% 4%
+|	[chain_statement]					% 2.5%
+|	[subtract_statement]				% 1.5%
+|	[tag_statement]						% 1%
+|	[divide_statement]					% .5%
+|	[multiply_statement]				% .5%
+|	[lookup_statement]					% .5%
+|	[time_statement]					% .2%
+|	[set_lower_statement]				% .2%
+|	[read_statement]					% .2%
 
 % Less than once per 500 instructions:
-|       [acquire_statement]
-%|      [eval_statement]                                        % IV/400 only
-%|      [adddur_statement]                                      % IV/400 only
-|       [bitoff_statement]
-|       [biton_statement]
-|       [compare_and_branch_statement] 
-|       [call_statement]
-%|      [call_bound_statement]
-%|      [call_prototyped_statement]
-%|      [cat_statement]
-%|      [check_char_statement]
-%|      [check_rev_statement]
-%|      [clear_statement]
-|       [close_statement]
-|       [commit_statement]
-|       [debug_statement]
-|       [delete_statement]
-|       [display_statement]
-|       [dump_statement]
-|       [exfmt_statement]
-%|      [exit_statement]
-%|      [extract_statement]
-|       [force_end_statement]
-|       [force_statement]
-|       [free_statement]
-|       [in_statement]
-|       [iterate_statement]                                             % III/400
-|       [leave_statement]                                               % III/400
-|       [move_remainder_statement]
-|       [next_statement]
-|       [occur_statement]
-|       [open_statement]
-|       [out_statement]
-|       [post_statement]
-|       [release_statement]
-|       [reset_statement]                                               % III/400 only
-|       [return_statement]
-|       [rpg_label_statement]                                   % II only
-|       [roll_back_statement]
-|       [scan_statement]                                                % III/400
-|       [set_greater_statement]                                 % III
-|       [shut_down_statement]
-|       [sort_statement]
-|       [sqrt_statement]
-%|      [subt_dates_statement]
-|       [substring_statement]
-%|      [testD_statement]
-%|      [testT_statement]
-%|      [testZ_statement]
-|       [test_bit_statement]
-|       [test_numeric_statement]
-|       [test_zone_statement]
-|       [unlock_statement]
-|       [update_statement]
-|       [write_statement]
-|       [xfoot_statement]
-|       [translate_statement]
-|       [z_sub_statement]
+|	[acquire_statement]
+%|	[eval_statement] 					% IV/400 only
+%|	[adddur_statement]					% IV/400 only
+|	[bitoff_statement]
+|	[biton_statement]
+|	[compare_and_branch_statement] 
+|	[call_statement]
+%|	[call_bound_statement]
+%|	[call_prototyped_statement]
+%|	[cat_statement]
+%|	[check_char_statement]
+%|	[check_rev_statement]
+%|	[clear_statement]
+|	[close_statement]
+|	[commit_statement]
+|	[debug_statement]
+|	[delete_statement]
+|	[display_statement]
+|	[dump_statement]
+|	[exfmt_statement]
+%|	[exit_statement]
+%|	[extract_statement]
+|	[force_end_statement]
+|	[force_statement]
+|	[free_statement]
+|	[in_statement]
+|	[iterate_statement]						% III/400
+|	[leave_statement]						% III/400
+|	[move_remainder_statement]
+|	[next_statement]
+|	[occur_statement]
+|	[open_statement]
+|	[out_statement]
+|	[post_statement]
+|	[release_statement]
+|	[reset_statement]						% III/400 only
+|	[return_statement]
+|	[rpg_label_statement]					% II only
+|	[roll_back_statement]
+|	[scan_statement]						% III/400
+|	[set_greater_statement]					% III
+|	[shut_down_statement]
+|	[sort_statement]
+|	[sqrt_statement]
+%|	[subt_dates_statement]
+|	[substring_statement]
+%|	[testD_statement]
+%|	[testT_statement]
+%|	[testZ_statement]
+|	[test_bit_statement]
+|	[test_numeric_statement]
+|	[test_zone_statement]
+|	[unlock_statement]
+|	[update_statement]
+|	[write_statement]
+|	[xfoot_statement]
+|	[translate_statement]
+|	[z_sub_statement]
 end define
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Acquire, Release
 
 define acquire_statement
-        [device_id_field_factor] 'op= ACQ [file_factor] [opt error_indication]
+	[device_id_field_factor] 'op= ACQ [file_factor] [opt error_indication]
 end define
 
 define release_statement   
-        [device_id_field_factor] 'op= REL [file_factor] [opt error_indication]
+	[device_id_field_factor] 'op= REL [file_factor] [opt error_indication]
 end define
 
 define device_id_field_factor
-        f1= [reference]
+	f1= [reference]
 end define
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Set Bits Off and On
 
 define bitoff_statement
-        'op= BITOF [factor2] [result]
+	'op= BITOF [factor2] [result]
 end define
 
 define biton_statement
-        'op= BITON [factor2] [result]
+	'op= BITON [factor2] [result]
 end define
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Compare and Branch
 
 define compare_and_branch_statement
-        [factor1] 'op= [CABxx] [factor2] [opt result] [result_indication]
+	[factor1] 'op= [CABxx] [factor2] [opt result] [result_indication]
 end define
 
 define CABxx
-        CABGT | CABEQ | CABLT | CABNE | CABGE | CABLE
+	CABGT | CABEQ | CABLT | CABNE | CABGE | CABLE
 end define
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Call a Program, Return to Caller
 
 define call_statement
-        'op= CALL f2= [program_name] 'res= [parameter_list_name] [opt error_indication]
-|       'op= CALL f2= [program_name]                            [opt error_indication]                  [NL] [IN] [IN]
-                [repeat parm_statement]                                                                                                                         [EX] [EX]
+	'op= CALL f2= [program_name] 'res= [parameter_list_name] [opt error_indication]
+|	'op= CALL f2= [program_name]                            [opt error_indication]			[NL] [IN] [IN]
+		[repeat parm_statement]																[EX] [EX]
 end define
 
 define return_statement   
-        'op= RETRN
+	'op= RETRN
 end define
 
 define parm_statement
-        [opt form_C]
-        [opt control_level_indication]
-        [opt parameter_result] 'op= PARM [opt parameter_value] [actual_parameter_result]        [NL]
+	[opt form_C]
+	[opt control_level_indication]
+	[opt parameter_result] 'op= PARM [opt parameter_value] [actual_parameter_result]	[NL]
 end define
 
 define parameter_result
-        f1= [reference]
+	f1= [reference]
 end define
 
 define parameter_value
-        f2= [expression]
+	f2= [expression]
 end define
 
 define actual_parameter_result
-        [result]
+	[result]
 end define
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Random Retrieval from a File Based on Record Number or Key Value
 
 define chain_statement
-        [key_factor] 'op= CHAIN [file_factor] [opt result] [file_result_indication]
+	[key_factor] 'op= CHAIN [file_factor] [opt result] [file_result_indication]
 end define 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Commit
 
 define commit_statement
-        'op= COMIT [opt error_indication]
-|       f1= [boundary_parameter_name] 'op= COMIT [opt error_indication]
+	'op= COMIT [opt error_indication]
+|	f1= [boundary_parameter_name] 'op= COMIT [opt error_indication]
 end define
 
 define boundary_parameter_name
-        [reference]
+	[reference]
 end define
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Compare
 
 define compare_statement
-        [factor1] 'op= COMP [factor2] [result_indication]
+	[factor1] 'op= COMP [factor2] [result_indication]
 end define 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Debug Function
 
 define debug_statement
-        [opt factor1] 'op= DEBUG [opt factor2] [opt result]
+	[opt factor1] 'op= DEBUG [opt factor2] [opt result]
 end define
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Delete Record
 
 define delete_statement
-        [opt key_factor] 'op= DELET [file_factor] [file_result_indication]
+	[opt key_factor] 'op= DELET [file_factor] [file_result_indication]
 end define
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Display Function
 
 define display_statement
-        [opt message_factor] 'op= DSPLY [opt queue_factor] [opt result] [opt error_indication]
+	[opt message_factor] 'op= DSPLY [opt queue_factor] [opt result] [opt error_indication]
 end define
 
 define message_factor
-        f1= [reference]
+	f1= [reference]
 end define
 
 define queue_factor
-        f2= [reference]
+	f2= [reference]
 end define
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Program Dump
 
 define dump_statement
-        [opt dump_factor] 'op= DUMP
+	[opt dump_factor] 'op= DUMP
 end define
 
 define dump_factor
-        f1= [external_name]
+	f1= [external_name]
 end define
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Calculation Time Output
 
 define except_statement
-        'op= EXCPT
-|       'op= EXCPT f2= [except_name]
+	'op= EXCPT
+|	'op= EXCPT f2= [except_name]
 end define
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Execute Format
 
 define exfmt_statement
-        'op= EXFMT f2= [external_record_name] [opt error_indication]
+	'op= EXFMT f2= [external_record_name] [opt error_indication]
 end define
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Execute Subroutine
 
 define execute_subroutine_statement
-        'op= EXSR f2= [subroutine_name]
+	'op= EXSR f2= [subroutine_name]
 end define
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Force End of Data
 
 define force_end_statement
-        op1= FEOD [file_factor] [opt error_indication]
+	op1= FEOD [file_factor] [opt error_indication]
 end define
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Force a Certain File to be Read on the Next Cycle
 
 define force_statement
-        'op= FORCE [file_factor]
+	'op= FORCE [file_factor]
 end define
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Deactive a Program
 
 define free_statement
-        'op= FREE f2= [program_id] [opt error_indication]
+	'op= FREE f2= [program_id] [opt error_indication]
 end define
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Branch To
 
 define goto_statement
-        'op= GOTO f2= [label]
+	'op= GOTO f2= [label]
 end define
 
 define label
-        [id]
+	[id]
 end define
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Retrieve a Data Area, Write a Data Area, Unlock a Data Area
 
 define in_statement
-        f1= *LOCK 'op= 'IN f2= [data_area_name] [opt error_indicator_name]
+	f1= *LOCK 'op= 'IN f2= [data_area_name] [opt error_indicator_name]
 |             'op= 'IN f2= [data_area_name] [opt error_indicator_name]
 end define
 
 define out_statement
-        f1= *LOCK 'op= OUT f2= [data_area_name] [opt error_indicator_name]
+	f1= *LOCK 'op= OUT f2= [data_area_name] [opt error_indicator_name]
 |             'op= OUT f2= [data_area_name] [opt error_indicator_name]
 end define
 
 define unlock_statement
-        'op= UNLOCK f2= [data_area_name] [opt error_indicator_name]
+	'op= UNLOCK f2= [data_area_name] [opt error_indicator_name]
 end define
 
 define data_area_name
-        *NAMVAR
-|       [data_structure_name]
+	*NAMVAR
+|	[data_structure_name]
 end define
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1392,121 +1392,121 @@ end define
 % Do groups only, III/400 only.
 
 define iterate_statement
-        'op= ITER
+	'op= ITER
 end define
 
 define leave_statement
-        'op= LEAVE
+	'op= LEAVE
 end define
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Lookup
 
 define lookup_statement  
-        f1= [reference] 'op= LOKUP f2= [array_name] [opt related_table_name] [result_indication]
+	f1= [reference] 'op= LOKUP f2= [array_name] [opt related_table_name] [result_indication]
 end define
 
 define related_table_name
-        [array_name]
+	[array_name]
 end define
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Move, Move {High,Low} to {High,Low} Zone, Move Array, Move Left
 
 define move_statement
-        'op= [move] f2= [source] [target_result] [result_indication]
+	'op= [move] f2= [source] [target_result] [result_indication]
 end define
 
 define source
-        [expression]
+	[expression]
 end define
 
 define target_result
-        [result]
+	[result]
 end define
 
 define move
-        MOVE
-|       MOVEA
-|       MOVEL
-|       MHHZO
-|       MHLZO
-|       MLHZO
-|       MLLZO
+	MOVE
+|	MOVEA
+|	MOVEL
+|	MHHZO
+|	MHLZO
+|	MLHZO
+|	MLLZO
 end define
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Move Remainder
 
 define move_remainder_statement
-        'op= MVR [result] [result_indication]
+	'op= MVR [result] [result_indication]
 end define
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Next (i.e. next input)
 
 define next_statement  
-        f1= [program_device_name] 'op= NEXT [file_factor] [opt error_indication]
+	f1= [program_device_name] 'op= NEXT [file_factor] [opt error_indication]
 end define
 
 define program_device_name
-        [expression]
+	[expression]
 end define
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Set/Get Occurrence of a Data Structure (*gack*)
 
 define occur_statement
-        [set_occurrence_statement]
-|       [get_occurrence_statement]
+	[set_occurrence_statement]
+|	[get_occurrence_statement]
 end define
 
 define set_occurrence_statement
-        f1= [expression] 'op= OCCUR f2= [data_structure_name] [opt result] [opt error_indication]
+	f1= [expression] 'op= OCCUR f2= [data_structure_name] [opt result] [opt error_indication]
 end define
 
 define get_occurrence_statement
-        'op= OCCUR f2= [data_structure_name] [result] [opt error_indication]
+	'op= OCCUR f2= [data_structure_name] [result] [opt error_indication]
 end define
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Open File for Processing, Close Files
 
 define open_statement
-        'op= OPEN [file_factor] [opt error_indication]
+	'op= OPEN [file_factor] [opt error_indication]
 end define
 
 define close_statement
-        'op= CLOSE [file_factor] [opt error_indication]
+	'op= CLOSE [file_factor] [opt error_indication]
 end define 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Post
 
 define post_statement
-         [opt device_id_field_factor] 'op= POST [opt file_factor] [opt data_structure_result] [opt error_indication]
+	 [opt device_id_field_factor] 'op= POST [opt file_factor] [opt data_structure_result] [opt error_indication]
 end define
 
 define data_structure_result
-        'res= [data_structure_name]
+	'res= [data_structure_name]
 end define
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Read a Record, Read Next Modified Record, Read Equal Key, Read Prior Record
 
-%       This next line is context-dependent. Factor-2 can be either a file name or 
-%       an external record name, depending on the file specification details.
+%	This next line is context-dependent. Factor-2 can be either a file name or 
+%	an external record name, depending on the file specification details.
 
 define read_statement
-        'op= [READx] [file_factor] [opt data_structure_result] [file_result_indication]
+	'op= [READx] [file_factor] [opt data_structure_result] [file_result_indication]
 end define
 
 define READx
-        READ
-|       READC
-|       READE
-|       READP
-|       READPE 
+	READ
+|	READC
+|	READE
+|	READP
+|	READPE 
 end define
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1516,193 +1516,193 @@ end define
 % context.
 
 define reset_statement
-                   'op= RESET f2= [field_name]
-|       f1= *NOKEY 'op= RESET f2= [data_structure_name]
+	           'op= RESET f2= [field_name]
+|	f1= *NOKEY 'op= RESET f2= [data_structure_name]
 end define
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% RPG Label                     II only
+% RPG Label			II only
 
 define rpg_label_statement
-        'op= RLABL 'res= [internal_name]
+	'op= RLABL 'res= [internal_name]
 end define
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Roll Back
 
 define roll_back_statement   
-        'op= ROLLBK [opt error_indication]
+	'op= ROLLBK [opt error_indication]
 end define
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Scan Character String, Translate
 
 define scan_statement
-        [factor1] 'op= SCAN [factor2] [result] [opt error_indication] [opt success_indication]
+	[factor1] 'op= SCAN [factor2] [result] [opt error_indication] [opt success_indication]
 end define
-        
+	
 define translate_statement
-        [factor1] 'op= XLATE [factor2] [result] [opt error_indication] [opt success_indication]
+	[factor1] 'op= XLATE [factor2] [result] [opt error_indication] [opt success_indication]
 end define 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Set Greater Than, Set Lower Limit
 
 define set_greater_statement
-        [key_factor] 'op= SETGT [file_factor] [file_result_indication]
+	[key_factor] 'op= SETGT [file_factor] [file_result_indication]
 end define
 
 define set_lower_statement
-        [key_factor] 'op= SETLL [file_factor] [file_result_indication]
+	[key_factor] 'op= SETLL [file_factor] [file_result_indication]
 end define
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Set Off, Set On
 
 define set_statement
-        'op= [SETxx] [repeat target_indication]
+	'op= [SETxx] [repeat target_indication]
 end define
 
 define target_indication
-        [indicator_label] [indicator_name]
+	[indicator_label] [indicator_name]
 end define
 
 define indicator_label
-        'ind_plus= | ind_'minus= | ind_'zero=
+	'ind_plus= | ind_'minus= | ind_'zero=
 end define
 
 define SETxx
-        SETON | SETOF
+	SETON | SETOF
 end define
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Shut Down
 
 define shut_down_statement
-        'op= SHUTDN 'ind_plus= [indicator_name]
+	'op= SHUTDN 'ind_plus= [indicator_name]
 end define
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Sort an Array
 
 define sort_statement
-        'op= SORTA f2= [array_name]
+	'op= SORTA f2= [array_name]
 end define
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Square Root (/400)
 
 define sqrt_statement
-        'op= SQRT [factor2] [result]
+	'op= SQRT [factor2] [result]
 end define
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Add, Subtract, Multiply, Divide, Zero and Add, Zero and Subtract
 
 define add_statement
-        [opt factor1] 'op= ADD [opt factor2] [result] [result_indication]
+	[opt factor1] 'op= ADD [opt factor2] [result] [result_indication]
 end define
 
 define subtract_statement
-        [opt factor1] 'op= SUB [opt factor2] [result] [result_indication]
+	[opt factor1] 'op= SUB [opt factor2] [result] [result_indication]
 end define
 
 define multiply_statement
-        [opt factor1] 'op= MULT [factor2] [result] [result_indication]
+	[opt factor1] 'op= MULT [factor2] [result] [result_indication]
 end define
 
 define divide_statement
-        [opt factor1] 'op= DIV [factor2] [result] [result_indication]
+	[opt factor1] 'op= DIV [factor2] [result] [result_indication]
 end define
 
 define z_add_statement
-        'op= Z-ADD [factor2] [result] [result_indication]
+	'op= Z-ADD [factor2] [result] [result_indication]
 end define
 
 define z_sub_statement
-        'op= Z-ADD [factor2] [result] [result_indication]
+	'op= Z-ADD [factor2] [result] [result_indication]
 end define 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Substring
 
 define substring_statement
-        f1= [length] 'op= SUBST f2= [source] [result] [opt error_indication]
+	f1= [length] 'op= SUBST f2= [source] [result] [opt error_indication]
 end define
 
 define length
-        [number]
+	[number]
 end define
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Tag
 
 define tag_statement
-        [label_factor] 'op= TAG
+	[label_factor] 'op= TAG
 end define
 
 define label_factor
-        f1= [label]
+	f1= [label]
 end define
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Test Bit
 
 define test_bit_statement
-        'op= TESTB [factor2] [result] [result_indication]
+	'op= TESTB [factor2] [result] [result_indication]
 end define
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Test Numeric
 
 define test_numeric_statement
-        'op= TESTN [result] [result_indication]
+	'op= TESTN [result] [result_indication]
 end define
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Test Zone
 
 define test_zone_statement
-        'op= TESTZ [result] [result_indication]
+	'op= TESTZ [result] [result_indication]
 end define
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Time
 
 define time_statement
-        'op= TIME [result] 
+	'op= TIME [result] 
 end define
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Create New Records, Modify Existing Record
 
 define write_statement
-        'op= WRITE [file_factor] [opt data_structure_result] [file_result_indication]
+	'op= WRITE [file_factor] [opt data_structure_result] [file_result_indication]
 end define 
 
 define update_statement
-        'op= UPDAT [file_factor] [opt data_structure_result] [file_result_indication]
+	'op= UPDAT [file_factor] [opt data_structure_result] [file_result_indication]
 end define 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Summing the Elements of an Array
 
 define xfoot_statement
-        'op= XFOOT [factor2] [result] [result_indication]
+	'op= XFOOT [factor2] [result] [result_indication]
 end define
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Subroutines
 
 define subroutine_definition
-        [NL]
-        [opt form_C] f1= [subroutine_name] 'op= BEGSR                                                           [NL] [IN]
-                [repeat calculation_specification]                                                                              [EX]
-        [opt form_C] [opt label_factor] 'op= ENDSR [opt exception_return_factor]                [NL]
+	[NL]
+	[opt form_C] f1= [subroutine_name] 'op= BEGSR								[NL] [IN]
+		[repeat calculation_specification]										[EX]
+	[opt form_C] [opt label_factor] 'op= ENDSR [opt exception_return_factor]		[NL]
 end define
 
 define exception_return_factor
-        f2= [field_name]
+	f2= [field_name]
 end define
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1710,120 +1710,120 @@ end define
 % O U T P U T
 
 define output_specification
-        [NL]
-        [opt form_O] 'file_name= [file_name] 'type= [output_type]
-        [repeat output_option]
-        [opt conditioning_indication]
-        [opt except_name_option]                                                                                        [NL] [IN]
-                [opt format_specification]
-                [repeat output_field_description]                                                               [EX]            
+	[NL]
+	[opt form_O] 'file_name= [file_name] 'type= [output_type]
+	[repeat output_option]
+	[opt conditioning_indication]
+	[opt except_name_option]											[NL] [IN]
+		[opt format_specification]
+		[repeat output_field_description]								[EX]		
 end define
 
 define form_O
-        'form= O
+	'form= O
 end define
 
 define output_type
-        H | D                           % details
-|       T                                       % total
-|       E                                       % exception
+	H | D				% details
+|	T					% total
+|	E					% exception
 end define
 
 define release_device_option
-        'fetch= R
+	'fetch= R
 end define
 
 define fetch_overflow_option
-        'fetch= F
+	'fetch= F
 end define
 
 define stacker_select_option
-        'fetch= [number]
+	'fetch= [number]
 end define
 
 define output_option
-        'space_bef=             [number]
-|       'space_after=   [number]
-|       'skip_before=   [number]
-|       'skip_after=            [number]
-|       [fetch_overflow_option]
-|       [release_device_option]
-|       'op=                            [update_file_operation]
-|       [stacker_select_option]
+	'space_bef= 		[number]
+|	'space_after= 	[number]
+|	'skip_before=	[number]
+|	'skip_after=		[number]
+|	[fetch_overflow_option]
+|	[release_device_option]
+|	'op=				[update_file_operation]
+|	[stacker_select_option]
 end define
 
 define except_name_option
-        'except_name=           [except_name]
+	'except_name=		[except_name]
 end define
 
 define update_file_operation
-        ADD
-|       DEL
+	ADD
+|	DEL
 end define
 
 define format_specification % [III/400 178ff]
-        [opt form_O] 'k= K 'name_length= [number] format_'name= [charlit]
+	[opt form_O] 'k= K 'name_length= [number] format_'name= [charlit]
 end define
 
 define output_field_description
-        [opt form_O] [opt conditioning_indication] [opt field_name_option] [repeat output_field_option] [NL]
+	[opt form_O] [opt conditioning_indication] [opt field_name_option] [repeat output_field_option] [NL]
 end define
 
 define field_name_option
-        'field_name= [field_name]
+	'field_name= [field_name]
 end define
 
 define output_field_option
-        'edit_code=             [edit_code]
-|       'blank_after=   B
-|       'end_posit=             [number]
-|       [data_format_option]
-|       'edit_word=             [charlit]
-|       'constant=              [charlit]
-|       'k= K 'name_length= [number] format_'name= [charlit]
+	'edit_code=		[edit_code]
+|	'blank_after=	B
+|	'end_posit=		[number]
+|	[data_format_option]
+|	'edit_word=		[charlit]
+|	'constant=		[charlit]
+|	'k= K 'name_length= [number] format_'name= [charlit]
 end define
 
 define edit_code
-        '1 | '2 | '3 | '4 | '5 | '6 | '7 | '8 | '9 | 
-        'A | 'B | 'C | 'D | 'J | 'K | 'L | 'M | 'N | 'O | 'P | 'Q | 
-        'X | 'Y | 'Z
+	'1 | '2 | '3 | '4 | '5 | '6 | '7 | '8 | '9 | 
+	'A | 'B | 'C | 'D | 'J | 'K | 'L | 'M | 'N | 'O | 'P | 'Q | 
+	'X | 'Y | 'Z
 end define
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Define a Composite Key
 
 define keylist_specification
-        [opt form_C] [opt control_level_indication] f1= [composite_key_name] 'op= KLIST         [NL] [IN]
-                [repeat key_field_specification]                                                                                        [EX]
+	[opt form_C] [opt control_level_indication] f1= [composite_key_name] 'op= KLIST		[NL] [IN]
+		[repeat key_field_specification]											[EX]
 end define
 
 define key_field_specification
-        [opt form_C] [opt control_level_indication] 'op= KFLD 'res= [field_name] [NL]
+	[opt form_C] [opt control_level_indication] 'op= KFLD 'res= [field_name] [NL]
 end define
-        
+	
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Field Definition
 
 define define_specification
-        [opt form_C] [opt control_level_indication] [field_definition]
+	[opt form_C] [opt control_level_indication] [field_definition]
 end define
 
 define field_definition
-        f1= *LIKE 'op= DEFN f2= [field_name] 'res= [field_name] [opt delta_length_option]
-|       f1= *NAMVAR 'op=DEFN [opt external_factor] 'res= [internal_name]
+	f1= *LIKE 'op= DEFN f2= [field_name] 'res= [field_name] [opt delta_length_option]
+|	f1= *NAMVAR 'op=DEFN [opt external_factor] 'res= [internal_name]
 end define
 
 define external_factor
-        f2= [external_name]
+	f2= [external_name]
 end define
 
 define delta_length_option
-        'sign= + 'length= [number]
-|       'sign= - 'length= [number]
+	'sign= + 'length= [number]
+|	'sign= - 'length= [number]
 end define
 
 define external_record_factor
-        f2= [external_name]
+	f2= [external_name]
 end define
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1834,15 +1834,15 @@ end define
 % references. RPG IV introduces expressions proper.
 
 define expression
-        [reference]
-|       [constant]
+	[reference]
+|	[constant]
 end define
 
 define constant
-        [number]
-|       [charlit]
-|       [figurative_constant]
-|       [hex_literal]
+	[number]
+|	[charlit]
+|	[figurative_constant]
+|	[hex_literal]
 end define
 
 % The following is based on the LS PL/I grammar.
@@ -1850,35 +1850,35 @@ end define
 % array indexing in the same reference.
 
 define reference
-        [basic_reference] [SPOFF] [opt index_qualifier] [opt substring_qualifier] [SPON]
+	[basic_reference] [SPOFF] [opt index_qualifier] [opt substring_qualifier] [SPON]
 end define
 
 define basic_reference
-        [field_name]
+	[field_name]
 end define
 
 define index_qualifier
-        , [field_name]
-|       , [constant]
+	, [field_name]
+|	, [constant]
 end define
 
 define substring_qualifier
-        : [field_name]
-|       : [constant]
+	: [field_name]
+|	: [constant]
 end define
 
 define figurative_constant
-        *BLANK 
-|       *BLANKS 
-|       *ZERO  
-|       *ZEROS 
-|       *HIVAL  
-|       *LOVAL 
-|       [SPOFF] *ALL [charlit] [SPON]
-|       [allx_literal]
-|       *NULL 
-|       *ON     
-|       *OFF    
+	*BLANK 
+| 	*BLANKS 
+|	*ZERO  
+| 	*ZEROS 
+|	*HIVAL  
+|	*LOVAL 
+|	[SPOFF] *ALL [charlit] [SPON]
+|	[allx_literal]
+|	*NULL 
+|	*ON 	
+|	*OFF 	
 end define
 
 % END

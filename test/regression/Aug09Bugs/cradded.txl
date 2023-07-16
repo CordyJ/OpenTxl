@@ -1,7 +1,7 @@
 #pragma -char -Dtokens
 tokens
-    CR  "\r"
-    TAB "\t"
+    CR	"\r"
+    TAB	"\t"
     NOTCR  "#r"
 end tokens
 
@@ -11,5 +11,5 @@ end define
 
 function main
     match [program]
-        P [program]
+	P [program]
 end function

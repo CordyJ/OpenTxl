@@ -1,7 +1,7 @@
 % Parse and pretty print Java code 
 
-include "Java.Grm"
-include "JavaCommentOverrides.Grm"
+include "Java.grm"
+include "JavaCommentOverrides.grm"
 
 function main
 	replace [program] 

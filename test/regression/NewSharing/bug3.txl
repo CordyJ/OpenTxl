@@ -6,7 +6,7 @@
 % JRC 12.4.96
 
 % Suitable input to this program is:
-%       Jim Jim Jim
+%	Jim Jim Jim
 % The output should be unchanged.
 
 define program
@@ -19,21 +19,21 @@ end define
 
 function main
     replace [program]
-        Things [repeat thing]
+	Things [repeat thing]
     by
-        Things [willChange]
+	Things [willChange]
 end function
 
 function willChange
     replace [repeat thing]
-        'Jim
-        MoreThings [repeat thing]
+	'Jim
+	MoreThings [repeat thing]
     construct ChangedThings [repeat thing]
-        MoreThings [$ 'Jim 'OH_NOOOO]
+	MoreThings [$ 'Jim 'OH_NOOOO]
     construct One [number]
-        1
+    	1
     where not
-        One [= One]
+    	One [= One]
     by 
         % unreachable
 end function

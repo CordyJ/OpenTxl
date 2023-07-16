@@ -7,9 +7,9 @@ begin
 var f; f := 2;
 while n != 1 do 
     while (n / f) * f = n do
-        // Got one - print it!
-        write f; 
-        n := n / f;
+	// Got one - print it!
+	write f; 
+	n := n / f;
     end
     f := f + 1;
 end end end

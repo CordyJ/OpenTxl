@@ -1,27 +1,27 @@
 TXL Example Specification
 -------------------------
 
-Name:   
-        ttrace.Txl
-        ctrace.Txl
-        ptrace.Txl
+Name:	
+	ttrace.Txl
+	ctrace.Txl
+	ptrace.Txl
 
 Description:
-        A general paradigm for transforming programs in any language
-        to self-tracing versions of themselves.  Examples here are
-        pure Turing, Standard Pascal and ANSI C.
+	A general paradigm for transforming programs in any language
+	to self-tracing versions of themselves.  Examples here are
+	pure Turing, Standard Pascal and ANSI C.
 
 Author:
-        J.R. Cordy
+   	J.R. Cordy
 
 Affiliation:
-        Software Technology Laboratory
-        Queen's University, Kingston, Canada
+	Software Technology Laboratory
+	Queen's University, Kingston, Canada
 
 Date:
-        Sept 1993
+	Sept 1993
 
 Examples:
-        txl stack.t ttrace.Txl
-        txl stack.p ptrace.Txl
-        txl stack.c ctrace.Txl
+	txl stack.t ttrace.Txl
+	txl stack.p ptrace.Txl
+	txl stack.c ctrace.Txl

@@ -16,11 +16,11 @@ BEGIN
     LOOP
         SELECT
             sitting > 0 && ACCEPT(leave,req) :
-                REPLY(leave,ok);
-                DEC(sitting);
+		REPLY(leave,ok);
+	        DEC(sitting);
           | sitting < ( Size - 1 ) && ACCEPT(sit,req) :
-                REPLY(sit,ok);
-                INC(sitting);
-        END;
+		REPLY(sit,ok);
+	        INC(sitting);
+	END;
     END;
 END Table.

@@ -1,9 +1,9 @@
 #pragma -xml
 
 define program
-        [repeat token]
+	[repeat token]
 end define
 
 function main
-        match [program] _ [program]
+	match [program] _ [program]
 end function

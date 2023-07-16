@@ -7,120 +7,120 @@
 % specifications for use in the attributed output.
 
 comments
-        '%
+	'%
 end comments
 
 compounds
-        :=
+	:=
 end compounds
 
 keys
-        int boolean array atom any empty ERROR
+	int boolean array atom any empty ERROR
 end keys
 
 define program
-        [declarationsAndStatements]
+	[declarationsAndStatements]
 end define
 
 define declarationsAndStatements
-        [declarationOrStatement] [opt restOfScope] 
+	[declarationOrStatement] [opt restOfScope] 
 end define
 
 define restOfScope
-        ; [NL]
-        [declarationsAndStatements]
+	; [NL]
+	[declarationsAndStatements]
 end define
 
 define declarationOrStatement
-        [declaration]
-    |   [statement]
-    |   [nullStatement]
+	[declaration]
+    |	[statement]
+    |	[nullStatement]
 end define
 
 define declaration
-        var [id] : [typeSpec]
+	var [id] : [typeSpec]
 end define
 
 define typeSpec
-        int
-    |   boolean
-    |   array
-    |   atom
-    |   any
-    |   empty
-    |   ERROR
+	int
+    |	boolean
+    |	array
+    |	atom
+    |	any
+    |	empty
+    |	ERROR
 end define
 
 define statement
-        [lhs] := [expression]
+	[lhs] := [expression]
 end define
 
 define lhs
-        [varRef]
+	[varRef]
 end define
 
 define expression
-        [expressionValue] [optionalExpressionAttrs]
+	[expressionValue] [optionalExpressionAttrs]
 end define
 
 define optionalExpressionAttrs
-        [expressionAttrs]
-    |   [nullExpressionAttrs]
+	[expressionAttrs]
+    |	[nullExpressionAttrs]
 end define
 
 define expressionAttrs
-        ( [typeAttribute] )
+	( [typeAttribute] )
 end define
 
 define nullExpressionAttrs
-        [nullAttrList]
+	[nullAttrList]
 end define
 
 define expressionValue
-        [booleanConstant]
-    |   [intConstant]
-    |   [varRef]
+	[booleanConstant]
+    |	[intConstant]
+    |	[varRef]
 end define
 
 define booleanConstant
-        true
-    |   false
+	true
+    |	false
 end define
 
 define intConstant
-        '1
-    |   '42
+	'1
+    |	'42
 end define
 
 define varRef
-        [id] [optionalVarRefAttrs]
+	[id] [optionalVarRefAttrs]
 end define
 
 define optionalVarRefAttrs
-        [varRefAttrs]
-    |   [nullVarRefAttrs]
+	[varRefAttrs]
+    |	[nullVarRefAttrs]
 end define
 
 define nullVarRefAttrs
-        [nullAttrList]
+	[nullAttrList]
 end define
 
 define varRefAttrs
-        ( [typeAttribute] )
+	( [typeAttribute] )
 end define
 
 define typeAttribute
-        [typeSpec] | [empty]
+	[typeSpec] | [empty]
 end define
 
 define ita
-        [typeSpec]
+	[typeSpec]
 end define
 
 define nullStatement
-        [empty]
+	[empty]
 end define
 
 define nullAttrList
-        [empty]
+	[empty]
 end define

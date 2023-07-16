@@ -5,77 +5,77 @@
 
 % Revision history:
 
-% 1.0   Moved to separate overrides file - T.D. March 12, 1996
-% 2.0   Completely rewritten to support new bracketing algorithm (Bracket 5.0) - JRC 4.10.96
-% 2.1   Added support for marking of level 88 conditions - JRC 10.12.96
+% 1.0	Moved to separate overrides file - T.D. March 12, 1996
+% 2.0	Completely rewritten to support new bracketing algorithm (Bracket 5.0) - JRC 4.10.96
+% 2.1	Added support for marking of level 88 conditions - JRC 10.12.96
 % 2.2   Added extension to numeric_literal nonterminal to properly parse
 %       numeric literals with spaces between the sign and the first digit
 %       of the number - RATH Jan 02/97.
-%                       eg.  IF A = +3 OR + 6 OR +7
+%			eg.  IF A = +3 OR + 6 OR +7
 % 3.0   T.D. Jan 20/97
-%               - Update to be compatible with grammar 7.0. Removed 66 from overrides (treated like 77)
-%               - added renames to description clause
-%               - changed id_or_FILLER to decl_name
-% 3.1   T.D. April 9, 1996
-%               - Removed override for numeric_literal.  Conflicts with subscript.
-%                 Use manual workaround for erroneous input.
-% 3.2   RATH May 08, 1997
-%               - changed [decl_name] to [opt decl_name] in [item_description] (not
-%                 in 66's or 88's), wo allow us to 'name' anonymous fields in Bracket.Txl
-%                 'unname' them in HotSpotsClean.Txl
+%		- Update to be compatible with grammar 7.0. Removed 66 from overrides (treated like 77)
+%		- added renames to description clause
+%		- changed id_or_FILLER to decl_name
+% 3.1	T.D. April 9, 1996
+%		- Removed override for numeric_literal.  Conflicts with subscript.
+%		  Use manual workaround for erroneous input.
+% 3.2	RATH May 08, 1997
+%		- changed [decl_name] to [opt decl_name] in [item_description] (not
+%		  in 66's or 88's), wo allow us to 'name' anonymous fields in Bracket.Txl
+%		  'unname' them in HotSpotsClean.Txl
 
 define record_description        
-                [repeat record_item+]
+		[repeat record_item+]
     |   [exec_sql_clause]  
 end define
 
 define record_item
         [NL] [level_number] [item_description]
-                        [opt item_fields]                                                       
+			[opt item_fields]							
 end define
 
 define item_description
-                [SP] [opt decl_name] [repeat description_clause] [dot]                  
-                        [IN] [repeat level_88_description] [EX]
+		[SP] [opt decl_name] [repeat description_clause] [dot]			
+			[IN] [repeat level_88_description] [EX]
 end define
 
 define item_fields
-                [opt bra] [repeat record_item] [opt ket]
+		[opt bra] [repeat record_item] [opt ket]
 end define
 
 define bra
-                [SP] '[ [IN]
+		[SP] '[ [IN]
 end define
 
 define ket
-                [SP] '] [EX]
+		[SP] '] [EX]
 end define
 
 define level_number
-                [number]
-        |       [level_1]
+		[number]
+	|	[level_1]
 end define
 
 define level_1
-                [NL] '1 
-        |       [NL] '01
+		[NL] '1	
+	|	[NL] '01
 end define
 
 define condition_primary
-                ...
-        |       [marked_level_88_condition]
+		...
+	|	[marked_level_88_condition]
 end define
 
 define arithmetic_primary
-                ...
-        |       [marked_level_88_condition]
+		...
+	|	[marked_level_88_condition]
 end define
 
 define marked_level_88_condition
-                [opt '?] [identifier]
+		[opt '?] [identifier]
 end define
 
 define description_clause
     ...
-        | [renames_clause]
+	| [renames_clause]
 end define

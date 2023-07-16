@@ -1,0 +1,11 @@
+all : output 
+
+output :
+	@echo.
+	@echo Step 1. Output comparison
+	@echo.
+	@.\TestAll.bat
+	@echo.
+
+clean :
+	(for /d %a in (*) do for %f in (%a\*output) do del "%f") > nul 2>&1

@@ -22,8 +22,8 @@ function main
     by
         Tables [ProcessSecondaryRelations]
             [ProcessPrimaryRelations]
-            [ProcessWeakSecondaryRelations]
-            [ProcessWeakPrimaryRelations]
+	    [ProcessWeakSecondaryRelations]
+	    [ProcessWeakPrimaryRelations]
 end function
 
 
@@ -47,11 +47,11 @@ rule ProcessPrimaryRelations
 
     % Get the foreign key attribute set
     construct ForeignKeyAttributes [repeat attribute]
-        _ [^ ForeignKeys]
+	_ [^ ForeignKeys]
 
     % Get the primary key attribute set
     construct PrimaryKeyAttributes [repeat attribute]
-        _ [^ PrimaryKey]
+	_ [^ PrimaryKey]
 
     % Compute (foreign key attribute set) - (primary key attribute set)
     construct ReducedForeignKeyAttributes [repeat attribute]
@@ -60,30 +60,30 @@ rule ProcessPrimaryRelations
     % Compute (defined attribute set) - (reduced foreign key attribute set)
     construct ReducedAttributeDefinitions [repeat attributeDefinition]
         _ [. each AttributeDefinitions] 
-            [removeAttributeDefinition each ReducedForeignKeyAttributes]
+	    [removeAttributeDefinition each ReducedForeignKeyAttributes]
 
     construct EntityPredicate [repeat predicate]
         entity ( EntityName ) 
 
     construct EntityAttributePredicates [repeat predicate]
-        _ [addEntityAttributePredicate EntityName each ReducedAttributeDefinitions]
+	_ [addEntityAttributePredicate EntityName each ReducedAttributeDefinitions]
 
     construct PrimaryKeyPredicates [repeat predicate]
-        _ [addPrimaryKeyPredicates_Atomic EntityName PrimaryKey]
-           [addPrimaryKeyPredicates_Composite EntityName PrimaryKey]
+	_ [addPrimaryKeyPredicates_Atomic EntityName PrimaryKey]
+	   [addPrimaryKeyPredicates_Composite EntityName PrimaryKey]
 
     construct UniquePredicates [repeat predicate]
-        _ [addUniquePredicate_Atomic EntityName ForeignKeyAttributes each UniqueStatements]
-            [addUniquePredicate_Composite EntityName ForeignKeyAttributes each UniqueStatements]
+	_ [addUniquePredicate_Atomic EntityName ForeignKeyAttributes each UniqueStatements]
+	    [addUniquePredicate_Composite EntityName ForeignKeyAttributes each UniqueStatements]
 
     construct BinaryRelationPredicates [repeat predicate]
-        _ [addBinaryRelationPredicatesCommented EntityName AttributeDefinitions 
-                each ForeignKeyStatements]
-            [addBinaryRelationPredicates EntityName AttributeDefinitions UniqueStatements
-                each ForeignKeyStatements]
+	_ [addBinaryRelationPredicatesCommented EntityName AttributeDefinitions 
+		each ForeignKeyStatements]
+	    [addBinaryRelationPredicates EntityName AttributeDefinitions UniqueStatements
+		each ForeignKeyStatements]
     by
         EntityPredicate
-            [. EntityAttributePredicates]
+	    [. EntityAttributePredicates]
             [. PrimaryKeyPredicates]
             [. UniquePredicates]
             [. BinaryRelationPredicates]
@@ -101,13 +101,13 @@ rule ProcessWeakPrimaryRelations
         CREATE TABLE EntityName [id] ( AttributeDefinitions [list attributeDefinition] ) 
         UniqueStatements [repeat uniqueConstraint]
         PRIMARY KEY ( PrimaryKey [list attribute] ) 
-        ForeignKeyStatements [repeat foreignKeyDefinition]
+	ForeignKeyStatements [repeat foreignKeyDefinition]
 
     % There is at least one foreign key statement 
     deconstruct ForeignKeyStatements
-        IdentifyingRelComment [opt IdentifyingRelComment]
+	IdentifyingRelComment [opt IdentifyingRelComment]
         FOREIGN KEY ( _ [list attribute] ) REFERENCES _ [table] 
-            _ [opt SpecialComment]
+	    _ [opt SpecialComment]
         Rest [repeat foreignKeyDefinition]
 
     % Get the primary, foreign and defined attribute sets
@@ -126,7 +126,7 @@ rule ProcessWeakPrimaryRelations
 
     % Some defined attributes are not part of the primary key 
     where not
-        PrimaryKeyAttributes [containsEvery DefinedAttributes]
+	PrimaryKeyAttributes [containsEvery DefinedAttributes]
 
     construct IdentifyingRelName [id]
         EntityName [_ 'IdentRel] [useIdentifyingRelNameAdvice IdentifyingRelComment]
@@ -138,15 +138,15 @@ rule ProcessWeakPrimaryRelations
         (1, 1) 
 
     construct Constraint [constraint]
-        DefaultConstraint [useIdentifyingRelConstraintAdvice IdentifyingRelComment]
+	DefaultConstraint [useIdentifyingRelConstraintAdvice IdentifyingRelComment]
 
     construct ReducedAttributeDefinitions [repeat attributeDefinition]
         _ [. each AttributeDefinitions] 
-            [removeAttributeDefinition each ForeignKeyAttributes]
+	    [removeAttributeDefinition each ForeignKeyAttributes]
 
     construct ReducedPrimaryKeyAttributes [repeat attribute]
         _ [. each PrimaryKey] 
-            [remove each ForeignKeyAttributes]
+	    [remove each ForeignKeyAttributes]
 
     construct WeakEntityPredicate [repeat predicate]
         weakEntity ( EntityName, IdentifyingRelName ) 
@@ -155,17 +155,17 @@ rule ProcessWeakPrimaryRelations
         _ [addEntityAttributePredicate EntityName each ReducedAttributeDefinitions]
 
     construct PartialKeyPredicates [repeat predicate]
-        _ [addPartialKeyPredicates_Atomic EntityName ReducedPrimaryKeyAttributes]
+	_ [addPartialKeyPredicates_Atomic EntityName ReducedPrimaryKeyAttributes]
             [addPartialKeyPredicates_Composite EntityName ReducedPrimaryKeyAttributes]
 
     construct IdentifyingRelationshipPredicates [repeat predicate]
-        _ [addIdentifyingRelationshipPredicates EntityName IdentifyingRelName 
-                Constraint Role ForeignKeyStatements]
+	_ [addIdentifyingRelationshipPredicates EntityName IdentifyingRelName 
+		Constraint Role ForeignKeyStatements]
     by
         WeakEntityPredicate
-            [. EntityAttributePredicates]
-            [. PartialKeyPredicates]
-            [. IdentifyingRelationshipPredicates]
+	    [. EntityAttributePredicates]
+	    [. PartialKeyPredicates]
+	    [. IdentifyingRelationshipPredicates]
 end rule
 
 
@@ -192,22 +192,22 @@ rule ProcessSecondaryRelations
         ForeignKeyAttributes [containsEvery PrimaryKeyAttributes]
 
     construct Participation [arity]
-        Binary  % assume binary unless otherwise
+	Binary	% assume binary unless otherwise
 
     construct RelationshipPredicate [repeat predicate]
-        relationship (RelName, Participation [checkNary ForeignKeyStatements] )
+	relationship (RelName, Participation [checkNary ForeignKeyStatements] )
 
     construct AttributePredicates [repeat predicate]
-        _ [addRelationshipAttributePredicate RelName each AttributeDefinitions]
+	_ [addRelationshipAttributePredicate RelName each AttributeDefinitions]
 
     construct EntityInRelationshipPredicates [repeat predicate]
-        _ [addEntityInRelationshipPredicateCommented RelName each ForeignKeyStatements]
-            [addEntityInRelationshipPredicate RelName each ForeignKeyStatements]
+	_ [addEntityInRelationshipPredicateCommented RelName each ForeignKeyStatements]
+	    [addEntityInRelationshipPredicate RelName each ForeignKeyStatements]
 
     by
         RelationshipPredicate 
-            [. AttributePredicates] 
-            [. EntityInRelationshipPredicates]
+	    [. AttributePredicates] 
+	    [. EntityInRelationshipPredicates]
 end rule
 
 
@@ -233,29 +233,29 @@ rule ProcessWeakSecondaryRelations
 
     % The foreign key attribute set is a proper subset of the primary key
     where
-        PrimaryKeyAttributes [containsEvery ForeignKeyAttributes]
+	PrimaryKeyAttributes [containsEvery ForeignKeyAttributes]
     where not
         ForeignKeyAttributes [containsEvery PrimaryKeyAttributes]
 
     % All defined attributes are in the primary key
     where
-        PrimaryKeyAttributes [containsEvery DefinedAttributes]
+	PrimaryKeyAttributes [containsEvery DefinedAttributes]
 
     % Compute (defined attribute set) - (foreign key attribute set)
     construct ReducedAttributeDefinitions [repeat attributeDefinition]
         _ [. each AttributeDefinitions] 
-          [removeAttributeDefinition each ForeignKeyAttributes]
+	  [removeAttributeDefinition each ForeignKeyAttributes]
 
     construct Predicates [repeat predicate]
         _ [ProcessMultiValuedAttribute_Atomic EntityName ReducedAttributeDefinitions]
             [ProcessMultiValuedAttribute_Composite AttributeName EntityName ReducedAttributeDefinitions]
     by
-        Predicates
+	Predicates
 end rule
 
 
 function addEntityAttributePredicate EntityName [id] 
-                AttributeDefinition [attributeDefinition]
+		AttributeDefinition [attributeDefinition]
 
     deconstruct AttributeDefinition
         Attribute [attribute] Type [dataType] _ [opt notNull]
@@ -267,7 +267,7 @@ function addEntityAttributePredicate EntityName [id]
         PredicatesSoFar [repeat predicate]
     by
         PredicatesSoFar 
-            [. EntityAttributePredicate]
+	    [. EntityAttributePredicate]
 end function
 
 function addPrimaryKeyPredicates_Atomic EntityName [id]
@@ -283,7 +283,7 @@ function addPrimaryKeyPredicates_Atomic EntityName [id]
         PredicatesSoFar [repeat predicate]
     by
         PredicatesSoFar 
-            [. KeyPredicate]
+	    [. KeyPredicate]
 end function
 
 function addPrimaryKeyPredicates_Composite EntityName [id]
@@ -301,18 +301,18 @@ function addPrimaryKeyPredicates_Composite EntityName [id]
         PredicatesSoFar [repeat predicate]
     by
         PredicatesSoFar 
-            [. KeyPredicate]
+	    [. KeyPredicate]
             [. EntityAttributePredicate]
 end function
 
 function addUniquePredicate_Atomic EntityName [id] 
-        ForeignKeyAttributes [repeat attribute] UniqueStatement [uniqueConstraint]
+	ForeignKeyAttributes [repeat attribute] UniqueStatement [uniqueConstraint]
 
     deconstruct UniqueStatement
         UNIQUE ( Attribute [attribute] ) 
 
     where not 
-        Attribute [= each ForeignKeyAttributes]
+	Attribute [= each ForeignKeyAttributes]
 
     construct KeyPredicate [predicate]
         key ( EntityName, Attribute ) 
@@ -321,11 +321,11 @@ function addUniquePredicate_Atomic EntityName [id]
         PredicatesSoFar [repeat predicate]
     by
         PredicatesSoFar 
-            [. KeyPredicate]
+	    [. KeyPredicate]
 end function
 
 function addUniquePredicate_Composite EntityName [id] 
-        ForeignKeyAttributes [repeat attribute] UniqueStatement [uniqueConstraint]
+	ForeignKeyAttributes [repeat attribute] UniqueStatement [uniqueConstraint]
 
     deconstruct UniqueStatement
         UNIQUE ( UniqueAttributeList [list attribute] ) 
@@ -334,7 +334,7 @@ function addUniquePredicate_Composite EntityName [id]
         Attribute1 [attribute] , RestOfAttributes [list_1_attribute]
 
     where not 
-        Attribute1 [= each ForeignKeyAttributes]
+	Attribute1 [= each ForeignKeyAttributes]
 
     construct CandidateKeyId [id]
         'CandidateKey 
@@ -352,7 +352,7 @@ function addUniquePredicate_Composite EntityName [id]
         PredicatesSoFar [repeat predicate]
     by
         PredicatesSoFar 
-            [. KeyPredicate]
+	    [. KeyPredicate]
             [. EntityAttributePredicate]
 end function
 
@@ -372,7 +372,7 @@ function checkNary ForeignKeyStatements [repeat foreignKeyDefinition]
 end function
 
 function addRelationshipAttributePredicate RelName [id] 
-                AttributeDefinition [attributeDefinition]
+		AttributeDefinition [attributeDefinition]
     deconstruct AttributeDefinition
         % matches the attributes of the relationship only (i.e., without NOT NULL) 
         Attribute [attribute] Type [dataType]
@@ -384,7 +384,7 @@ function addRelationshipAttributePredicate RelName [id]
         PredicatesSoFar [repeat predicate]
     by
         PredicatesSoFar 
-            [. RelationshipAttributePredicate]
+	    [. RelationshipAttributePredicate]
 end function
 
 function addEntityInRelationshipPredicateCommented RelName [id]
@@ -392,7 +392,7 @@ function addEntityInRelationshipPredicateCommented RelName [id]
 
     deconstruct ForeignKeyStatement
         FOREIGN KEY ( ForeignKeyAttributesList [list attribute] ) 
-            REFERENCES EntityName [id]
+	    REFERENCES EntityName [id]
             --* ROLE : Role [role] Constraint [constraint]
 
     construct EntityInRelationshipPredicate [predicate]
@@ -402,7 +402,7 @@ function addEntityInRelationshipPredicateCommented RelName [id]
         PredicatesSoFar [repeat predicate]
     by
         PredicatesSoFar 
-            [. EntityInRelationshipPredicate]
+	    [. EntityInRelationshipPredicate]
 end function
 
 function addEntityInRelationshipPredicate RelName [id]
@@ -410,7 +410,7 @@ function addEntityInRelationshipPredicate RelName [id]
 
     deconstruct ForeignKeyStatement
         FOREIGN KEY ( ForeignKeyAttributesList [list attribute] ) 
-            REFERENCES EntityName [id]
+	    REFERENCES EntityName [id]
 
     construct Role [role]
         % create a default role; it is the name of the entity
@@ -435,16 +435,16 @@ function addBinaryRelationPredicatesCommented EntityName [id]
 
     deconstruct ForeignKeyStatement
         FOREIGN KEY ( ForeignKeyAttributesList [list attribute] ) 
-            REFERENCES EntityName2 [id]
-            --* RELATIONSHIP : RelName [id]
-            --* ROLES : Role1 [role] Constraint1 [constraint] , 
-                        Role2 [role] Constraint2 [constraint]
+	    REFERENCES EntityName2 [id]
+	    --* RELATIONSHIP : RelName [id]
+	    --* ROLES : Role1 [role] Constraint1 [constraint] , 
+			Role2 [role] Constraint2 [constraint]
 
     construct RelationshipPredicate [predicate]
         relationship ( RelName, Binary ) 
 
     construct EntityInRelationshipPredicates [repeat predicate]
-        % (0,n) is default value
+	% (0,n) is default value
         entityInRelationship ( RelName, EntityName1, Constraint1, Role1 ) 
         entityInRelationship ( RelName, EntityName2, Constraint2, Role2 ) 
 
@@ -452,18 +452,18 @@ function addBinaryRelationPredicatesCommented EntityName [id]
         PredicatesSoFar [repeat predicate]
     by
         PredicatesSoFar 
-            [. RelationshipPredicate]
+	    [. RelationshipPredicate]
             [. EntityInRelationshipPredicates]
 end function
 
 function addBinaryRelationPredicates EntityName1 [id]
                 AttributeDefinitions [list attributeDefinition]
-                UniqueStatements [repeat uniqueConstraint]
+		UniqueStatements [repeat uniqueConstraint]
                 ForeignKeyStatement [foreignKeyDefinition]
 
     deconstruct ForeignKeyStatement
         FOREIGN KEY ( ForeignKeyAttributesList [list attribute] ) 
-            REFERENCES EntityName2 [id]
+	    REFERENCES EntityName2 [id]
 
     % construct default relationship name and roles 
     construct Role1 [role]
@@ -481,14 +481,14 @@ function addBinaryRelationPredicates EntityName1 [id]
 
     construct Constraint1 [constraint]
         DefaultConstraint 
-            [checkNotNull ForeignKeyAttributesList AttributeDefinitions]
+	    [checkNotNull ForeignKeyAttributesList AttributeDefinitions]
 
     construct DefaultConstraint2 [constraint]
         (0, n) 
 
     construct Constraint2 [constraint]
-        DefaultConstraint2 
-            [checkUnique ForeignKeyAttributesList UniqueStatements]
+	DefaultConstraint2 
+	    [checkUnique ForeignKeyAttributesList UniqueStatements]
 
     construct RelationshipPredicate [predicate]
         relationship ( RelName, Binary ) 
@@ -501,7 +501,7 @@ function addBinaryRelationPredicates EntityName1 [id]
         PredicatesSoFar [repeat predicate]
     by
         PredicatesSoFar 
-            [. RelationshipPredicate]
+	    [. RelationshipPredicate]
             [. EntityInRelationshipPredicates]
 end function
 
@@ -521,7 +521,7 @@ function checkNotNull ForeignKeyAttributesList [list attribute]
 end function
 
 function checkUnique ForeignKeyAttributesList [list attribute]
-                UniqueStatements [repeat uniqueConstraint]
+		UniqueStatements [repeat uniqueConstraint]
 
     deconstruct ForeignKeyAttributesList
         Attribute [attribute] , Rest [list attribute]
@@ -549,7 +549,7 @@ function ProcessMultiValuedAttribute_Atomic EntityName [id]
         PredicatesSoFar [repeat predicate]
     by
         PredicatesSoFar 
-            [. MultiValuedAttributePredicate]
+	    [. MultiValuedAttributePredicate]
 end function
 
 function ProcessMultiValuedAttribute_Composite AttributeName [id]
@@ -571,7 +571,7 @@ function ProcessMultiValuedAttribute_Composite AttributeName [id]
         PredicatesSoFar [repeat predicate]
     by
         PredicatesSoFar 
-            [. MultiValuedAttributePredicate]
+	    [. MultiValuedAttributePredicate]
             [. MultiValuedAttributeComponentPredicates]
 end function
 
@@ -589,7 +589,7 @@ function addMultiValuedAttributeComponent EntityName [id]
         PredicatesSoFar [repeat predicate]
     by
         PredicatesSoFar 
-            [. MultiValuedAttributeComponentPredicate]
+	    [. MultiValuedAttributeComponentPredicate]
 end function
 
 function useIdentifyingRelNameAdvice RelComment [opt IdentifyingRelComment]
@@ -597,7 +597,7 @@ function useIdentifyingRelNameAdvice RelComment [opt IdentifyingRelComment]
         --* IDENTIFYING_REL : IdentifyingRelName [id]
         --* ROLE : Role [role] Constraint [constraint]
     replace [id]
-        DefaultName [id]
+	DefaultName [id]
     by
         IdentifyingRelName
 end function
@@ -607,7 +607,7 @@ function useIdentifyingRelRoleAdvice RelComment [opt IdentifyingRelComment]
         --* IDENTIFYING_REL : IdentifyingRelName [id]
         --* ROLE : Role [id] Constraint [constraint]
     replace [id]
-        DefaultRole [id]
+	DefaultRole [id]
     by
         Role
 end function
@@ -617,7 +617,7 @@ function useIdentifyingRelConstraintAdvice RelComment [opt IdentifyingRelComment
         --* IDENTIFYING_REL : IdentifyingRelName [id]
         --* ROLE : Role [role] Constraint [constraint]
     replace [constraint]
-        DefaultConstraint [constraint]
+	DefaultConstraint [constraint]
     by
         Constraint
 end function
@@ -635,7 +635,7 @@ function addPartialKeyPredicates_Atomic EntityName [id]
         PredicatesSoFar [repeat predicate]
     by
         PredicatesSoFar 
-            [. KeyPredicate]
+	    [. KeyPredicate]
 end function
 
 function addPartialKeyPredicates_Composite EntityName [id]
@@ -645,7 +645,7 @@ function addPartialKeyPredicates_Composite EntityName [id]
         Attribute1 [attribute]  Attribute2 [attribute] RestOfAttributes [repeat attribute]
 
     construct PrimaryKey [list attribute]
-        _ [, each PrimaryKeyAttributes]
+	_ [, each PrimaryKeyAttributes]
 
     construct KeyPredicate [predicate]
         partialKey ( EntityName, 'PartialKey ) 
@@ -657,7 +657,7 @@ function addPartialKeyPredicates_Composite EntityName [id]
         PredicatesSoFar [repeat predicate]
     by
         PredicatesSoFar 
-            [. KeyPredicate]
+	    [. KeyPredicate]
             [. EntityAttributePredicate]
 end function
 
@@ -680,7 +680,7 @@ function addIdentifyingRelationshipPredicates EntityName [id]
         PredicatesSoFar [repeat predicate]
     by
         PredicatesSoFar 
-            [. NewPredicates]
+	    [. NewPredicates]
 end function
 
 function addIdentifyingRelationshipPredicate_Binary IdentifyingRelName [id]
@@ -697,7 +697,7 @@ function addIdentifyingRelationshipPredicate_Binary IdentifyingRelName [id]
         PredicatesSoFar [repeat predicate]
     by
         PredicatesSoFar 
-            [. IdentifyingRelationship]
+	    [. IdentifyingRelationship]
 end function
 
 function addIdentifyingRelationshipPredicate_N_ary IdentifyingRelName [id]
@@ -716,7 +716,7 @@ function addIdentifyingRelationshipPredicate_N_ary IdentifyingRelName [id]
         PredicatesSoFar [repeat predicate]
     by
         PredicatesSoFar 
-            [. IdentifyingRelationship]
+	    [. IdentifyingRelationship]
 end function
 
 function addEntityInRelationshipPredicateForOwnerEntities IdentifyingRelName [id]
@@ -725,7 +725,7 @@ function addEntityInRelationshipPredicateForOwnerEntities IdentifyingRelName [id
     deconstruct ForeignKeyStatement
         _ [opt IdentifyingRelComment]
         FOREIGN KEY ( ForeignKeyAttributesList [list attribute] ) REFERENCES EntityName [id]
-            RoleComment [opt SpecialComment]
+	    RoleComment [opt SpecialComment]
 
     construct Role [role]
         EntityName [useRoleAdvice RoleComment]
@@ -734,7 +734,7 @@ function addEntityInRelationshipPredicateForOwnerEntities IdentifyingRelName [id
         (0, n)
 
     construct Constraint [constraint]
-        DefaultConstraint [useConstraintAdvice RoleComment]
+	DefaultConstraint [useConstraintAdvice RoleComment]
 
     construct EntityInRelationshipPredicate [predicate]
         entityInRelationship ( IdentifyingRelName, EntityName, Constraint, Role ) 
@@ -743,14 +743,14 @@ function addEntityInRelationshipPredicateForOwnerEntities IdentifyingRelName [id
         PredicatesSoFar [repeat predicate]
     by
         PredicatesSoFar 
-            [. EntityInRelationshipPredicate]
+	    [. EntityInRelationshipPredicate]
 end function
 
 function useRoleAdvice RoleComment [opt SpecialComment]
     deconstruct RoleComment
         --* ROLE : Role [id] Constraint [constraint]
     replace [id]
-        DefaultRole [id]
+	DefaultRole [id]
     by
         Role
 end function
@@ -759,7 +759,7 @@ function useConstraintAdvice RoleComment [opt SpecialComment]
     deconstruct RoleComment
         --* ROLE : Role [role] Constraint [constraint]
     replace [constraint]
-        DefaultConstraint [constraint]
+	DefaultConstraint [constraint]
     by
         Constraint
 end function
@@ -783,7 +783,7 @@ function containsEvery Attributes2 [repeat attribute]
         Attributes2 [remove each Attributes1]
 
     deconstruct Attributes2Minus1
-        % empty
+	% empty
 end function
 
 function remove Attribute [attribute]
@@ -796,13 +796,13 @@ end function
 
 function contains AttributeList2 [attributelist]
     match [attributelist]
-        AttributeList1 [attributelist]
+	AttributeList1 [attributelist]
     construct Attributes1 [repeat attribute]
-        _ [^ AttributeList1]
+	_ [^ AttributeList1]
     construct Attributes2 [repeat attribute]
-        _ [^ AttributeList2]
+	_ [^ AttributeList2]
     deconstruct * Attributes2
-        _ [attribute]
+	_ [attribute]
     where
-        Attributes1 [containsEvery Attributes2]
+	Attributes1 [containsEvery Attributes2]
 end function

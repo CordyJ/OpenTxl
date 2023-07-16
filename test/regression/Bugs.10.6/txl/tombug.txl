@@ -4,22 +4,22 @@ include "stateflow.grm"
 
 function main
    replace [program]
-        P [program]
+   	P [program]
 
    export MachineIds [repeat number]
-        _
+   	_
    export ChartIds [repeat number]
-        _
+   	_
    export StateIds [repeat number]
-        _
+   	_
    export DataIds [repeat number]
-        _
+   	_
    export FataIds [repeat number]
-        _
+   	_
 
    by
-        P
-          [getMachineIds]
+   	P
+	  [getMachineIds]
 
 end function
 

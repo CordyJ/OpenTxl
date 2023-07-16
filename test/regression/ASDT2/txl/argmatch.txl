@@ -13,145 +13,145 @@ include "Turing+.grm"
 
 function main
     replace [program]
-        C [compilation]
+	C [compilation]
     by
-        C [message '"[attachProcVarFormalNamesToArguments C]"]
-          [attachProcVarFormalNamesToArguments C]
-          [message '"[attachFuncVarFormalNamesToArguments C]"]
-          [attachFuncVarFormalNamesToArguments C]
-          [message '"[removeMarks]"]
-          [removeMarks]
+	C [message '"[attachProcVarFormalNamesToArguments C]"]
+	  [attachProcVarFormalNamesToArguments C]
+	  [message '"[attachFuncVarFormalNamesToArguments C]"]
+	  [attachFuncVarFormalNamesToArguments C]
+	  [message '"[removeMarks]"]
+	  [removeMarks]
 end function
 
 % external rule message S [stringlit]
 
 function attachProcVarFormalNamesToArguments C [compilation]
     construct ProcHeads [repeat procedureHead]
-        _ [^ C] [removeNonVarProcs]
+	_ [^ C] [removeNonVarProcs]
     replace [compilation]
-        Everything [compilation]
+	Everything [compilation]
     by
-        Everything [attachProcVarFormalNamesOf each ProcHeads]
+	Everything [attachProcVarFormalNamesOf each ProcHeads]
 end function
 
 rule removeNonVarProcs
     replace [repeat procedureHead]
-        ProcHead [procedureHead]
-        Rest [repeat procedureHead]
+	ProcHead [procedureHead]
+	Rest [repeat procedureHead]
     where not
-        ProcHead [hasVar]
+	ProcHead [hasVar]
     by
-        Rest
+	Rest
 end rule
 
 rule hasVar 
     match [opt 'var]
-        var
+	var
 end rule
 
 function attachProcVarFormalNamesOf ProcHead [procedureHead]
     deconstruct ProcHead
-        'procedure P [id] ( ParmList [list parameterDeclaration+] ) 
+	'procedure P [id] ( ParmList [list parameterDeclaration+] ) 
     replace [compilation]
-        Everything [compilation]
+	Everything [compilation]
     by
-        Everything [attachProcCallVarFormalNames P ParmList]
+	Everything [attachProcCallVarFormalNames P ParmList]
 end function
 
 function attachFuncVarFormalNamesToArguments C [compilation]
     construct FuncHeads [repeat functionHead]
-        _ [^ C] [removeNonVarFuncs]
+	_ [^ C] [removeNonVarFuncs]
     replace [compilation]
-        Everything [compilation]
+	Everything [compilation]
     by
-        Everything [attachFuncVarFormalNamesOf each FuncHeads]
+	Everything [attachFuncVarFormalNamesOf each FuncHeads]
 end function
 
 rule removeNonVarFuncs
     replace [repeat functionHead]
-        FuncHead [functionHead]
-        Rest [repeat functionHead]
+	FuncHead [functionHead]
+	Rest [repeat functionHead]
     where not
-        FuncHead [hasVar]
+	FuncHead [hasVar]
     by
-        Rest
+	Rest
 end rule
 
 function attachFuncVarFormalNamesOf FuncHead [functionHead]
     deconstruct FuncHead
-        'function P [id] ( ParmList [list parameterDeclaration+] ) 
-            : ResultType [typeSpec]
+	'function P [id] ( ParmList [list parameterDeclaration+] ) 
+	    : ResultType [typeSpec]
     replace [compilation]
-        Everything [compilation]
+	Everything [compilation]
     by
-        Everything [attachFuncCallVarFormalNames P ParmList]
+	Everything [attachFuncCallVarFormalNames P ParmList]
 end function
 
 rule attachProcCallVarFormalNames P [id] ParmList [list parameterDeclaration+]
     deconstruct ParmList
-        FirstParm [parameterDeclaration] ,
-        RestOfParms [list parameterDeclaration]
+	FirstParm [parameterDeclaration] ,
+	RestOfParms [list parameterDeclaration]
     replace [callStatement]
-        P ( Args [list argument] )
+	P ( Args [list argument] )
     where not
-        Args [hasFormalInfo]
+	Args [hasFormalInfo]
     deconstruct Args
-        FirstArg [argument] , RestOfArgs [list argument] 
+	FirstArg [argument] , RestOfArgs [list argument] 
     by
-        P ( FirstArg [attachVarFormalName FirstParm] ,
-                  RestOfArgs [attachVarFormalListNames RestOfParms] )
+	P ( FirstArg [attachVarFormalName FirstParm] ,
+		  RestOfArgs [attachVarFormalListNames RestOfParms] )
 end rule
 
 function hasFormalInfo
     match * [opt formalInfo]
-        F [formalInfo]
+	F [formalInfo]
 end function
 
 rule attachFuncCallVarFormalNames P [id] ParmList [list parameterDeclaration+]
     deconstruct ParmList
-        FirstParm [parameterDeclaration] ,
-        RestOfParms [list parameterDeclaration]
+	FirstParm [parameterDeclaration] ,
+	RestOfParms [list parameterDeclaration]
     replace [reference]
-        P ( Args [list argument] )
-        CS [repeat componentSelector]
+	P ( Args [list argument] )
+	CS [repeat componentSelector]
     where not
-        Args [hasFormalInfo]
+	Args [hasFormalInfo]
     deconstruct Args
-        FirstArg [argument] , RestOfArgs [list argument] 
+	FirstArg [argument] , RestOfArgs [list argument] 
     by
-        P ( FirstArg [attachVarFormalName FirstParm] ,
-                  RestOfArgs [attachVarFormalListNames RestOfParms] )
-        CS
+	P ( FirstArg [attachVarFormalName FirstParm] ,
+		  RestOfArgs [attachVarFormalListNames RestOfParms] )
+	CS
 end rule
 
 function attachVarFormalListNames ParmList [list parameterDeclaration]
     deconstruct ParmList 
-        Parm [parameterDeclaration] ,
-        MoreParms [list parameterDeclaration]
+	Parm [parameterDeclaration] ,
+	MoreParms [list parameterDeclaration]
     replace [list argument]
-        Arg [argument] ,
-        MoreArgs [list argument]
+	Arg [argument] ,
+	MoreArgs [list argument]
     by
-        Arg [attachVarFormalName Parm] ,
-        MoreArgs [attachVarFormalListNames MoreParms]
+	Arg [attachVarFormalName Parm] ,
+	MoreArgs [attachVarFormalListNames MoreParms]
 end function
 
 function attachVarFormalName Parm [parameterDeclaration]
     deconstruct Parm
-        OR [opt 'register] 'var FormalId [id] : PT [parameterType] 
+	OR [opt 'register] 'var FormalId [id] : PT [parameterType] 
     replace [argument]
-        Arg [expn]
+	Arg [expn]
     by
-        Arg : 'var FormalId
+	Arg : 'var FormalId
 end function
 
 function removeMarks
     construct AMark [opt 'MARK]
-        MARK
+	MARK
     construct NoMark [opt 'MARK]
-        % nada
+	% nada
     replace [compilation]
-        C [compilation]
+	C [compilation]
     by
-        C [$ AMark NoMark]
+	C [$ AMark NoMark]
 end function

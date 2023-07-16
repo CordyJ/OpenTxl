@@ -6,70 +6,70 @@
 
 type spooler : 
     object
-        export (getdata, putdata)
+	export (getdata, putdata)
 
-        var count : int := 0    
+	var count : int := 0	
 
-        % A polymorphic object class representing a queue of any size and type.
-        % Note that the generic and object facilities are two completely 
-        % separate features which we combine in an orthogonal fashion to 
-        % produce the polymorphic object result.
+	% A polymorphic object class representing a queue of any size and type.
+	% Note that the generic and object facilities are two completely 
+	% separate features which we combine in an orthogonal fashion to 
+	% produce the polymorphic object result.
 
-        generic queueof (itemtype, queuesize)
-            type queueof :
-                object
-                    export (empty, enqueue, dequeue)
+	generic queueof (itemtype, queuesize)
+	    type queueof :
+		object
+		    export (empty, enqueue, dequeue)
 
-                    var qend : 0 .. queuesize - 1 := 0
-                    var qstart : 0 .. queuesize - 1 := 1
-                    var qlength : 0 .. queuesize := 0
-                    var contents : array 0 .. queuesize - 1 of itemtype
+		    var qend : 0 .. queuesize - 1 := 0
+		    var qstart : 0 .. queuesize - 1 := 1
+		    var qlength : 0 .. queuesize := 0
+		    var contents : array 0 .. queuesize - 1 of itemtype
 
-                    procedure enqueue (item : itemtype)
-                        pre qlength < queuesize
-                        qlength := qlength + 1
-                        qend := (qend + 1) mod queuesize
-                        contents (qend) := item
-                    end enqueue
+		    procedure enqueue (item : itemtype)
+			pre qlength < queuesize
+			qlength := qlength + 1
+			qend := (qend + 1) mod queuesize
+			contents (qend) := item
+		    end enqueue
 
-                    procedure dequeue (var item : itemtype)
-                        pre qlength > 0
-                        item := contents (qstart)
-                        qstart := (qstart + 1) mod queuesize
-                        qlength := qlength - 1
-                    end dequeue
+		    procedure dequeue (var item : itemtype)
+			pre qlength > 0
+			item := contents (qstart)
+			qstart := (qstart + 1) mod queuesize
+			qlength := qlength - 1
+		    end dequeue
 
-                    function empty : boolean
-                        result qlength = 0
-                    end empty
+		    function empty : boolean
+			result qlength = 0
+		    end empty
 
-                end queueof
+		end queueof
 
-        % An instance type of the polymorphic class "queueof"
-        instance stringqueue : queueof (string, 50)
+	% An instance type of the polymorphic class "queueof"
+	instance stringqueue : queueof (string, 50)
 
-        % A variable of the instance type
-        var sq : stringqueue
-        var s : string
+	% A variable of the instance type
+	var sq : stringqueue
+	var s : string
 
-        procedure getdata
-            loop
-                get skip
-                exit when eof
-                get s
-                exit when s = "."
-                sq.enqueue (s)
-            end loop
-        end getdata
+	procedure getdata
+	    loop
+		get skip
+		exit when eof
+		get s
+		exit when s = "."
+		sq.enqueue (s)
+	    end loop
+	end getdata
 
-        procedure putdata
-            loop
-                exit when sq.empty
-                sq.dequeue (s)
-                put s, " " ..
-            end loop
-            put ""
-        end putdata
+	procedure putdata
+	    loop
+		exit when sq.empty
+		sq.dequeue (s)
+		put s, " " ..
+	    end loop
+	    put ""
+	end putdata
 
     end spooler
 

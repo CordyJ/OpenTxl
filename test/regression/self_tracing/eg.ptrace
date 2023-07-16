@@ -11,20 +11,20 @@ var
 procedure Push (value : elementType);
 begin
     if stackTop < maxDepth then
-        begin
-            stackTop := stackTop + 1;
-            stack [stackTop] := value
-        end
+	begin
+	    stackTop := stackTop + 1;
+	    stack [stackTop] := value
+	end
     else
-        writeln ('ERROR: Push');
+	writeln ('ERROR: Push');
 end;
 
 procedure Pop;
 begin
     if stackTop > 0 then
-        stackTop := stackTop - 1
+	stackTop := stackTop - 1
     else
-        writeln ('ERROR: Pop');
+	writeln ('ERROR: Pop');
 end;
 
 function Top : elementType;

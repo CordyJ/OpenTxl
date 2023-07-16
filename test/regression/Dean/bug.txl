@@ -9,7 +9,7 @@ end define
 
 define exp3
        [exp4]
-     | [exp3] [exp4] [ATTR] [opt 'c ]	%% simple left recursion for left assoc
+     | [exp3] [exp4] [attr 'c ]	%% simple left recursion for left assoc
 end define
 
 define exp4

@@ -17,12 +17,12 @@
 % [partition] below preserves the invariant in the previous paragraph.
 
 define range
-        [id *]                  % An unpartitioned range
-    |   [range] [id] [range]    % A partitioned range
+	[id *]                	% An unpartitioned range
+    |	[range] [id] [range]  	% A partitioned range
 end define
 
 define program
-        [range]
+	[range]
 end define
 
 % The main rule, as described above, replaces all occurrences of unpartitioned
@@ -31,17 +31,17 @@ end define
 rule main
     % Find an unpartitioned range with at least two things in it.
     replace [range] 
-        Pivot [id] List [repeat id +]
+	Pivot [id] List [repeat id +]
 
     % Make a partitioned range with nothing in it but the pivot...
     construct Nil [id *]
-        % (empty)
+	% (empty)
     construct Sub [range] 
-        Nil Pivot Nil
+	Nil Pivot Nil
 
     % ...and pop each element of List into the appropriate place.
     by 
-        Sub [partition each List]
+	Sub [partition each List]
 end rule
 
 
@@ -50,11 +50,11 @@ end rule
 
 function partition N [id]
     replace [range] 
-        Left [id *] Pivot [id] Right [id *]
+	Left [id *] Pivot [id] Right [id *]
     by 
-        Left [toLeft Pivot N] 
-        Pivot 
-        Right [toRight Pivot N]
+	Left [toLeft Pivot N] 
+	Pivot 
+	Right [toRight Pivot N]
 end function
 
 
@@ -62,11 +62,11 @@ end function
 
 function toLeft Pivot [id] N [id]
     where 
-        N [< Pivot]
+	N [< Pivot]
     replace [id *] 
-        List [id *]
+	List [id *]
     by 
-        N List
+	N List
 end function
 
 
@@ -74,10 +74,10 @@ end function
 
 function toRight Pivot [id] N [id]
     where not 
-        N [< Pivot]
+	N [< Pivot]
     replace [id *] 
-        List [id *]
+	List [id *]
     by 
-        N List
+	N List
 end function
 

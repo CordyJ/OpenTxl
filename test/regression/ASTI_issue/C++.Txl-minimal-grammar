@@ -15,8 +15,8 @@ tokens
 end tokens
 
 comments
-        //
-        /*  */
+	//
+	/*  */
 end comments
 
 compounds
@@ -38,7 +38,7 @@ keys
 end keys
 
 define program
-        [declaration_list]
+	[declaration_list]
 end define
 
 define name
@@ -55,7 +55,7 @@ define qualified_name
 end define
 
 define class_component
-     [opt '~] [class_name]              
+     [opt '~] [class_name]		
    | [qualified_name]
 end define
 
@@ -93,7 +93,7 @@ define declarator_list
 end define
 
 define init_declarator
-        [declarator]
+	[declarator]
 end define
 
 define declarator
@@ -189,8 +189,8 @@ define nested_name_spec
 end define
 
 define compound_statement
-     {                          [NL] [IN]
-     }                          [NL]
+     {  			[NL] [IN]
+     }				[NL]
 end define
 
 define open_paren
@@ -203,9 +203,9 @@ end define
 
 % Trivial parse rule for testing.
 function main
-        replace [program]
+	replace [program]
            P [repeat declaration]
-        by
-           P
+	by
+	   P
 end function
 

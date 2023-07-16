@@ -9,19 +9,19 @@ int stackTop;
 Push (elementType value)
 {
     if (stackTop < maxDepth) {
-        stackTop += 1;
-        stack [stackTop] = value;
+	stackTop += 1;
+	stack [stackTop] = value;
     } else {
-        puts ("ERROR: Push\n");
+	puts ("ERROR: Push\n");
     }
 }
 
 Pop ()
 {
     if (stackTop > 0) 
-        stackTop -= 1;
+	stackTop -= 1;
     else
-        printf ("ERROR: Pop\n");
+	printf ("ERROR: Pop\n");
 }
 
 elementType Top ()

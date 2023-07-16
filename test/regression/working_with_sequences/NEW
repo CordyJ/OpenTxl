@@ -1,0 +1,124 @@
+	    % Replaces a [repeat X] sequence with the subsequence from N1..N2 
+	    % RepeatX [select Number1 Number2]
+	    % RepeatX [head Number]			== RepeatX [select 1 Number]
+	    % RepeatX [tail Number]			== RepeatX [select Number *]
+
+	    var i1, i2 : int
+	    i1 := round (strreal (string@(identTable (trees (ruleEnvironment.valueTP (1)).name))))
+
+	    if applyingRuleName = selectR then
+		i2 := round (strreal (string@(identTable (trees (ruleEnvironment.valueTP (2)).name))))
+	    elsif applyingRuleName = tailR then
+		i2 := 999999
+	    elsif applyingRuleName = headR then
+		i2 := i1
+		i1 := 1
+	    end if
+
+	    % get the element type of the repeat 
+	    var X := string@(identTable (trees (resultTP).name)) (9..*) 
+	    if X (1) = "_" then 
+		X := X (2..*) 
+	    end if 
+
+	    const Xindex : tokenT := ident.lookup (X)
+	    const repeatIndex : tokenT := ident.lookup ("repeat__" + X) 
+	    const repeatFirstIndex : tokenT := ident.lookup ("repeat_1_" + X) 
+
+	    var repeatTP, repeatFirstTP : treePT 
+
+	    if trees (resultTP).name = repeatIndex then
+		% repeat__X
+		if i2 < i1 then
+		    % result is empty
+		    tree_ops.makeOneKid (resultTP, emptyTP) 
+		    matched := true
+		    return
+		end if
+
+		assert i2 >= i1
+
+		% find the i1'th [repeat X] node
+		var s1 := resultTP
+		var i := 1
+		loop 
+		    if trees (tree_ops.kid1TP (s1)).kind = kindT.empty  then
+			% ran off the end - error!
+			externalError ("parameter out of range of scope", applyingRuleName, callingRuleName)
+		    end if
+		    exit when i = i1
+		    % go on to next "repeat__" tree 
+		    s1 := tree_ops.kid2TP (tree_ops.kid1TP (s1)) 
+		    i += 1
+		end loop 
+
+		% now we have the i1'th [repeat X] tree in s1
+		% find the i2'th one
+		var s2 : treePT := s1
+		loop 
+		    % New semantics - if i2 > length of repeat, means entire tail
+		    exit when trees (tree_ops.kid1TP (s2)).kind = kindT.empty 
+		    % Old normal semantics - finish at i2
+		    exit when i = i2
+		    % go on to next "repeat__" tree 
+		    s2 := tree_ops.kid2TP (tree_ops.kid1TP (s2)) 
+		    i += 1
+		end loop 
+
+		% made it - now cut off the tail of s2
+		if trees (tree_ops.kid1TP (s2)).kind not= kindT.empty then
+		    s2 := tree_ops.kid2TP (tree_ops.kid1TP (s2))
+		    tree_ops.makeOneKid (s2, emptyTP)
+		end if
+
+		% and change scope to the result
+		resultTP := s1
+		matched := true
+
+	    else
+		assert trees (resultTP).name = repeatFirstIndex 
+
+		% repeat_1_X
+		if i2 < i1 then
+		    % result is empty, but can't be since we have a [repeat X+]
+		    externalError ("parameter out of range of scope", applyingRuleName, callingRuleName)
+		end if
+
+		assert i2 >= i1
+
+		% find the i1'th [repeat_1_X] node
+		var s1 := resultTP
+		var i := 1
+		loop 
+		    if trees (s1).kind = kindT.empty  then
+			% ran off the end - error!
+			externalError ("parameter out of range of scope", applyingRuleName, callingRuleName)
+		    end if
+		    exit when i = i1
+		    % go on to next "repeat_1_" tree 
+		    s1 := tree_ops.kid1TP (tree_ops.kid2TP (s1)) 
+		    i += 1
+		end loop 
+
+		% now we have the i1'th [repeat_1_X] tree in s1
+		% find the i2'th one
+		var s2 : treePT := s1
+		loop 
+		    % New semantics - if i2 > length of repeat, means entire tail
+		    exit when trees (s2).kind = kindT.empty 
+		    % Old normal semantics - finish at i2
+		    exit when i = i2
+		    % go on to next "repeat_1_" tree 
+		    s2 := tree_ops.kid1TP (tree_ops.kid2TP (s2)) 
+		    i += 1
+		end loop 
+
+		% made it - now cut off the tail of s2
+		if trees (s2).kind not= kindT.empty then
+		    tree_ops.makeOneKid (tree_ops.kid1TP (tree_ops.kid2TP (s2)), emptyTP)
+		end if
+
+		% and change scope to the result
+		resultTP := s1
+		matched := true
+	    end if 

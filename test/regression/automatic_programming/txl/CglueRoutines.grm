@@ -1,60 +1,60 @@
 % C glue routine syntax
 
 compounds
-        ->
+	->
 end compounds
 
 define program
-        [repeat functionSpec_or_CglueRoutine]
+	[repeat functionSpec_or_CglueRoutine]
 end define
 
 define functionSpec_or_CglueRoutine
-        [functionSpec]
-    |   [CglueRoutine]
+	[functionSpec]
+    |	[CglueRoutine]
 end define
 
 define CglueRoutine
-        [typeSpec] [functionName] (p)                           [NL][IN]
-            struct {                                            [NL][IN]
-                    [repeat typeSpecIndirectParameterNameSemi]  [EX]
-            } *p;                                               [EX][NL]
-        {                                                       [NL][IN]
-                [repeat typeSpecParameterNameSemi]
-                [repeat inParameterBindingSemi]
-                [functionCallSemi]
-                [repeat outParameterBindingSemi]
-                [returnCode]                                    [EX]
-        }                                                       [NL][NL] 
+	[typeSpec] [functionName] (p)	  			[NL][IN]
+	    struct { 						[NL][IN]
+		    [repeat typeSpecIndirectParameterNameSemi] 	[EX]
+	    } *p;						[EX][NL]
+	{ 							[NL][IN]
+		[repeat typeSpecParameterNameSemi]
+		[repeat inParameterBindingSemi]
+		[functionCallSemi]
+		[repeat outParameterBindingSemi]
+		[returnCode]					[EX]
+	}							[NL][NL] 
 end define
 
 define typeSpecIndirectParameterNameSemi
-        [typeSpec] '* [parameterName] ; [NL]
+    	[typeSpec] '* [parameterName] ;	[NL]
 end define
 
 define typeSpecParameterNameSemi
-        [typeSpec] [parameterName] ;    [NL]
+    	[typeSpec] [parameterName] ;	[NL]
 end define
 
 define inParameterBindingSemi
-        [parameterName] = ( [typeSpec] ) '* p -> [parameterName] ;      [NL]
+   	[parameterName] = ( [typeSpec] ) '* p -> [parameterName] ;	[NL]
 end define
 
 define outParameterBindingSemi
-        '* p -> [parameterName] = ( [typeSpec] ) [parameterName] ;      [NL] 
+	'* p -> [parameterName] = ( [typeSpec] ) [parameterName] ;	[NL] 
 end define
 
 define functionCallSemi
-        [opt outParameterNameEquals] [functionName] ( [list parameterName] ) ;  [NL]
+ 	[opt outParameterNameEquals] [functionName] ( [list parameterName] ) ;	[NL]
 end define
 
 define outParameterNameEquals
-        [parameterName] =
+	[parameterName] =
 end define
 
 define returnCode
-        'return ( [conditionOrZero] ) ; [NL]
+	'return ( [conditionOrZero] ) ;	[NL]
 end define
 
 define conditionOrZero
-        [id] | '0
+	[id] | '0
 end define

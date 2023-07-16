@@ -6,27 +6,27 @@ include "TNial.Grammar"
 
 function main
     replace [program]
-        D [declarationsAndStatements]
+	D [declarationsAndStatements]
     by
-        D [enterDefaultAttributes]
-           [attributeProgram]
+	D [enterDefaultAttributes]
+	   [attributeProgram]
 end function
 
 function enterDefaultAttributes
     replace [declarationsAndStatements]
         Scope [declarationsAndStatements]
     by
-        Scope [enterDefaultVarAttributes]
-                  [enterDefaultExpressionAttributes]
+	Scope [enterDefaultVarAttributes]
+		  [enterDefaultExpressionAttributes]
 end function
-           
+	   
 rule enterDefaultVarAttributes
     replace [optionalVarRefAttrs]
         N [nullVarRefAttrs]
     by
         ( )
 end rule
-           
+	   
 rule enterDefaultExpressionAttributes
     replace [optionalExpressionAttrs]
         N [nullExpressionAttrs]
@@ -36,61 +36,61 @@ end rule
 
 function attributeProgram
     replace [declarationsAndStatements]
-        D [declarationsAndStatements]
+	D [declarationsAndStatements]
     by
-        D [propagateVarDeclarations]
-           [enterConstantExpressionAttributes]
-           [propogateVarExpressions]
-           [propogateAssignedTypes]
-           [flagConflicts]
+	D [propagateVarDeclarations]
+	   [enterConstantExpressionAttributes]
+	   [propogateVarExpressions]
+	   [propogateAssignedTypes]
+	   [flagConflicts]
 end function
 
 function propagateVarDeclarations
     replace * [declarationsAndStatements]
-        var V [id] : T [typeSpec]
-        R [restOfScope]
+	var V [id] : T [typeSpec]
+	R [restOfScope]
     by
-        var V : T
-        R [enterVarTypes V T] 
-            [propagateVarDeclarations]
+	var V : T
+	R [enterVarTypes V T] 
+	    [propagateVarDeclarations]
 end function
 
 function enterVarTypes V [id] T [typeSpec]
     replace * [declarationsAndStatements]
-        dOrS [declarationOrStatement]
-        RestOfScope [opt restOfScope]
+	dOrS [declarationOrStatement]
+	RestOfScope [opt restOfScope]
     by
-        dOrS [enterVarType V T]
-        RestOfScope [enterVarTypes V T]
+	dOrS [enterVarType V T]
+	RestOfScope [enterVarTypes V T]
 end function
 
 rule enterVarType V [id] T [typeSpec]
     replace [varRef]
-        V ( )
+	V ( )
     by
-        V ( T )
+	V ( T )
 end rule
 
 function enterConstantExpressionAttributes
     replace [declarationsAndStatements]
         Scope [declarationsAndStatements]
     by
-        Scope [enterIntConstantExpressionAttributes]
-                  [enterBooleanConstantExpressionAttributes]
+	Scope [enterIntConstantExpressionAttributes]
+		  [enterBooleanConstantExpressionAttributes]
 end function
 
 rule enterIntConstantExpressionAttributes
     replace [expression]
         I [intConstant] ( )
     by
-        I ( int )
+	I ( int )
 end rule
 
 rule enterBooleanConstantExpressionAttributes
     replace [expression]
         B [booleanConstant] ( )
     by
-        B ( boolean )
+	B ( boolean )
 end rule
 
 rule propogateVarExpressions
@@ -99,31 +99,31 @@ rule propogateVarExpressions
     deconstruct V
         Vid [id] ( Vtype [typeSpec] )
     by
-        V ( Vtype )
+	V ( Vtype )
 end rule
 
 rule propogateAssignedTypes
     replace [declarationsAndStatements]
         V [varRef] := E [expression]
-        RestOfScope [opt restOfScope]
+	RestOfScope [opt restOfScope]
     deconstruct V
         Vid [id] ( )
     deconstruct E
-        Eval [expressionValue] ( Etype [typeSpec] )
+	Eval [expressionValue] ( Etype [typeSpec] )
     construct Result [declarationsAndStatements]
-        Vid ( Etype )  := E
-        RestOfScope [enterVarTypes Vid Etype] 
+	Vid ( Etype )  := E
+	RestOfScope [enterVarTypes Vid Etype] 
     by 
-        Result [propogateVarExpressions]
+	Result [propogateVarExpressions]
 end rule
 
 rule flagConflicts
     replace [statement]
         V [varRef] := E [expression]
     deconstruct V
-        Vid [id] ( Vtype [typeSpec] )
+	Vid [id] ( Vtype [typeSpec] )
     deconstruct E
-        Eval [expressionValue] ( Etype [typeSpec] )
+	Eval [expressionValue] ( Etype [typeSpec] )
     where not
         Vtype [= Etype] 
     construct TSany [typeSpec]
@@ -131,8 +131,8 @@ rule flagConflicts
     where not
         Vtype [= TSany]
     construct ErrorMessage [statement]
-        V [message '"Type conflict"] [print] := E [print] [message ""]
+    	V [message '"Type conflict"] [print] := E [print] [message ""]
     by
-        Vid ( ERROR ) := Eval ( ERROR )
+	Vid ( ERROR ) := Eval ( ERROR )
 end rule
 

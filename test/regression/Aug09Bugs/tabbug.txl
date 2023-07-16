@@ -1,7 +1,7 @@
 #pragma -char -Dtokens
 
 tokens
-    mytokens    "[ \t]"
+    mytokens	"[ \t]"
 end tokens
 
 define program

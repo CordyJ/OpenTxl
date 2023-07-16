@@ -1,30 +1,30 @@
 TXL Example Program
 -------------------
 
-Name:   
-        ANSIC.Grammar
-        c.Txl
-        ccount.Txl
+Name:	
+	ANSIC.Grammar
+	c.Txl
+	ccount.Txl
 
 Description:
-        ANSIC.Grammar is a TXL basis grammar and pretty printer for ANSI C.
-        c.Txl is a null transform that simply pretty prints the source
-        as directed by the grammar.
+    	ANSIC.Grammar is a TXL basis grammar and pretty printer for ANSI C.
+	c.Txl is a null transform that simply pretty prints the source
+	as directed by the grammar.
 
-        ccount.Txl is a transform that always yields an empty result
-        but has the side effect of printing statistics on the use of 
-        declarations and statements in the input program.
+	ccount.Txl is a transform that always yields an empty result
+	but has the side effect of printing statistics on the use of 
+	declarations and statements in the input program.
 
 Author:
-        J.R. Cordy
+   	J.R. Cordy
 
 Affiliation:
-        Queen's University, Kingston, Canada
+	Queen's University, Kingston, Canada
 
 Date:
-        February 1992
-        Revised January 1994
+	February 1992
+	Revised January 1994
 
 Examples:
-        txl user.c -comment             % pretty print user.c
-        txl user.c ccount.Txl           % count kinds of statements in user.c
+	txl user.c -comment		% pretty print user.c
+	txl user.c ccount.Txl 		% count kinds of statements in user.c

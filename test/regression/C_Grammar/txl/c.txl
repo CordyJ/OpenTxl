@@ -2,10 +2,10 @@
 include "C.grm"
 
 % Comment out this line to disallow Gnu gcc extensions
-include "CGnuOverrides.Grm"
+include "CGnuOverrides.grm"
 
 % Comment out this line to disallow parsing of comments
-include "CCommentOverrides.Grm"
+include "CCommentOverrides.grm"
 
 function main
     match [program]

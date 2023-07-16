@@ -1,7 +1,7 @@
 tokens
-    hexnumber   "[\dabcdefABCDEF]+H"
-    octalnumber "0[01234567]*"
-    id          "[\i-\+\#$%]+"
+    hexnumber	"[\dabcdefABCDEF]+H"
+    octalnumber	"0[01234567]*"
+    id		"[\i-\+\#$%]+"
 end tokens
 
 define program
@@ -14,8 +14,8 @@ end define
 
 rule main
     replace [thing*]
-        H [hexnumber]
-        Rest [thing*]
+	H [hexnumber]
+	Rest [thing*]
     by
-        Rest
+	Rest
 end rule

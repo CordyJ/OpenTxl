@@ -42,7 +42,7 @@ This leads to confusion where a Functions get parsed as declarators.
 
 for example
 {
-        foo(a);
+	foo(a);
 }
 
 foo will be parsed as a declaration.  I have followed the grammer and it

@@ -11,7 +11,7 @@ END;
 
 FUNCTION relaxation(IN     X: SHAPE {n # n} OF REAL;
                     IN     c: REAL)
-                    RESULT Y: SHAPE {n-2 # n-2} OF REAL;
+		    RESULT Y: SHAPE {n-2 # n-2} OF REAL;
 
 BEGIN
 
@@ -66,7 +66,7 @@ END blackSlices;
 
 PROCEDURE Slice(IN W: VIEW {n # n};
                 IN size: NATURAL;
-                OUT Red, Black: VIEW);
+		OUT Red, Black: VIEW);
 
 BEGIN
 

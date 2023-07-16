@@ -1,6 +1,6 @@
 % Parse and pretty print Modula-3 programs
 
-include "Modula3.Grm"
+include "Modula3.grm"
 
 function main
     replace [program]

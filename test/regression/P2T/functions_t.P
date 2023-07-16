@@ -1,25 +1,25 @@
 % TXL 7.7a4
 % Andy Maloney, Queen's University, February 1995
-%       [part of 499 project]
+%	[part of 499 project]
 
 
 %% called once for each Pascal arg [except the first]
 %% used by both 'addOptArgListToFunc' and 'addOptArgListToProc'
 function translateArg SPD [p_semicolonParameterDeclaration]
-        deconstruct SPD
-                        '; PD [p_parameterDeclaration]
+	deconstruct SPD
+			'; PD [p_parameterDeclaration]
 
-        replace [list p_parameterDeclaration]
-                SoFar [list p_parameterDeclaration]
-                
-        construct newTuringArg [p_parameterDeclaration]
-                PD
-                        [changeInt]
-                        [changeChar]
-                        [changeArray]
-        
-        by
-                SoFar [, newTuringArg]  
+	replace [list p_parameterDeclaration]
+		SoFar [list p_parameterDeclaration]
+		
+	construct newTuringArg [p_parameterDeclaration]
+		PD
+			[changeInt]
+			[changeChar]
+			[changeArray]
+	
+	by
+		SoFar [, newTuringArg]	
 end function
 
 
@@ -28,39 +28,39 @@ end function
 %%
 
 define t_functionDeclaration
-        'function [id] [opt p_parameterList] ': [p_typeIdentifier]      [NL][IN]
-                [repeat p_declaration]                          [NL]
-                [repeat p_statement]                            [EX]
-        'end [id]                                                               [NL]
+	'function [id] [opt p_parameterList] ': [p_typeIdentifier]	[NL][IN]
+		[repeat p_declaration]				[NL]
+		[repeat p_statement]				[EX]
+	'end [id]								[NL]
 end define
 
 define t_procedureDeclaration
-        'procedure [id] [opt p_parameterList]   [NL][IN]
-                [repeat p_declaration]                          [NL]
-                [repeat p_statement]                            [EX]
-        'end [id]                                                               [NL]
+	'procedure [id] [opt p_parameterList]	[NL][IN]
+		[repeat p_declaration]				[NL]
+		[repeat p_statement]				[EX]
+	'end [id]								[NL]
 end define
 
 define p_parameterList
 %% Pascal
-        '( [p_parameterDeclaration] [repeat p_semicolonParameterDeclaration] ')
+    	'( [p_parameterDeclaration] [repeat p_semicolonParameterDeclaration] ')
   |
 %% Turing
-                '( [list p_parameterDeclaration] ')
+		'( [list p_parameterDeclaration] ')
 end define
 
 
 function translatePascalFunctions PascalFunction [p_subprogramDeclaration]
-        replace [repeat p_subprogramDeclaration]
-                SoFar [repeat p_subprogramDeclaration]
-                
-        construct newTuringFunction [p_subprogramDeclaration]
-                PascalFunction
-                        [translateProcedures]
-                        [translateFunctions]
-                
-        by
-                SoFar [. newTuringFunction]
+	replace [repeat p_subprogramDeclaration]
+		SoFar [repeat p_subprogramDeclaration]
+		
+	construct newTuringFunction [p_subprogramDeclaration]
+		PascalFunction
+			[translateProcedures]
+			[translateFunctions]
+		
+	by
+		SoFar [. newTuringFunction]
 end function
 
 
@@ -69,80 +69,80 @@ end function
 %%
 
 function translateFunctions
-        replace [p_subprogramDeclaration]
-                'function N [id] P [opt p_parameterList] ': T [p_typeIdentifier] ';
-                RD [repeat p_declaration]               
-                SP [repeat p_subprogramDeclaration]
-                'begin
-                        S [repeat p_statement]
-                'end ';
-        
-        construct newVar [id]                                   %% make unique identifier
-                N [!]
-        
-        construct newVarDecl [p_declaration]    %% make new Pascal var
-                'var
-                newVar ': T ';
-        
-        construct newD [repeat p_declaration]   %% add it to declarations
-                RD [. newVarDecl]
-                
-        construct newRD [repeat p_declaration]
-                _ [translatePascalDeclarations each newD]
+	replace [p_subprogramDeclaration]
+		'function N [id] P [opt p_parameterList] ': T [p_typeIdentifier] ';
+		RD [repeat p_declaration]		
+		SP [repeat p_subprogramDeclaration]
+		'begin
+			S [repeat p_statement]
+		'end ';
+	
+	construct newVar [id]					%% make unique identifier
+		N [!]
+	
+	construct newVarDecl [p_declaration]	%% make new Pascal var
+		'var
+	    	newVar ': T ';
+	
+	construct newD [repeat p_declaration]	%% add it to declarations
+		RD [. newVarDecl]
+		
+	construct newRD [repeat p_declaration]
+		_ [translatePascalDeclarations each newD]
 
-        construct newType [p_typeIdentifier]    %% fix return type
-                T
-                        [changeInt]
-                        [changeChar]
-                        [changeArray]
+	construct newType [p_typeIdentifier]	%% fix return type
+		T
+			[changeInt]
+			[changeChar]
+			[changeArray]
 
-        construct newS [repeat p_statement]
-                _ [translatePascalStatements each S]
+	construct newS [repeat p_statement]
+		_ [translatePascalStatements each S]
 
-        construct resultStatement [p_statement]         %% make result statement
-                'result newVar
+	construct resultStatement [p_statement]		%% make result statement
+		'result newVar
 
-        construct newTStatements [repeat p_statement]
-                newS [$ N newVar]       %% WRONG!! Need to change only assignments to the function name
-                
-        construct newTuringFunction [p_subprogramDeclaration]
-                'function N ': newType
-                        newRD
-                        newTStatements [. resultStatement]
-                'end N
-                
-        by
-                newTuringFunction [addOptArgListToFunc P]
+	construct newTStatements [repeat p_statement]
+		newS [$ N newVar]	%% WRONG!! Need to change only assignments to the function name
+		
+	construct newTuringFunction [p_subprogramDeclaration]
+		'function N ': newType
+			newRD
+			newTStatements [. resultStatement]
+		'end N
+		
+	by
+		newTuringFunction [addOptArgListToFunc P]
 end function
 
 %% add arg list if it exists
 function addOptArgListToFunc OPL [opt p_parameterList]
-        deconstruct OPL
-        '( PD [p_parameterDeclaration] SPD [repeat p_semicolonParameterDeclaration] ')
-                        
-        replace [p_subprogramDeclaration]
-                'function N [id] ': T [p_typeIdentifier]
-                        RD [repeat p_declaration]
-                        RS [repeat p_statement]
-                'end N
-                        
-        construct newPD [list p_parameterDeclaration]
-                PD
-                                [changeInt]
-                                [changeChar]
-                                [changeArray]
+	deconstruct OPL
+    	'( PD [p_parameterDeclaration] SPD [repeat p_semicolonParameterDeclaration] ')
+			
+	replace [p_subprogramDeclaration]
+		'function N [id] ': T [p_typeIdentifier]
+			RD [repeat p_declaration]
+			RS [repeat p_statement]
+		'end N
+			
+	construct newPD [list p_parameterDeclaration]
+		PD
+				[changeInt]
+				[changeChar]
+				[changeArray]
 
-        construct newList [list p_parameterDeclaration]
-                _ [translateArg each SPD]
-                        
-        construct newParamList [list p_parameterDeclaration]
-                newPD [, newList]
-                
-        by
-                'function N '( newParamList ') ': T
-                        RD
-                        RS
-                'end N
+	construct newList [list p_parameterDeclaration]
+		_ [translateArg each SPD]
+			
+	construct newParamList [list p_parameterDeclaration]
+		newPD [, newList]
+		
+	by
+		'function N '( newParamList ') ': T
+			RD
+			RS
+		'end N
 end function
 
 
@@ -151,57 +151,57 @@ end function
 %%
 
 function translateProcedures
-        replace [p_subprogramDeclaration]
-                'procedure N [id] P [opt p_parameterList] ';
-                RD [repeat p_declaration]               
-                SP [repeat p_subprogramDeclaration]
-                'begin
-                        S [repeat p_statement]
-                'end ';
-        
-        construct newRD [repeat p_declaration]
-                _ [translatePascalDeclarations each RD]
-                
-        construct newS [repeat p_statement]
-                _ [translatePascalStatements each S]
-                
-        construct newTuringProcedure [p_subprogramDeclaration]
-                'procedure N
-                        newRD
-                        newS
-                'end N
-                
-        by
-                newTuringProcedure [addOptArgListToProc P]
+	replace [p_subprogramDeclaration]
+		'procedure N [id] P [opt p_parameterList] ';
+		RD [repeat p_declaration]		
+		SP [repeat p_subprogramDeclaration]
+		'begin
+			S [repeat p_statement]
+		'end ';
+	
+	construct newRD [repeat p_declaration]
+		_ [translatePascalDeclarations each RD]
+		
+	construct newS [repeat p_statement]
+		_ [translatePascalStatements each S]
+		
+	construct newTuringProcedure [p_subprogramDeclaration]
+		'procedure N
+			newRD
+			newS
+		'end N
+		
+	by
+		newTuringProcedure [addOptArgListToProc P]
 end function
 
 
 %% add arg list if it exists
 function addOptArgListToProc OPL [opt p_parameterList]
-        deconstruct OPL
-        '( PD [p_parameterDeclaration] SPD [repeat p_semicolonParameterDeclaration] ')
-                        
-        replace [p_subprogramDeclaration]
-                'procedure N [id]
-                        RD [repeat p_declaration]
-                        RS [repeat p_statement]
-                'end N
-                        
-        construct newPD [list p_parameterDeclaration]
-                PD
-                                [changeInt]
-                                [changeChar]
-                                [changeArray]
+	deconstruct OPL
+    	'( PD [p_parameterDeclaration] SPD [repeat p_semicolonParameterDeclaration] ')
+			
+	replace [p_subprogramDeclaration]
+		'procedure N [id]
+			RD [repeat p_declaration]
+			RS [repeat p_statement]
+		'end N
+			
+	construct newPD [list p_parameterDeclaration]
+		PD
+				[changeInt]
+				[changeChar]
+				[changeArray]
 
-        construct newList [list p_parameterDeclaration]
-                _ [translateArg each SPD]
-                        
-        construct newParamList [list p_parameterDeclaration]
-                newPD [, newList]
-                
-        by
-                'procedure N '( newParamList ')
-                        RD
-                        RS
-                'end N
+	construct newList [list p_parameterDeclaration]
+		_ [translateArg each SPD]
+			
+	construct newParamList [list p_parameterDeclaration]
+		newPD [, newList]
+		
+	by
+		'procedure N '( newParamList ')
+			RD
+			RS
+		'end N
 end function

@@ -11,5 +11,5 @@ end define
 
 function main
     match [program] 
-        _ [program]
+ 	_ [program]
 end function

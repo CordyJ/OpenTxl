@@ -47,8 +47,8 @@
 %       w       write file
 %       q       quit
 %       z       write and quit
-%       h       help
-%       t       run (as Turing program)
+%	h	help
+%	t	run (as Turing program)
 %
 
 % UNIX utility modules
@@ -135,8 +135,8 @@ procedure putinfo
     infoline += "]"
     infoline += repeat (" ", 40 - length (infoline))
     if msgtext not= "" then
-        infoline += msgtext
-        infoline := infoline (1 .. min (linesize, length (infoline)))
+	infoline += msgtext
+	infoline := infoline (1 .. min (linesize, length (infoline)))
     end if
     infoline += repeat (" ", linesize - length (infoline))
     curses.move (0, 0)

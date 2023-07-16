@@ -2,12 +2,12 @@
 % J.R. Cordy, Queen's University, 22.10.92
 
 comments
-        { }
-        (* *)
+	{ }
+	(* *)
 end comments
 
 compounds
-        := .. >= <= <>
+	:= .. >= <= <>
 end compounds
 
 keys
@@ -20,66 +20,66 @@ keys
 end keys
 
 define program
-        program [id] ( [list id+] ) ;   [NL]
-        [block] .
+	program [id] ( [list id+] ) ;	[NL]
+	[block] .
 end define
 
 define block
-        [IN]
-        [repeat declaration]            
-        [repeat subprogramDeclaration]  
-        [EX]
-        [beginEnd] 
+	[IN]
+	[repeat declaration]		
+	[repeat subprogramDeclaration]	
+	[EX]
+	[beginEnd] 
 end define
 
 define beginEnd
-        begin                   [NL] [IN]
-            [opt statements]    [EX]
-        'end                                            
+	begin			[NL] [IN]
+	    [opt statements]	[EX]
+	'end                                            
 end define 
 
 define statements
-        [statement] ; [NL] 
-        [statements]
-    |   [statement] [opt ';] [NL]
+	[statement] ; [NL] 
+	[statements]
+    |	[statement] [opt ';] [NL]
 end define
 
 define declaration
-        [constDeclaration]      
-    |   [typeDeclaration]       
-    |   [variableDeclaration]   
-    |   [labelDeclaration]      
+	[constDeclaration]	
+    |   [typeDeclaration]     	
+    |   [variableDeclaration]  	
+    |   [labelDeclaration]     	
 end define
 
 define constDeclaration
-        const                           [IN][NL]
-            [repeat constDefinition+]   [EX]
+	const 				[IN][NL]
+	    [repeat constDefinition+]	[EX]
 end define
 
 define constDefinition
-        [id] = [constant] ;     [NL]
+	[id] = [constant] ;	[NL]
 end define
 
 define constant
-        [opt plusOrMinus] [id]
+	[opt plusOrMinus] [id]
     |   [opt plusOrMinus] [number]
     |   [charlit] 
-    |   ''' [SPOFF] ''' [SPON]  % ''''
-    |   true
-    |   false
+    |	''' [SPOFF] ''' [SPON]	% ''''
+    |	true
+    |	false
 end define
 
 define plusOrMinus
-        + | -
+	+ | -
 end define
 
 define typeDeclaration
-        type                            [IN][NL]
-            [repeat typeDefinition+]    [EX]
+	type 				[IN][NL]
+	    [repeat typeDefinition+]	[EX]
 end define
 
 define typeDefinition
-        [id] = [typeSpec] ;     [NL]
+	[id] = [typeSpec] ;	[NL]
 end define
 
 define typeSpec
@@ -92,140 +92,140 @@ define typeSpec
 end define
 
 define simpleType
-        [typeIdentifier]
+	[typeIdentifier]
     |   [enumeratedType]
     |   [subrangeType]
 end define
 
 define typeIdentifier
-        [id]
-    |   'integer
+	[id]
+    |	'integer
     |   'real
     |   'boolean
     |   'char
 end define
 
 define enumeratedType
-        ( [list id+] )
+	( [list id+] )
 end define
 
 define subrangeType
-        [constant] .. [constant]
+	[constant] .. [constant]
 end define
 
 define pointerType
-        ^ [typeSpec]
+	^ [typeSpec]
 end define
 
 define arrayType
-        array '[ [list simpleType+] '] of [typeSpec]
+	array '[ [list simpleType+] '] of [typeSpec]
 end define
 
 define fileType
-        file of [typeSpec]
+	file of [typeSpec]
 end define
 
 define setType
-        set of [simpleType]
+	set of [simpleType]
 end define
 
 define recordType
-                                [NL] [IN]
-        record                  [IN]
-            [fieldList]         [EX] [NL]
-        'end                    [EX]
+				[NL] [IN]
+	record 			[IN]
+	    [fieldList]		[EX] [NL]
+	'end			[EX]
 end define
 
 define fieldList
-        [recordField] [repeat semicolonRecordField] 
+	[recordField] [repeat semicolonRecordField] 
     |   [variantRecord]
 end define
 
 define recordField
-        [NL]
-        [list id+] : [typeSpec]
+	[NL]
+	[list id+] : [typeSpec]
 end define
 
 define semicolonRecordField
-        ; [recordField]
+	; [recordField]
 end define
 
 define variantRecord
-        case [expression] of            [IN][IN]
-            [caseAlternative]
-            [repeat caseAlternative]    [EX][EX][NL]
-        'end
-        case [id] : [typeSpec] of       [IN][IN]
-            [variant]           
-            [repeat semicolonVariant]   [EX][EX][NL]
+	case [expression] of  		[IN][IN]
+	    [caseAlternative]
+	    [repeat caseAlternative]	[EX][EX][NL]
+	'end
+	case [id] : [typeSpec] of	[IN][IN]
+	    [variant] 		
+	    [repeat semicolonVariant]	[EX][EX][NL]
 end define
 
 define variant
-        [NL][EX]
-        [list constant+] :      [IN][NL]
-            ( [fieldList] )
+	[NL][EX]
+	[list constant+] : 	[IN][NL]
+	    ( [fieldList] )
 end define
 
 define semicolonVariant
-        ; [variant]
+	; [variant]
 end define
 
 define variableDeclaration
-        var                             [IN][NL]
-            [repeat idTypeSpec+]        [EX]
+	var 				[IN][NL]
+	    [repeat idTypeSpec+]	[EX]
 end define
 
 define idTypeSpec
-        [list id+] : [typeSpec] ; [NL]
+	[list id+] : [typeSpec] ; [NL]
 end define
 
 define labelDeclaration
-        label [list number+] ;
+	label [list number+] ;
 end define
 
 define subprogramDeclaration
-        [procedureDeclaration]
+	[procedureDeclaration]
     |   [functionDeclaration]
 end define
 
 define procedureDeclaration
-        [NL]
-        procedure [id] [opt parameterList] ; [NL]
-        [block] ; [NL]
+	[NL]
+	procedure [id] [opt parameterList] ; [NL]
+	[block] ; [NL]
 end define
 
 define parameterList
-        ( [parameterDeclaration] [repeat semicolonParameterDeclaration] )
+    	( [parameterDeclaration] [repeat semicolonParameterDeclaration] )
 end define
 
 define parameterDeclaration
-        [opt 'var] [list id+] : [typeIdentifier]
-    |   'function [id] : [typeIdentifier]
-    |   procedure [id] 
+	[opt 'var] [list id+] : [typeIdentifier]
+    |	'function [id] : [typeIdentifier]
+    |	procedure [id] 
 end define
 
 define semicolonParameterDeclaration
-        ; [parameterDeclaration]
+	; [parameterDeclaration]
 end define
 
 define functionDeclaration
-        [NL]
-        'function [id] [opt parameterList] : [typeIdentifier] ; [NL]
-        [block] ; [NL]
+	[NL]
+	'function [id] [opt parameterList] : [typeIdentifier] ; [NL]
+	[block] ; [NL]
 end define
 
 define statement
-        [opt statementLabel] [unlabeledStatement]
+   	[opt statementLabel] [unlabeledStatement]
 end define
 
 define statementLabel
-        [number] :
+	[number] :
 end define
 
 define unlabeledStatement
         [assignmentStatement]                    
-    |   [callStatement]
-    |   [writeStatement]                
+    |	[callStatement]
+    |	[writeStatement]                
     |   [writelnStatement]              
     |   [readStatement]                 
     |   [readlnStatement]               
@@ -238,159 +238,159 @@ define unlabeledStatement
     |   [withStatement]                 
     |   [gotoStatement]         
     |   ;
-    |   [otherStatement]
+    |	[otherStatement]
 end define
 
 define otherStatement
-        'NONE_SO_FAR    % placeholder for extensions
+	'NONE_SO_FAR	% placeholder for extensions
 end define
 
 define assignmentStatement
-        [variable] := [expression]
+	[variable] := [expression]
 end define
 
 define callStatement
-        [id] [opt argumentList]
+	[id] [opt argumentList]
 end define
 
 define argumentList
-        ( [list expression+] ) 
+	( [list expression+] ) 
 end define
 
 define writeStatement
-        write [writeArgumentList] 
+	write [writeArgumentList] 
 end define
 
 define writeArgumentList
-        ( [list writeArgument+] )        
+	( [list writeArgument+] )        
 end define
 
 define writeArgument
-        [expression] [opt colonExpression]
+	[expression] [opt colonExpression]
 end define
 
 define colonExpression
-        : [expression]
+	: [expression]
 end define
     
 define writelnStatement
-        writeln [opt writeArgumentList]
+	writeln [opt writeArgumentList]
 end define
 
 define readStatement
-        read [readArgumentList]
+	read [readArgumentList]
 end define
 
 define readArgumentList
-        ( [list id+] )
+	( [list id+] )
 end define
 
 define readlnStatement
-        readln [opt readArgumentList]
+	readln [opt readArgumentList]
 end define
 
 define ifStatement
-        if [expression] then    [IN][NL]
-            [statement]         [EX]
-        [opt elsePart]
+	if [expression] then	[IN][NL]
+	    [statement]		[EX]
+	[opt elsePart]
 end define
 
 define elsePart
-        [NL]
-        else                    [IN][NL]
-            [statement]         [EX]
+	[NL]
+	else 			[IN][NL]
+	    [statement]		[EX]
 end define
 
 define caseStatement
-        case [expression] of            [IN][IN]
-            [caseAlternative]
-            [repeat caseAlternative]    [EX][EX][NL]
-        'end
+	case [expression] of  		[IN][IN]
+	    [caseAlternative]
+	    [repeat caseAlternative]	[EX][EX][NL]
+	'end
 end define
 
 define caseAlternative
-        [NL] [EX] 
-        [list constant+] :      [IN][NL]
-            [opt statement] ;   
+	[NL] [EX] 
+	[list constant+] :	[IN][NL]
+	    [opt statement] ;	
 end define
 
 define whileStatement
-        while [expression] do   [IN][NL]
-            [statement]         [EX]
+	while [expression] do 	[IN][NL]
+	    [statement]		[EX]
 end define
 
 define repeatStatement
-        'repeat                 [IN][NL]
-            [opt statements]    [EX]
-        until [expression]
+	'repeat			[IN][NL]
+	    [opt statements]	[EX]
+	until [expression]
 end define
 
 define forStatement
-        for [id] := [expression] [toOrDownto] [expression] do   [IN][NL]
-            [statement] [EX]
+	for [id] := [expression] [toOrDownto] [expression] do	[IN][NL]
+	    [statement]	[EX]
 end define
 
 define toOrDownto
-        to | downto
+	to | downto
 end define
 
 define withStatement
-        with [list variable+] do        [IN][NL]
-            [statement]                 [EX]
+	with [list variable+] do	[IN][NL]
+	    [statement]			[EX]
 end define
 
 define gotoStatement
-        goto [number] 
+	goto [number] 
 end define
 
 define variable
-        [id] [repeat componentSelector]
+    	[id] [repeat componentSelector]
 end define
 
 define componentSelector
-        '[ [list expression+] ']
-    |   . [id]
-    |   ^
+	'[ [list expression+] ']
+    |	. [id]
+    |	^
 end define
 
 define expression
-        [simpleExpression] [repeat operatorSimpleExpression]
+	[simpleExpression] [repeat operatorSimpleExpression]
 end define
 
 define operatorSimpleExpression
-        [operator] [simpleExpression]
+	[operator] [simpleExpression]
 end define
 
 define operator
-        =  |  <  |  >  |  <>  |  >=  |  <=  |  in
+	=  |  <  |  >  |  <>  |  >=  |  <=  |  in
 end define
 
 define simpleExpression
-        [opt prefixOperator] [term] [repeat termOperatorTerm]
+	[opt prefixOperator] [term] [repeat termOperatorTerm]
 end define
 
 define termOperatorTerm
-        [termOperator] [term]
+	[termOperator] [term]
 end define
 
 define termOperator
-        + | - | or
+	+ | - | or
 end define
 
 define term
-        [factor] [repeat factorOperatorFactor]
+	[factor] [repeat factorOperatorFactor]
 end define
 
 define factorOperatorFactor
-        [factorOperator] [factor]
+	[factorOperator] [factor]
 end define
 
 define factorOperator
-        * | / | div | mod | and
+	* | / | div | mod | and
 end define
 
 define factor
-        [constant]
+	[constant]
     |   [variable] 
     |   [id] ( [list expression+] )        
     |   ( [expression] )
@@ -399,10 +399,10 @@ define factor
 end define
 
 define subrangeExpn
-        [expression] .. [expression]
+	[expression] .. [expression]
 end define
 
 define prefixOperator
-        +  |  -  
+	+  |  -  
 end define
 

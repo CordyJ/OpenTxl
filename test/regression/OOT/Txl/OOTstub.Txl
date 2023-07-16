@@ -7,122 +7,122 @@ include "OOT.Grammar"
 
 % allow marking of declarations
 define declarationOrStatement
-        [NL] [opt 'MARKED] [declaration] [opt ';] [NL] 
-    |   [variableBinding] [opt ';] [NL] 
-    |   [statement] [opt ';] [NL] 
-    |   [commentlines]          
+	[NL] [opt 'MARKED] [declaration] [opt ';] [NL] 
+    |	[variableBinding] [opt ';] [NL] 
+    |	[statement] [opt ';] [NL] 
+    |	[commentlines]		
 end define
 
 
 % build the stub
 function main
     replace [program]
-        C [compilation]
+	C [compilation]
     by
-        C [normalizeExportLists] 
-          [removeExportComments] 
-          [extractModuleUnitStub]
-          [extractMonitorUnitStub]
-          [extractClassUnitStub]
+	C [normalizeExportLists] 
+	  [removeExportComments] 
+	  [extractModuleUnitStub]
+	  [extractMonitorUnitStub]
+	  [extractClassUnitStub]
 end function
 
 rule normalizeExportLists
     replace [exportList]
-        'export ExportItems [list exportItem+]
+	'export ExportItems [list exportItem+]
     by
-        'export ( ExportItems )
+	'export ( ExportItems )
 end rule
 
 rule removeExportComments
     replace [exportList]
-        ExpList [exportList]
+	ExpList [exportList]
     where
-        ExpList [?removeComments]
+	ExpList [?removeComments]
     by
-        ExpList [removeComments]
+	ExpList [removeComments]
 end rule
 
 rule removeComments
     replace [opt commentlines]
-        C [commentlines]
+	C [commentlines]
     by
-        % doodly
+	% doodly
 end rule
 
 function extractMonitorUnitStub
     replace [compilation]
-        Comments [opt commentlines]
-        unit monitor M [id] ColonExpn [opt colonExpn] 
-            Implement [opt implementClause]
-            ImplementBy [opt implementByClause]
-            Imports [opt importList]
-            'export ( Exports [list exportItem+] )
-            Pre [opt preClause]
-            Body [repeat declarationOrStatement]
-            Post [opt postClause] 
-        'end M
+	Comments [opt commentlines]
+	unit monitor M [id] ColonExpn [opt colonExpn] 
+	    Implement [opt implementClause]
+	    ImplementBy [opt implementByClause]
+	    Imports [opt importList]
+	    'export ( Exports [list exportItem+] )
+	    Pre [opt preClause]
+	    Body [repeat declarationOrStatement]
+	    Post [opt postClause] 
+	'end M
 
     by
-        Comments
-        unit monitor M ColonExpn
-            'export ( Exports )
-            Body [removeStatements] 
-                 [markDeclaration each Exports]
-                 [deleteUnmarkedDeclarations]
-                 [removeMarks]
-                 [sortBy each Exports]
-        'end M
+	Comments
+	unit monitor M ColonExpn
+	    'export ( Exports )
+	    Body [removeStatements] 
+		 [markDeclaration each Exports]
+		 [deleteUnmarkedDeclarations]
+		 [removeMarks]
+		 [sortBy each Exports]
+	'end M
 end function
 
 function extractModuleUnitStub
     replace [compilation]
-        Comments [opt commentlines]
-        unit module M [id] 
-            Implement [opt implementClause]
-            ImplementBy [opt implementByClause]
-            Imports [opt importList]
-            'export ( Exports [list exportItem+] )
-            Pre [opt preClause]
-            Body [repeat declarationOrStatement]
-            Post [opt postClause] 
-        'end M
+	Comments [opt commentlines]
+	unit module M [id] 
+	    Implement [opt implementClause]
+	    ImplementBy [opt implementByClause]
+	    Imports [opt importList]
+	    'export ( Exports [list exportItem+] )
+	    Pre [opt preClause]
+	    Body [repeat declarationOrStatement]
+	    Post [opt postClause] 
+	'end M
 
     by
-        Comments
-        unit module M 
-            'export ( Exports )
-            Body [removeStatements] 
-                 [markDeclaration each Exports]
-                 [deleteUnmarkedDeclarations]
-                 [removeMarks]
-                 [sortBy each Exports]
-        'end M
+	Comments
+	unit module M 
+	    'export ( Exports )
+	    Body [removeStatements] 
+		 [markDeclaration each Exports]
+		 [deleteUnmarkedDeclarations]
+		 [removeMarks]
+		 [sortBy each Exports]
+	'end M
 end function
 
 function extractClassUnitStub
     replace [compilation]
-        Comments [opt commentlines]
-        unit Monitor [opt 'monitor] class M [id] 
-            Expand [opt expandClause]
-            Implement [opt implementClause]
-            ImplementBy [opt implementByClause]
-            Imports [opt importList]
-            'export ( Exports [list exportItem+] )
-            Pre [opt preClause]
-            Body [repeat declarationOrStatement]
-            Post [opt postClause] 
-        'end M
+	Comments [opt commentlines]
+	unit Monitor [opt 'monitor] class M [id] 
+	    Expand [opt expandClause]
+	    Implement [opt implementClause]
+	    ImplementBy [opt implementByClause]
+	    Imports [opt importList]
+	    'export ( Exports [list exportItem+] )
+	    Pre [opt preClause]
+	    Body [repeat declarationOrStatement]
+	    Post [opt postClause] 
+	'end M
 
     by
-        Comments
-        unit Monitor class M 
-            'export ( Exports )
-            Body [removeStatements] 
-                 [markDeclaration each Exports]
-                 [deleteUnmarkedDeclarations]
-                 [removeMarks]
-                 [sortBy each Exports]
-        'end M
+	Comments
+	unit Monitor class M 
+	    'export ( Exports )
+	    Body [removeStatements] 
+		 [markDeclaration each Exports]
+		 [deleteUnmarkedDeclarations]
+		 [removeMarks]
+		 [sortBy each Exports]
+	'end M
 end function
 
 % % external rule message N [number]
@@ -140,123 +140,123 @@ end rule
 
 function isDeclaration
     match [declarationOrStatement]
-        Marked [opt 'MARKED] Declaration [declaration] Semi [opt ';] 
+	Marked [opt 'MARKED] Declaration [declaration] Semi [opt ';] 
 end function
 
 rule markDeclaration Export [exportItem]
     deconstruct Export
-        Comment [opt commentlines]  
-        ExportMethods [repeat exportMethod] 
-        ExportId [id]
+	Comment [opt commentlines]  
+	ExportMethods [repeat exportMethod] 
+	ExportId [id]
     replace [declarationOrStatement]
-        Declaration [declaration]
+	Declaration [declaration]
     where 
-        Declaration [declares ExportId]
+	Declaration [declares ExportId]
     where not
-        Declaration [isModule] [isMonitor] [isClass] 
+	Declaration [isModule] [isMonitor] [isClass] 
     by
-        'MARKED Declaration [trimProcDeclaration] 
-                            [trimFunctionDeclaration]
-                            [trimOtherDeclarations]
+	'MARKED Declaration [trimProcDeclaration] 
+			    [trimFunctionDeclaration]
+			    [trimOtherDeclarations]
 end rule
 
 function isModule
     match [declaration]
-        Module [moduleDeclaration]
+	Module [moduleDeclaration]
 end function
 
 function isMonitor
     match [declaration]
-        Monitor [monitorDeclaration]
+	Monitor [monitorDeclaration]
 end function
 
 function isClass
     match [declaration]
-        Class [classDeclaration]
+	Class [classDeclaration]
 end function
 
 rule deleteUnmarkedDeclarations 
     replace [repeat declarationOrStatement]
-        Declaration [declaration] Semi [opt ';]
-        Rest [repeat declarationOrStatement]
+	Declaration [declaration] Semi [opt ';]
+	Rest [repeat declarationOrStatement]
     by
-        Rest
+	Rest
 end rule
 
 rule removeMarks
     replace [opt 'MARKED]
-        'MARKED
+  	'MARKED
     by
-        % nada
+	% nada
 end rule
 
 rule declares Id [id]
     match [declaredId]
-        Id
+	Id
 end rule
 
 function trimProcDeclaration 
     replace [declaration]
-        Comments [opt commentlines]
-        Proc [procSpec] Id [id] Parms [opt parameterListDeclaration]
-        Imports [opt importList]
-        Body [subprogramBody]
+	Comments [opt commentlines]
+	Proc [procSpec] Id [id] Parms [opt parameterListDeclaration]
+	Imports [opt importList]
+	Body [subprogramBody]
     by
-        Comments 
-        'deferred Proc Id Parms 
+	Comments 
+	'deferred Proc Id Parms 
 end function
 
 function trimFunctionDeclaration 
     replace [declaration]
-        Comments [opt commentlines]
-        Fcn [fcnSpec] Id [id] Parms [opt parameterListDeclaration]
-            ResultId [opt id] : ResultType [typeSpec] 
-        Imports [opt importList]
-        Body [subprogramBody]
+	Comments [opt commentlines]
+	Fcn [fcnSpec] Id [id] Parms [opt parameterListDeclaration]
+	    ResultId [opt id] : ResultType [typeSpec] 
+	Imports [opt importList]
+	Body [subprogramBody]
     by
-        Comments 
-        'deferred Fcn Id Parms ResultId : ResultType
+	Comments 
+	'deferred Fcn Id Parms ResultId : ResultType
 end function
 
 function trimOtherDeclarations
     replace [declaration]
-        Declaration [declaration]
+	Declaration [declaration]
     where not
-        Declaration [isSubprogram] 
+	Declaration [isSubprogram] 
     by
-        Declaration [removeComments]
+	Declaration [removeComments]
 end function
 
 function isSubprogram
     match [declaration]
-        Declaration [subprogramDeclaration]
+	Declaration [subprogramDeclaration]
 end function
 
 rule sortBy Export [exportItem]
     deconstruct Export
-        Comment [opt commentlines]  
-        ExportMethods [repeat exportMethod] 
-        ExportId [id]
+	Comment [opt commentlines]  
+	ExportMethods [repeat exportMethod] 
+	ExportId [id]
     replace [repeat declarationOrStatement]
-        Declaration [declarationOrStatement]
-        OtherDeclaration [declarationOrStatement]
-        Rest [repeat declarationOrStatement]
+	Declaration [declarationOrStatement]
+	OtherDeclaration [declarationOrStatement]
+	Rest [repeat declarationOrStatement]
     where
-        Declaration [declares ExportId]
+	Declaration [declares ExportId]
     construct OtherAndRest [repeat declarationOrStatement]
-        OtherDeclaration
-        Rest
+	OtherDeclaration
+	Rest
     by
-        OtherAndRest [removeDuplicates ExportId] 
-                     [. Declaration]
+	OtherAndRest [removeDuplicates ExportId] 
+		     [. Declaration]
 end rule
 
 rule removeDuplicates DeclaredId [id]
     replace [repeat declarationOrStatement]
-        DuplicateDeclaration [declarationOrStatement]
-        Rest [repeat declarationOrStatement]
+	DuplicateDeclaration [declarationOrStatement]
+	Rest [repeat declarationOrStatement]
     where
-        DuplicateDeclaration [declares DeclaredId]
+	DuplicateDeclaration [declares DeclaredId]
     by
-        Rest
+	Rest
 end rule

@@ -1,55 +1,55 @@
 TXL Example Specification
 -------------------------
 
-Name:   
-        normalize.Txl
-        rename.Txl
-        argmatch.Txl
-        resources.Txl
-        impexps.Txl
-        references.Txl
-        parameters.Txl
+Name:	
+	normalize.Txl
+	rename.Txl
+	argmatch.Txl
+	resources.Txl
+	impexps.Txl
+	references.Txl
+	parameters.Txl
 
 Description:
-        This directory contains a set of several TXL programs that
-        together, under direction of the Makefile in this directory,
-        extract a Prolog design factbase from any Turing Plus
-        programming language program.  
+	This directory contains a set of several TXL programs that
+	together, under direction of the Makefile in this directory,
+	extract a Prolog design factbase from any Turing Plus
+	programming language program.  
 
-        Normalize.Txl normalizes the Turing Plus source program to
-        a standard form which is easier for the other transforms to
-        handle.  In particular, it expands multiple declarations into
-        sequences of single declarations and eliminates forward references.
+	Normalize.Txl normalizes the Turing Plus source program to
+	a standard form which is easier for the other transforms to
+	handle.  In particular, it expands multiple declarations into
+	sequences of single declarations and eliminates forward references.
 
-        Rename.Txl renames all declared entities in the program to
-        reflect their scope of declaration and constructs 'ico' 
-        (is_contained_in) facts for them.  For example, all variables
-        declared inside procedure P are renamed beginning with 'P$'.
+	Rename.Txl renames all declared entities in the program to
+	reflect their scope of declaration and constructs 'ico' 
+	(is_contained_in) facts for them.  For example, all variables
+	declared inside procedure P are renamed beginning with 'P$'.
 
-        Argmatch.Txl annotates all 'var' arguments in procedure calls
-        with their corresponding formal parameter names.
+	Argmatch.Txl annotates all 'var' arguments in procedure calls
+	with their corresponding formal parameter names.
 
-        Resources.Txl, impexps.Txl, references.Txl and parameters.Txl 
-        annotate the program with facts concerning resource kinds, 
-        import/export relations, read and write references to variables 
-        and constants, and parameter kinds respectively.
+	Resources.Txl, impexps.Txl, references.Txl and parameters.Txl 
+	annotate the program with facts concerning resource kinds, 
+	import/export relations, read and write references to variables 
+	and constants, and parameter kinds respectively.
 
-        The Makefile in this directory runs all of the above transforms
-        and extracts the generated facts for a given Turing Plus
-        source program.
+	The Makefile in this directory runs all of the above transforms
+	and extracts the generated facts for a given Turing Plus
+	source program.
 
 Authors:
-        Kevin Schneider
-        Jim Cordy
+   	Kevin Schneider
+	Jim Cordy
 
 Affiliation:
-        Advanced Software Design Technology Project (ASDT)
-        IBM Canada Ltd./Queen's University
-        Canada
+	Advanced Software Design Technology Project (ASDT)
+	IBM Canada Ltd./Queen's University
+	Canada
 
 Date:
-        July 1992
+	July 1992
 
 Example:
-        make microturing.facts  (runs all of the TXL programs in a row;
-                                 takes about five minutes elapsed time)
+	make microturing.facts	(runs all of the TXL programs in a row;
+			         takes about five minutes elapsed time)

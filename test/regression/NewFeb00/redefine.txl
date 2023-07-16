@@ -1,17 +1,17 @@
 define program
-        [repeat item]
+	[repeat item]
 end define
 
 define item
-        [id]
+	[id]
 end define
 
 redefine item 
-        ... |
-        [number]
-    |   'Jim
+	... |
+	[number]
+    |	'Jim
 end redefine
 
 function main
-        match [program] _ [program]
+	match [program] _ [program]
 end function

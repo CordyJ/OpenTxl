@@ -9,7 +9,7 @@ end define
 
 rule main
     replace $ [number]
-        N [number]
+	N [number]
     by
-        N [+ '0x1]
+	N [+ '0x1]
 end rule

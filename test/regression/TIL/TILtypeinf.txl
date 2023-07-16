@@ -9,7 +9,7 @@
 include "TIL.grm"
 
 % Preserve comments, we're probably going to maintain the result
-include "TILCommentOverrides.Grm"
+include "TILCommentOverrides.grm"
 
 
 % Grammar overrides to allow for type specifications on TIL variable declarations.
@@ -17,15 +17,15 @@ include "TILCommentOverrides.Grm"
 % This transformation will infer the types of all untyped variables.
 
 redefine declaration
-        'var [primary] [opt colon_type_spec] '; [NL]
+	'var [primary] [opt colon_type_spec] ';	[NL]
 end redefine
 
 define colon_type_spec
-        ': [type_spec]
+	': [type_spec]
 end define
 
 define type_spec
-        'int | 'string | 'UNKNOWN
+	'int | 'string | 'UNKNOWN
 end define
 
 
@@ -34,15 +34,15 @@ end define
 % appear in input and is not printed in output.
 
 redefine primary 
-        [subprimary] [attr type_attr]
+	[subprimary] [attr type_attr]
 end redefine
 
 define subprimary
-        [id] | [literal] | '( [expression] ') 
+	[id] | [literal] | '( [expression] ') 
 end define
 
 define type_attr
-        '{ [opt type_spec] '}
+	'{ [opt type_spec] '}
 end define
 
 
@@ -50,17 +50,17 @@ end define
 % to make attribution rules simpler.
 
 redefine assignment_statement
-        [primary] ':= [expression] ';   [NL]
+	[primary] ':= [expression] ';	[NL]
 end redefine
 
 redefine for_statement
-    'for [primary] := [expression] 'to [expression] 'do [IN][NL]
-        [statement*]                                    [EX]
-    'end                                                [NL]
+    'for [primary] := [expression] 'to [expression] 'do	[IN][NL]
+    	[statement*]                           		[EX]
+    'end                                       		[NL]
 end redefine
 
 redefine read_statement
-        'read [primary] ';      [NL]
+	'read [primary] ';	[NL]
 end redefine
 
 
@@ -80,14 +80,14 @@ function main
         P [program]
     by
         P [bracketExpressions]
-          [enterDefaultAttributes]
+	  [enterDefaultAttributes]
           [attributeStringConstants]
-          [attributeIntConstants]
+	  [attributeIntConstants]
           [attributeProgramToFixedPoint]
-          [completeWithUnknown]
-          [typeDeclarations]
-          [reportErrors]
-          [unbracketExpressions]
+	  [completeWithUnknown]
+	  [typeDeclarations]
+	  [reportErrors]
+	  [unbracketExpressions]
 end function
 
 % Rules to introduce and undo complete parenthesization to allow for 
@@ -98,7 +98,7 @@ rule bracketExpressions
     replace [expression]
         E1 [expression] Op [op] E2 [expression]
     by
-        '( E1 Op E2 ')
+    	'( E1 Op E2 ')
 end rule
 
 rule unbracketExpressions
@@ -106,7 +106,7 @@ rule unbracketExpressions
     replace [expression]
         '( E1 [expression] Op [op] E2 [expression] ') {Type [type_spec]}
     by
-        E1 Op E2
+    	E1 Op E2
 end rule
 
 % Rule to add empty type attributes to every primary expression and variable
@@ -128,13 +128,13 @@ rule attributeProgramToFixedPoint
         P [program]
     construct NP [program]
         P [attributeAssignments]
-          [attributeOperations]
-          [attributeForIds]
-          [attributeDeclarations]
+	  [attributeOperations]
+	  [attributeForIds]
+	  [attributeDeclarations]
     deconstruct not NP
-        P
+	P
     by
-        NP
+	NP
 end rule
 
 rule attributeStringConstants
@@ -167,24 +167,24 @@ end rule
 
 rule attributeForIds
     replace [for_statement]
-        'for Id [id] { } := P1 [subprimary] {Type [type_spec]} 'to P2 [subprimary] {Type} 'do
-            S [statement*]
-        'end
+    	'for Id [id] { } := P1 [subprimary] {Type [type_spec]} 'to P2 [subprimary] {Type} 'do
+	    S [statement*]
+	'end
     by
-        'for Id {Type} := P1 {Type} 'to P2 {Type} 'do
-            S 
-        'end
+    	'for Id {Type} := P1 {Type} 'to P2 {Type} 'do
+	    S 
+	'end
 end rule
 
 rule attributeDeclarations
     replace [statement*]
-        'var Id [id] { } ;
-        S [statement*]
+    	'var Id [id] { } ;
+	S [statement*]
     deconstruct * [primary] S
-        Id {Type [type_spec]}
+    	Id {Type [type_spec]}
     by
-        'var Id {Type};
-        S [attributeReferences Id Type]
+    	'var Id {Type};
+	S [attributeReferences Id Type]
 end rule
 
 rule attributeReferences Id [id] Type [type_spec]
@@ -203,7 +203,7 @@ rule completeWithUnknown
     replace [attr type_attr]
         { }
     by
-        {UNKNOWN}
+    	{UNKNOWN}
 end rule
 
 
@@ -223,7 +223,7 @@ end rule
 
 rule reportErrors
     replace $ [statement]
-        S [statement]
+    	S [statement]
     skipping [statement*]
     deconstruct * [type_spec] S
         'UNKNOWN
@@ -236,17 +236,17 @@ rule reportErrors
 
     construct Message [statement]
         S [pragma "-attr"] 
-          [message "*** ERROR: Unable to resolve types in:"]
-          [stripBody]
-          [putp "%"]
-          [pragma "-noattr"]
+	  [message "*** ERROR: Unable to resolve types in:"]
+	  [stripBody]
+	  [putp "%"]
+	  [pragma "-noattr"]
     by 
-        S
+    	S
 end rule
 
 function stripBody
     replace * [repeat statement]
-        _ [repeat statement]
+    	_ [repeat statement]
     by
         % nothing
 end function

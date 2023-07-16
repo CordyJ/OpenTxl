@@ -47,8 +47,8 @@
 %       w       write file
 %       q       quit
 %       z       write and quit
-%       h       help
-%       t       run (as Turing program)
+%	h	help
+%	t	run (as Turing program)
 %
 
 % UNIX utility modules
@@ -135,8 +135,8 @@ procedure putinfo
     infoline += "]"
     infoline += repeat (" ", 40 - length (infoline))
     if msgtext not= "" then
-        infoline += msgtext
-        infoline := infoline (1 .. min (linesize, length (infoline)))
+	infoline += msgtext
+	infoline := infoline (1 .. min (linesize, length (infoline)))
     end if
     infoline += repeat (" ", linesize - length (infoline))
     curses.move (0, 0)
@@ -162,57 +162,57 @@ procedure getcommand
     var c : string (1)
 
     if command = "" then
-        curses.getch (c)
-        command := c
+	curses.getch (c)
+	command := c
     end if
 
     if command = esc then
-        % escape sequence
-        curses.getch (c)
-        command += c
+	% escape sequence
+	curses.getch (c)
+	command += c
 
-        if c = "[" or c = "O" then
-            % ANSI arrow or function key - 3 character sequence
-            curses.getch (c)
-            command += c
+	if c = "[" or c = "O" then
+	    % ANSI arrow or function key - 3 character sequence
+	    curses.getch (c)
+	    command += c
 
-            % translate ANSI to standard
-            if command (2) = "[" then
-                % ANSI arrow key
-                if command = Aup then
-                    command := Sup
-                elsif command = Adown then
-                    command := Sdown
-                elsif command = Aleft then
-                    command := Sleft
-                elsif command = Aright then
-                    command := Sright
-                else
-                    command := Sbad
-                end if
+	    % translate ANSI to standard
+	    if command (2) = "[" then
+		% ANSI arrow key
+		if command = Aup then
+		    command := Sup
+		elsif command = Adown then
+		    command := Sdown
+		elsif command = Aleft then
+		    command := Sleft
+		elsif command = Aright then
+		    command := Sright
+		else
+		    command := Sbad
+		end if
 
-            elsif command (2) = "O" then
-                % ANSI function key
-                if command = Ainsert then
-                    command := Sinsert
-                elsif command = Adelete then
-                    command := Sdelete
-                elsif command = Afind then
-                    command := Sfind
-                elsif command = Apage then
-                    command := Spage
-                else
-                    command := Sbad
-                end if
+	    elsif command (2) = "O" then
+		% ANSI function key
+		if command = Ainsert then
+		    command := Sinsert
+		elsif command = Adelete then
+		    command := Sdelete
+		elsif command = Afind then
+		    command := Sfind
+		elsif command = Apage then
+		    command := Spage
+		else
+		    command := Sbad
+		end if
 
-            else
-                command := Sbad
-            end if
-        end if
+	    else
+		command := Sbad
+	    end if
+	end if
 
     elsif command = "" then
-        % eof
-        command := Squit
+	% eof
+	command := Squit
     end if
 
     msgtext := ""
@@ -221,8 +221,8 @@ end getcommand
 procedure flush
     var c : string (1)
     loop
-        exit when not curses.hasch
-        curses.getch (c)
+	exit when not curses.hasch
+	curses.getch (c)
     end loop
 end flush
 
@@ -231,31 +231,31 @@ procedure read_
     open : file, filename, get
 
     if file not= 0 then
-        % read in file
-        numlines := 0
-        for i : 1 .. maxlines
-            exit when eof (file)
-            var s : string
-            get : file, s :*
-            loop
-                const tabposition := index (s, "\t")
-                exit when tabposition = 0
-                const tabblanks := repeat (" ", 8 - (tabposition - 1) mod 8)
-                s := s (1 .. tabposition - 1) + tabblanks + s (tabposition + 1 .. *)
-            end loop
-            lines (i) := s (1 .. min (length (s), linesize))
-            numlines += 1
-        end for
+	% read in file
+	numlines := 0
+	for i : 1 .. maxlines
+	    exit when eof (file)
+	    var s : string
+	    get : file, s :*
+	    loop
+		const tabposition := index (s, "\t")
+		exit when tabposition = 0
+		const tabblanks := repeat (" ", 8 - (tabposition - 1) mod 8)
+		s := s (1 .. tabposition - 1) + tabblanks + s (tabposition + 1 .. *)
+	    end loop
+	    lines (i) := s (1 .. min (length (s), linesize))
+	    numlines += 1
+	end for
 
-        if not eof (file) then
-            error ("file too large")
-        else
-            message ("read " + intstr (numlines, 1) + " lines")
-        end if
+	if not eof (file) then
+	    error ("file too large")
+	else
+	    message ("read " + intstr (numlines, 1) + " lines")
+	end if
 
-        close : file
+	close : file
     else
-        message ("new file")
+	message ("new file")
     end if
 end read_
 
@@ -264,31 +264,31 @@ procedure write_
     open : file, filename, put
 
     if file not= 0 then
-        % write out file
-        for i : 1 .. numlines
-            var line := lines (i)
-            loop
-                exit when length (line) = 0 or line (length (line)) not= " "
-                line := line (1 .. length (line) - 1)
-            end loop
-            loop
-                const tabposition := index (line, "        ")
-                exit when tabposition = 0
-                line := line (1 .. tabposition - 1)
-                    + "\t" + line (tabposition + 8 .. *)
-            end loop
-            put : file, line
-        end for
-        close : file
-        message ("write " + intstr (numlines, 1) + " lines")
+	% write out file
+	for i : 1 .. numlines
+	    var line := lines (i)
+	    loop
+		exit when length (line) = 0 or line (length (line)) not= " "
+		line := line (1 .. length (line) - 1)
+	    end loop
+	    loop
+		const tabposition := index (line, "        ")
+		exit when tabposition = 0
+		line := line (1 .. tabposition - 1)
+		    + "\t" + line (tabposition + 8 .. *)
+	    end loop
+	    put : file, line
+	end for
+	close : file
+	message ("write " + intstr (numlines, 1) + " lines")
     else
-        error ("can't write file")
+	error ("can't write file")
     end if
 end write_
 
 procedure clear
     for i : 1 .. maxlines
-        lines (i) := nullline
+	lines (i) := nullline
     end for
     numlines := 0
     firstline := 1
@@ -299,13 +299,13 @@ end clear
 procedure draw
     curses.move (1, 0)
     for i : firstline .. firstline + screensize
-        curses.move (i - firstline + 1, 0)
-        if i < maxlines then
-            curses.addstr (lines (i))
-        else
-            curses.addstr ("~")
-        end if
-        curses.clrtoeol
+	curses.move (i - firstline + 1, 0)
+	if i < maxlines then
+	    curses.addstr (lines (i))
+	else
+	    curses.addstr ("~")
+	end if
+	curses.clrtoeol
     end for
     curses.move (currentline - firstline + 1, currentchar - 1)
     curses.refresh
@@ -313,24 +313,24 @@ end draw
 
 procedure scrolldown
     if firstline > 1 then
-        firstline -= 1
-        curses.move (1, 0)
-        curses.insertln
-        curses.addstr (lines (firstline))
-        curses.clrtoeol
-        curses.refresh
+	firstline -= 1
+	curses.move (1, 0)
+	curses.insertln
+	curses.addstr (lines (firstline))
+	curses.clrtoeol
+	curses.refresh
     end if
 end scrolldown
 
 procedure scrollup
     if firstline + screensize < maxlines then
-        firstline += 1
-        curses.move (1, 0)
-        curses.deleteln
-        curses.move (screensize + 1, 0)
-        curses.addstr (lines (firstline + screensize))
-        curses.clrtoeol
-        curses.refresh
+	firstline += 1
+	curses.move (1, 0)
+	curses.deleteln
+	curses.move (screensize + 1, 0)
+	curses.addstr (lines (firstline + screensize))
+	curses.clrtoeol
+	curses.refresh
     end if
 end scrollup
 
@@ -338,24 +338,24 @@ procedure move
     message ("")
 
     if command = Sup and currentline > 1 then
-        currentline -= 1
+	currentline -= 1
     elsif command = Sdown and currentline < maxlines
-            and lines (currentline) not= nullline then
-        currentline += 1
+	    and lines (currentline) not= nullline then
+	currentline += 1
     elsif command = Sright and currentchar < linesize then
-        currentchar += 1
+	currentchar += 1
     elsif command = Sleft and currentchar > 1 then
-        currentchar -= 1
+	currentchar -= 1
     elsif command = cr and currentline < maxlines
-            and lines (currentline) not= nullline then
-        currentchar := 1
-        currentline += 1
+	    and lines (currentline) not= nullline then
+	currentchar := 1
+	currentline += 1
     end if
 
     if currentline < firstline then
-        scrolldown
+	scrolldown
     elsif currentline > firstline + screensize then
-        scrollup
+	scrollup
     end if
 
     curses.move (currentline - firstline + 1, currentchar - 1)
@@ -369,33 +369,33 @@ procedure page
     getcommand
 
     if command = Sup then
-        message ("page up")
-        if currentline > 1 then
-            currentline := max (1, currentline - screensize)
-            firstline := max (1, firstline - screensize)
-            putinfo
-            draw
-        else
-            error ("beginning of file")
-        end if
+	message ("page up")
+	if currentline > 1 then
+	    currentline := max (1, currentline - screensize)
+	    firstline := max (1, firstline - screensize)
+	    putinfo
+	    draw
+	else
+	    error ("beginning of file")
+	end if
     elsif command = Sdown or command = cr then
-        message ("page down")
-        if currentline not= numlines then
-            currentline := min (numlines, currentline + screensize)
-            firstline := min (numlines, firstline + screensize)
-            putinfo
-            draw
-        else
-            error ("end of file")
-        end if
+	message ("page down")
+	if currentline not= numlines then
+	    currentline := min (numlines, currentline + screensize)
+	    firstline := min (numlines, firstline + screensize)
+	    putinfo
+	    draw
+	else
+	    error ("end of file")
+	end if
     elsif command = Sright then
-        message ("page right")
-        currentchar := length (lines (currentline))
+	message ("page right")
+	currentchar := length (lines (currentline))
     elsif command = Sleft then
-        message ("page left")
-        currentchar := 1
+	message ("page left")
+	currentchar := 1
     else
-        error ("bad command")
+	error ("bad command")
     end if
 
     curses.move (currentline - firstline + 1, currentchar - 1)
@@ -405,99 +405,99 @@ end page
 
 procedure insert
     if command not= ins then
-        message ("insert _")
-        command := ""
-        getcommand
+	message ("insert _")
+	command := ""
+	getcommand
     end if
 
     if command = Sup then
-        message ("insert up")
-        if currentline > firstline + screensize then
-            curses.move (1, 0)
-            curses.deleteln
-            firstline += 1
-        end if
-        curses.move (currentline - firstline + 1, 0)
-        curses.insertln
-        currentchar := 1
-        for decreasing i : maxlines - 1 .. currentline
-            lines (i + 1) := lines (i)
-        end for
-        lines (currentline) := ""
-        command := ""
-        numlines += 1
-        putinfo
+	message ("insert up")
+	if currentline > firstline + screensize then
+	    curses.move (1, 0)
+	    curses.deleteln
+	    firstline += 1
+	end if
+	curses.move (currentline - firstline + 1, 0)
+	curses.insertln
+	currentchar := 1
+	for decreasing i : maxlines - 1 .. currentline
+	    lines (i + 1) := lines (i)
+	end for
+	lines (currentline) := ""
+	command := ""
+	numlines += 1
+	putinfo
 
     elsif command = Sdown or command = cr then
-        message ("insert down")
-        curses.move (1, 0)
-        curses.deleteln
-        curses.move (currentline - firstline + 1, 0)
-        curses.insertln
-        firstline += 1
-        currentline += 1
-        currentchar := 1
-        for decreasing i : maxlines - 1 .. currentline
-            lines (i + 1) := lines (i)
-        end for
-        lines (currentline) := ""
-        command := ""
-        numlines += 1
-        putinfo
+	message ("insert down")
+	curses.move (1, 0)
+	curses.deleteln
+	curses.move (currentline - firstline + 1, 0)
+	curses.insertln
+	firstline += 1
+	currentline += 1
+	currentchar := 1
+	for decreasing i : maxlines - 1 .. currentline
+	    lines (i + 1) := lines (i)
+	end for
+	lines (currentline) := ""
+	command := ""
+	numlines += 1
+	putinfo
 
     elsif command = Sright then
-        message ("insert right")
-        bind var line to lines (currentline)
-        if currentchar < linesize then
-            currentchar += 1
-        end if
-        if currentchar > length (line) then
-            line += repeat (" ", currentchar - length (line))
-        end if
-        var c : string (1)
-        loop
-            curses.move (currentline - firstline + 1, currentchar - 1)
-            curses.getch (c)
-            exit when c < " " or length (line) = linesize
-            curses.insertch (c)
-            line := line (1 .. currentchar) + c + line (currentchar + 1 .. *)
-            if currentchar < linesize then
-                currentchar += 1
-            end if
-        end loop
-        command := c
+	message ("insert right")
+	bind var line to lines (currentline)
+	if currentchar < linesize then
+	    currentchar += 1
+	end if
+	if currentchar > length (line) then
+	    line += repeat (" ", currentchar - length (line))
+	end if
+	var c : string (1)
+	loop
+	    curses.move (currentline - firstline + 1, currentchar - 1)
+	    curses.getch (c)
+	    exit when c < " " or length (line) = linesize
+	    curses.insertch (c)
+	    line := line (1 .. currentchar) + c + line (currentchar + 1 .. *)
+	    if currentchar < linesize then
+		currentchar += 1
+	    end if
+	end loop
+	command := c
 
     elsif command = Sleft or command = ins then
-        message ("insert left")
-        bind var line to lines (currentline)
-        var c : string (1)
-        loop
-            curses.move (currentline - firstline + 1, currentchar - 1)
-            curses.getch (c)
-            exit when c < " " or length (line) = linesize
-            curses.insertch (c)
-            line := line (1 .. currentchar - 1) + c + line (currentchar .. *)
-            if currentchar < linesize then
-                currentchar += 1
-            end if
-        end loop
-        command := c
+	message ("insert left")
+	bind var line to lines (currentline)
+	var c : string (1)
+	loop
+	    curses.move (currentline - firstline + 1, currentchar - 1)
+	    curses.getch (c)
+	    exit when c < " " or length (line) = linesize
+	    curses.insertch (c)
+	    line := line (1 .. currentchar - 1) + c + line (currentchar .. *)
+	    if currentchar < linesize then
+		currentchar += 1
+	    end if
+	end loop
+	command := c
 
     else
-        message ("insert left")
-        bind var line to lines (currentline)
-        var c : string (1) := command (1)
-        loop
-            exit when c < " " or length (line) = linesize
-            curses.insertch (c)
-            line := line (1 .. currentchar - 1) + c + line (currentchar .. *)
-            if currentchar < linesize then
-                currentchar += 1
-            end if
-            curses.move (currentline - firstline + 1, currentchar - 1)
-            curses.getch (c)
-        end loop
-        command := c
+	message ("insert left")
+	bind var line to lines (currentline)
+	var c : string (1) := command (1)
+	loop
+	    exit when c < " " or length (line) = linesize
+	    curses.insertch (c)
+	    line := line (1 .. currentchar - 1) + c + line (currentchar .. *)
+	    if currentchar < linesize then
+		currentchar += 1
+	    end if
+	    curses.move (currentline - firstline + 1, currentchar - 1)
+	    curses.getch (c)
+	end loop
+	command := c
     end if
 
     curses.move (currentline - firstline + 1, currentchar - 1)
@@ -506,67 +506,67 @@ end insert
 
 procedure delete
     if command not= del then
-        message ("delete _")
-        command := ""
-        getcommand
+	message ("delete _")
+	command := ""
+	getcommand
     end if
 
     if command = Sup then
-        message ("delete up")
-        curses.deleteln
-        for i : currentline .. maxlines - 1
-            exit when lines (i) = nullline
-            lines (i) := lines (i + 1)
-        end for
-        if firstline > 1 then
-            firstline -= 1
-            curses.move (1, 0)
-            curses.insertln
-            curses.addstr (lines (firstline))
-        else
-            curses.move (screensize + 1, 0)
-            curses.addstr (lines (firstline + screensize))
-        end if
-        if currentline > 1 then
-            currentline -= 1
-        end if
-        numlines -= 1
-        putinfo
+	message ("delete up")
+	curses.deleteln
+	for i : currentline .. maxlines - 1
+	    exit when lines (i) = nullline
+	    lines (i) := lines (i + 1)
+	end for
+	if firstline > 1 then
+	    firstline -= 1
+	    curses.move (1, 0)
+	    curses.insertln
+	    curses.addstr (lines (firstline))
+	else
+	    curses.move (screensize + 1, 0)
+	    curses.addstr (lines (firstline + screensize))
+	end if
+	if currentline > 1 then
+	    currentline -= 1
+	end if
+	numlines -= 1
+	putinfo
 
     elsif command = Sdown or command = cr then
-        message ("delete down")
-        curses.deleteln
-        for i : currentline .. maxlines - 1
-            exit when lines (i) = nullline
-            lines (i) := lines (i + 1)
-        end for
-        curses.move (screensize + 1, 0)
-        curses.addstr (lines (firstline + screensize))
-        curses.clrtoeol
-        numlines -= 1
-        putinfo
+	message ("delete down")
+	curses.deleteln
+	for i : currentline .. maxlines - 1
+	    exit when lines (i) = nullline
+	    lines (i) := lines (i + 1)
+	end for
+	curses.move (screensize + 1, 0)
+	curses.addstr (lines (firstline + screensize))
+	curses.clrtoeol
+	numlines -= 1
+	putinfo
 
     elsif command = Sright or command = del then
-        message ("delete right")
-        curses.deletech
-        bind var line to lines (currentline)
-        if currentchar <= length (line) then
-            line := line (1 .. currentchar - 1) + line (currentchar + 1 .. *)
-        end if
+	message ("delete right")
+	curses.deletech
+	bind var line to lines (currentline)
+	if currentchar <= length (line) then
+	    line := line (1 .. currentchar - 1) + line (currentchar + 1 .. *)
+	end if
 
     elsif command = Sleft then
-        message ("delete left")
-        curses.deletech
-        bind var line to lines (currentline)
-        if currentchar <= length (line) then
-            line := line (1 .. currentchar - 1) + line (currentchar + 1 .. *)
-        end if
-        if currentchar > 1 then
-            currentchar -= 1
-        end if
+	message ("delete left")
+	curses.deletech
+	bind var line to lines (currentline)
+	if currentchar <= length (line) then
+	    line := line (1 .. currentchar - 1) + line (currentchar + 1 .. *)
+	end if
+	if currentchar > 1 then
+	    currentchar -= 1
+	end if
 
     else
-        error ("bad direction")
+	error ("bad direction")
     end if
 
     curses.move (currentline - firstline + 1, currentchar - 1)
@@ -579,14 +579,14 @@ procedure find
     pattern := ""
     var c : string (1)
     loop
-        message ("find \"" + pattern)
-        curses.getch (c)
-        exit when c < " " or length (pattern) = linesize
-        pattern += c
+	message ("find \"" + pattern)
+	curses.getch (c)
+	exit when c < " " or length (pattern) = linesize
+	pattern += c
     end loop
 
     if pattern = "" then
-        pattern := oldpattern
+	pattern := oldpattern
     end if
 
     message ("find \"" + pattern + "\" _")
@@ -595,76 +595,76 @@ procedure find
     getcommand
 
     if command = Sright then
-        message ("find \"" + pattern + "\" right")
-        var templine := lines (currentline)
-        var position : int
-        loop
-            position := index (templine, pattern)
-            exit when position = 0 or position > currentchar
-            templine := templine (1 .. position - 1) + "~"
-                + templine (position + 1 .. *)
-        end loop
+	message ("find \"" + pattern + "\" right")
+	var templine := lines (currentline)
+	var position : int
+	loop
+	    position := index (templine, pattern)
+	    exit when position = 0 or position > currentchar
+	    templine := templine (1 .. position - 1) + "~"
+		+ templine (position + 1 .. *)
+	end loop
 
-        if position > currentchar then
-            currentchar := position
-        else
-            error ("not found")
-        end if
+	if position > currentchar then
+	    currentchar := position
+	else
+	    error ("not found")
+	end if
 
     elsif command = Sleft then
-        message ("find \"" + pattern + "\" left")
-        const position := index (lines (currentline), pattern)
+	message ("find \"" + pattern + "\" left")
+	const position := index (lines (currentline), pattern)
 
-        if position not= 0 and position < currentchar then
-            currentchar := position
-        else
-            error ("not found")
-        end if
+	if position not= 0 and position < currentchar then
+	    currentchar := position
+	else
+	    error ("not found")
+	end if
 
     elsif command = Sdown or command = cr then
-        message ("find \"" + pattern + "\" down")
-        const oldline := currentline
+	message ("find \"" + pattern + "\" down")
+	const oldline := currentline
 
-        for l : currentline + 1 .. numlines
-            if index (lines (l), pattern) not= 0 then
-                currentline := l
-                currentchar := index (lines (l), pattern)
-                exit
-            end if
-        end for
+	for l : currentline + 1 .. numlines
+	    if index (lines (l), pattern) not= 0 then
+		currentline := l
+		currentchar := index (lines (l), pattern)
+		exit
+	    end if
+	end for
 
-        if currentline = oldline
-                or index (lines (currentline), pattern) = 0 then
-            error ("not found")
-        elsif currentline > firstline + screensize then
-            firstline := max (1, currentline - screensize div 2)
-            putinfo
-            draw
-        end if
+	if currentline = oldline
+		or index (lines (currentline), pattern) = 0 then
+	    error ("not found")
+	elsif currentline > firstline + screensize then
+	    firstline := max (1, currentline - screensize div 2)
+	    putinfo
+	    draw
+	end if
 
     elsif command = Sup then
-        message ("find \"" + pattern + "\" up")
-        const oldline := currentline
+	message ("find \"" + pattern + "\" up")
+	const oldline := currentline
 
-        for decreasing l : currentline - 1 .. 1
-            if index (lines (l), pattern) not= 0 then
-                currentline := l
-                currentchar := index (lines (l), pattern)
-                exit
-            end if
-        end for
+	for decreasing l : currentline - 1 .. 1
+	    if index (lines (l), pattern) not= 0 then
+		currentline := l
+		currentchar := index (lines (l), pattern)
+		exit
+	    end if
+	end for
 
-        if currentline = oldline
-                or index (lines (currentline), pattern) = 0 then
-            error ("not found")
-        elsif currentline < firstline then
-            firstline := max (1, currentline - screensize div 2)
-            putinfo
-            draw
-        end if
+	if currentline = oldline
+		or index (lines (currentline), pattern) = 0 then
+	    error ("not found")
+	elsif currentline < firstline then
+	    firstline := max (1, currentline - screensize div 2)
+	    putinfo
+	    draw
+	end if
 
     else
-        error ("bad direction")
+	error ("bad direction")
     end if
 
     curses.move (currentline - firstline + 1, currentchar - 1)
@@ -677,39 +677,39 @@ procedure goto
     var linenumtext := ""
     var c : string (1)
     loop
-        message ("go to " + linenumtext)
-        curses.getch (c)
-        exit when c < "0" or c > "9" or length (linenumtext) = 6
-        linenumtext += c
+	message ("go to " + linenumtext)
+	curses.getch (c)
+	exit when c < "0" or c > "9" or length (linenumtext) = 6
+	linenumtext += c
     end loop
 
     var linenum := strint ("0" + linenumtext)
 
     if linenum = 0 and c = "$" then
-        linenum := numlines
-        c := ""
+	linenum := numlines
+	c := ""
     elsif linenum < 1 then
-        linenum := 1
+	linenum := 1
     elsif linenum > numlines then
-        linenum := numlines
+	linenum := numlines
     end if
 
     currentline := max (1, linenum)
     currentchar := 1
 
     if currentline >= firstline and currentline <= firstline + screensize then
-        curses.move (currentline - firstline + 1, currentchar - 1)
-        curses.refresh
+	curses.move (currentline - firstline + 1, currentchar - 1)
+	curses.refresh
     else
-        firstline := max (1, currentline - screensize div 2)
-        message ("go to " + intstr (currentline, 1))
-        draw
+	firstline := max (1, currentline - screensize div 2)
+	message ("go to " + intstr (currentline, 1))
+	draw
     end if
 
     if c = "\r" then
-        command := ""
+	command := ""
     else
-        command := c
+	command := c
     end if
 end goto
 
@@ -723,19 +723,19 @@ procedure filecmd
     var newfilename := ""
     var c : string (1)
     loop
-        message ("file \"" + newfilename)
-        curses.getch (c)
+	message ("file \"" + newfilename)
+	curses.getch (c)
 
-        if c = "\b" and length (newfilename) > 0 then
-            newfilename := newfilename (1 .. length (newfilename) - 1)
-        else
-            exit when c < " " or length (newfilename) > 50
-            newfilename += c
-        end if
+	if c = "\b" and length (newfilename) > 0 then
+	    newfilename := newfilename (1 .. length (newfilename) - 1)
+	else
+	    exit when c < " " or length (newfilename) > 50
+	    newfilename += c
+	end if
     end loop
 
     if newfilename not= "" then
-        filename := newfilename
+	filename := newfilename
     end if
 
     message ("file \"" + filename + "\"")
@@ -766,7 +766,7 @@ procedure help
     redraw
 
     if rc not= 0 then
-        error ("help failed")
+	error ("help failed")
     end if
 
     command := ""
@@ -797,8 +797,8 @@ procedure run
     % skip first three lines of interpreter junk
     var s : string
     for : 1 .. 3
-        exit when errstream = 0 or eof (errstream)
-        get : errstream, s :*
+	exit when errstream = 0 or eof (errstream)
+	get : errstream, s :*
     end for
 
     % get error message and line number
@@ -806,24 +806,24 @@ procedure run
     var errline := 0
 
     if errstream not= 0 and not eof (errstream) then
-        get : errstream, errmessage :*
-        var i := 1
-        loop
-            exit when i > length (errmessage) or
-                (errmessage (i) >= "0" and errmessage (i) <= "9")
-            i += 1
-        end loop
-        loop
-            exit when i > length (errmessage) or
-                (errmessage (i) < "0" or errmessage (i) > "9")
-            errline := errline * 10 + ord (errmessage (i)) - ord ("0")
-            i += 1
-        end loop
-        errmessage := errmessage (i .. *)
+	get : errstream, errmessage :*
+	var i := 1
+	loop
+	    exit when i > length (errmessage) or
+		(errmessage (i) >= "0" and errmessage (i) <= "9")
+	    i += 1
+	end loop
+	loop
+	    exit when i > length (errmessage) or
+		(errmessage (i) < "0" or errmessage (i) > "9")
+	    errline := errline * 10 + ord (errmessage (i)) - ord ("0")
+	    i += 1
+	end loop
+	errmessage := errmessage (i .. *)
     end if
 
     if errstream not= 0 then
-        close : errstream
+	close : errstream
     end if
 
     % clean up our file mess
@@ -831,26 +831,26 @@ procedure run
 
     % move to line with error if any
     if errline not= 0 then
-        firstline := max (1, errline - screensize div 2)
-        currentline := min (errline, numlines)
-        currentchar := 1
+	firstline := max (1, errline - screensize div 2)
+	currentline := min (errline, numlines)
+	currentchar := 1
     end if
 
     % show error message if any
     if errmessage not= "" then
-        var i := 1
-        loop
-            exit when i > length (errmessage) or errmessage (i) = ":"
-            i += 1
-        end loop
-        if i < length (errmessage) and errmessage (i) = ":" then
-            errmessage := errmessage (i + 1 .. *)
-        end if
-        put skip ..
-        if errline not= 0 then
-            put "Line ", errline, ":" ..
-        end if
-        put errmessage
+	var i := 1
+	loop
+	    exit when i > length (errmessage) or errmessage (i) = ":"
+	    i += 1
+	end loop
+	if i < length (errmessage) and errmessage (i) = ":" then
+	    errmessage := errmessage (i + 1 .. *)
+	end if
+	put skip ..
+	if errline not= 0 then
+	    put "Line ", errline, ":" ..
+	end if
+	put errmessage
     end if
 
     % return to editing
@@ -870,7 +870,7 @@ procedure run
     redraw
 
     if errmessage not= "" then
-        error (errmessage)
+	error (errmessage)
     end if
 
     command := ""
@@ -879,33 +879,33 @@ end run
 procedure replace
     message ("")
     if command >= " " then
-        bind var line to lines (currentline)
+	bind var line to lines (currentline)
 
-        if currentchar > length (line) then
-            line := line + repeat (" ", currentchar - length (line))
-        end if
+	if currentchar > length (line) then
+	    line := line + repeat (" ", currentchar - length (line))
+	end if
 
-        if currentchar <= length (line) then
-            line := line (1 .. currentchar - 1) + command
-                + line (currentchar + 1 .. *)
-        end if
+	if currentchar <= length (line) then
+	    line := line (1 .. currentchar - 1) + command
+		+ line (currentchar + 1 .. *)
+	end if
 
-        currentchar += 1
+	currentchar += 1
 
-        if currentchar > linesize then
-            currentchar := linesize
-        end if
+	if currentchar > linesize then
+	    currentchar := linesize
+	end if
 
-        if currentline > numlines then
-            numlines += 1
-        end if
+	if currentline > numlines then
+	    numlines += 1
+	end if
 
-        curses.addch (command)
-        curses.move (currentline - firstline + 1, currentchar - 1)
-        curses.refresh
+	curses.addch (command)
+	curses.move (currentline - firstline + 1, currentchar - 1)
+	curses.refresh
 
     else
-        error ("bad command")
+	error ("bad command")
     end if
 
     command := ""
@@ -940,46 +940,46 @@ loop
     getcommand
 
     if command = Sup or command = Sdown
-            or command = Sleft or command = Sright then
-        move
+	    or command = Sleft or command = Sright then
+	move
     elsif command = Spage then
-        page
+	page
     elsif command = Sinsert then
-        insert
+	insert
     elsif command = Sdelete then
-        delete
+	delete
     elsif command = Sfind then
-        find
+	find
     elsif command = Sgoto then
-        goto
+	goto
     elsif command = Sfile then
-        filecmd
+	filecmd
     elsif command = Sread then
-        readcmd
+	readcmd
     elsif command = Swrite then
-        writecmd
+	writecmd
     elsif command = Squit then
-        exit
+	exit
     elsif command = Swritequit then
-        write_
-        exit when file not= 0
+	write_
+	exit when file not= 0
     elsif command = Shelp then
-        help
+	help
     elsif command = Srun then
-        run
+	run
     elsif command = red then
-        redraw
+	redraw
     elsif command = del then
-        delete
+	delete
     elsif command = ins then
-        insert
+	insert
     elsif command = cr then
-        move
+	move
     elsif command >= " " then
-        replace
+	replace
     else
-        error ("bad command")
-        flush
+	error ("bad command")
+	flush
     end if
 end loop
 

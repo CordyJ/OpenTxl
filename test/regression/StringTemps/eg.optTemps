@@ -20,48 +20,48 @@
 
 
 void error ();
-typedef short   tokenT;
-typedef char    kindT;
-typedef long    inputTokenHT;
-typedef tokenT  __x850[65536];
-extern __x850   inputTokens;
-typedef kindT   __x851[65536];
-extern __x851   inputTokenKind;
-typedef long    lineNumberT;
-typedef lineNumberT     __x852[65536];
-extern __x852   inputTokenLineNum;
-extern inputTokenHT     tokenHandle;
-extern inputTokenHT     lastTokenHandle;
-extern inputTokenHT     failTokenHandle;
-typedef unsigned char   tokenValueT[128];
-typedef long    tokenDepthT;
-typedef tokenDepthT     __x853[65537];
-extern __x853   depthTokenAccepted;
-extern long     nFiles;
-typedef TLSTRING        __x854[60];
-extern __x854   fileNames;
-typedef unsigned char   compoundT[5];
-extern long     nCompounds;
-typedef compoundT       __x857[40];
-extern __x857   compoundTokens;
-typedef compoundT       __x858[8];
-extern __x858   commentTokens;
-extern long     nComments;
-extern long     nKeys;
-typedef tokenT  __x859[400];
-extern __x859   keywordTokens;
-typedef char    __x860[256];
-extern __x860   letterP;
-typedef char    __x864[256];
-extern __x864   upperP;
-typedef char    __x868[256];
-extern __x868   lowerP;
-typedef char    __x872[256];
-extern __x872   idCharP;
-typedef char    __x876[256];
-extern __x876   separatorP;
-typedef char    __x880[256];
-extern __x880   digitP;
+typedef	short	tokenT;
+typedef	char	kindT;
+typedef	long	inputTokenHT;
+typedef	tokenT	__x850[65536];
+extern __x850	inputTokens;
+typedef	kindT	__x851[65536];
+extern __x851	inputTokenKind;
+typedef	long	lineNumberT;
+typedef	lineNumberT	__x852[65536];
+extern __x852	inputTokenLineNum;
+extern inputTokenHT	tokenHandle;
+extern inputTokenHT	lastTokenHandle;
+extern inputTokenHT	failTokenHandle;
+typedef	unsigned char	tokenValueT[128];
+typedef	long	tokenDepthT;
+typedef	tokenDepthT	__x853[65537];
+extern __x853	depthTokenAccepted;
+extern long	nFiles;
+typedef	TLSTRING	__x854[60];
+extern __x854	fileNames;
+typedef	unsigned char	compoundT[5];
+extern long	nCompounds;
+typedef	compoundT	__x857[40];
+extern __x857	compoundTokens;
+typedef	compoundT	__x858[8];
+extern __x858	commentTokens;
+extern long	nComments;
+extern long	nKeys;
+typedef	tokenT	__x859[400];
+extern __x859	keywordTokens;
+typedef	char	__x860[256];
+extern __x860	letterP;
+typedef	char	__x864[256];
+extern __x864	upperP;
+typedef	char	__x868[256];
+extern __x868	lowerP;
+typedef	char	__x872[256];
+extern __x872	idCharP;
+typedef	char	__x876[256];
+extern __x876	separatorP;
+typedef	char	__x880[256];
+extern __x880	digitP;
 
 void sortKeys ();
 
@@ -70,121 +70,121 @@ void sortCompounds ();
 char keyP ();
 
 char numberP ();
-typedef long    kidPT;
-typedef long    treePT;
-typedef treePT  consKidT;
-typedef unsigned char   countT;
-struct  patternAndParseTreeT {
-    kindT       kind;
-    countT      count;
-    tokenT      name;
-    kidPT       kidsKP;
+typedef	long	kidPT;
+typedef	long	treePT;
+typedef	treePT	consKidT;
+typedef	unsigned char	countT;
+struct	patternAndParseTreeT {
+    kindT	kind;
+    countT	count;
+    tokenT	name;
+    kidPT	kidsKP;
 };
-typedef consKidT        __x888[750001];
-extern __x888   kids;
-typedef struct patternAndParseTreeT     __x889[500001];
-extern __x889   trees;
-extern long     treeCount;
-extern long     kidCount;
+typedef	consKidT	__x888[750001];
+extern __x888	kids;
+typedef	struct patternAndParseTreeT	__x889[500001];
+extern __x889	trees;
+extern long	treeCount;
+extern long	kidCount;
 
 void newTree ();
 
 void newKid ();
 
 void newKids ();
-typedef tokenValueT     __x896[16384];
-extern __x896   identTable;
-typedef treePT  __x897[16384];
-extern __x897   identTree;
+typedef	tokenValueT	__x896[16384];
+extern __x896	identTable;
+typedef	treePT	__x897[16384];
+extern __x897	identTree;
 
 extern tokenT ident_lookup ();
 
 extern void ident_install ();
-extern long     empty_T;
-extern long     emptyTP;
-extern long     comma_T;
-extern long     commaTP;
-extern long     anonymous_T;
-extern long     NL_T;
-extern long     IN_T;
-extern long     EX_T;
-extern long     SP_T;
-extern long     SPOFF_T;
-extern long     SPON_T;
-extern long     KEEP_T;
-extern long     anyT;
-extern long     stringlit_T;
-extern long     charlit_T;
-extern long     token_T;
-extern long     key_T;
-extern long     number_T;
-extern long     floatnumber_T;
-extern long     decimalnumber_T;
-extern long     integernumber_T;
-extern long     id_T;
-extern long     comment_T;
-extern long     upperlowerid_T;
-extern long     upperid_T;
-extern long     lowerupperid_T;
-extern long     lowerid_T;
-extern long     order_T;
-extern long     choose_T;
-extern long     literal_T;
-extern long     firstTime_T;
-extern long     subsequentUse_T;
-extern long     expression_T;
-extern long     ruleCall_T;
-extern long     undefined_T;
-typedef tokenT  __x898[23];
-extern __x898   kindName;
+extern long	empty_T;
+extern long	emptyTP;
+extern long	comma_T;
+extern long	commaTP;
+extern long	anonymous_T;
+extern long	NL_T;
+extern long	IN_T;
+extern long	EX_T;
+extern long	SP_T;
+extern long	SPOFF_T;
+extern long	SPON_T;
+extern long	KEEP_T;
+extern long	anyT;
+extern long	stringlit_T;
+extern long	charlit_T;
+extern long	token_T;
+extern long	key_T;
+extern long	number_T;
+extern long	floatnumber_T;
+extern long	decimalnumber_T;
+extern long	integernumber_T;
+extern long	id_T;
+extern long	comment_T;
+extern long	upperlowerid_T;
+extern long	upperid_T;
+extern long	lowerupperid_T;
+extern long	lowerid_T;
+extern long	order_T;
+extern long	choose_T;
+extern long	literal_T;
+extern long	firstTime_T;
+extern long	subsequentUse_T;
+extern long	expression_T;
+extern long	ruleCall_T;
+extern long	undefined_T;
+typedef	tokenT	__x898[23];
+extern __x898	kindName;
 
 kindT nameKind ();
-struct  __x900 {
-    tokenT      name;
-    tokenT      typename;
-    unsigned short      refs;
+struct	__x900 {
+    tokenT	name;
+    tokenT	typename;
+    unsigned short	refs;
 };
-typedef struct __x900   __x899[40];
-struct  localsListT {
-    __x899      local;
-    long        nformals, nprelocals, nlocals;
+typedef	struct __x900	__x899[40];
+struct	localsListT {
+    __x899	local;
+    long	nformals, nprelocals, nlocals;
 };
-typedef char    partKind;
-struct  partDescriptor {
-    partKind    kind;
-    tokenT      name;
-    long        nameRef;
-    tokenT      target;
-    treePT      replacementTP;
-    treePT      patternTP;
-    char        isStarred;
-    char        negated;
+typedef	char	partKind;
+struct	partDescriptor {
+    partKind	kind;
+    tokenT	name;
+    long	nameRef;
+    tokenT	target;
+    treePT	replacementTP;
+    treePT	patternTP;
+    char	isStarred;
+    char	negated;
 };
-typedef struct partDescriptor   __x901[20];
-typedef __x901  partList;
-typedef long    ruleKind;
-struct  ruleT {
-    tokenT      name;
-    struct localsListT  localVars;
-    tokenT      targetName;
-    kindT       targetKind;
-    tokenT      skipName;
-    long        prePatternCount;
-    partList    prePattern;
-    treePT      patternTP;
-    long        postPatternCount;
-    partList    postPattern;
-    treePT      replacementTP;
-    ruleKind    kind;
-    char        isStarred;
-    char        isCondition;
-    char        hasPostCondition;
-    char        defined;
-    char        called;
+typedef	struct partDescriptor	__x901[20];
+typedef	__x901	partList;
+typedef	long	ruleKind;
+struct	ruleT {
+    tokenT	name;
+    struct localsListT	localVars;
+    tokenT	targetName;
+    kindT	targetKind;
+    tokenT	skipName;
+    long	prePatternCount;
+    partList	prePattern;
+    treePT	patternTP;
+    long	postPatternCount;
+    partList	postPattern;
+    treePT	replacementTP;
+    ruleKind	kind;
+    char	isStarred;
+    char	isCondition;
+    char	hasPostCondition;
+    char	defined;
+    char	called;
 };
-typedef struct ruleT    __x902[200];
-extern __x902   rules;
-extern long     ruleCount;
+typedef	struct ruleT	__x902[200];
+extern __x902	rules;
+extern long	ruleCount;
 
 void enterRuleName ();
 
@@ -193,50 +193,50 @@ void lookupLocalVar ();
 void findLocalVar ();
 
 void enterLocalVar ();
-typedef unsigned short  __x926[40];
-typedef treePT  __x925[40];
-struct  ruleEnvironmentT {
-    treePT      scopeTP;
-    __x925      valueTP;
-    treePT      resultTP;
-    __x926      parentrefs;
-    TLADDRESSINT        localsListAddr;
+typedef	unsigned short	__x926[40];
+typedef	treePT	__x925[40];
+struct	ruleEnvironmentT {
+    treePT	scopeTP;
+    __x925	valueTP;
+    treePT	resultTP;
+    __x926	parentrefs;
+    TLADDRESSINT	localsListAddr;
 };
-typedef treePT  __x929[2000];
-extern __x929   symbolTable;
-extern long     symbolTableSize;
+typedef	treePT	__x929[2000];
+extern __x929	symbolTable;
+extern long	symbolTableSize;
 
 void enterSymbol ();
 
 void lookupSymbol ();
 
 void findSymbol ();
-extern long     TL_TLI_TLIARC;
-extern unsigned long    TL_TLK_TLKCLK;
-extern char     parse_print_p;
-extern char     apply_print_p;
-extern char     tree_print_p;
-extern char     rule_print_p;
-extern char     result_tree_print_p;
-extern char     boot_parse_p;
-extern char     verbose_p;
-extern char     compile_p;
-extern char     load_p;
-extern char     debug_p;
-extern char     txl_p;
-extern char     sharing_p;
-extern char     comment_token_p;
-extern char     lisp_print_p;
-extern TLSTRING txlSourceFileName;
+extern long	TL_TLI_TLIARC;
+extern unsigned long	TL_TLK_TLKCLK;
+extern char	parse_print_p;
+extern char	apply_print_p;
+extern char	tree_print_p;
+extern char	rule_print_p;
+extern char	result_tree_print_p;
+extern char	boot_parse_p;
+extern char	verbose_p;
+extern char	compile_p;
+extern char	load_p;
+extern char	debug_p;
+extern char	txl_p;
+extern char	sharing_p;
+extern char	comment_token_p;
+extern char	lisp_print_p;
+extern TLSTRING	txlSourceFileName;
 
 void printParse ();
-typedef treePT  __x959[2000];
+typedef	treePT	__x959[2000];
 
 void printGrammar ();
 
 void printLispTree ();
-typedef char    __x970[256];
-typedef char    __x974[256];
+typedef	char	__x970[256];
+typedef	char	__x974[256];
 
 void printLeaves ();
 
@@ -419,45 +419,45 @@ extern void ruleCompiler_makeRuleTable ();
 extern void externalRules_applyRule ();
 
 extern void transformer_applyMainRule ();
-typedef long    transformer_DBkind;
+typedef	long	transformer_DBkind;
 
 char transformer_debugger_isbreakpoint ();
 
 void transformer_debugger_breakpoint ();
-static long     transformer_debugger_nsteps;
-static char     transformer_debugger_matchfinding;
-typedef tokenT  transformer_debugger___x1011[10];
-static transformer_debugger___x1011     transformer_debugger_breakpoints;
-static long     transformer_debugger_nbreakpoints;
-static long     transformer_debugger_tempbreakpoint;
+static long	transformer_debugger_nsteps;
+static char	transformer_debugger_matchfinding;
+typedef	tokenT	transformer_debugger___x1011[10];
+static transformer_debugger___x1011	transformer_debugger_breakpoints;
+static long	transformer_debugger_nbreakpoints;
+static long	transformer_debugger_tempbreakpoint;
 
 static void transformer_debugger_setbreakpoint (ruleName)
-tokenT  ruleName;
+tokenT	ruleName;
 {
     {
-        register long   bp;
-        long    __x1012;
-        __x1012 = transformer_debugger_nbreakpoints;
-        bp = 1;
-        if (bp <= __x1012) {
-            for(;;) {
-                if ((transformer_debugger_breakpoints[bp - 1]) == ruleName) {
-                    TL_TLI_TLISS ((long) 0, (short) 2);
-                    TL_TLI_TLIPS ((long) 0, "  Breakpoint already set at rule ", (short) 0);
-                    TL_TLI_TLIPS ((long) 0, (identTable[ruleName]), (short) 0);
-                    TL_TLI_TLIPK ((short) 0);
-                    return;
-                };
-                if (bp == __x1012) break;
-                bp++;
-            }
-        };
+	register long	bp;
+	long	__x1012;
+	__x1012 = transformer_debugger_nbreakpoints;
+	bp = 1;
+	if (bp <= __x1012) {
+	    for(;;) {
+		if ((transformer_debugger_breakpoints[bp - 1]) == ruleName) {
+		    TL_TLI_TLISS ((long) 0, (short) 2);
+		    TL_TLI_TLIPS ((long) 0, "  Breakpoint already set at rule ", (short) 0);
+		    TL_TLI_TLIPS ((long) 0, (identTable[ruleName]), (short) 0);
+		    TL_TLI_TLIPK ((short) 0);
+		    return;
+		};
+		if (bp == __x1012) break;
+		bp++;
+	    }
+	};
     };
     if (transformer_debugger_nbreakpoints >= 10) {
-        TL_TLI_TLISS ((long) 0, (short) 2);
-        TL_TLI_TLIPS ((long) 0, "  ? Too many breakpoints", (short) 0);
-        TL_TLI_TLIPK ((short) 0);
-        return;
+	TL_TLI_TLISS ((long) 0, (short) 2);
+	TL_TLI_TLIPS ((long) 0, "  ? Too many breakpoints", (short) 0);
+	TL_TLI_TLIPK ((short) 0);
+	return;
     };
     transformer_debugger_nbreakpoints += 1;
     transformer_debugger_breakpoints[transformer_debugger_nbreakpoints - 1] = ruleName;
@@ -468,35 +468,35 @@ tokenT  ruleName;
 }
 
 static void transformer_debugger_clearbreakpoint (ruleName)
-tokenT  ruleName;
+tokenT	ruleName;
 {
-    long        bp;
+    long	bp;
     bp = 1;
     for(;;) {
-        if ((bp > transformer_debugger_nbreakpoints) || ((transformer_debugger_breakpoints[bp - 1]) == ruleName)) {
-            break;
-        };
-        bp += 1;
+	if ((bp > transformer_debugger_nbreakpoints) || ((transformer_debugger_breakpoints[bp - 1]) == ruleName)) {
+	    break;
+	};
+	bp += 1;
     };
     if (bp > transformer_debugger_nbreakpoints) {
-        TL_TLI_TLISS ((long) 0, (short) 2);
-        TL_TLI_TLIPS ((long) 0, "  ? Rule not being breakpointed", (short) 0);
-        TL_TLI_TLIPK ((short) 0);
-        return;
+	TL_TLI_TLISS ((long) 0, (short) 2);
+	TL_TLI_TLIPS ((long) 0, "  ? Rule not being breakpointed", (short) 0);
+	TL_TLI_TLIPK ((short) 0);
+	return;
     };
     transformer_debugger_nbreakpoints -= 1;
     {
-        register long   b;
-        long    __x1013;
-        __x1013 = transformer_debugger_nbreakpoints;
-        b = bp;
-        if (b <= __x1013) {
-            for(;;) {
-                transformer_debugger_breakpoints[b - 1] = transformer_debugger_breakpoints[(b + 1) - 1];
-                if (b == __x1013) break;
-                b++;
-            }
-        };
+	register long	b;
+	long	__x1013;
+	__x1013 = transformer_debugger_nbreakpoints;
+	b = bp;
+	if (b <= __x1013) {
+	    for(;;) {
+		transformer_debugger_breakpoints[b - 1] = transformer_debugger_breakpoints[(b + 1) - 1];
+		if (b == __x1013) break;
+		b++;
+	    }
+	};
     };
     TL_TLI_TLISS ((long) 0, (short) 2);
     TL_TLI_TLIPS ((long) 0, "  Breakpoint cleared at rule ", (short) 0);
@@ -505,211 +505,211 @@ tokenT  ruleName;
 }
 
 static char transformer_debugger_isrealbreakpoint (ruleName)
-tokenT  ruleName;
+tokenT	ruleName;
 {
     {
-        register long   bp;
-        long    __x1014;
-        __x1014 = transformer_debugger_nbreakpoints;
-        bp = 1;
-        if (bp <= __x1014) {
-            for(;;) {
-                if ((transformer_debugger_breakpoints[bp - 1]) == ruleName) {
-                    return (1);
-                };
-                if (bp == __x1014) break;
-                bp++;
-            }
-        };
+	register long	bp;
+	long	__x1014;
+	__x1014 = transformer_debugger_nbreakpoints;
+	bp = 1;
+	if (bp <= __x1014) {
+	    for(;;) {
+		if ((transformer_debugger_breakpoints[bp - 1]) == ruleName) {
+		    return (1);
+		};
+		if (bp == __x1014) break;
+		bp++;
+	    }
+	};
     };
     return (0);
     /* NOTREACHED */
 }
 
 char transformer_debugger_isbreakpoint (ruleName)
-tokenT  ruleName;
+tokenT	ruleName;
 {
     if ((transformer_debugger_nsteps > 0) || transformer_debugger_matchfinding) {
-        return (1);
+	return (1);
     } else {
-        return (transformer_debugger_isrealbreakpoint((tokenT) ruleName));
+	return (transformer_debugger_isrealbreakpoint((tokenT) ruleName));
     };
     /* NOTREACHED */
 }
 
 static void transformer_debugger_findruleordefine (sourceFileName, sourceDirectory, rdId, rdfilename, rdline)
-TLSTRING        sourceFileName;
-TLSTRING        sourceDirectory;
-TLSTRING        rdId;
-TLSTRING        rdfilename;
-long    *rdline;
+TLSTRING	sourceFileName;
+TLSTRING	sourceDirectory;
+TLSTRING	rdId;
+TLSTRING	rdfilename;
+long	*rdline;
 {
-    long        sourceFile;
-    long        sourceLine;
+    long	sourceFile;
+    long	sourceLine;
     sourceFile = 0;
     TL_TLI_TLIOF ((unsigned short) 2, sourceFileName, &sourceFile);
     if (sourceFile == 0) {
-        TL_TLI_TLISS ((long) 0, (short) 2);
-        TL_TLI_TLIPS ((long) 0, "  ? Unable to open ", (short) 0);
-        TL_TLI_TLIPS ((long) 0, sourceFileName, (short) 0);
-        TL_TLI_TLIPK ((short) 0);
-        return;
+	TL_TLI_TLISS ((long) 0, (short) 2);
+	TL_TLI_TLIPS ((long) 0, "  ? Unable to open ", (short) 0);
+	TL_TLI_TLIPS ((long) 0, sourceFileName, (short) 0);
+	TL_TLI_TLIPK ((short) 0);
+	return;
     };
     sourceLine = 0;
     for(;;) {
-        TLSTRING        line;
-        if (TL_TLI_TLIEOF((long) sourceFile)) {
-            break;
-        };
-        TL_TLI_TLISS ((long) sourceFile, (short) 1);
-        TL_TLI_TLIGSS((long) 255, line, (short) sourceFile);
-        sourceLine += 1;
-        {
-            TLSTRING    __x1017;
-            {
-                TLSTRING        __x1016;
-                {
-                    TLSTRING    __x1015;
-                    TL_TLS_TLSCAT("rule ", rdId, __x1015);
-                    if (((TL_TLS_TLSIND(line, __x1015) != 0) || ((TL_TLS_TLSCAT("function ", rdId, __x1016), TL_TLS_TLSIND(line, __x1016) != 0))) || ((TL_TLS_TLSCAT("define ", rdId, __x1017), TL_TLS_TLSIND(line, __x1017) != 0))) {
-                        long    restOfLineIndex;
-                        TLSTRING        restOfLine;
-                        char    foundit;
-                        restOfLineIndex = TL_TLS_TLSIND(line, rdId) + TL_TLS_TLSLEN(rdId);
-                        {
-                            TLSTRING    __x1018;
-                            TL_TLS_TLSBXS(__x1018, (long) 0, (long) restOfLineIndex, line);
-                            TLSTRASS(255, restOfLine, __x1018);
-                        };
-                        {
-                            unsigned char       __x1019[2];
-                            foundit = (strcmp(restOfLine, "") == 0) || ((TL_TLS_TLSBX(__x1019, (long) 1, restOfLine), strcmp(__x1019, " ") == 0));
-                        };
-                        if (foundit) {
-                            TLSTRASS(255, rdfilename, sourceFileName);
-                            (*rdline) = sourceLine;
-                        };
-                    } else {
-                        if (TL_TLS_TLSIND(line, "include \"") != 0) {
-                            TLSTRING    includeFileName;
-                            TLSTRING    includeDirectory;
-                            TLSTRASS(255, includeFileName, line);
-                            {
-                                TLSTRING        __x1020;
-                                TL_TLS_TLSBXS(__x1020, (long) 0, (long) (TL_TLS_TLSIND(includeFileName, "\"") + 1), includeFileName);
-                                TLSTRASS(255, includeFileName, __x1020);
-                            };
-                            {
-                                TLSTRING        __x1021;
-                                TL_TLS_TLSBXX(__x1021, (long) (TL_TLS_TLSIND(includeFileName, "\"") - 1), (long) 1, includeFileName);
-                                TLSTRASS(255, includeFileName, __x1021);
-                            };
-                            {
-                                TLSTRING        __x1022;
-                                TL_TLS_TLSCAT(sourceDirectory, includeFileName, __x1022);
-                                TLSTRASS(255, includeFileName, __x1022);
-                            };
-                            TLSTRASS(255, includeDirectory, "");
-                            if (TL_TLS_TLSIND(sourceFileName, "/") != 0) {
-                                TLSTRASS(255, includeDirectory, includeFileName);
-                                for(;;) {
-                                    {
-                                        unsigned char   __x1023[2];
-                                        TL_TLS_TLSBS(__x1023, (long) 0, includeDirectory);
-                                        if (strcmp(__x1023, "/") == 0) {
-                                            break;
-                                        };
-                                    };
-                                    {
-                                        TLSTRING        __x1024;
-                                        TL_TLS_TLSBXS(__x1024, (long) -1, (long) 1, includeDirectory);
-                                        TLSTRASS(255, includeDirectory, __x1024);
-                                    };
-                                };
-                            };
-                            transformer_debugger_findruleordefine(includeFileName, includeDirectory, rdId, rdfilename, &((*rdline)));
-                        };
-                    };
-                };
-            };
-        };
+	TLSTRING	line;
+	if (TL_TLI_TLIEOF((long) sourceFile)) {
+	    break;
+	};
+	TL_TLI_TLISS ((long) sourceFile, (short) 1);
+	TL_TLI_TLIGSS((long) 255, line, (short) sourceFile);
+	sourceLine += 1;
+	{
+	    TLSTRING	__x1017;
+	    {
+		TLSTRING	__x1016;
+		{
+		    TLSTRING	__x1015;
+		    TL_TLS_TLSCAT("rule ", rdId, __x1015);
+		    if (((TL_TLS_TLSIND(line, __x1015) != 0) || ((TL_TLS_TLSCAT("function ", rdId, __x1016), TL_TLS_TLSIND(line, __x1016) != 0))) || ((TL_TLS_TLSCAT("define ", rdId, __x1017), TL_TLS_TLSIND(line, __x1017) != 0))) {
+			long	restOfLineIndex;
+			TLSTRING	restOfLine;
+			char	foundit;
+			restOfLineIndex = TL_TLS_TLSIND(line, rdId) + TL_TLS_TLSLEN(rdId);
+			{
+			    TLSTRING	__x1018;
+			    TL_TLS_TLSBXS(__x1018, (long) 0, (long) restOfLineIndex, line);
+			    TLSTRASS(255, restOfLine, __x1018);
+			};
+			{
+			    unsigned char	__x1019[2];
+			    foundit = (strcmp(restOfLine, "") == 0) || ((TL_TLS_TLSBX(__x1019, (long) 1, restOfLine), strcmp(__x1019, " ") == 0));
+			};
+			if (foundit) {
+			    TLSTRASS(255, rdfilename, sourceFileName);
+			    (*rdline) = sourceLine;
+			};
+		    } else {
+			if (TL_TLS_TLSIND(line, "include \"") != 0) {
+			    TLSTRING	includeFileName;
+			    TLSTRING	includeDirectory;
+			    TLSTRASS(255, includeFileName, line);
+			    {
+				TLSTRING	__x1020;
+				TL_TLS_TLSBXS(__x1020, (long) 0, (long) (TL_TLS_TLSIND(includeFileName, "\"") + 1), includeFileName);
+				TLSTRASS(255, includeFileName, __x1020);
+			    };
+			    {
+				TLSTRING	__x1021;
+				TL_TLS_TLSBXX(__x1021, (long) (TL_TLS_TLSIND(includeFileName, "\"") - 1), (long) 1, includeFileName);
+				TLSTRASS(255, includeFileName, __x1021);
+			    };
+			    {
+				TLSTRING	__x1022;
+				TL_TLS_TLSCAT(sourceDirectory, includeFileName, __x1022);
+				TLSTRASS(255, includeFileName, __x1022);
+			    };
+			    TLSTRASS(255, includeDirectory, "");
+			    if (TL_TLS_TLSIND(sourceFileName, "/") != 0) {
+				TLSTRASS(255, includeDirectory, includeFileName);
+				for(;;) {
+				    {
+					unsigned char	__x1023[2];
+					TL_TLS_TLSBS(__x1023, (long) 0, includeDirectory);
+					if (strcmp(__x1023, "/") == 0) {
+					    break;
+					};
+				    };
+				    {
+					TLSTRING	__x1024;
+					TL_TLS_TLSBXS(__x1024, (long) -1, (long) 1, includeDirectory);
+					TLSTRASS(255, includeDirectory, __x1024);
+				    };
+				};
+			    };
+			    transformer_debugger_findruleordefine(includeFileName, includeDirectory, rdId, rdfilename, &((*rdline)));
+			};
+		    };
+		};
+	    };
+	};
     };
     TL_TLI_TLICL ((long) sourceFile);
 }
 
 static void transformer_debugger_showruleordefine (rdId)
-TLSTRING        rdId;
+TLSTRING	rdId;
 {
-    TLSTRING    sourceFileName;
-    TLSTRING    sourceDirectory;
-    TLSTRING    rdfilename;
-    long        rdline;
+    TLSTRING	sourceFileName;
+    TLSTRING	sourceDirectory;
+    TLSTRING	rdfilename;
+    long	rdline;
     TLSTRASS(255, sourceFileName, txlSourceFileName);
     if (TL_TLS_TLSIND(sourceFileName, ".CTxl") != 0) {
-        {
-            TLSTRING    __x1026;
-            TL_TLS_TLSBXX(__x1026, (long) TL_TLS_TLSIND(sourceFileName, ".CTxl"), (long) 1, sourceFileName);
-            {
-                TLSTRING        __x1025;
-                TL_TLS_TLSCAT(__x1026, "Txl", __x1025);
-                TLSTRASS(255, sourceFileName, __x1025);
-            };
-        };
+	{
+	    TLSTRING	__x1026;
+	    TL_TLS_TLSBXX(__x1026, (long) TL_TLS_TLSIND(sourceFileName, ".CTxl"), (long) 1, sourceFileName);
+	    {
+		TLSTRING	__x1025;
+		TL_TLS_TLSCAT(__x1026, "Txl", __x1025);
+		TLSTRASS(255, sourceFileName, __x1025);
+	    };
+	};
     };
     TLSTRASS(255, sourceDirectory, "");
     if (TL_TLS_TLSIND(sourceFileName, "/") != 0) {
-        TLSTRASS(255, sourceDirectory, sourceFileName);
-        for(;;) {
-            {
-                unsigned char   __x1027[2];
-                TL_TLS_TLSBS(__x1027, (long) 0, sourceDirectory);
-                if (strcmp(__x1027, "/") == 0) {
-                    break;
-                };
-            };
-            {
-                TLSTRING        __x1028;
-                TL_TLS_TLSBXS(__x1028, (long) -1, (long) 1, sourceDirectory);
-                TLSTRASS(255, sourceDirectory, __x1028);
-            };
-        };
+	TLSTRASS(255, sourceDirectory, sourceFileName);
+	for(;;) {
+	    {
+		unsigned char	__x1027[2];
+		TL_TLS_TLSBS(__x1027, (long) 0, sourceDirectory);
+		if (strcmp(__x1027, "/") == 0) {
+		    break;
+		};
+	    };
+	    {
+		TLSTRING	__x1028;
+		TL_TLS_TLSBXS(__x1028, (long) -1, (long) 1, sourceDirectory);
+		TLSTRASS(255, sourceDirectory, __x1028);
+	    };
+	};
     };
     TLSTRASS(255, rdfilename, "");
     rdline = 0;
     transformer_debugger_findruleordefine(sourceFileName, sourceDirectory, rdId, rdfilename, &(rdline));
     if (rdline == 0) {
-        TL_TLI_TLISS ((long) 0, (short) 2);
-        TL_TLI_TLIPS ((long) 0, "  ? Couldn\'t find rule or define of that name", (short) 0);
-        TL_TLI_TLIPK ((short) 0);
+	TL_TLI_TLISS ((long) 0, (short) 2);
+	TL_TLI_TLIPS ((long) 0, "  ? Couldn\'t find rule or define of that name", (short) 0);
+	TL_TLI_TLIPK ((short) 0);
     } else {
-        long    rdfile;
-        TLSTRING        line;
-        TL_TLI_TLIOF ((unsigned short) 2, rdfilename, &rdfile);
-        {
-            register long       ln;
-            long        __x1029;
-            __x1029 = rdline;
-            ln = 1;
-            if (ln <= __x1029) {
-                for(;;) {
-                    TL_TLI_TLISS ((long) rdfile, (short) 1);
-                    TL_TLI_TLIGSS((long) 255, line, (short) rdfile);
-                    if (ln == __x1029) break;
-                    ln++;
-                }
-            };
-        };
-        for(;;) {
-            TL_TLI_TLISS ((long) 0, (short) 2);
-            TL_TLI_TLIPS ((long) 0, line, (short) 0);
-            TL_TLI_TLIPK ((short) 0);
-            if ((((TL_TLI_TLIEOF((long) rdfile) || (TL_TLS_TLSIND(line, "end define") != 0)) || (TL_TLS_TLSIND(line, "end rule") != 0)) || (TL_TLS_TLSIND(line, "end function") != 0)) || (TL_TLS_TLSIND(line, "external rule") != 0)) {
-                break;
-            };
-            TL_TLI_TLISS ((long) rdfile, (short) 1);
-            TL_TLI_TLIGSS((long) 255, line, (short) rdfile);
-        };
-        TL_TLI_TLICL ((long) rdfile);
+	long	rdfile;
+	TLSTRING	line;
+	TL_TLI_TLIOF ((unsigned short) 2, rdfilename, &rdfile);
+	{
+	    register long	ln;
+	    long	__x1029;
+	    __x1029 = rdline;
+	    ln = 1;
+	    if (ln <= __x1029) {
+		for(;;) {
+		    TL_TLI_TLISS ((long) rdfile, (short) 1);
+		    TL_TLI_TLIGSS((long) 255, line, (short) rdfile);
+		    if (ln == __x1029) break;
+		    ln++;
+		}
+	    };
+	};
+	for(;;) {
+	    TL_TLI_TLISS ((long) 0, (short) 2);
+	    TL_TLI_TLIPS ((long) 0, line, (short) 0);
+	    TL_TLI_TLIPK ((short) 0);
+	    if ((((TL_TLI_TLIEOF((long) rdfile) || (TL_TLS_TLSIND(line, "end define") != 0)) || (TL_TLS_TLSIND(line, "end rule") != 0)) || (TL_TLS_TLSIND(line, "end function") != 0)) || (TL_TLS_TLSIND(line, "external rule") != 0)) {
+		break;
+	    };
+	    TL_TLI_TLISS ((long) rdfile, (short) 1);
+	    TL_TLI_TLIGSS((long) 255, line, (short) rdfile);
+	};
+	TL_TLI_TLICL ((long) rdfile);
     };
 }
 
@@ -783,12 +783,12 @@ static void transformer_debugger_dbhelp () {
 }
 
 void transformer_debugger_breakpoint (kind, ruleName, partRef, scope, ruleEnvironment, success)
-transformer_DBkind      kind;
-tokenT  ruleName;
-long    partRef;
-treePT  scope;
-struct ruleEnvironmentT *ruleEnvironment;
-char    success;
+transformer_DBkind	kind;
+tokenT	ruleName;
+long	partRef;
+treePT	scope;
+struct ruleEnvironmentT	*ruleEnvironment;
+char	success;
 {
     TLBIND((*localVars), struct localsListT);
     TLBIND((*localValueTP), __x925);
@@ -796,670 +796,670 @@ char    success;
     localValueTP = (*ruleEnvironment).valueTP;
     if ((kind == 0) || (kind == 1)) {
     } else {
-        if (transformer_debugger_isrealbreakpoint((tokenT) ruleName)) {
-            TL_TLI_TLISS ((long) 0, (short) 2);
-            TL_TLI_TLIPS ((long) 0, "  >> Breakpoint", (short) 0);
-            TL_TLI_TLIPK ((short) 0);
-            transformer_debugger_nsteps = 0;
-            transformer_debugger_matchfinding = 0;
-        } else {
-            if (transformer_debugger_matchfinding) {
-                if ((kind != 4) && (kind != 1)) {
-                    return;
-                };
-            } else {
-            };
-        };
+	if (transformer_debugger_isrealbreakpoint((tokenT) ruleName)) {
+	    TL_TLI_TLISS ((long) 0, (short) 2);
+	    TL_TLI_TLIPS ((long) 0, "  >> Breakpoint", (short) 0);
+	    TL_TLI_TLIPK ((short) 0);
+	    transformer_debugger_nsteps = 0;
+	    transformer_debugger_matchfinding = 0;
+	} else {
+	    if (transformer_debugger_matchfinding) {
+		if ((kind != 4) && (kind != 1)) {
+		    return;
+		};
+	    } else {
+	    };
+	};
     };
     switch (kind) {
-        case 0:
-            {
-                transformer_debugger_dbhelp();
-            }
-            break;
-        case 1:
-            {
-                TL_TLI_TLISS ((long) 0, (short) 2);
-                TL_TLI_TLIPS ((long) 0, "  Exiting mainRule", (short) 0);
-                TL_TLI_TLIPK ((short) 0);
-            }
-            break;
-        case 2:
-            {
-                TL_TLI_TLISS ((long) 0, (short) 2);
-                TL_TLI_TLIPS ((long) 0, "  Applying rule ", (short) 0);
-                TL_TLI_TLIPS ((long) 0, (identTable[ruleName]), (short) 0);
-                TL_TLI_TLIPK ((short) 0);
-            }
-            break;
-        case 3:
-            {
-                TL_TLI_TLISS ((long) 0, (short) 2);
-                TL_TLI_TLIPS ((long) 0, "  Exiting rule ", (short) 0);
-                TL_TLI_TLIPS ((long) 0, (identTable[ruleName]), (short) 0);
-                if (success) {
-                    TL_TLI_TLISS ((long) 0, (short) 2);
-                    TL_TLI_TLIPS ((long) 0, " (succeeded)", (short) 0);
-                    TL_TLI_TLIPK ((short) 0);
-                } else {
-                    TL_TLI_TLISS ((long) 0, (short) 2);
-                    TL_TLI_TLIPS ((long) 0, " (failed)", (short) 0);
-                    TL_TLI_TLIPK ((short) 0);
-                };
-            }
-            break;
-        case 4:
-            {
-                TL_TLI_TLISS ((long) 0, (short) 2);
-                TL_TLI_TLIPS ((long) 0, "  Matched main pattern of rule ", (short) 0);
-                TL_TLI_TLIPS ((long) 0, (identTable[ruleName]), (short) 0);
-                TL_TLI_TLIPK ((short) 0);
-            }
-            break;
-        case 5:
-            {
-                TL_TLI_TLISS ((long) 0, (short) 2);
-                TL_TLI_TLIPS ((long) 0, "  Done replacement of pattern match of rule ", (short) 0);
-                TL_TLI_TLIPS ((long) 0, (identTable[ruleName]), (short) 0);
-                if (success) {
-                    TL_TLI_TLISS ((long) 0, (short) 2);
-                    TL_TLI_TLIPS ((long) 0, " (succeeded)", (short) 0);
-                    TL_TLI_TLIPK ((short) 0);
-                } else {
-                    TL_TLI_TLISS ((long) 0, (short) 2);
-                    TL_TLI_TLIPS ((long) 0, " (failed)", (short) 0);
-                    TL_TLI_TLIPK ((short) 0);
-                };
-            }
-            break;
-        case 7:
-            {
-                TL_TLI_TLISS ((long) 0, (short) 2);
-                TL_TLI_TLIPS ((long) 0, "  Entering construct of ", (short) 0);
-                TL_TLI_TLIPS ((long) 0, (identTable[(*localVars).local[partRef - 1].name]), (short) 0);
-                TL_TLI_TLIPS ((long) 0, ", in rule ", (short) 0);
-                TL_TLI_TLIPS ((long) 0, (identTable[ruleName]), (short) 0);
-                TL_TLI_TLIPK ((short) 0);
-            }
-            break;
-        case 8:
-            {
-                TL_TLI_TLISS ((long) 0, (short) 2);
-                TL_TLI_TLIPS ((long) 0, "  Exiting construct of ", (short) 0);
-                TL_TLI_TLIPS ((long) 0, (identTable[(*localVars).local[partRef - 1].name]), (short) 0);
-                TL_TLI_TLIPS ((long) 0, ", in rule ", (short) 0);
-                TL_TLI_TLIPS ((long) 0, (identTable[ruleName]), (short) 0);
-                TL_TLI_TLIPK ((short) 0);
-            }
-            break;
-        case 6:
-            {
-                TL_TLI_TLISS ((long) 0, (short) 2);
-                TL_TLI_TLIPS ((long) 0, "  Exiting deconstruct of ", (short) 0);
-                TL_TLI_TLIPS ((long) 0, (identTable[(*localVars).local[partRef - 1].name]), (short) 0);
-                TL_TLI_TLIPS ((long) 0, ", in rule ", (short) 0);
-                TL_TLI_TLIPS ((long) 0, (identTable[ruleName]), (short) 0);
-                if (success) {
-                    TL_TLI_TLISS ((long) 0, (short) 2);
-                    TL_TLI_TLIPS ((long) 0, " (succeeded)", (short) 0);
-                    TL_TLI_TLIPK ((short) 0);
-                } else {
-                    TL_TLI_TLISS ((long) 0, (short) 2);
-                    TL_TLI_TLIPS ((long) 0, " (failed)", (short) 0);
-                    TL_TLI_TLIPK ((short) 0);
-                };
-            }
-            break;
-        case 9:
-            {
-                TL_TLI_TLISS ((long) 0, (short) 2);
-                TL_TLI_TLIPS ((long) 0, "  Exiting where condition on ", (short) 0);
-                TL_TLI_TLIPS ((long) 0, (identTable[(*localVars).local[partRef - 1].name]), (short) 0);
-                TL_TLI_TLIPS ((long) 0, ", in rule ", (short) 0);
-                TL_TLI_TLIPS ((long) 0, (identTable[ruleName]), (short) 0);
-                if (success) {
-                    TL_TLI_TLISS ((long) 0, (short) 2);
-                    TL_TLI_TLIPS ((long) 0, " (succeeded)", (short) 0);
-                    TL_TLI_TLIPK ((short) 0);
-                } else {
-                    TL_TLI_TLISS ((long) 0, (short) 2);
-                    TL_TLI_TLIPS ((long) 0, " (failed)", (short) 0);
-                    TL_TLI_TLIPK ((short) 0);
-                };
-            }
-            break;
+	case 0:
+	    {
+		transformer_debugger_dbhelp();
+	    }
+	    break;
+	case 1:
+	    {
+		TL_TLI_TLISS ((long) 0, (short) 2);
+		TL_TLI_TLIPS ((long) 0, "  Exiting mainRule", (short) 0);
+		TL_TLI_TLIPK ((short) 0);
+	    }
+	    break;
+	case 2:
+	    {
+		TL_TLI_TLISS ((long) 0, (short) 2);
+		TL_TLI_TLIPS ((long) 0, "  Applying rule ", (short) 0);
+		TL_TLI_TLIPS ((long) 0, (identTable[ruleName]), (short) 0);
+		TL_TLI_TLIPK ((short) 0);
+	    }
+	    break;
+	case 3:
+	    {
+		TL_TLI_TLISS ((long) 0, (short) 2);
+		TL_TLI_TLIPS ((long) 0, "  Exiting rule ", (short) 0);
+		TL_TLI_TLIPS ((long) 0, (identTable[ruleName]), (short) 0);
+		if (success) {
+		    TL_TLI_TLISS ((long) 0, (short) 2);
+		    TL_TLI_TLIPS ((long) 0, " (succeeded)", (short) 0);
+		    TL_TLI_TLIPK ((short) 0);
+		} else {
+		    TL_TLI_TLISS ((long) 0, (short) 2);
+		    TL_TLI_TLIPS ((long) 0, " (failed)", (short) 0);
+		    TL_TLI_TLIPK ((short) 0);
+		};
+	    }
+	    break;
+	case 4:
+	    {
+		TL_TLI_TLISS ((long) 0, (short) 2);
+		TL_TLI_TLIPS ((long) 0, "  Matched main pattern of rule ", (short) 0);
+		TL_TLI_TLIPS ((long) 0, (identTable[ruleName]), (short) 0);
+		TL_TLI_TLIPK ((short) 0);
+	    }
+	    break;
+	case 5:
+	    {
+		TL_TLI_TLISS ((long) 0, (short) 2);
+		TL_TLI_TLIPS ((long) 0, "  Done replacement of pattern match of rule ", (short) 0);
+		TL_TLI_TLIPS ((long) 0, (identTable[ruleName]), (short) 0);
+		if (success) {
+		    TL_TLI_TLISS ((long) 0, (short) 2);
+		    TL_TLI_TLIPS ((long) 0, " (succeeded)", (short) 0);
+		    TL_TLI_TLIPK ((short) 0);
+		} else {
+		    TL_TLI_TLISS ((long) 0, (short) 2);
+		    TL_TLI_TLIPS ((long) 0, " (failed)", (short) 0);
+		    TL_TLI_TLIPK ((short) 0);
+		};
+	    }
+	    break;
+	case 7:
+	    {
+		TL_TLI_TLISS ((long) 0, (short) 2);
+		TL_TLI_TLIPS ((long) 0, "  Entering construct of ", (short) 0);
+		TL_TLI_TLIPS ((long) 0, (identTable[(*localVars).local[partRef - 1].name]), (short) 0);
+		TL_TLI_TLIPS ((long) 0, ", in rule ", (short) 0);
+		TL_TLI_TLIPS ((long) 0, (identTable[ruleName]), (short) 0);
+		TL_TLI_TLIPK ((short) 0);
+	    }
+	    break;
+	case 8:
+	    {
+		TL_TLI_TLISS ((long) 0, (short) 2);
+		TL_TLI_TLIPS ((long) 0, "  Exiting construct of ", (short) 0);
+		TL_TLI_TLIPS ((long) 0, (identTable[(*localVars).local[partRef - 1].name]), (short) 0);
+		TL_TLI_TLIPS ((long) 0, ", in rule ", (short) 0);
+		TL_TLI_TLIPS ((long) 0, (identTable[ruleName]), (short) 0);
+		TL_TLI_TLIPK ((short) 0);
+	    }
+	    break;
+	case 6:
+	    {
+		TL_TLI_TLISS ((long) 0, (short) 2);
+		TL_TLI_TLIPS ((long) 0, "  Exiting deconstruct of ", (short) 0);
+		TL_TLI_TLIPS ((long) 0, (identTable[(*localVars).local[partRef - 1].name]), (short) 0);
+		TL_TLI_TLIPS ((long) 0, ", in rule ", (short) 0);
+		TL_TLI_TLIPS ((long) 0, (identTable[ruleName]), (short) 0);
+		if (success) {
+		    TL_TLI_TLISS ((long) 0, (short) 2);
+		    TL_TLI_TLIPS ((long) 0, " (succeeded)", (short) 0);
+		    TL_TLI_TLIPK ((short) 0);
+		} else {
+		    TL_TLI_TLISS ((long) 0, (short) 2);
+		    TL_TLI_TLIPS ((long) 0, " (failed)", (short) 0);
+		    TL_TLI_TLIPK ((short) 0);
+		};
+	    }
+	    break;
+	case 9:
+	    {
+		TL_TLI_TLISS ((long) 0, (short) 2);
+		TL_TLI_TLIPS ((long) 0, "  Exiting where condition on ", (short) 0);
+		TL_TLI_TLIPS ((long) 0, (identTable[(*localVars).local[partRef - 1].name]), (short) 0);
+		TL_TLI_TLIPS ((long) 0, ", in rule ", (short) 0);
+		TL_TLI_TLIPS ((long) 0, (identTable[ruleName]), (short) 0);
+		if (success) {
+		    TL_TLI_TLISS ((long) 0, (short) 2);
+		    TL_TLI_TLIPS ((long) 0, " (succeeded)", (short) 0);
+		    TL_TLI_TLIPK ((short) 0);
+		} else {
+		    TL_TLI_TLISS ((long) 0, (short) 2);
+		    TL_TLI_TLIPS ((long) 0, " (failed)", (short) 0);
+		    TL_TLI_TLIPK ((short) 0);
+		};
+	    }
+	    break;
     };
     if (transformer_debugger_nsteps > 0) {
-        transformer_debugger_nsteps -= 1;
-        if (transformer_debugger_nsteps > 0) {
-            return;
-        };
+	transformer_debugger_nsteps -= 1;
+	if (transformer_debugger_nsteps > 0) {
+	    return;
+	};
     };
     transformer_debugger_nsteps = 0;
     transformer_debugger_matchfinding = 0;
     for(;;) {
-        TLSTRING        command;
-        TL_TLI_TLISS ((long) 0, (short) 2);
-        TL_TLI_TLIPS ((long) 0, "TXLDB >> ", (short) 0);
-        if (TL_TLI_TLIEOF((long) -2)) {
-            TLSTRASS(255, command, "quit");
-        } else {
-            TL_TLI_TLISSI ();
-            TL_TLI_TLIGSS((long) 255, command, (short) -2);
-        };
-        if (strcmp(command, "rules") == 0) {
-            long        outlength;
-            outlength = 0;
-            {
-                register long   r;
-                long    __x1031;
-                __x1031 = ruleCount;
-                r = 1;
-                if (r <= __x1031) {
-                    for(;;) {
-                        if (((outlength + TL_TLS_TLSLEN((identTable[rules[r - 1].name]))) + 2) > 78) {
-                            TL_TLI_TLISS ((long) 0, (short) 2);
-                            TL_TLI_TLIPS ((long) 0, "", (short) 0);
-                            TL_TLI_TLIPK ((short) 0);
-                            outlength = 0;
-                        };
-                        TL_TLI_TLISS ((long) 0, (short) 2);
-                        TL_TLI_TLIPS ((long) 0, "  ", (short) 0);
-                        TL_TLI_TLIPS ((long) 0, (identTable[rules[r - 1].name]), (short) 0);
-                        outlength += TL_TLS_TLSLEN((identTable[rules[r - 1].name])) + 2;
-                        if (r == __x1031) break;
-                        r++;
-                    }
-                };
-            };
-            TL_TLI_TLISS ((long) 0, (short) 2);
-            TL_TLI_TLIPS ((long) 0, "", (short) 0);
-            TL_TLI_TLIPK ((short) 0);
-        } else {
-            if (strcmp(command, "rule") == 0) {
-                TL_TLI_TLISS ((long) 0, (short) 2);
-                TL_TLI_TLIPS ((long) 0, "  ", (short) 0);
-                TL_TLI_TLIPS ((long) 0, (identTable[ruleName]), (short) 0);
-                TL_TLI_TLIPK ((short) 0);
-            } else {
-                if (((strcmp(command, "step") == 0) || (TL_TLS_TLSIND(command, "step ") == 1)) || (strcmp(command, "") == 0)) {
-                    if (TL_TLS_TLSIND(command, " ") != 0) {
-                        {
-                            TLSTRING    __x1032;
-                            TL_TLS_TLSBXS(__x1032, (long) 0, (long) 6, command);
-                            TLSTRASS(255, command, __x1032);
-                        };
-                        transformer_debugger_nsteps = 0;
-                        for(;;) {
-                            {
-                                unsigned char   __x1034[2];
-                                {
-                                    unsigned char       __x1033[2];
-                                    if (((strcmp(command, "") == 0) || ((TL_TLS_TLSBX(__x1033, (long) 1, command), strcmp(__x1033, "0") < 0))) || ((TL_TLS_TLSBX(__x1034, (long) 1, command), strcmp(__x1034, "9") > 0))) {
-                                        break;
-                                    };
-                                };
-                            };
-                            {
-                                unsigned char   __x1035[2];
-                                TL_TLS_TLSBX(__x1035, (long) 1, command);
-                                transformer_debugger_nsteps = ((transformer_debugger_nsteps * 10) + ((unsigned long) TLCVTTOCHR(__x1035))) - 48;
-                            };
-                            {
-                                TLSTRING        __x1036;
-                                TL_TLS_TLSBXS(__x1036, (long) 0, (long) 2, command);
-                                TLSTRASS(255, command, __x1036);
-                            };
-                        };
-                        if (transformer_debugger_nsteps == 0) {
-                            TL_TLI_TLISS ((long) 0, (short) 2);
-                            TL_TLI_TLIPS ((long) 0, "  ? Bad step count", (short) 0);
-                            TL_TLI_TLIPK ((short) 0);
-                        } else {
-                            break;
-                        };
-                    } else {
-                        transformer_debugger_nsteps = 1;
-                        break;
-                    };
-                } else {
-                    if ((strcmp(command, "run") == 0) || (strcmp(command, "go") == 0)) {
-                        break;
-                    } else {
-                        if (strcmp(command, "//") == 0) {
-                            transformer_debugger_matchfinding = 1;
-                            break;
-                        } else {
-                            if (TL_TLS_TLSIND(command, "/") == 1) {
-                                TLSTRING        ruleId;
-                                long    setRuleName;
-                                char    found;
-                                if (TL_TLS_TLSLEN(command) > 1) {
-                                    {
-                                        TLSTRING        __x1037;
-                                        TL_TLS_TLSBXS(__x1037, (long) 0, (long) 2, command);
-                                        TLSTRASS(255, ruleId, __x1037);
-                                    };
-                                } else {
-                                    TLSTRASS(255, ruleId, identTable[ruleName]);
-                                };
-                                setRuleName = ident_lookup(ruleId);
-                                found = 0;
-                                {
-                                    register long       r;
-                                    long        __x1038;
-                                    __x1038 = ruleCount;
-                                    r = 1;
-                                    if (r <= __x1038) {
-                                        for(;;) {
-                                            if ((rules[r - 1].name) == setRuleName) {
-                                                found = 1;
-                                                transformer_debugger_setbreakpoint((tokenT) setRuleName);
-                                                break;
-                                            } else {
-                                                if (r == ruleCount) {
-                                                    TL_TLI_TLISS ((long) 0, (short) 2);
-                                                    TL_TLI_TLIPS ((long) 0, "  ? No such rule", (short) 0);
-                                                    TL_TLI_TLIPK ((short) 0);
-                                                    break;
-                                                };
-                                            };
-                                            if (r == __x1038) break;
-                                            r++;
-                                        }
-                                    };
-                                };
-                                if (found) {
-                                    break;
-                                };
-                            } else {
-                                if ((strcmp(command, "set") == 0) || (TL_TLS_TLSIND(command, "set ") == 1)) {
-                                    TLSTRING    ruleId;
-                                    long        setRuleName;
-                                    if (TL_TLS_TLSIND(command, " ") != 0) {
-                                        {
-                                            TLSTRING    __x1039;
-                                            TL_TLS_TLSBXS(__x1039, (long) 0, (long) 5, command);
-                                            TLSTRASS(255, ruleId, __x1039);
-                                        };
-                                    } else {
-                                        TLSTRASS(255, ruleId, identTable[ruleName]);
-                                    };
-                                    setRuleName = ident_lookup(ruleId);
-                                    {
-                                        register long   r;
-                                        long    __x1040;
-                                        __x1040 = ruleCount;
-                                        r = 1;
-                                        if (r <= __x1040) {
-                                            for(;;) {
-                                                if ((rules[r - 1].name) == setRuleName) {
-                                                    transformer_debugger_setbreakpoint((tokenT) setRuleName);
-                                                    break;
-                                                } else {
-                                                    if (r == ruleCount) {
-                                                        TL_TLI_TLISS ((long) 0, (short) 2);
-                                                        TL_TLI_TLIPS ((long) 0, "  ? No such rule", (short) 0);
-                                                        TL_TLI_TLIPK ((short) 0);
-                                                        break;
-                                                    };
-                                                };
-                                                if (r == __x1040) break;
-                                                r++;
-                                            }
-                                        };
-                                    };
-                                } else {
-                                    if ((strcmp(command, "clear") == 0) || (TL_TLS_TLSIND(command, "clear ") == 1)) {
-                                        TLSTRING        ruleId;
-                                        long    clearRuleName;
-                                        if (TL_TLS_TLSIND(command, " ") != 0) {
-                                            {
-                                                TLSTRING        __x1041;
-                                                TL_TLS_TLSBXS(__x1041, (long) 0, (long) 7, command);
-                                                TLSTRASS(255, ruleId, __x1041);
-                                            };
-                                        } else {
-                                            TLSTRASS(255, ruleId, identTable[ruleName]);
-                                        };
-                                        clearRuleName = ident_lookup(ruleId);
-                                        {
-                                            register long       r;
-                                            long        __x1042;
-                                            __x1042 = ruleCount;
-                                            r = 1;
-                                            if (r <= __x1042) {
-                                                for(;;) {
-                                                    if ((rules[r - 1].name) == clearRuleName) {
-                                                        transformer_debugger_clearbreakpoint((tokenT) clearRuleName);
-                                                        break;
-                                                    } else {
-                                                        if (r == ruleCount) {
-                                                            TL_TLI_TLISS ((long) 0, (short) 2);
-                                                            TL_TLI_TLIPS ((long) 0, "  ? No such rule", (short) 0);
-                                                            TL_TLI_TLIPK ((short) 0);
-                                                            break;
-                                                        };
-                                                    };
-                                                    if (r == __x1042) break;
-                                                    r++;
-                                                }
-                                            };
-                                        };
-                                    } else {
-                                        if (strcmp(command, "showbps") == 0) {
-                                            long        outlength;
-                                            outlength = 0;
-                                            {
-                                                register long   bp;
-                                                long    __x1043;
-                                                __x1043 = transformer_debugger_nbreakpoints;
-                                                bp = 1;
-                                                if (bp <= __x1043) {
-                                                    for(;;) {
-                                                        if (((outlength + TL_TLS_TLSLEN((identTable[transformer_debugger_breakpoints[bp - 1]]))) + 2) > 78) {
-                                                            TL_TLI_TLISS ((long) 0, (short) 2);
-                                                            TL_TLI_TLIPS ((long) 0, "", (short) 0);
-                                                            TL_TLI_TLIPK ((short) 0);
-                                                            outlength = 0;
-                                                        };
-                                                        TL_TLI_TLISS ((long) 0, (short) 2);
-                                                        TL_TLI_TLIPS ((long) 0, "  ", (short) 0);
-                                                        TL_TLI_TLIPS ((long) 0, (identTable[transformer_debugger_breakpoints[bp - 1]]), (short) 0);
-                                                        outlength += TL_TLS_TLSLEN((identTable[transformer_debugger_breakpoints[bp - 1]])) + 2;
-                                                        if (bp == __x1043) break;
-                                                        bp++;
-                                                    }
-                                                };
-                                            };
-                                            TL_TLI_TLISS ((long) 0, (short) 2);
-                                            TL_TLI_TLIPS ((long) 0, "", (short) 0);
-                                            TL_TLI_TLIPK ((short) 0);
-                                        } else {
-                                            if ((strcmp(command, "show") == 0) || (TL_TLS_TLSIND(command, "show ") == 1)) {
-                                                TLSTRING        rdId;
-                                                if (TL_TLS_TLSIND(command, " ") != 0) {
-                                                    {
-                                                        TLSTRING        __x1044;
-                                                        TL_TLS_TLSBXS(__x1044, (long) 0, (long) 6, command);
-                                                        TLSTRASS(255, rdId, __x1044);
-                                                    };
-                                                } else {
-                                                    TLSTRASS(255, rdId, identTable[ruleName]);
-                                                };
-                                                transformer_debugger_showruleordefine(rdId);
-                                            } else {
-                                                if ((((((strcmp(command, "scope") == 0) || (strcmp(command, "match") == 0)) || (strcmp(command, "result") == 0)) || (strcmp(command, "tree scope") == 0)) || (strcmp(command, "tree match") == 0)) || (strcmp(command, "tree result") == 0)) {
-                                                    char        treeWanted;
-                                                    treeWanted = TL_TLS_TLSIND(command, "tree") == 1;
-                                                    if (treeWanted) {
-                                                        {
-                                                            TLSTRING    __x1045;
-                                                            TL_TLS_TLSBXS(__x1045, (long) 0, (long) (TL_TLS_TLSIND(command, " ") + 1), command);
-                                                            TLSTRASS(255, command, __x1045);
-                                                        };
-                                                    };
-                                                    if (((((kind == 2) || (kind == 0)) && (strcmp(command, "scope") == 0)) || ((kind == 4) && (strcmp(command, "match") == 0))) || (((((kind == 5) || (kind == 3)) || (kind == 8)) || (kind == 1)) && (strcmp(command, "result") == 0))) {
-                                                        if (treeWanted) {
-                                                            printParse((treePT) scope, (long) 0, (char) 1);
-                                                        } else {
-                                                            printLeaves((treePT) scope, (char) 1);
-                                                        };
-                                                        TL_TLI_TLISS ((long) 0, (short) 2);
-                                                        TL_TLI_TLIPS ((long) 0, "", (short) 0);
-                                                        TL_TLI_TLIPK ((short) 0);
-                                                    } else {
-                                                        TL_TLI_TLISS ((long) 0, (short) 2);
-                                                        TL_TLI_TLIPS ((long) 0, "  ? No ", (short) 0);
-                                                        TL_TLI_TLIPS ((long) 0, command, (short) 0);
-                                                        TL_TLI_TLIPS ((long) 0, " in this context", (short) 0);
-                                                        TL_TLI_TLIPK ((short) 0);
-                                                    };
-                                                } else {
-                                                    if (strcmp(command, "vars") == 0) {
-                                                        {
-                                                            register long       localIndex;
-                                                            long        __x1046;
-                                                            __x1046 = (*localVars).nlocals;
-                                                            localIndex = 1;
-                                                            if (localIndex <= __x1046) {
-                                                                for(;;) {
-                                                                    TL_TLI_TLISS ((long) 0, (short) 2);
-                                                                    TL_TLI_TLIPS ((long) 0, "  ", (short) 0);
-                                                                    TL_TLI_TLIPS ((long) 0, (identTable[(*localVars).local[localIndex - 1].name]), (short) 0);
-                                                                    TL_TLI_TLIPS ((long) 0, " [", (short) 0);
-                                                                    TL_TLI_TLIPS ((long) 0, (identTable[(*localVars).local[localIndex - 1].typename]), (short) 0);
-                                                                    TL_TLI_TLIPS ((long) 0, "]", (short) 0);
-                                                                    if (localIndex == __x1046) break;
-                                                                    localIndex++;
-                                                                }
-                                                            };
-                                                        };
-                                                        TL_TLI_TLISS ((long) 0, (short) 2);
-                                                        TL_TLI_TLIPS ((long) 0, "", (short) 0);
-                                                        TL_TLI_TLIPK ((short) 0);
-                                                    } else {
-                                                        if ((strcmp(command, "state") == 0) || (strcmp(command, "where") == 0)) {
-                                                            switch (kind) {
-                                                                case 0:
-                                                                    {
-                                                                        TL_TLI_TLISS ((long) 0, (short) 2);
-                                                                        TL_TLI_TLIPS ((long) 0, "  Applying mainRule", (short) 0);
-                                                                        TL_TLI_TLIPK ((short) 0);
-                                                                    }
-                                                                    break;
-                                                                case 1:
-                                                                    {
-                                                                        TL_TLI_TLISS ((long) 0, (short) 2);
-                                                                        TL_TLI_TLIPS ((long) 0, "  Exiting mainRule", (short) 0);
-                                                                        TL_TLI_TLIPK ((short) 0);
-                                                                    }
-                                                                    break;
-                                                                case 2:
-                                                                    {
-                                                                        TL_TLI_TLISS ((long) 0, (short) 2);
-                                                                        TL_TLI_TLIPS ((long) 0, "  Applying rule ", (short) 0);
-                                                                        TL_TLI_TLIPS ((long) 0, (identTable[ruleName]), (short) 0);
-                                                                        TL_TLI_TLIPK ((short) 0);
-                                                                    }
-                                                                    break;
-                                                                case 3:
-                                                                    {
-                                                                        TL_TLI_TLISS ((long) 0, (short) 2);
-                                                                        TL_TLI_TLIPS ((long) 0, "  Exiting rule ", (short) 0);
-                                                                        TL_TLI_TLIPS ((long) 0, (identTable[ruleName]), (short) 0);
-                                                                        if (success) {
-                                                                            TL_TLI_TLISS ((long) 0, (short) 2);
-                                                                            TL_TLI_TLIPS ((long) 0, " (succeeded)", (short) 0);
-                                                                            TL_TLI_TLIPK ((short) 0);
-                                                                        } else {
-                                                                            TL_TLI_TLISS ((long) 0, (short) 2);
-                                                                            TL_TLI_TLIPS ((long) 0, " (failed)", (short) 0);
-                                                                            TL_TLI_TLIPK ((short) 0);
-                                                                        };
-                                                                    }
-                                                                    break;
-                                                                case 4:
-                                                                    {
-                                                                        TL_TLI_TLISS ((long) 0, (short) 2);
-                                                                        TL_TLI_TLIPS ((long) 0, "  Matched pattern of rule ", (short) 0);
-                                                                        TL_TLI_TLIPS ((long) 0, (identTable[ruleName]), (short) 0);
-                                                                        TL_TLI_TLIPK ((short) 0);
-                                                                    }
-                                                                    break;
-                                                                case 5:
-                                                                    {
-                                                                        TL_TLI_TLISS ((long) 0, (short) 2);
-                                                                        TL_TLI_TLIPS ((long) 0, "  Done replacement of pattern match of rule ", (short) 0);
-                                                                        TL_TLI_TLIPS ((long) 0, (identTable[ruleName]), (short) 0);
-                                                                        if (success) {
-                                                                            TL_TLI_TLISS ((long) 0, (short) 2);
-                                                                            TL_TLI_TLIPS ((long) 0, " (succeeded)", (short) 0);
-                                                                            TL_TLI_TLIPK ((short) 0);
-                                                                        } else {
-                                                                            TL_TLI_TLISS ((long) 0, (short) 2);
-                                                                            TL_TLI_TLIPS ((long) 0, " (failed)", (short) 0);
-                                                                            TL_TLI_TLIPK ((short) 0);
-                                                                        };
-                                                                    }
-                                                                    break;
-                                                                case 7:
-                                                                    {
-                                                                        TL_TLI_TLISS ((long) 0, (short) 2);
-                                                                        TL_TLI_TLIPS ((long) 0, "  Entering construct of ", (short) 0);
-                                                                        TL_TLI_TLIPS ((long) 0, (identTable[(*localVars).local[partRef - 1].name]), (short) 0);
-                                                                        TL_TLI_TLIPS ((long) 0, ", in rule ", (short) 0);
-                                                                        TL_TLI_TLIPS ((long) 0, (identTable[ruleName]), (short) 0);
-                                                                        TL_TLI_TLIPK ((short) 0);
-                                                                    }
-                                                                    break;
-                                                                case 8:
-                                                                    {
-                                                                        TL_TLI_TLISS ((long) 0, (short) 2);
-                                                                        TL_TLI_TLIPS ((long) 0, "  Exiting construct of ", (short) 0);
-                                                                        TL_TLI_TLIPS ((long) 0, (identTable[(*localVars).local[partRef - 1].name]), (short) 0);
-                                                                        TL_TLI_TLIPS ((long) 0, ", in rule ", (short) 0);
-                                                                        TL_TLI_TLIPS ((long) 0, (identTable[ruleName]), (short) 0);
-                                                                        TL_TLI_TLIPK ((short) 0);
-                                                                    }
-                                                                    break;
-                                                                case 6:
-                                                                    {
-                                                                        TL_TLI_TLISS ((long) 0, (short) 2);
-                                                                        TL_TLI_TLIPS ((long) 0, "  Exiting deconstruct of ", (short) 0);
-                                                                        TL_TLI_TLIPS ((long) 0, (identTable[(*localVars).local[partRef - 1].name]), (short) 0);
-                                                                        TL_TLI_TLIPS ((long) 0, ", in rule ", (short) 0);
-                                                                        TL_TLI_TLIPS ((long) 0, (identTable[ruleName]), (short) 0);
-                                                                        if (success) {
-                                                                            TL_TLI_TLISS ((long) 0, (short) 2);
-                                                                            TL_TLI_TLIPS ((long) 0, " (succeeded)", (short) 0);
-                                                                            TL_TLI_TLIPK ((short) 0);
-                                                                        } else {
-                                                                            TL_TLI_TLISS ((long) 0, (short) 2);
-                                                                            TL_TLI_TLIPS ((long) 0, " (failed)", (short) 0);
-                                                                            TL_TLI_TLIPK ((short) 0);
-                                                                        };
-                                                                    }
-                                                                    break;
-                                                                case 9:
-                                                                    {
-                                                                        TL_TLI_TLISS ((long) 0, (short) 2);
-                                                                        TL_TLI_TLIPS ((long) 0, "  Exiting where condition on ", (short) 0);
-                                                                        TL_TLI_TLIPS ((long) 0, (identTable[(*localVars).local[partRef - 1].name]), (short) 0);
-                                                                        TL_TLI_TLIPS ((long) 0, ", in rule ", (short) 0);
-                                                                        TL_TLI_TLIPS ((long) 0, (identTable[ruleName]), (short) 0);
-                                                                        if (success) {
-                                                                            TL_TLI_TLISS ((long) 0, (short) 2);
-                                                                            TL_TLI_TLIPS ((long) 0, " (succeeded)", (short) 0);
-                                                                            TL_TLI_TLIPK ((short) 0);
-                                                                        } else {
-                                                                            TL_TLI_TLISS ((long) 0, (short) 2);
-                                                                            TL_TLI_TLIPS ((long) 0, " (failed)", (short) 0);
-                                                                            TL_TLI_TLIPK ((short) 0);
-                                                                        };
-                                                                    }
-                                                                    break;
-                                                            };
-                                                        } else {
-                                                            if ((strcmp(command, "help") == 0) || (strcmp(command, "?") == 0)) {
-                                                                transformer_debugger_dbhelp();
-                                                            } else {
-                                                                if (((strcmp(command, "exit") == 0) || (strcmp(command, "quit") == 0)) || (strcmp(command, "bye") == 0)) {
-                                                                    TL_TLI_TLISS ((long) 0, (short) 2);
-                                                                    TL_TLI_TLIPS ((long) 0, "  Exiting TXL", (short) 0);
-                                                                    TL_TLI_TLIPK ((short) 0);
-                                                                    TL_TLA_TLAQ ((long) 1, (char *) 0, (long) 0);
-                                                                } else {
-                                                                    if (TL_TLS_TLSLEN(command) > 0) {
-                                                                        char    treeWanted;
-                                                                        unsigned char   c;
-                                                                        treeWanted = TL_TLS_TLSIND(command, "tree ") == 1;
-                                                                        if (treeWanted) {
-                                                                            {
-                                                                                TLSTRING        __x1047;
-                                                                                TL_TLS_TLSBXS(__x1047, (long) 0, (long) (TL_TLS_TLSIND(command, " ") + 1), command);
-                                                                                TLSTRASS(255, command, __x1047);
-                                                                            };
-                                                                        };
-                                                                        {
-                                                                            unsigned char       __x1048[2];
-                                                                            TL_TLS_TLSBX(__x1048, (long) 1, command);
-                                                                            if (strcmp(__x1048, "\'") == 0) {
-                                                                                {
-                                                                                    TLSTRING    __x1049;
-                                                                                    TL_TLS_TLSBXS(__x1049, (long) 0, (long) 2, command);
-                                                                                    TLSTRASS(255, command, __x1049);
-                                                                                };
-                                                                            };
-                                                                        };
-                                                                        {
-                                                                            unsigned char       __x1050[2];
-                                                                            TL_TLS_TLSBX(__x1050, (long) 1, command);
-                                                                            c = TLCVTTOCHR(__x1050);
-                                                                        };
-                                                                        if ((strcmp(command, "") == 0) || (!(letterP[c]))) {
-                                                                            TL_TLI_TLISS ((long) 0, (short) 2);
-                                                                            TL_TLI_TLIPS ((long) 0, "  ? bad command (\'help\' for list of commands)", (short) 0);
-                                                                            TL_TLI_TLIPK ((short) 0);
-                                                                        } else {
-                                                                            char        found;
-                                                                            found = 0;
-                                                                            {
-                                                                                register long   localIndex;
-                                                                                long    __x1051;
-                                                                                __x1051 = (*localVars).nlocals;
-                                                                                localIndex = 1;
-                                                                                if (localIndex <= __x1051) {
-                                                                                    for(;;) {
-                                                                                        if (strcmp(identTable[(*localVars).local[localIndex - 1].name], command) == 0) {
-                                                                                            if (((*localValueTP)[localIndex - 1]) == 0) {
-                                                                                                TL_TLI_TLISS ((long) 0, (short) 2);
-                                                                                                TL_TLI_TLIPS ((long) 0, "  ? unbound", (short) 0);
-                                                                                                TL_TLI_TLIPK ((short) 0);
-                                                                                            } else {
-                                                                                                if (treeWanted) {
-                                                                                                    printParse((treePT) ((*localValueTP)[localIndex - 1]), (long) 0, (char) 1);
-                                                                                                } else {
-                                                                                                    printLeaves((treePT) ((*localValueTP)[localIndex - 1]), (char) 1);
-                                                                                                };
-                                                                                                TL_TLI_TLISS ((long) 0, (short) 2);
-                                                                                                TL_TLI_TLIPS ((long) 0, "", (short) 0);
-                                                                                                TL_TLI_TLIPK ((short) 0);
-                                                                                            };
-                                                                                            found = 1;
-                                                                                            break;
-                                                                                        };
-                                                                                        if (localIndex == __x1051) break;
-                                                                                        localIndex++;
-                                                                                    }
-                                                                                };
-                                                                            };
-                                                                            if (!found) {
-                                                                                TL_TLI_TLISS ((long) 0, (short) 2);
-                                                                                TL_TLI_TLIPS ((long) 0, "  ? No such variable in the context (or bad command)", (short) 0);
-                                                                                TL_TLI_TLIPK ((short) 0);
-                                                                            };
-                                                                        };
-                                                                    } else {
-                                                                        TL_TLI_TLISS ((long) 0, (short) 2);
-                                                                        TL_TLI_TLIPS ((long) 0, "  ? bad command (\'help\' for list of commands)", (short) 0);
-                                                                        TL_TLI_TLIPK ((short) 0);
-                                                                    };
-                                                                };
-                                                            };
-                                                        };
-                                                    };
-                                                };
-                                            };
-                                        };
-                                    };
-                                };
-                            };
-                        };
-                    };
-                };
-            };
-        };
+	TLSTRING	command;
+	TL_TLI_TLISS ((long) 0, (short) 2);
+	TL_TLI_TLIPS ((long) 0, "TXLDB >> ", (short) 0);
+	if (TL_TLI_TLIEOF((long) -2)) {
+	    TLSTRASS(255, command, "quit");
+	} else {
+	    TL_TLI_TLISSI ();
+	    TL_TLI_TLIGSS((long) 255, command, (short) -2);
+	};
+	if (strcmp(command, "rules") == 0) {
+	    long	outlength;
+	    outlength = 0;
+	    {
+		register long	r;
+		long	__x1031;
+		__x1031 = ruleCount;
+		r = 1;
+		if (r <= __x1031) {
+		    for(;;) {
+			if (((outlength + TL_TLS_TLSLEN((identTable[rules[r - 1].name]))) + 2) > 78) {
+			    TL_TLI_TLISS ((long) 0, (short) 2);
+			    TL_TLI_TLIPS ((long) 0, "", (short) 0);
+			    TL_TLI_TLIPK ((short) 0);
+			    outlength = 0;
+			};
+			TL_TLI_TLISS ((long) 0, (short) 2);
+			TL_TLI_TLIPS ((long) 0, "  ", (short) 0);
+			TL_TLI_TLIPS ((long) 0, (identTable[rules[r - 1].name]), (short) 0);
+			outlength += TL_TLS_TLSLEN((identTable[rules[r - 1].name])) + 2;
+			if (r == __x1031) break;
+			r++;
+		    }
+		};
+	    };
+	    TL_TLI_TLISS ((long) 0, (short) 2);
+	    TL_TLI_TLIPS ((long) 0, "", (short) 0);
+	    TL_TLI_TLIPK ((short) 0);
+	} else {
+	    if (strcmp(command, "rule") == 0) {
+		TL_TLI_TLISS ((long) 0, (short) 2);
+		TL_TLI_TLIPS ((long) 0, "  ", (short) 0);
+		TL_TLI_TLIPS ((long) 0, (identTable[ruleName]), (short) 0);
+		TL_TLI_TLIPK ((short) 0);
+	    } else {
+		if (((strcmp(command, "step") == 0) || (TL_TLS_TLSIND(command, "step ") == 1)) || (strcmp(command, "") == 0)) {
+		    if (TL_TLS_TLSIND(command, " ") != 0) {
+			{
+			    TLSTRING	__x1032;
+			    TL_TLS_TLSBXS(__x1032, (long) 0, (long) 6, command);
+			    TLSTRASS(255, command, __x1032);
+			};
+			transformer_debugger_nsteps = 0;
+			for(;;) {
+			    {
+				unsigned char	__x1034[2];
+				{
+				    unsigned char	__x1033[2];
+				    if (((strcmp(command, "") == 0) || ((TL_TLS_TLSBX(__x1033, (long) 1, command), strcmp(__x1033, "0") < 0))) || ((TL_TLS_TLSBX(__x1034, (long) 1, command), strcmp(__x1034, "9") > 0))) {
+					break;
+				    };
+				};
+			    };
+			    {
+				unsigned char	__x1035[2];
+				TL_TLS_TLSBX(__x1035, (long) 1, command);
+				transformer_debugger_nsteps = ((transformer_debugger_nsteps * 10) + ((unsigned long) TLCVTTOCHR(__x1035))) - 48;
+			    };
+			    {
+				TLSTRING	__x1036;
+				TL_TLS_TLSBXS(__x1036, (long) 0, (long) 2, command);
+				TLSTRASS(255, command, __x1036);
+			    };
+			};
+			if (transformer_debugger_nsteps == 0) {
+			    TL_TLI_TLISS ((long) 0, (short) 2);
+			    TL_TLI_TLIPS ((long) 0, "  ? Bad step count", (short) 0);
+			    TL_TLI_TLIPK ((short) 0);
+			} else {
+			    break;
+			};
+		    } else {
+			transformer_debugger_nsteps = 1;
+			break;
+		    };
+		} else {
+		    if ((strcmp(command, "run") == 0) || (strcmp(command, "go") == 0)) {
+			break;
+		    } else {
+			if (strcmp(command, "//") == 0) {
+			    transformer_debugger_matchfinding = 1;
+			    break;
+			} else {
+			    if (TL_TLS_TLSIND(command, "/") == 1) {
+				TLSTRING	ruleId;
+				long	setRuleName;
+				char	found;
+				if (TL_TLS_TLSLEN(command) > 1) {
+				    {
+					TLSTRING	__x1037;
+					TL_TLS_TLSBXS(__x1037, (long) 0, (long) 2, command);
+					TLSTRASS(255, ruleId, __x1037);
+				    };
+				} else {
+				    TLSTRASS(255, ruleId, identTable[ruleName]);
+				};
+				setRuleName = ident_lookup(ruleId);
+				found = 0;
+				{
+				    register long	r;
+				    long	__x1038;
+				    __x1038 = ruleCount;
+				    r = 1;
+				    if (r <= __x1038) {
+					for(;;) {
+					    if ((rules[r - 1].name) == setRuleName) {
+						found = 1;
+						transformer_debugger_setbreakpoint((tokenT) setRuleName);
+						break;
+					    } else {
+						if (r == ruleCount) {
+						    TL_TLI_TLISS ((long) 0, (short) 2);
+						    TL_TLI_TLIPS ((long) 0, "  ? No such rule", (short) 0);
+						    TL_TLI_TLIPK ((short) 0);
+						    break;
+						};
+					    };
+					    if (r == __x1038) break;
+					    r++;
+					}
+				    };
+				};
+				if (found) {
+				    break;
+				};
+			    } else {
+				if ((strcmp(command, "set") == 0) || (TL_TLS_TLSIND(command, "set ") == 1)) {
+				    TLSTRING	ruleId;
+				    long	setRuleName;
+				    if (TL_TLS_TLSIND(command, " ") != 0) {
+					{
+					    TLSTRING	__x1039;
+					    TL_TLS_TLSBXS(__x1039, (long) 0, (long) 5, command);
+					    TLSTRASS(255, ruleId, __x1039);
+					};
+				    } else {
+					TLSTRASS(255, ruleId, identTable[ruleName]);
+				    };
+				    setRuleName = ident_lookup(ruleId);
+				    {
+					register long	r;
+					long	__x1040;
+					__x1040 = ruleCount;
+					r = 1;
+					if (r <= __x1040) {
+					    for(;;) {
+						if ((rules[r - 1].name) == setRuleName) {
+						    transformer_debugger_setbreakpoint((tokenT) setRuleName);
+						    break;
+						} else {
+						    if (r == ruleCount) {
+							TL_TLI_TLISS ((long) 0, (short) 2);
+							TL_TLI_TLIPS ((long) 0, "  ? No such rule", (short) 0);
+							TL_TLI_TLIPK ((short) 0);
+							break;
+						    };
+						};
+						if (r == __x1040) break;
+						r++;
+					    }
+					};
+				    };
+				} else {
+				    if ((strcmp(command, "clear") == 0) || (TL_TLS_TLSIND(command, "clear ") == 1)) {
+					TLSTRING	ruleId;
+					long	clearRuleName;
+					if (TL_TLS_TLSIND(command, " ") != 0) {
+					    {
+						TLSTRING	__x1041;
+						TL_TLS_TLSBXS(__x1041, (long) 0, (long) 7, command);
+						TLSTRASS(255, ruleId, __x1041);
+					    };
+					} else {
+					    TLSTRASS(255, ruleId, identTable[ruleName]);
+					};
+					clearRuleName = ident_lookup(ruleId);
+					{
+					    register long	r;
+					    long	__x1042;
+					    __x1042 = ruleCount;
+					    r = 1;
+					    if (r <= __x1042) {
+						for(;;) {
+						    if ((rules[r - 1].name) == clearRuleName) {
+							transformer_debugger_clearbreakpoint((tokenT) clearRuleName);
+							break;
+						    } else {
+							if (r == ruleCount) {
+							    TL_TLI_TLISS ((long) 0, (short) 2);
+							    TL_TLI_TLIPS ((long) 0, "  ? No such rule", (short) 0);
+							    TL_TLI_TLIPK ((short) 0);
+							    break;
+							};
+						    };
+						    if (r == __x1042) break;
+						    r++;
+						}
+					    };
+					};
+				    } else {
+					if (strcmp(command, "showbps") == 0) {
+					    long	outlength;
+					    outlength = 0;
+					    {
+						register long	bp;
+						long	__x1043;
+						__x1043 = transformer_debugger_nbreakpoints;
+						bp = 1;
+						if (bp <= __x1043) {
+						    for(;;) {
+							if (((outlength + TL_TLS_TLSLEN((identTable[transformer_debugger_breakpoints[bp - 1]]))) + 2) > 78) {
+							    TL_TLI_TLISS ((long) 0, (short) 2);
+							    TL_TLI_TLIPS ((long) 0, "", (short) 0);
+							    TL_TLI_TLIPK ((short) 0);
+							    outlength = 0;
+							};
+							TL_TLI_TLISS ((long) 0, (short) 2);
+							TL_TLI_TLIPS ((long) 0, "  ", (short) 0);
+							TL_TLI_TLIPS ((long) 0, (identTable[transformer_debugger_breakpoints[bp - 1]]), (short) 0);
+							outlength += TL_TLS_TLSLEN((identTable[transformer_debugger_breakpoints[bp - 1]])) + 2;
+							if (bp == __x1043) break;
+							bp++;
+						    }
+						};
+					    };
+					    TL_TLI_TLISS ((long) 0, (short) 2);
+					    TL_TLI_TLIPS ((long) 0, "", (short) 0);
+					    TL_TLI_TLIPK ((short) 0);
+					} else {
+					    if ((strcmp(command, "show") == 0) || (TL_TLS_TLSIND(command, "show ") == 1)) {
+						TLSTRING	rdId;
+						if (TL_TLS_TLSIND(command, " ") != 0) {
+						    {
+							TLSTRING	__x1044;
+							TL_TLS_TLSBXS(__x1044, (long) 0, (long) 6, command);
+							TLSTRASS(255, rdId, __x1044);
+						    };
+						} else {
+						    TLSTRASS(255, rdId, identTable[ruleName]);
+						};
+						transformer_debugger_showruleordefine(rdId);
+					    } else {
+						if ((((((strcmp(command, "scope") == 0) || (strcmp(command, "match") == 0)) || (strcmp(command, "result") == 0)) || (strcmp(command, "tree scope") == 0)) || (strcmp(command, "tree match") == 0)) || (strcmp(command, "tree result") == 0)) {
+						    char	treeWanted;
+						    treeWanted = TL_TLS_TLSIND(command, "tree") == 1;
+						    if (treeWanted) {
+							{
+							    TLSTRING	__x1045;
+							    TL_TLS_TLSBXS(__x1045, (long) 0, (long) (TL_TLS_TLSIND(command, " ") + 1), command);
+							    TLSTRASS(255, command, __x1045);
+							};
+						    };
+						    if (((((kind == 2) || (kind == 0)) && (strcmp(command, "scope") == 0)) || ((kind == 4) && (strcmp(command, "match") == 0))) || (((((kind == 5) || (kind == 3)) || (kind == 8)) || (kind == 1)) && (strcmp(command, "result") == 0))) {
+							if (treeWanted) {
+							    printParse((treePT) scope, (long) 0, (char) 1);
+							} else {
+							    printLeaves((treePT) scope, (char) 1);
+							};
+							TL_TLI_TLISS ((long) 0, (short) 2);
+							TL_TLI_TLIPS ((long) 0, "", (short) 0);
+							TL_TLI_TLIPK ((short) 0);
+						    } else {
+							TL_TLI_TLISS ((long) 0, (short) 2);
+							TL_TLI_TLIPS ((long) 0, "  ? No ", (short) 0);
+							TL_TLI_TLIPS ((long) 0, command, (short) 0);
+							TL_TLI_TLIPS ((long) 0, " in this context", (short) 0);
+							TL_TLI_TLIPK ((short) 0);
+						    };
+						} else {
+						    if (strcmp(command, "vars") == 0) {
+							{
+							    register long	localIndex;
+							    long	__x1046;
+							    __x1046 = (*localVars).nlocals;
+							    localIndex = 1;
+							    if (localIndex <= __x1046) {
+								for(;;) {
+								    TL_TLI_TLISS ((long) 0, (short) 2);
+								    TL_TLI_TLIPS ((long) 0, "  ", (short) 0);
+								    TL_TLI_TLIPS ((long) 0, (identTable[(*localVars).local[localIndex - 1].name]), (short) 0);
+								    TL_TLI_TLIPS ((long) 0, " [", (short) 0);
+								    TL_TLI_TLIPS ((long) 0, (identTable[(*localVars).local[localIndex - 1].typename]), (short) 0);
+								    TL_TLI_TLIPS ((long) 0, "]", (short) 0);
+								    if (localIndex == __x1046) break;
+								    localIndex++;
+								}
+							    };
+							};
+							TL_TLI_TLISS ((long) 0, (short) 2);
+							TL_TLI_TLIPS ((long) 0, "", (short) 0);
+							TL_TLI_TLIPK ((short) 0);
+						    } else {
+							if ((strcmp(command, "state") == 0) || (strcmp(command, "where") == 0)) {
+							    switch (kind) {
+								case 0:
+								    {
+									TL_TLI_TLISS ((long) 0, (short) 2);
+									TL_TLI_TLIPS ((long) 0, "  Applying mainRule", (short) 0);
+									TL_TLI_TLIPK ((short) 0);
+								    }
+								    break;
+								case 1:
+								    {
+									TL_TLI_TLISS ((long) 0, (short) 2);
+									TL_TLI_TLIPS ((long) 0, "  Exiting mainRule", (short) 0);
+									TL_TLI_TLIPK ((short) 0);
+								    }
+								    break;
+								case 2:
+								    {
+									TL_TLI_TLISS ((long) 0, (short) 2);
+									TL_TLI_TLIPS ((long) 0, "  Applying rule ", (short) 0);
+									TL_TLI_TLIPS ((long) 0, (identTable[ruleName]), (short) 0);
+									TL_TLI_TLIPK ((short) 0);
+								    }
+								    break;
+								case 3:
+								    {
+									TL_TLI_TLISS ((long) 0, (short) 2);
+									TL_TLI_TLIPS ((long) 0, "  Exiting rule ", (short) 0);
+									TL_TLI_TLIPS ((long) 0, (identTable[ruleName]), (short) 0);
+									if (success) {
+									    TL_TLI_TLISS ((long) 0, (short) 2);
+									    TL_TLI_TLIPS ((long) 0, " (succeeded)", (short) 0);
+									    TL_TLI_TLIPK ((short) 0);
+									} else {
+									    TL_TLI_TLISS ((long) 0, (short) 2);
+									    TL_TLI_TLIPS ((long) 0, " (failed)", (short) 0);
+									    TL_TLI_TLIPK ((short) 0);
+									};
+								    }
+								    break;
+								case 4:
+								    {
+									TL_TLI_TLISS ((long) 0, (short) 2);
+									TL_TLI_TLIPS ((long) 0, "  Matched pattern of rule ", (short) 0);
+									TL_TLI_TLIPS ((long) 0, (identTable[ruleName]), (short) 0);
+									TL_TLI_TLIPK ((short) 0);
+								    }
+								    break;
+								case 5:
+								    {
+									TL_TLI_TLISS ((long) 0, (short) 2);
+									TL_TLI_TLIPS ((long) 0, "  Done replacement of pattern match of rule ", (short) 0);
+									TL_TLI_TLIPS ((long) 0, (identTable[ruleName]), (short) 0);
+									if (success) {
+									    TL_TLI_TLISS ((long) 0, (short) 2);
+									    TL_TLI_TLIPS ((long) 0, " (succeeded)", (short) 0);
+									    TL_TLI_TLIPK ((short) 0);
+									} else {
+									    TL_TLI_TLISS ((long) 0, (short) 2);
+									    TL_TLI_TLIPS ((long) 0, " (failed)", (short) 0);
+									    TL_TLI_TLIPK ((short) 0);
+									};
+								    }
+								    break;
+								case 7:
+								    {
+									TL_TLI_TLISS ((long) 0, (short) 2);
+									TL_TLI_TLIPS ((long) 0, "  Entering construct of ", (short) 0);
+									TL_TLI_TLIPS ((long) 0, (identTable[(*localVars).local[partRef - 1].name]), (short) 0);
+									TL_TLI_TLIPS ((long) 0, ", in rule ", (short) 0);
+									TL_TLI_TLIPS ((long) 0, (identTable[ruleName]), (short) 0);
+									TL_TLI_TLIPK ((short) 0);
+								    }
+								    break;
+								case 8:
+								    {
+									TL_TLI_TLISS ((long) 0, (short) 2);
+									TL_TLI_TLIPS ((long) 0, "  Exiting construct of ", (short) 0);
+									TL_TLI_TLIPS ((long) 0, (identTable[(*localVars).local[partRef - 1].name]), (short) 0);
+									TL_TLI_TLIPS ((long) 0, ", in rule ", (short) 0);
+									TL_TLI_TLIPS ((long) 0, (identTable[ruleName]), (short) 0);
+									TL_TLI_TLIPK ((short) 0);
+								    }
+								    break;
+								case 6:
+								    {
+									TL_TLI_TLISS ((long) 0, (short) 2);
+									TL_TLI_TLIPS ((long) 0, "  Exiting deconstruct of ", (short) 0);
+									TL_TLI_TLIPS ((long) 0, (identTable[(*localVars).local[partRef - 1].name]), (short) 0);
+									TL_TLI_TLIPS ((long) 0, ", in rule ", (short) 0);
+									TL_TLI_TLIPS ((long) 0, (identTable[ruleName]), (short) 0);
+									if (success) {
+									    TL_TLI_TLISS ((long) 0, (short) 2);
+									    TL_TLI_TLIPS ((long) 0, " (succeeded)", (short) 0);
+									    TL_TLI_TLIPK ((short) 0);
+									} else {
+									    TL_TLI_TLISS ((long) 0, (short) 2);
+									    TL_TLI_TLIPS ((long) 0, " (failed)", (short) 0);
+									    TL_TLI_TLIPK ((short) 0);
+									};
+								    }
+								    break;
+								case 9:
+								    {
+									TL_TLI_TLISS ((long) 0, (short) 2);
+									TL_TLI_TLIPS ((long) 0, "  Exiting where condition on ", (short) 0);
+									TL_TLI_TLIPS ((long) 0, (identTable[(*localVars).local[partRef - 1].name]), (short) 0);
+									TL_TLI_TLIPS ((long) 0, ", in rule ", (short) 0);
+									TL_TLI_TLIPS ((long) 0, (identTable[ruleName]), (short) 0);
+									if (success) {
+									    TL_TLI_TLISS ((long) 0, (short) 2);
+									    TL_TLI_TLIPS ((long) 0, " (succeeded)", (short) 0);
+									    TL_TLI_TLIPK ((short) 0);
+									} else {
+									    TL_TLI_TLISS ((long) 0, (short) 2);
+									    TL_TLI_TLIPS ((long) 0, " (failed)", (short) 0);
+									    TL_TLI_TLIPK ((short) 0);
+									};
+								    }
+								    break;
+							    };
+							} else {
+							    if ((strcmp(command, "help") == 0) || (strcmp(command, "?") == 0)) {
+								transformer_debugger_dbhelp();
+							    } else {
+								if (((strcmp(command, "exit") == 0) || (strcmp(command, "quit") == 0)) || (strcmp(command, "bye") == 0)) {
+								    TL_TLI_TLISS ((long) 0, (short) 2);
+								    TL_TLI_TLIPS ((long) 0, "  Exiting TXL", (short) 0);
+								    TL_TLI_TLIPK ((short) 0);
+								    TL_TLA_TLAQ ((long) 1, (char *) 0, (long) 0);
+								} else {
+								    if (TL_TLS_TLSLEN(command) > 0) {
+									char	treeWanted;
+									unsigned char	c;
+									treeWanted = TL_TLS_TLSIND(command, "tree ") == 1;
+									if (treeWanted) {
+									    {
+										TLSTRING	__x1047;
+										TL_TLS_TLSBXS(__x1047, (long) 0, (long) (TL_TLS_TLSIND(command, " ") + 1), command);
+										TLSTRASS(255, command, __x1047);
+									    };
+									};
+									{
+									    unsigned char	__x1048[2];
+									    TL_TLS_TLSBX(__x1048, (long) 1, command);
+									    if (strcmp(__x1048, "\'") == 0) {
+										{
+										    TLSTRING	__x1049;
+										    TL_TLS_TLSBXS(__x1049, (long) 0, (long) 2, command);
+										    TLSTRASS(255, command, __x1049);
+										};
+									    };
+									};
+									{
+									    unsigned char	__x1050[2];
+									    TL_TLS_TLSBX(__x1050, (long) 1, command);
+									    c = TLCVTTOCHR(__x1050);
+									};
+									if ((strcmp(command, "") == 0) || (!(letterP[c]))) {
+									    TL_TLI_TLISS ((long) 0, (short) 2);
+									    TL_TLI_TLIPS ((long) 0, "  ? bad command (\'help\' for list of commands)", (short) 0);
+									    TL_TLI_TLIPK ((short) 0);
+									} else {
+									    char	found;
+									    found = 0;
+									    {
+										register long	localIndex;
+										long	__x1051;
+										__x1051 = (*localVars).nlocals;
+										localIndex = 1;
+										if (localIndex <= __x1051) {
+										    for(;;) {
+											if (strcmp(identTable[(*localVars).local[localIndex - 1].name], command) == 0) {
+											    if (((*localValueTP)[localIndex - 1]) == 0) {
+												TL_TLI_TLISS ((long) 0, (short) 2);
+												TL_TLI_TLIPS ((long) 0, "  ? unbound", (short) 0);
+												TL_TLI_TLIPK ((short) 0);
+											    } else {
+												if (treeWanted) {
+												    printParse((treePT) ((*localValueTP)[localIndex - 1]), (long) 0, (char) 1);
+												} else {
+												    printLeaves((treePT) ((*localValueTP)[localIndex - 1]), (char) 1);
+												};
+												TL_TLI_TLISS ((long) 0, (short) 2);
+												TL_TLI_TLIPS ((long) 0, "", (short) 0);
+												TL_TLI_TLIPK ((short) 0);
+											    };
+											    found = 1;
+											    break;
+											};
+											if (localIndex == __x1051) break;
+											localIndex++;
+										    }
+										};
+									    };
+									    if (!found) {
+										TL_TLI_TLISS ((long) 0, (short) 2);
+										TL_TLI_TLIPS ((long) 0, "  ? No such variable in the context (or bad command)", (short) 0);
+										TL_TLI_TLIPK ((short) 0);
+									    };
+									};
+								    } else {
+									TL_TLI_TLISS ((long) 0, (short) 2);
+									TL_TLI_TLIPS ((long) 0, "  ? bad command (\'help\' for list of commands)", (short) 0);
+									TL_TLI_TLIPK ((short) 0);
+								    };
+								};
+							    };
+							};
+						    };
+						};
+					    };
+					};
+				    };
+				};
+			    };
+			};
+		    };
+		};
+	    };
+	};
     };
 }
 

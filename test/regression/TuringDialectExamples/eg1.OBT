@@ -1,20 +1,20 @@
 type class stack (maxdepth, elementType) :
     object
-        import (error)
-        export (push, pop)
+	import (error)
+	export (push, pop)
 
-        var storage : array 1 .. maxdepth of elementType
-        var depth : 0 .. maxdepth
+	var storage : array 1 .. maxdepth of elementType
+	var depth : 0 .. maxdepth
 
-        procedure push (e : elementType)
-        % .  .  .  same body as before  .  .  . 
-        end push
+	procedure push (e : elementType)
+	% .  .  .  same body as before  .  .  .	
+	end push
 
-        procedure pop (var e : elementType)
-        % .  .  .  same body as before  .  .  . 
-        end pop
+	procedure pop (var e : elementType)
+	% .  .  .  same body as before  .  .  .	
+	end pop
 
-        depth := 0
+	depth := 0
     end smallStackOfString
 
 type smallStackOfString : instance stack (10, string)

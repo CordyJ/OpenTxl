@@ -7,63 +7,63 @@ include "ANSIC.Grammar"
 
 % Avoid counting function bodies as compound statements
 define compound_nonstatement
-        {                       [IN] [NL] 
-            [declarations] 
-            [statements]        [EX] 
-        } [opt ';]              [NL] [KEEP]
+        { 			[IN] [NL] 
+	    [declarations] 
+	    [statements] 	[EX] 
+	} [opt ';] 		[NL] [KEEP]
 end define
 
 % Avoid copying whole function bodies when counting
 % (This would all be trivial if we had attributes in TXL!)
 define function_definition
-        [opt functionmark] [opt decl_specifiers] [declarator]
-            [opt NL_declarations]                       % old style functions
-            [compound_nonstatement]
+	[opt functionmark] [opt decl_specifiers] [declarator]
+	    [opt NL_declarations] 			% old style functions
+	    [compound_nonstatement]
 end define
 
 define functionmark
-        'MARK
+    	'MARK
 end define
 
 % Avoid copying whole declarations
 define declaration
-        [opt declarationmark] [linkage_specification]
-    |   [opt declarationmark] [struct_or_union_definition]
-    |   [opt declarationmark] [decl_specifiers] [opt declarator_list] ; [NL]    
+    	[opt declarationmark] [linkage_specification]
+    |	[opt declarationmark] [struct_or_union_definition]
+    |	[opt declarationmark] [decl_specifiers] [opt declarator_list] ;	[NL]	
 end define
 
 define declarationmark 
-        'MARK
+	'MARK
 end define
 
 % Avoid copying whole statements
 define statement
         [opt statementmark] [opt compoundmark] [repeat label] [compound_statement]
-    |   [opt statementmark] [opt expressionmark] [repeat label] [expression_statement]  
-    |   [opt statementmark] [opt selectionmark] [repeat label] [selection_statement]    
-    |   [opt statementmark] [opt iterationmark] [repeat label] [iteration_statement]    
-    |   [opt statementmark] [repeat label] [jump_statement]     
-    |   [opt statementmark] [repeat label] [null_statement]     
+    |	[opt statementmark] [opt expressionmark] [repeat label] [expression_statement]	
+    |	[opt statementmark] [opt selectionmark] [repeat label] [selection_statement]	
+    |	[opt statementmark] [opt iterationmark] [repeat label] [iteration_statement]	
+    |	[opt statementmark] [repeat label] [jump_statement]	
+    |	[opt statementmark] [repeat label] [null_statement]	
 end define
 
 define statementmark 
-        'MARK
+	'MARK
 end define
 
 define compoundmark 
-        'MARK
+	'MARK
 end define
 
 define expressionmark 
-        'MARK
+	'MARK
 end define
 
 define selectionmark 
-        'MARK
+	'MARK
 end define
 
 define iterationmark 
-        'MARK
+	'MARK
 end define
 
 
@@ -74,27 +74,27 @@ external function print
 external function unquote S [stringlit]
 
 define id_or_number
-        [id] | [number]
+	[id] | [number]
 end define
 
 function printf S [stringlit] 
     match [number]
-        N [number]
+	N [number]
     construct IdS [id]
-        _ [unquote S]
+	_ [unquote S]
     construct Output [repeat id_or_number]
-        IdS N
+	IdS N
     construct Print [repeat id_or_number]
-        Output [print]
+	Output [print]
 end function
 
 function nl
     match [number]
-        N [number]
+	N [number]
     construct Nothing [repeat id]
-        % empty
+	% empty
     construct Print [repeat id]
-        Nothing [print]
+	Nothing [print]
 end function
 
 
@@ -103,111 +103,111 @@ end function
 
 function mainRule
     replace [program]
-        UnmarkedP [program]
+	UnmarkedP [program]
 
     construct P [program]
-        UnmarkedP [markup]
+	UnmarkedP [markup]
 
     construct PPs [repeat preprocessor]
-        _ [^ P]
+	_ [^ P]
     construct NPPs [number]
-        _ [length PPs]     [nl] [printf '"Preprocessor directives  "] [nl]
+	_ [length PPs]     [nl]	[printf '"Preprocessor directives  "] [nl]
 
     construct Decls [repeat declarationmark]
-        _ [^ P] 
+	_ [^ P] 
     construct NDecls [number]
-        _ [length Decls]        [printf '"Declarations  "] [nl]
+	_ [length Decls] 	[printf '"Declarations  "] [nl]
 
     construct Fcts [repeat functionmark]
-        _ [^ P]
+	_ [^ P]
     construct NFcts [number]
-        _ [length Fcts]         [printf '"Function definitions  "] [nl]
+	_ [length Fcts] 	[printf '"Function definitions  "] [nl]
 
     construct Stmts [repeat statementmark]
-        _ [^ P]
+	_ [^ P]
     construct NStmts [number]
-        _ [length Stmts]        [printf '"Statements    "]
+	_ [length Stmts] 	[printf '"Statements    "]
 
     construct ExpnStmts [repeat expressionmark]
-        _ [^ P]
+	_ [^ P]
     construct NExpnStmts [number]
-        _ [length ExpnStmts]    [printf '"    expression statements  "] 
+	_ [length ExpnStmts] 	[printf '"    expression statements  "] 
 
     construct ExtractMoreFacts [program]
-        P [extractmorefacts]
+	P [extractmorefacts]
 
     by
-        % nada
+	% nada
 end function
 
 function extractmorefacts
     match [program]
-        P [program]
+	P [program]
 
     construct Selections [repeat selectionmark]
-        _ [^ P]
+	_ [^ P]
     construct NSelections [number]
-        _ [length Selections]   [printf '"    selection statements   "] 
+	_ [length Selections] 	[printf '"    selection statements   "] 
 
     construct Iterations [repeat iterationmark]
-        _ [^ P]
+	_ [^ P]
     construct NIterations [number]
-        _ [length Iterations]   [printf '"    iteration statements   "] 
+	_ [length Iterations] 	[printf '"    iteration statements   "] 
 
     construct Compounds [repeat compoundmark]
-        _ [^ P]
+	_ [^ P]
     construct NCompounds [number]
-        _ [length Compounds]    [printf '"    compound statements    "] 
+	_ [length Compounds]  	[printf '"    compound statements    "] 
 
     construct Jumps [repeat jump_statement]
-        _ [^ P]
+	_ [^ P]
     construct NJumps [number]
-        _ [length Jumps]        [printf '"    jump statements        "] 
+	_ [length Jumps]      	[printf '"    jump statements        "] 
 
     construct Nulls [repeat null_statement]
-        _ [^ P]
+	_ [^ P]
     construct NNulls [number]
-        _ [length Nulls]        [printf '"    null statements        "] 
+	_ [length Nulls]      	[printf '"    null statements        "] 
 
 end function
 
 function markup
     construct NFM [opt functionmark]
-        % nada
+	% nada
     construct FM [opt functionmark]
-        'MARK
+	'MARK
     construct NDM [opt declarationmark]
-        % nada
+	% nada
     construct DM [opt declarationmark]
-        'MARK
+	'MARK
     construct NSM [opt statementmark]
-        % nada
+	% nada
     construct SM [opt statementmark]
-        'MARK
+	'MARK
     construct NCM [opt compoundmark]
-        % nada
+	% nada
     construct CM [opt compoundmark]
-        'MARK
+	'MARK
     construct NEM [opt expressionmark]
-        % nada
+	% nada
     construct EM [opt expressionmark]
-        'MARK
+	'MARK
     construct NSeM [opt selectionmark]
-        % nada
+	% nada
     construct SeM [opt selectionmark]
-        'MARK
+	'MARK
     construct NIM [opt iterationmark]
-        % nada
+	% nada
     construct IM [opt iterationmark]
-        'MARK
+	'MARK
     replace [program]
-        P [program]
+	P [program]
     by
-        P [$ NFM FM]
-          [$ NDM DM]
-          [$ NSM SM]
-          [$ NCM CM]
-          [$ NEM EM]
-          [$ NSeM SeM]
-          [$ NIM IM]
+	P [$ NFM FM]
+	  [$ NDM DM]
+	  [$ NSM SM]
+	  [$ NCM CM]
+	  [$ NEM EM]
+	  [$ NSeM SeM]
+	  [$ NIM IM]
 end function

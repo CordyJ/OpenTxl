@@ -6,27 +6,27 @@ module Stack
     var stackTop : 0 .. maxDepth := 0
 
     procedure Push (value : elementType)
-        if stackTop < maxDepth then
-            stackTop += 1
-            s (stackTop) := value
-        else
-            put "ERROR Push"
-            quit 
-            end if
+	if stackTop < maxDepth then
+	    stackTop += 1
+	    s (stackTop) := value
+	else
+	    put "ERROR Push"
+	    quit 
+	    end if
     end Push
 
     procedure Pop
-        if stackTop > 0 then
-            stackTop -= 1
-        else
-            put "ERROR Pop"
-            quit 
-        end if
+	if stackTop > 0 then
+	    stackTop -= 1
+	else
+	    put "ERROR Pop"
+	    quit 
+	end if
     end Pop
 
     function Top : elementType
-        assert stackTop > 0
-        result s (stackTop)
+	assert stackTop > 0
+	result s (stackTop)
     end Top
 end Stack
 

@@ -5,142 +5,142 @@
 % % common to field declarations in class/interface
 % Note: not applied to multiple declarations in one line
 % ----------------------------------------------------------------------------
-%  ********* [1]CLASS  FIELD DECLARATIONS       *********
+%  ********* [1]CLASS  FIELD DECLARATIONS	*********
 % ----------------------------------------------------------------------------
 % [0]find a field declaration in a class body
 function translateFieldDeclaration
-        replace[repeat class_body_declaration]
-                ClassBodyDecl[repeat class_body_declaration] 
-        by
-                ClassBodyDecl[changeField]
+	replace[repeat class_body_declaration]
+		ClassBodyDecl[repeat class_body_declaration] 
+	by
+		ClassBodyDecl[changeField]
 end function
 % [1-1]apply other functions to a field declaration-----------------------------
 function changeField 
-        replace*[repeat class_body_declaration]
-                FieldDecl[field_declaration]
-                Remaining[repeat class_body_declaration]
-        by
-           FieldDecl[changeFieldArrayDimensions][checkVar][checkPrimitiveConstants]
-                    [checkRunTimeConstants]% [changeArrayDimensions]
-           Remaining[changeField]
+	replace*[repeat class_body_declaration]
+		FieldDecl[field_declaration]
+		Remaining[repeat class_body_declaration]
+	by
+	   FieldDecl[changeFieldArrayDimensions][checkVar][checkPrimitiveConstants]
+	   	    [checkRunTimeConstants]% [changeArrayDimensions]
+	   Remaining[changeField]
 end function
 % [1-2]for constants that has predefined value in their declaration-------------
 function checkPrimitiveConstants
-        replace[field_declaration]
-                Modifiers[repeat modifier] 
-                TypeSpecifier[type_specifier] 
-                VarDecl[variable_declarators];
-        construct AllVarDecl[repeat variable_declarator]
-                _[^ VarDecl]
-        deconstruct AllVarDecl
-                FirstVarDecl[variable_declarator]Remaining[repeat variable_declarator]
-        where Modifiers[containFinal]
-        where FirstVarDecl[isCompileTime]
-        by
-                Modifiers[removeStatic][finalToConst]
-                         [removeNonCSModifiers][changeProtected]
-                TypeSpecifier[changeDataTypes][changeArrayTypes]
-                VarDecl ;       
+	replace[field_declaration]
+		Modifiers[repeat modifier] 
+		TypeSpecifier[type_specifier] 
+		VarDecl[variable_declarators];
+	construct AllVarDecl[repeat variable_declarator]
+		_[^ VarDecl]
+	deconstruct AllVarDecl
+		FirstVarDecl[variable_declarator]Remaining[repeat variable_declarator]
+	where Modifiers[containFinal]
+	where FirstVarDecl[isCompileTime]
+	by
+		Modifiers[removeStatic][finalToConst]
+			 [removeNonCSModifiers][changeProtected]
+		TypeSpecifier[changeDataTypes][changeArrayTypes]
+		VarDecl ;	
 end function 
 % [1-3]for constants that has no immediate value in their declaration-----------
 function checkRunTimeConstants
-        replace[field_declaration]
-                Modifiers[repeat modifier] 
-                TypeSpecifier[type_specifier] 
-                VarDecl[variable_declarator];
-        where Modifiers[containFinal]
-        where not VarDecl[isCompileTime]
-        by
-                Modifiers[finalToReadOnly][removeNonCSModifiers][changeProtected]
-                TypeSpecifier[changeDataTypes][changeArrayTypes]
-                VarDecl ;       
+	replace[field_declaration]
+		Modifiers[repeat modifier] 
+		TypeSpecifier[type_specifier] 
+		VarDecl[variable_declarator];
+	where Modifiers[containFinal]
+	where not VarDecl[isCompileTime]
+	by
+		Modifiers[finalToReadOnly][removeNonCSModifiers][changeProtected]
+		TypeSpecifier[changeDataTypes][changeArrayTypes]
+		VarDecl ;	
 end function 
 % [1-4]for field declaration as normal variable declaration---------------------
 function checkVar
-        replace[field_declaration]
-                Modifiers[repeat modifier] 
-                TypeSpecifier[type_specifier] 
-                VarDecl[variable_declarators];
-        construct AllVarDecl[repeat variable_declarator]
-                _[^ VarDecl]
-        deconstruct AllVarDecl
-                FirstVarDecl[variable_declarator]Remaining[repeat variable_declarator]
-        where not Modifiers[containFinal]
-        by
-                Modifiers[removeNonCSModifiers][changeProtected]
-                TypeSpecifier[changeDataTypes][changeArrayTypes]
-                VarDecl ;       
+	replace[field_declaration]
+		Modifiers[repeat modifier] 
+		TypeSpecifier[type_specifier] 
+		VarDecl[variable_declarators];
+	construct AllVarDecl[repeat variable_declarator]
+		_[^ VarDecl]
+	deconstruct AllVarDecl
+		FirstVarDecl[variable_declarator]Remaining[repeat variable_declarator]
+	where not Modifiers[containFinal]
+	by
+		Modifiers[removeNonCSModifiers][changeProtected]
+		TypeSpecifier[changeDataTypes][changeArrayTypes]
+		VarDecl ;	
 end function
 % [1-5]change a field declaration int b[] to int[]b ----------------------------
 function changeFieldArrayDimensions 
-        replace[field_declaration]
-                Modifiers[repeat modifier] 
-                DataType[type_name]
-                VarName[declared_name]Dim [repeat dimension]VarInit [opt equals_variable_initializer];
-        % data type first and [] follows
-        construct NewTypeSpecifier[type_specifier]
-                DataType Dim
-        by
-                Modifiers NewTypeSpecifier VarName VarInit ;
+	replace[field_declaration]
+		Modifiers[repeat modifier] 
+		DataType[type_name]
+		VarName[declared_name]Dim [repeat dimension]VarInit [opt equals_variable_initializer];
+	% data type first and [] follows
+	construct NewTypeSpecifier[type_specifier]
+		DataType Dim
+	by
+		Modifiers NewTypeSpecifier VarName VarInit ;
 end function
 % [1-6]check if it has a number,true,false,string or char literal------------------
 function isCompileTime
-        match[variable_declarator]
-                VarName[variable_name] '= Value[literal]
+	match[variable_declarator]
+		VarName[variable_name] '= Value[literal]
 end function
 % [1-7]change the final key word to const------------------------------------------
 function finalToConst
-        replace *[repeat modifier]
-                CurrentModifier[modifier]
-                RemainingModifiers[repeat modifier]
-        where CurrentModifier[isFinal]
-        by 
-                'const
-                RemainingModifiers
+	replace *[repeat modifier]
+		CurrentModifier[modifier]
+		RemainingModifiers[repeat modifier]
+	where CurrentModifier[isFinal]
+	by 
+		'const
+		RemainingModifiers
 end function
 % [1-8]change the final key word to readonly---------------------------------------
 function finalToReadOnly
-        replace *[repeat modifier]
-                CurrentModifier[modifier]
-                RemainingModifiers[repeat modifier]
-        where CurrentModifier[isFinal]
-        by 
-                'readonly
-                RemainingModifiers
+	replace *[repeat modifier]
+		CurrentModifier[modifier]
+		RemainingModifiers[repeat modifier]
+	where CurrentModifier[isFinal]
+	by 
+		'readonly
+		RemainingModifiers
 end function
 % [1-9] remove transient and volatile
 %  not exist in C# 
 rule removeNonCSModifiers
-        replace [repeat modifier]
-                CurrentModifier[modifier]
-                RemainingModifiers[repeat modifier]
-        where CurrentModifier[isTransient][isVolatile]
-        by
-                RemainingModifiers
+	replace [repeat modifier]
+		CurrentModifier[modifier]
+		RemainingModifiers[repeat modifier]
+	where CurrentModifier[isTransient][isVolatile]
+	by
+		RemainingModifiers
 end rule
 % ----------------------------------------------------------------------------
-%  ********* [2]INTERFACE  FIELD DECLARATIONS   *********
+%  ********* [2]INTERFACE  FIELD DECLARATIONS	*********
 % ----------------------------------------------------------------------------
 % [0]find a field declaration in an interface body
 function translateIntFieldDeclaration
-        replace[repeat class_body_declaration]
-                ClassBodyDecl[repeat class_body_declaration] 
-        by
-                ClassBodyDecl[changeIntField]
+	replace[repeat class_body_declaration]
+		ClassBodyDecl[repeat class_body_declaration] 
+	by
+		ClassBodyDecl[changeIntField]
 end function
 % [2-1]apply other functions to a field declaration-----------------------------
 function changeIntField 
-        replace*[repeat class_body_declaration]
-                FieldDecl[field_declaration]
-                Remaining[repeat class_body_declaration]
-        construct S[stringlit]
-                "//J2C# Unsupported:Interface field must be removed manually"
-        construct Comment[comment]
-                _[unquote S]    
-        by
-                Comment
-                FieldDecl
-                Remaining[changeIntField]
+	replace*[repeat class_body_declaration]
+		FieldDecl[field_declaration]
+		Remaining[repeat class_body_declaration]
+	construct S[stringlit]
+		"//J2C# Unsupported:Interface field must be removed manually"
+	construct Comment[comment]
+		_[unquote S]	
+	by
+		Comment
+		FieldDecl
+		Remaining[changeIntField]
 end function
 
 

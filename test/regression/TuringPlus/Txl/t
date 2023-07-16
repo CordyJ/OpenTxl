@@ -1,8 +1,0 @@
-define explicitConstant
-        [integernumber]
-    |   [floatnumber]
-    |   [stringlit]
-    |   [charlit]       
-    |   true
-    |   false
-end define

@@ -1,31 +1,31 @@
 TXL Example Specification
 -------------------------
 
-Name:   
-        RStoFB.Txl
+Name:	
+	RStoFB.Txl
 
 Description:
-        One of a suite of six database schema translation systems
-        to automatically transform database schemas between data models
-        to assist in database migration and/or multidatabase integration.
-        This particular transform translates relational (SQL/DDL)
-        database schemas to ER (Entity-Relationship) schemas in Prolog
-        factbase form.  
-        
-        This system is described in detail in "Schema Translation 
-        Using Structural Transformation", R. Abu-Hamdeh, J.R. Cordy and 
-        T.P. Martin, Proc. CASCON'94, IBM Centre for Advanced Studies 
-        1994 Conference, Toronto, November 1994, pp. 202-215.
+	One of a suite of six database schema translation systems
+	to automatically transform database schemas between data models
+	to assist in database migration and/or multidatabase integration.
+	This particular transform translates relational (SQL/DDL)
+	database schemas to ER (Entity-Relationship) schemas in Prolog
+	factbase form.  
+	
+	This system is described in detail in "Schema Translation 
+	Using Structural Transformation", R. Abu-Hamdeh, J.R. Cordy and 
+	T.P. Martin, Proc. CASCON'94, IBM Centre for Advanced Studies 
+	1994 Conference, Toronto, November 1994, pp. 202-215.
 
 Author:
-        R. Abu-Hamde
+   	R. Abu-Hamde
 
 Affiliation:
-        Queen's University, Kingston, Canada
+	Queen's University, Kingston, Canada
 
 Date:
-        August 1993
-        Revised August 1995
+	August 1993
+	Revised August 1995
 
 Example:
-        txl consulatant.RS RStoFB.Txl
+	txl consulatant.RS RStoFB.Txl

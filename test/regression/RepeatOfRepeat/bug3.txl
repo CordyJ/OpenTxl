@@ -4,22 +4,22 @@ END
 end keys
 
 define program
-        BEGIN
-        [repeat idorlits]
-        END
+	BEGIN
+	[repeat idorlits]
+	END
 end define
 
 define literals
-        [repeat id] 
+	[repeat id] 
 end define
 
 define idorlits
-        [id]
-    |   [literals]
+    	[id]
+    |	[literals]
 end define
 
 rule main
     match [program]
-        P [program]
+	P [program]
 end rule
 

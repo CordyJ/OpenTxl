@@ -1,20 +1,20 @@
 #pragma -char
 
 tokens
-        xspace "[       ]+"
+	xspace "[ 	]+"
 end tokens
 
 define program
-        [repeat line]
+	[repeat line]
 end define
 
 define line
-        [opt xspace] [repeat token] [newline]
+	[opt xspace] [repeat token] [newline]
 end define
 
 rule main
-        replace * [line]
-                Space [xspace] Tokens [repeat token] NL [newline]
-        by
-                Space Tokens NL
+	replace * [line]
+		Space [xspace] Tokens [repeat token] NL [newline]
+	by
+		Space Tokens NL
 end rule

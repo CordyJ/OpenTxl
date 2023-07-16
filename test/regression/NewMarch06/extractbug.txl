@@ -10,9 +10,9 @@ end define
 
 function main 
     replace [program] 
-            P [program] 
+	    P [program] 
     construct Q [repeat item] 
-        _ [^ P] 
+	_ [^ P] 
     by 
-        Q 
+	Q 
 end function

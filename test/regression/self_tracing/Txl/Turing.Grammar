@@ -3,524 +3,524 @@
 % (after the original by C.D. Halpern, University of Toronto, January 1986)
 
 compounds
-        :=  +=  -=  *=  ..  >=  <=  ~= 
+	:=  +=  -=  *=  ..  >=  <=  ~= 
 end compounds
 
 comments
-        '%
+	'%
 end comments
 
 keys
-        'array 'assert 'begin 'bind 'body 'boolean 'case 'collection 'const 'decreasing
-        'else 'elsif 'end 'enum 'exit 'export 'for 'forward 'free 'function
-        'get 'if 'import 'init 'int 'label 'loop 'module 'new 'not
-        'of 'opaque 'pervasive 'pointer 'post 'pre 'procedure 'put 'real 'record
-        'result 'return 'set 'skip 'string 'then 'to 'type 'union 'var 'when
+	'array 'assert 'begin 'bind 'body 'boolean 'case 'collection 'const 'decreasing
+	'else 'elsif 'end 'enum 'exit 'export 'for 'forward 'free 'function
+	'get 'if 'import 'init 'int 'label 'loop 'module 'new 'not
+	'of 'opaque 'pervasive 'pointer 'post 'pre 'procedure 'put 'real 'record
+	'result 'return 'set 'skip 'string 'then 'to 'type 'union 'var 'when
 end keys
 
 define program
-        [repeat declarationOrStatement]
+	[repeat declarationOrStatement]
 end define
 
 define subScope
-        [repeat declarationOrStatement]
+	[repeat declarationOrStatement]
 end define
 
 define declarationOrStatement
-        [declaration]   [NL] 
-    |   [statement]     [NL]
+	[declaration] 	[NL] 
+    |	[statement] 	[NL]
 end define
 
 define declaration
-        [moduleDeclaration]
-    |   [constantDeclaration]
-    |   [typeDeclaration]
-    |   [variableDeclaration]
-    |   [variableBinding]
-    |   [subprogramDeclaration]
+	[moduleDeclaration]
+    |	[constantDeclaration]
+    |	[typeDeclaration]
+    |	[variableDeclaration]
+    |	[variableBinding]
+    |	[subprogramDeclaration]
 end define
 
 define moduleDeclaration 
-                                [NL]
-        'module [id]            [NL][IN]
-            [moduleBody]        [EX]
-        'end [id]               [NL]
+				[NL]
+	'module [id] 		[NL][IN]
+	    [moduleBody] 	[EX]
+	'end [id] 		[NL]
 end define
 
 define moduleBody 
-        [opt importList]
-        [opt exportList]
-        [subScope]
+	[opt importList]
+	[opt exportList]
+	[subScope]
 end define
 
 define exportList 
-        'export ( [list optOpaqueId] )  [NL]
+	'export ( [list optOpaqueId] )	[NL]
 end define
 
 define optOpaqueId 
-        [opt 'opaque] [id] 
+	[opt 'opaque] [id] 
 end define
 
 define constantDeclaration 
-        'const [opt Pervasive] [id] [opt colonTypeSpec] [opt assignInitialValue]
+	'const [opt Pervasive] [id] [opt colonTypeSpec] [opt assignInitialValue]
 end define
 
 define assignInitialValue
-        := [initialValue]
+	:= [initialValue]
 end define
 
 define initialValue
-        'init ( [initialValue] [repeat commaInitialValue] )
-    |   [expn]
+	'init ( [initialValue] [repeat commaInitialValue] )
+    |	[expn]
 end define
 
 define commaInitialValue 
-        , [initialValue]
+	, [initialValue]
 end define
 
 define colonTypeSpec
-        : [typeSpec]
+	: [typeSpec]
 end define
 
 define typeSpec
-        [standardType]
-    |   [arrayType]
-    |   [recordType]
-    |   [enumeratedType]
-    |   [setType]
-    |   [unionType]
-    |   [collectionType]
-    |   [pointerType]
-    |   [subrangeType]
-    |   [namedType]
+	[standardType]
+    |	[arrayType]
+    |	[recordType]
+    |	[enumeratedType]
+    |	[setType]
+    |	[unionType]
+    |	[collectionType]
+    |	[pointerType]
+    |	[subrangeType]
+    |	[namedType]
 end define
 
 define standardType
-        'int  
-    |   'real  
-    |   'boolean  
-    |   [stringType]
+    	'int  
+    |	'real  
+    |	'boolean  
+    |	[stringType]
 end define
 
 define stringType
-        'string [opt stringLength]
+	'string [opt stringLength]
 end define
 
 define stringLength
-        ( [expnOrStar] )
+	( [expnOrStar] )
 end define
 
 define idOrStar
-        [expn]  |  *
+	[expn]  |  *
 end define
 
 % Non-precedence expression grammar (leave precedence to Turing)
 
 define expn 
-        [primary] [opt operatorExpn]
+	[primary] [opt operatorExpn]
 end define
 
 define operatorExpn 
-        [op] [expn]
+	[op] [expn]
 end define
 
 define op 
-        +  |  *  |  -  |  /  |  =  |  <  |  >  |  'and  |  'or  |  >=  |  <=  |  ~=  |  'mod  |  'div  |  'not =
+	+  |  *  |  -  |  /  |  =  |  <  |  >  |  'and  |  'or  |  >=  |  <=  |  ~=  |  'mod  |  'div  |  'not =
 end define
 
 define primary 
-        ( [expn] )
-    |   [prefixOp] [primary]
-    |   [stringlit]
-    |   [number]
-    |   [reference]
+	( [expn] )
+    |	[prefixOp] [primary]
+    |	[stringlit]
+    |	[number]
+    |	[reference]
 end define
 
 define prefixOp 
-        +  |  -  |  'not
+	+  |  -  |  'not
 end define
 
 define reference 
-        [id] [repeat componentSelector]
+	[id] [repeat componentSelector]
 end define
 
 define componentSelector
-        . [id]
-    |   [subscript]
+	. [id]
+    |	[subscript]
 end define
 
 define subscript
-        ( [expnOrStar] [opt commaOrDotDotExpnOrStar] )
+	( [expnOrStar] [opt commaOrDotDotExpnOrStar] )
 end define
 
 define commaOrDotDotExpnOrStar
-        [repeat commaExpn]
-    |   [dotDotExpnOrStar]
+	[repeat commaExpn]
+    |	[dotDotExpnOrStar]
 end define
 
 define commaExpn
-        , [expn]
+  	, [expn]
 end define
 
 define dotDotExpnOrStar
-        .. [expnOrStar]
+	.. [expnOrStar]
 end define
 
 define expnOrStar
-        [starExpn]
-    |   [expn]
+	[starExpn]
+    |	[expn]
 end define
 
 define starExpn
-        * [opt plusOrMinusExpn]
+	* [opt plusOrMinusExpn]
 end define
 
 define plusOrMinusExpn
-        + [expn]
-    |   - [expn]
+	+ [expn]
+    |	- [expn]
 end define
 
 define subrangeType
-        [expn] .. [expn]
+	[expn] .. [expn]
 end define
 
 define commaId
-        , [id]
+	, [id]
 end define
 
 define arrayType 
-        'array [indexType] [repeat commaIndexType] 'of [typeSpec]
+	'array [indexType] [repeat commaIndexType] 'of [typeSpec]
 end define
 
 define indexType 
-        [enumeratedType] 
-    |   [starredSubrangeType] 
-    |   [namedType]
+	[enumeratedType] 
+    |	[starredSubrangeType] 
+    |	[namedType]
 end define
 
 define starredSubrangeType
-        [expn] .. [expnOrStar]
+	[expn] .. [expnOrStar]
 end define
 
 define expnOrStar
-        [expn]
-    |   *
+	[expn]
+    |	*
 end define
 
 define commaIndexType
-        , [indexType]
+	, [indexType]
 end define
 
 define recordType 
-                                        [NL][IN]
-        'record                         [NL][IN]
-            [repeat recordField]        [EX]
-        'end 'record                    [EX]
+					[NL][IN]
+	'record 			[NL][IN]
+	    [repeat recordField]	[EX]
+	'end 'record 			[EX]
 end define
 
 define recordField
-        [id] [repeat commaId] : [typeSpec]      [NL]
+	[id] [repeat commaId] : [typeSpec]	[NL]
 end define
 
 define unionType 
-                                                [NL][IN]
-        'union [opt id] : [indexType] 'of       [NL][IN]
-            [unionAlternative]
-            [repeat unionAlternative]
-            [opt lastUnionAlternative]          [EX]
-        'end 'union                             [EX]
+						[NL][IN]
+	'union [opt id] : [indexType] 'of	[NL][IN]
+	    [unionAlternative]
+	    [repeat unionAlternative]
+	    [opt lastUnionAlternative]		[EX]
+	'end 'union				[EX]
 end define
 
 define unionAlternative 
-        'label [expn] [repeat commaExpn] :              [NL][IN]
-            [repeat id_RepCommaId_Colon_TypeSpec]       [EX]
+	'label [expn] [repeat commaExpn] : 		[NL][IN]
+	    [repeat id_RepCommaId_Colon_TypeSpec]	[EX]
 end define
 
 define id_RepCommaId_Colon_TypeSpec 
-        [id] [repeat commaId] : [typeSpec]      [NL]
+	[id] [repeat commaId] : [typeSpec] 	[NL]
 end define
 
 define lastUnionAlternative 
-        'label :                                        [NL][IN]
-            [repeat id_RepCommaId_Colon_TypeSpec]       [EX]
+	'label : 					[NL][IN]
+	    [repeat id_RepCommaId_Colon_TypeSpec]	[EX]
 end define
 
 define collectionType
-        'collection 'of [forwardIdOrTypeSpec]
+	'collection 'of [forwardIdOrTypeSpec]
 end define
 
 define forwardIdOrTypeSpec 
-        'forward [id] 
-    |   [typeSpec]
+	'forward [id] 
+    |	[typeSpec]
 end define
 
 define pointerType 
-        'pointer 'to [id]
+	'pointer 'to [id]
 end define
 
 define namedType
-        [reference]
+	[reference]
 end define
 
 define enumeratedType 
-        'enum ( [id] [repeat commaId] )
+	'enum ( [id] [repeat commaId] )
 end define
 
 define setType 
-        'set 'of [indexType]
+	'set 'of [indexType]
 end define
 
 define variableBinding 
-        'bind [opt 'var] [id] 'to [reference] [repeat commaVarBinding]
+	'bind [opt 'var] [id] 'to [reference] [repeat commaVarBinding]
 end define
 
 define commaVarBinding 
-         , [variableBinding]
+	 , [variableBinding]
 end define
 
 define variableDeclaration 
-        'var [id] [repeat commaId] [opt colonTypeSpec] [opt assignInitialValue]
+	'var [id] [repeat commaId] [opt colonTypeSpec] [opt assignInitialValue]
 end define
 
 define typeDeclaration
-        'type [opt Pervasive] [id] : [typeSpec]
+	'type [opt Pervasive] [id] : [typeSpec]
 end define
 
 define Pervasive 
-        'pervasive 
-    |   *
-    |   [empty]
+	'pervasive 
+    |	*
+    |	[empty]
 end define
 
 define subprogramDeclaration
-        [procedureDeclaration]
-    |   [functionDeclaration] 
-    |   [forwardSubprogramDeclaration] 
-    |   [bodySubprogramDeclaration] 
+	[procedureDeclaration]
+    |	[functionDeclaration] 
+    |	[forwardSubprogramDeclaration] 
+    |	[bodySubprogramDeclaration] 
 end define
 
 define procedureDeclaration
-                                [NL]
-        [procedureHeader]       [NL][IN]
-            [opt importList]
-            [subprogramBody]
+				[NL]
+	[procedureHeader]	[NL][IN]
+	    [opt importList]
+	    [subprogramBody]
 end define
 
 define functionDeclaration
-                                [NL]
-        [functionHeader]        [NL][IN]
-            [opt importList]
-            [subprogramBody]
+				[NL]
+	[functionHeader]	[NL][IN]
+	    [opt importList]
+	    [subprogramBody]
 end define
 
 define forwardSubprogramDeclaration
-        'forward [subprogramHeader]     [NL][IN]
-        [importList]                    [EX]
+	'forward [subprogramHeader] 	[NL][IN]
+	[importList]			[EX]
 end define
 
 define subprogramHeader
-        [procedureHeader] 
-    |   [functionHeader]
+	[procedureHeader] 
+    |	[functionHeader]
 end define
 
 define bodySubprogramDeclaration
-                                                [NL]
-        'body [procedureOrFunction] [id]        [NL][IN]
-        [subprogramBody]
+						[NL]
+	'body [procedureOrFunction] [id] 	[NL][IN]
+	[subprogramBody]
 end define
 
 define procedureOrFunction
-        'procedure
-    |   'function
+	'procedure
+    |	'function
 end define
 
 define procedureHeader
-        'procedure [id] [opt parameterList]
+	'procedure [id] [opt parameterList]
 end define
 
 define parameterList
-        ( [parameterDeclaration]  [repeat commaParameterDecl] )
+	( [parameterDeclaration]  [repeat commaParameterDecl] )
 end define
 
 define parameterDeclaration
-        [opt 'var] [id] [repeat commaId] :  [typeSpec]
-    |   [subprogramHeader]
+	[opt 'var] [id] [repeat commaId] :  [typeSpec]
+    |	[subprogramHeader]
 end define
 
 define commaParameterDecl
-        , [parameterDeclaration]
+	, [parameterDeclaration]
 end define
 
 define functionHeader
-        'function [id] [opt parameterList] [opt id] : [typeSpec]
+	'function [id] [opt parameterList] [opt id] : [typeSpec]
 end define
 
 define importList 
-        'import ( [list optVarOrForwardId] )    [NL]
+	'import ( [list optVarOrForwardId] )	[NL]
 end define
 
 define optVarOrForwardId 
-        [opt varOrForward] [id]
+	[opt varOrForward] [id]
 end define
 
 define varOrForward 
-        'var 
-    |   'forward 
+	'var 
+    |	'forward 
 end define
 
 define subprogramBody
-            [opt preExpn]
-            [opt initList]
-            [opt postExpn]
-            [subScope]          [EX]
-        'end  [id]              [NL]
+	    [opt preExpn]
+	    [opt initList]
+	    [opt postExpn]
+	    [subScope]		[EX]
+	'end  [id]		[NL]
 end define
 
 define initList
-        'init  [initAssignment]  [repeat commaInitAssignment]   [NL]
+	'init  [initAssignment]  [repeat commaInitAssignment]	[NL]
 end define
 
 define preExpn 
-        'pre [expn]     [NL]
+	'pre [expn] 	[NL]
 end define
 
 define postExpn 
-        'post [expn]    [NL]
+	'post [expn] 	[NL]
 end define
 
 define initAssignment
-        [id] := [expn]
+	[id] := [expn]
 end define
 
 define commaInitAssignment
-        , [initAssignment]
+	, [initAssignment]
 end define
 
 define statement
-        'assert [expn]
-    |   'return
-    |   'result [expn]
-    |   [ifStatement]
-    |   'loop                   [NL][IN]
-            [subScope]          [EX]
-        'end 'loop
-    |   'exit [opt when]
-    |   [caseStatement]
-    |   'begin                  [NL][IN]
-            [subScope]          [EX]
-        'end
-    |   'new [id], [reference]
-    |   'free [id], [reference]
-    |   [forStatement]
-    |   [putStatement]
-    |   [getStatement]
-    |   [assignment]
-    |   [procedureCall]
-    |   ;
+	'assert [expn]
+    |	'return
+    |	'result [expn]
+    |	[ifStatement]
+    |	'loop			[NL][IN]
+	    [subScope]		[EX]
+	'end 'loop
+    |	'exit [opt when]
+    |	[caseStatement]
+    |	'begin			[NL][IN]
+	    [subScope]		[EX]
+	'end
+    |	'new [id], [reference]
+    |	'free [id], [reference]
+    |	[forStatement]
+    |	[putStatement]
+    |	[getStatement]
+    |	[assignment]
+    |	[procedureCall]
+    |	;
 end define
 
 define ifStatement
-        'if [expn] 'then        [NL][IN]
-                [subScope]      [EX]
-        [repeat elsif]
-        [opt else]
-        'end 'if
+	'if [expn] 'then	[NL][IN]
+		[subScope]	[EX]
+	[repeat elsif]
+	[opt else]
+	'end 'if
 end define
 
 define elsif
-        'elsif [expn] 'then     [NL][IN]
-            [subScope]          [EX]
+	'elsif [expn] 'then  	[NL][IN]
+	    [subScope]		[EX]
 end define
 
 define else
-        'else                   [NL][IN]
-            [subScope]          [EX]
+	'else			[NL][IN]
+	    [subScope]		[EX]
 end define
 
 define caseStatement
-        'case [expn] 'of                [NL][IN]
-            [caseAlternative]
-            [repeat caseAlternative]
-            [opt lastCaseAlternative]   [EX]
-        'end case
+	'case [expn] 'of		[NL][IN]
+	    [caseAlternative]
+	    [repeat caseAlternative]
+	    [opt lastCaseAlternative]	[EX]
+	'end case
 end define
 
 define caseAlternative
-        'label [expn] [repeat commaExpn]  :     [NL][IN]
-            [subScope]                          [EX]
+	'label [expn] [repeat commaExpn]  :	[NL][IN]
+	    [subScope]				[EX]
 end define
 
 define lastCaseAlternative
-        'label :                [NL][IN]
-            [subScope]          [EX]
+	'label : 		[NL][IN]
+	    [subScope]		[EX]
 end define
 
 define when
-        'when [expn]
+	'when [expn]
 end define
 
 define forStatement
-        'for [opt 'decreasing] [opt id] : [forRange]    [NL][IN]
-            [subScope]                                  [EX]
-        'end 'for
+	'for [opt 'decreasing] [opt id] : [forRange]	[NL][IN]
+	    [subScope]					[EX]
+	'end 'for
 end define
 
 define forRange 
-        [subrangeType] 
-    |   [namedType]
+	[subrangeType] 
+    |	[namedType]
 end define
 
 define putStatement
-        'put [opt colonIdComma] [putItem] [repeat commaPutItem] [opt '..]
+	'put [opt colonIdComma] [putItem] [repeat commaPutItem] [opt '..]
 end define
 
 define colonIdComma 
-        : [id] , 
+	: [id] , 
 end define
 
 define putItem
-        [expn] [opt colonExpn] [opt colonExpn] [opt colonExpn]
-    |   'skip
+	[expn] [opt colonExpn] [opt colonExpn] [opt colonExpn]
+    |	'skip
 end define
 
 define colonExpn 
-        : [expn]
+	: [expn]
 end define
 
 define commaPutItem
-        , [putItem]
+	, [putItem]
 end define
 
 define getStatement
-        'get [opt colonIdComma] [getItem] [repeat commaGetItem]
+	'get [opt colonIdComma] [getItem] [repeat commaGetItem]
 end define
 
 define getItem
-        [reference] [opt colonExpnOrStar]
-    |   'skip
+	[reference] [opt colonExpnOrStar]
+    |	'skip
 end define
 
 define colonExpnOrStar
-        : [expnOrStar]
+	: [expnOrStar]
 end define
 
 define expnOrStar
-        [expn]
-    |   *
+	[expn]
+    |	*
 end define
 
 define commaGetItem
-        , [getItem]
+	, [getItem]
 end define
 
 define assignment
-        [reference] [assignmentOperator] [expn]
+	[reference] [assignmentOperator] [expn]
 end define
 
 define assignmentOperator
-        :=  |  +=  |  -=  |  *=
+    	:=  |  +=  |  -=  |  *=
 end define
 
 define procedureCall
-        [reference]
+	[reference]
 end define

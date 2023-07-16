@@ -23,11 +23,11 @@ PROCEDURE display(allocated: INTEGER;req: tFork);
 BEGIN
     InOut.WriteString("Fork ");
     CASE allocated OF
-        None: 
-            InOut.WriteString(" not allocated");
+	None: 
+	    InOut.WriteString(" not allocated");
       | Left, Right: 
-          InOut.WriteString(" allocated to philosopher ");
-          InOut.WriteString(req.Name);
+	  InOut.WriteString(" allocated to philosopher ");
+	  InOut.WriteString(req.Name);
     END;
     InOut.WriteLn();
 END display;
@@ -39,21 +39,21 @@ BEGIN
         display(allocated,req); 
         SELECT
             (allocated = None) OR (allocated = Left) && ACCEPT(left,req) :
-                CASE req.order OF
-                    pickup:
-                        allocated := Left;
-                  | putdown:
-                        allocated := None;
-                END;
-                REPLY(left,ack);
+	        CASE req.order OF
+	            pickup:
+	                allocated := Left;
+	          | putdown:
+	                allocated := None;
+		END;
+		REPLY(left,ack);
           | (allocated = None) OR (allocated = Right) && ACCEPT(right,req) :
-                CASE req.order OF
-                    pickup:
-                         allocated := Right;
-                  | putdown:
-                         allocated := None;
-                END;
-                REPLY(left,ack);
+	        CASE req.order OF
+	            pickup:
+	                 allocated := Right;
+	          | putdown:
+	                 allocated := None;
+		END;
+		REPLY(left,ack);
         END;
     END;
 END Fork.

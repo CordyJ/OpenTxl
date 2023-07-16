@@ -10,9 +10,9 @@ end define
 
 rule main
     replace [repeat id]
-        Id1 [id] Id2 [id] Rest [repeat id]
+	Id1 [id] Id2 [id] Rest [repeat id]
     where 
-        Id1 [> Id2]
+	Id1 [> Id2]
     by
-        Id2 Id1 Rest 
+	Id2 Id1 Rest 
 end rule

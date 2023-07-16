@@ -7,13 +7,13 @@ module class stack (itemtype, stacksize)
     var contents : array 1 .. stacksize of itemtype
 
     procedure push (item : itemtype)
-        top := top + 1
-        contents (top) := item
+	top := top + 1
+	contents (top) := item
     end push
 
     procedure pop (var item : itemtype)
-        item := contents (top)
-        top := top - 1
+	item := contents (top)
+	top := top - 1
     end pop
 end stack
 
@@ -21,28 +21,28 @@ end stack
 module stringstack refines stack (string, 100)
     export (empty)
     function empty : boolean
-        result top = 0
+	result top = 0
     end empty
 end stringstack
 
 % Another module supporting a stack of records
 type symbolinfo:
     record
-        symbol : string
-        number : int
+	symbol : string
+	number : int
     end record
 
 module symbolstack refines stack (symbolinfo, 30)
     import (symbolinfo)
     export (symbol, number, allgone)
     function symbol : string
-        result contents (top).symbol
+	result contents (top).symbol
     end symbol
     function number : int
-        result contents (top).number
+	result contents (top).number
     end number
     function allgone : boolean
-        result top = 0
+	result top = 0
     end allgone
 end symbolstack
     

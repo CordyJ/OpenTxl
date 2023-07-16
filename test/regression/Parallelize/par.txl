@@ -1,5 +1,5 @@
 % Parallelize Pascal assignments
-% J.R. Cordy    15.5.93
+% J.R. Cordy	15.5.93
 
 % This TXL program will collect all sequences of independent
 % assignments into single parallel assignments.
@@ -7,7 +7,7 @@
 include "Pascal.grm"
 
 compounds
-        << >>
+	<< >>
 end compounds
 
 define otherStatement
@@ -20,11 +20,11 @@ end define
 
 function main
     replace [program]
-        P [program]
+	P [program]
     by
-        P [createSimultaneousAssignmentPairs]
-          [extendSimulataneousAssignments]
-          [mergeSimulataneousAssignments]
+	P [createSimultaneousAssignmentPairs]
+	  [extendSimulataneousAssignments]
+	  [mergeSimulataneousAssignments]
 end function
 
 rule createSimultaneousAssignmentPairs
@@ -83,6 +83,6 @@ end rule
 
 rule references V [variable]
     match * [variable]
-        V
+ 	V
 end rule
 

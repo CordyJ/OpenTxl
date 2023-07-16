@@ -1,15 +1,15 @@
 %+
-%       Name:           ObjectPascal.Grammar
+%	Name:		ObjectPascal.Grammar
 %
-%       Purpose:        TXL Basis Grammar for Borland Delphi Object Pascal
-%       Author:         S.P. Leblanc, Royal Military College of Canada
+% 	Purpose:	TXL Basis Grammar for Borland Delphi Object Pascal
+%	Author:		S.P. Leblanc, Royal Military College of Canada
 %
-%       Revision History:
-%       1.0     April 2002 S.P. Leblanc 
-%               - initial version
-%       1.1     May-June 2002
-%               - modifications to parse everything
-%               - Helen Jong, T. Dean, Z. Nasser, Queen's University
+%	Revision History:
+%	1.0 	April 2002 S.P. Leblanc 
+%		- initial version
+%	1.1	May-June 2002
+%		- modifications to parse everything
+%		- Helen Jong, T. Dean, Z. Nasser, Queen's University
 %-
 
 
@@ -68,12 +68,12 @@ end define
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 define program_definition
-    'program [decl_name] [opt program_file_list] ';                     [NL] %TD, Hellen
+    'program [decl_name] [opt program_file_list] '; 			[NL] %TD, Hellen
     [program_block] .
 end define
 
 define program_file_list
-   ( [list id] ')       % TD ignore file parameter for now.
+   ( [list id] ')	% TD ignore file parameter for now.
 end define
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -81,7 +81,7 @@ end define
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 define package_definition
-    package [decl_name] ';                                               [NL]
+    package [decl_name] ';						 [NL]
     [opt requires_clause]
     [opt contains_clause]
     'end .
@@ -96,11 +96,11 @@ define contains_clause
 end define
 
 define requires_idList_semicolon
-    requires [list ref_name+] ;                                         [NL]
+    requires [list ref_name+] ;						[NL]
 end define
 
 define contains_idList_semicolon
-    contains [list ref_name+] ;                                         [NL]            
+    contains [list ref_name+] ;						[NL]		
 end define
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -108,7 +108,7 @@ end define
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 define library_definition
-    library [decl_name] ';                                              [NL]
+    library [decl_name] ';						[NL]
     [program_block] .
 end define
 
@@ -117,28 +117,28 @@ end define
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 define unit_definition
-    unit [decl_name] ';                                                 [NL]
-    [interface_section]                                                 [NL]
-    [implementation_section]                                            [NL]
+    unit [decl_name] ';            					[NL]
+    [interface_section]     						[NL]
+    [implementation_section]						[NL]
     [init_section] .
 end define
 
 define interface_section
-    interface                                                           [NL][NL]
-    [opt uses_clause]                                                   [NL]
+    interface                       					[NL][NL]
+    [opt uses_clause]               					[NL]
     [repeat interface_declaration]
 end define
 
 define implementation_section
-        implementation                                                  [IN][NL]
-            [opt uses_clause]
-            [repeat declaration_section]                                [EX][NL]
+        implementation                  				[IN][NL]
+	    [opt uses_clause]
+	    [repeat declaration_section]    				[EX][NL]
 end define
 
 define init_section
-      intitialization                                                   [IN][NL]
-         [statement_list]
-         [opt fin_statement_list]                                       [EX][NL]
+      intitialization							[IN][NL]
+	 [statement_list]
+	 [opt fin_statement_list]					[EX][NL]
       'end
     | [compound_statement]
     | 'end
@@ -148,14 +148,14 @@ define interface_declaration
       [constant_section]
     | [type_section]
     | [var_section]
-    | [exported_heading] [opt directive]        %Hellen
+    | [exported_heading] [opt directive] 	%Hellen
 end define
 
 define exported_heading
-      [procedure_heading] ';                                            [NL]
-    | [function_heading] ';                                             [NL]
-    | [constructor_heading] ';                                          [NL]
-    | [destructor_heading] ';                                           [NL]
+      [procedure_heading] ';						[NL]
+    | [function_heading] ';						[NL]
+    | [constructor_heading] ';						[NL]
+    | [destructor_heading] ';	 					[NL]
 end define
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -170,8 +170,8 @@ end define
 % TD. should not be part of program_block , but in library and 
 % program
 define uses_clause
-    uses                                                                [IN][NL]
-        [list uses_item+] ';                                            [EX][NL] %TD
+    uses                    						[IN][NL]
+	[list uses_item+] ';   						[EX][NL] %TD
 end define
 
 define uses_item %TD
@@ -208,13 +208,13 @@ end define
 %-------------------------------------
 
 define constant_section
-    const                                                               [IN][NL]
-        [repeat constant_declaration]                                   [EX][NL]
+    const                           					[IN][NL]
+        [repeat constant_declaration]   				[EX][NL]
 end define
 
 define constant_declaration
-      [decl_name] = [expression] ;                                      [NL]    %Hellen
-    | [decl_name] : [typeId] = [typed_constant] ;                       [NL]
+      [decl_name] = [expression] ;					[NL]	%Hellen
+    | [decl_name] : [typeId] = [typed_constant] ; 			[NL]
 end define
 
 %-------------------------------------
@@ -222,35 +222,35 @@ end define
 %-------------------------------------
 
 define type_section
-    'type                                                               [IN][NL]
-        [repeat type_declaration+]                                      [EX][NL]
+    'type                           					[IN][NL]
+        [repeat type_declaration+]      				[EX][NL]
 end define
 
 define type_declaration
-    [decl_name] = [type_or_restrictedType]      %Hellen
+    [decl_name] = [type_or_restrictedType]	%Hellen
 end define
 
 define type_or_restrictedType
-      [type] ;                                                          [NL]
-    | [restrictedType] ';                                               [NL]
+      [type] ;                 						[NL]
+    | [restrictedType] ';  						[NL]
 end define
 
 define typed_constant
-      [expression]              %Hellen
+      [expression]		%Hellen
     | [array_constant]
     | [record_constant]
 end define
 
 define array_constant
-    ( [list typed_constant] )   %Hellen
+    ( [list typed_constant] )	%Hellen
 end define
 
 define record_constant
-    ( [typed_constant] [repeat semicolon_record_field_constant] )       %Hellen
+    ( [typed_constant] [repeat semicolon_record_field_constant] )	%Hellen
 end define
 
-define semicolon_record_field_constant  %Hellen
-    '; [decl_name] : [typed_constant]   %Hellen 
+define semicolon_record_field_constant	%Hellen
+    '; [decl_name] : [typed_constant]	%Hellen 
 end define
 
 define type
@@ -303,12 +303,12 @@ define variantType
 end define
 
 define subrangeType
-    [expression] .. [expression]        %Hellen
+    [expression] .. [expression]	%Hellen
 end define
 
 
 define stringType
-    'string | ansistring | widestring | 'string '[ [expression] ']      %Hellen
+    'string | ansistring | widestring | 'string '[ [expression] ']	%Hellen
 end define
 
 define structType
@@ -319,14 +319,14 @@ define structType
 end define
 
 define arrayType
-    [array_word] [opt square_ordinalType] of [type]     %Hellen
+    [array_word] [opt square_ordinalType] of [type]	%Hellen
 end define
 
 define array_word
     'array | 'Array
 end define
 
-define square_ordinalType       %Hellen
+define square_ordinalType	%Hellen
     '[ [list ordinalType] ']
 end define
 
@@ -339,7 +339,7 @@ define field_list
 end define
 
 define field_declaration
-    [list decl_name+] : [type] ;                                        [NL]
+    [list decl_name+] : [type] ;  					[NL]
 end define
 
 define variant_section
@@ -352,11 +352,11 @@ define id_colon
 end define
 
 define record_variant_semicolon
-    [record_variant] ;                                                  [NL]
+    [record_variant] ;							[NL]
 end define
 
 define record_variant
-    [list expression+] : ( [opt field_list] )   %Hellen
+    [list expression+] : ( [opt field_list] )	%Hellen
 end define
 
 define setType
@@ -379,12 +379,12 @@ define proc_or_func_heading
     [procedure_heading] | [function_heading]
 end define
 
-define of_object        %Hellen
+define of_object	%Hellen
     'of 'object
 end define
 
 define typeId
-        [ref_name]                      
+        [ref_name]			
     |   [predefinedType]
 end define
 
@@ -393,7 +393,7 @@ define predefinedType
     |   'real
     |   'boolean
     |   'char
-    |   'byte
+    |	'byte
 end define
 
 %-------------------------------------
@@ -419,7 +419,7 @@ define semi_virtual_method_heading
 end define
 
 define virtual_method_heading
-    [method_heading] [opt semi_directive] [opt semicolon_virtual]       %Hellen
+    [method_heading] [opt semi_directive] [opt semicolon_virtual]	%Hellen
 end define
 
 define semicolon_virtual
@@ -454,7 +454,7 @@ define semi_ident_list_colonType
 end define
 
 define ident_list_colonType
-    [list decl_name+] : [type]          
+    [list decl_name+] : [type]		
 end define
 
 define fin_statement_list
@@ -462,9 +462,9 @@ define fin_statement_list
 end define
 
 define classType
-    class [opt class_heritage]                                  [IN][NL]
-        [opt class_element_list]
-        [repeat vis_spec_element_list]                          [EX][NL]
+    class [opt class_heritage]					[IN][NL]
+	[opt class_element_list]
+	[repeat vis_spec_element_list]				[EX][NL]
     [opt 'end]
 end define
 
@@ -477,7 +477,7 @@ define class_visibility
 end define
 
 define vis_spec_element_list
-                                                        [NL]
+							[NL]
     [class_visibility] [opt class_element_list]
 end define
 
@@ -486,7 +486,7 @@ define class_element_list
 end define
 
 define class_element_semi
-                                                        [NL]
+							[NL]
     [class_element] ';
 end define
 
@@ -514,10 +514,10 @@ define class_visibility_property_list
 end define
 
 define property_list
-    [property_word] [decl_name] [opt property_interface] [repeat property_specifiers]   %Hellen
+    [property_word] [decl_name] [opt property_interface] [repeat property_specifiers]	%Hellen
 end define
 
-define property_word    %Hellen
+define property_word	%Hellen
     'property | 'Property
 end define
 
@@ -530,7 +530,7 @@ define property_parameter_list
 end define
 
 define idList_colonTypeId_semicolon
-    [list decl_name+] : [typeId] ;  [NL]                
+    [list decl_name+] : [typeId] ;  [NL]		
 end define
 
 define property_specifiers
@@ -542,23 +542,23 @@ define property_specifiers
     | [implementsTypeId]
 end define
 
-define index_expession          %Hellen
+define index_expession		%Hellen
     index [expression]
 end define
 
 define read_id
-        read [ref_name]         
+        read [ref_name]		
 end define
 
 define write_id
-        write [ref_name]                
+        write [ref_name]		
 end define
 
-define stored_id_OR_stored_expression           %Hellen
+define stored_id_OR_stored_expression		%Hellen
         stored [id_or_expression]
 end define
 
-define default_expression_OR_nodefault          %Hellen
+define default_expression_OR_nodefault		%Hellen
         default [expression]
         | nodefault
 end define
@@ -568,7 +568,7 @@ define implementsTypeId
 end define
 
 define interfaceType
-        interface [opt interface_heritage] [opt class_method_list]      %Hellen
+        interface [opt interface_heritage] [opt class_method_list]	%Hellen
         [opt class_property_list] 'end
 end define
 
@@ -581,16 +581,16 @@ end define
 %-------------------------------------
 
 define var_section
-    [var]                                                               [NL][IN]
-        [repeat var_declaration_semicolon]                              [NL][EX]        %Hellen
+    [var]								[NL][IN]
+	[repeat var_declaration_semicolon]				[NL][EX]	%Hellen
 end define
 
-define var      %Hellen
+define var	%Hellen
       'var | 'Var
 end define
 
 define var_declaration_semicolon
-    [var_declaration] ;                                                 [NL]
+    [var_declaration] ; 						[NL]
 end define
 
 define var_declaration
@@ -603,16 +603,16 @@ define var_assignment
 end define
 
 define absolute_assignment
-    absolute [id_or_expression] %Hellen
+    absolute [id_or_expression]	%Hellen
 end define
 
-define id_or_expression         %Hellen
-      [ref_name]                        
+define id_or_expression		%Hellen
+      [ref_name]			
     | [expression]
 end define
 
 define constant_assignment
-    = [expression]              %Hellen
+    = [expression]		%Hellen
 end define
 
 %-------------------------------------
@@ -627,38 +627,38 @@ define procedure_section
 end define
 
 define constructor_declaration
-    [constructor_heading] ;                                             [IN][NL]
-        [block]                                                         [EX][NL]
-        ;                                                               [NL]
+    [constructor_heading] ; 						[IN][NL]
+	[block]        							[EX][NL]
+	;								[NL]
 end define
 
 define destructor_declaration
-    [destructor_heading] ;                                              [IN][NL]
-        [block]                                                         [EX][NL]
-        ;                                                               [NL]
+    [destructor_heading] ;						[IN][NL]
+        [block]         						[EX][NL]
+        ;								[NL]
 end define
 
 define procedure_declaration
-    [procedure_heading] ;                                               [IN][NL]
-        [block]                                                         [EX][NL]
-        ;                                                               [NL]
+    [procedure_heading] ;						[IN][NL]
+        [block]         						[EX][NL]
+        ;  								[NL]
 end define
 
 define function_declaration
-    [function_heading] [opt semi_directive] ;                           [IN][NL]
-        [block]                                                         [EX][NL]
-        ;                                                               [NL]
+    [function_heading] [opt semi_directive] ;				[IN][NL]
+	[block]         						[EX][NL]
+        ;								[NL]
 end define
 
 define function_heading
-    [function_word] [decl_name] [opt formal_parameters] : [type_or_string]      %Hellen
+    [function_word] [decl_name] [opt formal_parameters] : [type_or_string]	%Hellen
 end define
 
-define type_or_string           %Hellen
+define type_or_string		%Hellen
     [type] | [charlit]
 end define
 
-define function_word            %Hellen
+define function_word		%Hellen
     'function | 'Function
 end define
 
@@ -695,7 +695,7 @@ define parameter_type
 end define
 
 define param_init
-   '= [expression]      %Hellen
+   '= [expression]	%Hellen
 end define
 
 define array_of
@@ -714,7 +714,7 @@ define statement_list
 end define
 
 define semi_statement
-    ;                                                                   [NL]
+    ; 									[NL]
     [statement]
 end define
 
@@ -734,11 +734,11 @@ end define
 
 %-----------------------------------
 % Simple statments
-%       - assignment, function call, etc
+%	- assignment, function call, etc
 %-----------------------------------
 
 define simple_statement
-      [ref_name] [opt assign_expression]        % assignment statement and procedure/method call
+      [ref_name] [opt assign_expression]	% assignment statement and procedure/method call
     | inherited [opt ref_name]
     | goto [labelId]
 end define
@@ -763,14 +763,14 @@ define struct_statement
     | [loop_statement]
     | [with_statement]
     | [try_finally_statement]
-    | [try_except_statement]    %Hellen
+    | [try_except_statement]	%Hellen
     | [raise_statement]
 end define
 
 define compound_statement
-    [begin]                                                             [IN][NL]
-      [statement_list]                                                  [EX][NL]
-    'end                                                                [NL]
+    [begin]                   						[IN][NL]
+      [statement_list]  						[EX][NL]
+    'end                    						[NL]
 end define
 
 define begin
@@ -793,15 +793,15 @@ define else_statement
     else [opt statement]
 end define
 
-define if               %Hellen
+define if		%Hellen
     'if | 'If
 end define
 
 define case_statement
-    case [expression] of [case_selector]                                [IN][NL]
-        [repeat semi_case_selector] [opt ';]                            [EX][NL]
-        [opt else_statement] [opt ';]                                   [NL]
-        % else is also part of if, so defined above TD
+    case [expression] of [case_selector]    				[IN][NL]
+	[repeat semi_case_selector] [opt ';]    			[EX][NL]
+	[opt else_statement] [opt ';]           			[NL]
+	% else is also part of if, so defined above TD
     'end
 end define
 
@@ -818,7 +818,7 @@ define comma_case_label
 end define
 
 define case_label
-    [expression] [opt dotDot_expression]        %Hellen
+    [expression] [opt dotDot_expression]	%Hellen
 end define
 
 define loop_statement
@@ -837,7 +837,7 @@ end define
 
 define for_statement
     [for] [ref_name] := [expression] [to_or_downto] [expression] [do]
-        [statement]
+	[statement]
 end define
 
 define to_or_downto
@@ -857,59 +857,59 @@ define with_statement
 end define
 
 define try_finally_statement
-    try                                                                 [IN][NL]
-      [statement_list]                                                  [EX][NL]
-    finally                                                             [IN][NL]
-      [statement_list]                                                  [EX][NL]
+    try                 						[IN][NL]
+      [statement_list]  						[EX][NL]
+    finally             						[IN][NL]
+      [statement_list]  						[EX][NL]
     'end
 end define
 
-define try_except_statement             %Hellen
-    'try                                                                [IN][NL]
-      [statement_list]                                                  [EX][NL]
-    [except] [opt ;]                                                    [IN][NL]
-      [exception_block]                                                 [EX][NL]
+define try_except_statement		%Hellen
+    'try                 						[IN][NL]
+      [statement_list]							[EX][NL]
+    [except] [opt ;]     						[IN][NL]
+      [exception_block]							[EX][NL]
     'end 
 end define
 
-define except           %Hellen
+define except		%Hellen
     'except | 'Except
 end define
 
-define exception_block          %Hellen
+define exception_block		%Hellen
       [empty]
     | [statement_list]
     | [exception_else]
 end define
 
 define exception_else
-    [exception_handler_list]                                            [NL][EX]
+    [exception_handler_list]   						[NL][EX]
     [opt else_statement]
 end define
 
-define exception_handler_list   %Hellen
+define exception_handler_list	%Hellen
        [exception_handler] [repeat semi_exception_handler] [opt ;]
 end define
 
-define semi_exception_handler   %Hellen
+define semi_exception_handler	%Hellen
     ; [exception_handler]
 end define
 
-define exception_handler                        % TD
-    'on [opt exception_var] [type] [do]                                 [IN][NL]
-        [statement]                                                     [EX]
+define exception_handler			% TD
+    'on [opt exception_var] [type] [do]        				[IN][NL]
+    	[statement]                 					[EX]
 end define
 
 define exception_var
     [decl_name] ':
 end define
 
-define raise_statement          %Hellen
+define raise_statement		%Hellen
     'raise [opt ref_name] [opt at_address]
 end define
 
 define at_address
-    'at [ref_name]                      
+    'at [ref_name]			
 end define
 
 %=====================================================================
@@ -935,7 +935,7 @@ define rel_op_simple_expression
 end define
 
 define simple_expression
-    [opt term] [repeat add_op_term]     %TD
+    [opt term] [repeat add_op_term]	%TD
 end define
 
 define add_op_term
@@ -951,28 +951,28 @@ define mul_op_factor
 end define
 
 define factor
-          [ref_name]                    %Hellen
+          [ref_name]			%Hellen
         | [charlit]
         | [repeat pond_number+]
-        | '@ [opt '@] [ref_name]                                        
+	| '@ [opt '@] [ref_name]					
         | nil
         | ( [expression] )
-        | [not_word] [factor]           %Hellen
+        | [not_word] [factor]		%Hellen
         | [set_constructor]
         | [predefinedType] ( [expression] )
-        | [bool_value]                  %Hellen
-        | [opt '-] [number]
+        | [bool_value]			%Hellen
+	| [opt '-] [number]
 end define
 
 define pond_number
-        '# [number]
+	'# [number]
 end define
 
-define not_word         %Hellen
+define not_word		%Hellen
     'not | Not | NOT
 end define
 
-define bool_value       %Hellen
+define bool_value	%Hellen
     true | false | True | False
 end define
 
@@ -1025,12 +1025,12 @@ define ref_name    %ZN
 end define
 
 define object
-      [id] [repeat object_modifier]                     % ??? Unsure if this is a declaration or a reference - ZN
+      [id] [repeat object_modifier]			% ??? Unsure if this is a declaration or a reference - ZN
     | '( [ref_name] ') [repeat object_modifier]
 end define
 
 define object_modifier
-      '. [id]                   % ???
+      '. [id]			% ???
     | [array_subscript]
     | [arguments]
     | '^

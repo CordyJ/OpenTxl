@@ -1,6 +1,6 @@
 % TXL 7.7a4
 % Andy Maloney, Queen's University, January 1995
-%       [part of 499 project]
+%	[part of 499 project]
 
 
 %% *****
@@ -9,64 +9,64 @@
 
 define p_typeIdentifier
 %% Pascal
-        [id]
-    |   'integer
+	[id]
+    |	'integer
     |   'real
     |   'boolean
     |   'char
 %% Turing
-    |   'int
-    |   'string '( [number] ')
+    |	'int
+    |	'string '( [number] ')
 end define
 
 define p_arrayType
 %% Pascal
-        array '[ [list p_simpleType+] '] of [p_typeSpec]
+	array '[ [list p_simpleType+] '] of [p_typeSpec]
   |
 %% Turing
-        array [p_subrangeType] of [p_typeSpec]
+	array [p_subrangeType] of [p_typeSpec]
 end define
 
 rule changeInt
-        replace [p_typeIdentifier]
-                'integer
-        
-        by
-                'int
+	replace [p_typeIdentifier]
+		'integer
+	
+	by
+		'int
 end rule
 
 rule changeChar
-        replace [p_typeIdentifier]
-                'char
-        
-        by
-                'string '( '1 ')
+	replace [p_typeIdentifier]
+		'char
+	
+	by
+		'string '( '1 ')
 end rule
 
 rule changeArray
-        replace [p_arrayType]
-                array '[ ST [p_subrangeType] '] of TS [p_typeSpec]
-        
-        by
-                array ST of TS
+	replace [p_arrayType]
+		array '[ ST [p_subrangeType] '] of TS [p_typeSpec]
+	
+	by
+		array ST of TS
 end rule
 
 
 function translatePascalDeclarations PascalDecl [p_declaration]
-        replace [repeat p_declaration]
-                SoFar [repeat p_declaration]
-                
-        construct newPascalDecl [p_declaration]
-                PascalDecl
-                                        [changeConst]
-                                        [changeType]
-                                        [changeVar]
-        
-        where not
-                newPascalDecl [= PascalDecl]
-                                                                
-        by
-                SoFar [. newPascalDecl]
+	replace [repeat p_declaration]
+		SoFar [repeat p_declaration]
+		
+	construct newPascalDecl [p_declaration]
+		PascalDecl
+					[changeConst]
+					[changeType]
+					[changeVar]
+	
+	where not
+		newPascalDecl [= PascalDecl]
+								
+	by
+		SoFar [. newPascalDecl]
 end function
 
 
@@ -75,89 +75,89 @@ end function
 %%
 
 define t_constDecl
-        'const [p_constId] ':= [p_constValue]           [NL]
+	'const [p_constId] ':= [p_constValue]		[NL]
 end define
 
 function changeConst
-        replace [p_declaration]
-                'const
-                PCD [repeat p_constDefinition+]
-                
-        construct pascalIds [repeat p_constId]
-                _ [^ PCD]
+	replace [p_declaration]
+		'const
+	    	PCD [repeat p_constDefinition+]
+		
+	construct pascalIds [repeat p_constId]
+		_ [^ PCD]
 
-        construct pascalValues [repeat p_constValue]
-                _ [^ PCD]
-                
-        construct newTuringConsts [repeat t_constDecl]
-                _ [makeConst each pascalIds pascalValues]
-                
-        by
-                newTuringConsts
+	construct pascalValues [repeat p_constValue]
+		_ [^ PCD]
+		
+	construct newTuringConsts [repeat t_constDecl]
+		_ [makeConst each pascalIds pascalValues]
+		
+	by
+		newTuringConsts
 end function
 
 function makeConst pascalId [p_constId] pascalValue [p_constValue]
-        replace [repeat t_constDecl]
-                SoFar [repeat t_constDecl]
-        
-        construct newConst [t_constDecl]
-                'const pascalId ':= pascalValue
-        
-        by
-                SoFar [. newConst]
+	replace [repeat t_constDecl]
+		SoFar [repeat t_constDecl]
+	
+	construct newConst [t_constDecl]
+		'const pascalId ':= pascalValue
+	
+	by
+		SoFar [. newConst]
 end function
-                
-                
+		
+		
 %% *****
 %% types
 %%
 
 define p_typeType
 %% Pascal
-        [p_typeSpec]
+	[p_typeSpec]
 %% Turing
   |
-        'int
+	'int
 end define
 
 define t_typeDecl
-        'type [p_typeId] ': [p_typeType]                [NL]
+	'type [p_typeId] ': [p_typeType]		[NL]
 end define
 
 
 function changeType
-        replace [p_declaration]
-                'type
-                PTD [repeat p_typeDefinition+]
-        
-        construct PascalIds [repeat p_typeId]
-                _ [^ PTD]
+	replace [p_declaration]
+		'type
+	    	PTD [repeat p_typeDefinition+]
+	
+	construct PascalIds [repeat p_typeId]
+		_ [^ PTD]
 
-        construct PascalTypes [repeat p_typeType]
-                _ [^ PTD]
-                
-        construct TuringTypes [repeat p_typeType]
-                PascalTypes
-                                        [changeInt]
-                                        [changeChar]
-                                        [changeArray]
-        
-        construct newTuringTypes [repeat t_typeDecl]
-                _ [makeType each PascalIds TuringTypes]
-                
-        by
-                newTuringTypes
+	construct PascalTypes [repeat p_typeType]
+		_ [^ PTD]
+		
+	construct TuringTypes [repeat p_typeType]
+		PascalTypes
+					[changeInt]
+					[changeChar]
+					[changeArray]
+	
+	construct newTuringTypes [repeat t_typeDecl]
+		_ [makeType each PascalIds TuringTypes]
+		
+	by
+		newTuringTypes
 end function
 
 function makeType PascalId [p_typeId] PascalType [p_typeType]
-        replace [repeat t_typeDecl]
-                SoFar [repeat t_typeDecl]
-        
-        construct newTuringType [t_typeDecl]
-                'type PascalId ': PascalType
-        
-        by
-                SoFar [. newTuringType]
+	replace [repeat t_typeDecl]
+		SoFar [repeat t_typeDecl]
+	
+	construct newTuringType [t_typeDecl]
+		'type PascalId ': PascalType
+	
+	by
+		SoFar [. newTuringType]
 end function
 
 
@@ -167,47 +167,47 @@ end function
 
 define p_varType
 %% Pascal
-        [p_typeSpec]
+	[p_typeSpec]
 %% Turing
   |
-        'int
+	'int
 end define
 
 define t_varDecl
-        'var [p_varId] ': [p_varType]           [NL]
+	'var [p_varId] ': [p_varType]		[NL]
 end define
 
 function changeVar
-        replace [p_declaration]
-                'var
-                PTD [repeat p_varDefinition+]
-                
-        construct PascalIds [repeat p_varId]
-                _ [^ PTD]
+	replace [p_declaration]
+		'var
+	    	PTD [repeat p_varDefinition+]
+		
+	construct PascalIds [repeat p_varId]
+		_ [^ PTD]
 
-        construct PascalTypes [repeat p_varType]
-                _ [^ PTD]
+	construct PascalTypes [repeat p_varType]
+		_ [^ PTD]
 
-        construct TuringTypes [repeat p_varType]
-                PascalTypes
-                                        [changeInt]
-                                        [changeChar]
-                                        [changeArray]
-                
-        construct newTuringVars [repeat t_varDecl]
-                _ [makeVar each PascalIds TuringTypes]
-                
-        by
-                newTuringVars
+	construct TuringTypes [repeat p_varType]
+		PascalTypes
+					[changeInt]
+					[changeChar]
+					[changeArray]
+		
+	construct newTuringVars [repeat t_varDecl]
+		_ [makeVar each PascalIds TuringTypes]
+		
+	by
+		newTuringVars
 end function
 
 function makeVar pascalId [p_varId] pascalType [p_varType]
-        replace [repeat t_varDecl]
-                SoFar [repeat t_varDecl]
-        
-        construct newVar [t_varDecl]
-                'var pascalId ': pascalType
-        
-        by
-                SoFar [. newVar]
+	replace [repeat t_varDecl]
+		SoFar [repeat t_varDecl]
+	
+	construct newVar [t_varDecl]
+		'var pascalId ': pascalType
+	
+	by
+		SoFar [. newVar]
 end function

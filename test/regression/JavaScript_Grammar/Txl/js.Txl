@@ -1,6 +1,6 @@
 % TXL Parser and Pretty-printer for standalone Javascript code
 
-include "Javascript.Grm"
+include "Javascript.grm"
 
 function main
     match [program]

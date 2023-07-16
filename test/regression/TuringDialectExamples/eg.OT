@@ -6,31 +6,31 @@ const queuesize := 10
 
 type queue :
     object
-        import (queuetype, queuesize)
-        export (empty, enqueue, dequeue)
+	import (queuetype, queuesize)
+	export (empty, enqueue, dequeue)
 
-        var qend : 0 .. queuesize - 1 := 0
-        var qstart : 0 .. queuesize - 1 := 1
-        var qlength : 0 .. queuesize := 0
-        var contents : array 0 .. queuesize - 1 of queuetype
+	var qend : 0 .. queuesize - 1 := 0
+	var qstart : 0 .. queuesize - 1 := 1
+	var qlength : 0 .. queuesize := 0
+	var contents : array 0 .. queuesize - 1 of queuetype
 
-        procedure enqueue (item : queuetype)
-            pre qlength < queuesize
-            qlength := qlength + 1
-            qend := (qend + 1) mod queuesize
-            contents (qend) := item
-        end enqueue
+	procedure enqueue (item : queuetype)
+	    pre qlength < queuesize
+	    qlength := qlength + 1
+	    qend := (qend + 1) mod queuesize
+	    contents (qend) := item
+	end enqueue
 
-        procedure dequeue (var item : queuetype)
-            pre qlength > 0
-            item := contents (qstart)
-            qstart := (qstart + 1) mod queuesize
-            qlength := qlength - 1
-        end dequeue
+	procedure dequeue (var item : queuetype)
+	    pre qlength > 0
+	    item := contents (qstart)
+	    qstart := (qstart + 1) mod queuesize
+	    qlength := qlength - 1
+	end dequeue
 
-        function empty : boolean
-            result qlength = 0
-        end empty
+	function empty : boolean
+	    result qlength = 0
+	end empty
 
     end queue
 

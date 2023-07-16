@@ -7,13 +7,13 @@
 
 include "Miranda.Grammar"
 
-include "primitives.Txl"
-include "functions.Txl"
-include "patterns.Txl"
-include "boolean.Txl"
-include "comparisons.Txl"
-include "lists.Txl"
-include "generators.Txl"
+include "primitives.txl"
+include "functions.txl"
+include "patterns.txl"
+include "boolean.txl"
+include "comparisons.txl"
+include "lists.txl"
+include "generators.txl"
 
 redefine exp
 	[exp1] [repeat infix_exp]

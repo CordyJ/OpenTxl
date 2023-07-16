@@ -10,6 +10,6 @@ include "oberon-comments.grm"
 % Null transformation
 function main
     match [program] 
-        _ [program]
+	_ [program]
 end function
 

@@ -41,12 +41,12 @@ for dir in $dirs; do
         for eg in $egs; do
             # Run old TXL
             : > /tmp/tta-old$$
-            (/usr/bin/time -l $OLDTXL -v -s 400 -w 200 $eg -o /tmp/tta-old$$ < /tmp/42 2>&1 ) >> $eg-oldoutput
+            (/usr/bin/time $OLDTXL -v -s 400 -w 200 $eg -o /tmp/tta-old$$ < /tmp/42 2>&1 ) >> $eg-oldoutput
             cat /tmp/tta-old$$ >> $eg-oldoutput
 
             # Run new TXL
             : > /tmp/tta-new$$
-            (/usr/bin/time -l ../$NEWTXL -v -s 400 -w 200 $eg -o /tmp/tta-new$$ < /tmp/42 2>&1 ) >> $eg-newoutput
+            (/usr/bin/time ../$NEWTXL -v -s 400 -w 200 $eg -o /tmp/tta-new$$ < /tmp/42 2>&1 ) >> $eg-newoutput
             cat /tmp/tta-new$$ >> $eg-newoutput
 
             # Diff them

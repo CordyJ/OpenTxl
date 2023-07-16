@@ -6,7 +6,7 @@ MODULE FFT ;
  
 
 FUNCTION Filter (IN U : VIEW {n};
-                 IN k : NAT) RESULT F : VIEW {n DIV k};
+    	    	 IN k : NAT) RESULT F : VIEW {n DIV k};
 
 
 BEGIN
@@ -14,8 +14,8 @@ BEGIN
 END Filter;
 
 PROCEDURE Unzip (IN  Seq  : VIEW {n};
-                 OUT Even : VIEW {n DIV 2};
-                 OUT Odd  : VIEW {n DIV 2 + n MOD 2});
+    	    	 OUT Even : VIEW {n DIV 2};
+    	    	 OUT Odd  : VIEW {n DIV 2 + n MOD 2});
 
 BEGIN
     Even <- Filter(Seq, 2);
@@ -23,7 +23,7 @@ BEGIN
 END Unzip;
 
 FUNCTION Omega (IN j,
-                   n   : INT) RESULT OmegaJ : COMPLEX ;
+    	    	   n   : INT) RESULT OmegaJ : COMPLEX ;
 VAR
     pi  :  REAL;
 END;
@@ -34,8 +34,8 @@ BEGIN
 END Omega;
 
 FUNCTION Combine (IN Even,
-                     Odd : SHAPE {n} OF COMPLEX) 
-                RESULT C : SHAPE {2*n} OF COMPLEX;
+    	    	     Odd : SHAPE {n} OF COMPLEX) 
+    	    	RESULT C : SHAPE {2*n} OF COMPLEX;
 
 
 BEGIN
@@ -43,7 +43,7 @@ BEGIN
 END Combine;
 
 FUNCTION FFTMAIN (IN S : SHAPE {n} OF COMPLEX ) RESULT T : 
-            SHAPE {n} OF COMPLEX;
+    	    SHAPE {n} OF COMPLEX;
 VAR
     S,
     T      : VIEW {n};

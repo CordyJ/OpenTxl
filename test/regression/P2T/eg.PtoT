@@ -1,25 +1,25 @@
 program Question(input,output);
 
 var
-        line : array[1..80] of char;
-        len, i : integer;
-        aChar : char;
+	line : array[1..80] of char;
+	len, i : integer;
+	aChar : char;
 
 begin
-        len := 0;
-        repeat
-                len := len + 1;
-                read( aChar );
-                line[len] := aChar;
-        until aChar = '.';
-        
-        readln;
-        
-        line[len] := '?';
-        
-        for i:=1 to len do
-                write( line[i] );
-                
-        writeln;
-        writeln( 'The length was', len );
+	len := 0;
+	repeat
+		len := len + 1;
+		read( aChar );
+		line[len] := aChar;
+	until aChar = '.';
+	
+	readln;
+	
+	line[len] := '?';
+	
+	for i:=1 to len do
+		write( line[i] );
+		
+	writeln;
+	writeln( 'The length was', len );
 end.

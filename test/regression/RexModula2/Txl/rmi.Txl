@@ -23,8 +23,8 @@ end function
 function transformCommunication
   replace [ProgramModule]
       MODULE ModuleName [id] OptPrio [opt priority] ;
-          Imports [repeat import_item]
-          Body [block]
+	  Imports [repeat import_item]
+	  Body [block]
       ModuleName .
 
   construct PreId [id] 
@@ -34,11 +34,11 @@ function transformCommunication
 
   by
       MODULE ModuleName OptPrio;
-          IMPORT ModuleId;
-          Imports [addCommunicationProcedureImports]
-          Body [addCommunicationInitAndClose]
-               [transformCommunicationPrimitives ModuleId] 
-               [transformSelectStatements ModuleId]
+	  IMPORT ModuleId;
+	  Imports [addCommunicationProcedureImports]
+	  Body [addCommunicationInitAndClose]
+	       [transformCommunicationPrimitives ModuleId] 
+	       [transformSelectStatements ModuleId]
       ModuleName . 
 end function
 
@@ -48,9 +48,9 @@ function addCommunicationProcedureImports
       OldImports [repeat import_item]
   by
       FROM 'RexComm IMPORT
-          'InitComm, 'CloseComm, 
-          'AllocHandle, 'ReleaseHandle, 'NoHandle, 'tPortList, 'tHandle,
-          'AllocPortList, 'ReleasePortList, 'WaitOnPortList, 'InsertPort;
+	  'InitComm, 'CloseComm, 
+	  'AllocHandle, 'ReleaseHandle, 'NoHandle, 'tPortList, 'tHandle,
+	  'AllocPortList, 'ReleasePortList, 'WaitOnPortList, 'InsertPort;
       OldImports 
 end function
 
@@ -59,7 +59,7 @@ function addCommunicationInitAndClose
   replace [block]
       Declarations [repeat declaration]
       BEGIN
-          Statements [repeat statement_semi] 
+	  Statements [repeat statement_semi] 
       END
   construct CloseStatement [statement_semi]
       'CloseComm();
@@ -69,7 +69,7 @@ function addCommunicationInitAndClose
   by
       Declarations
       BEGIN
-          NewStatements
+	  NewStatements
       END
 end function
 
@@ -94,9 +94,9 @@ rule transformCommunicationPrimitives ModuleId [id]
       CommCall [CommunicationCall] 
   by
       CommStatement [transformCommunicationCall ModuleId CallId Call]
-                    [transformCommunicationCall ModuleId WaitId Wait]
-                    [transformCommunicationCall ModuleId AcceptId Accept]
-                    [transformCommunicationCall ModuleId ReplyId Reply]
+       	      	    [transformCommunicationCall ModuleId WaitId Wait]
+              	    [transformCommunicationCall ModuleId AcceptId Accept]
+              	    [transformCommunicationCall ModuleId ReplyId Reply]
 end rule
 
 
@@ -117,9 +117,9 @@ function extractHandle OptHandle [opt handle]
     deconstruct OptHandle
         WITH HandleId [id]
     replace [id]
-        'NoHandle
+	'NoHandle
     by
-        HandleId
+	HandleId
 end function
 
 
@@ -129,7 +129,7 @@ rule transformHandles
   replace [block]
       Declarations [repeat declaration]
       BEGIN 
-        Statements [repeat statement_semi]
+	Statements [repeat statement_semi]
       END
 
   where
@@ -137,8 +137,8 @@ rule transformHandles
 
   construct HandleDeclarations [repeat declaration]
       Declarations [deleteNonVariableDeclarations]
-                   [deleteNonHandleDeclarations]
-                   [mergeVariableDeclarations]
+	           [deleteNonHandleDeclarations]
+	           [mergeVariableDeclarations]
 
   deconstruct HandleDeclarations
       VAR HandleIL [list id+] : HANDLE ;
@@ -149,14 +149,14 @@ rule transformHandles
   by
       Declarations [transformHandleDeclarations]
       BEGIN
-          Statements [transformHandleStatements HandleList]
+	  Statements [transformHandleStatements HandleList]
       END
 end rule
 
 
 rule containsHandleDeclarations
     match [SimpleType]
-        HANDLE
+	HANDLE
 end rule
 
 
@@ -183,64 +183,64 @@ end rule
 
 function isVarDeclaration
     match [declaration]
-        VAR VD [repeat VariableDeclaration_semi]
+    	VAR VD [repeat VariableDeclaration_semi]
 end function
 
 
 rule deleteNonHandleDeclarations
     replace [repeat VariableDeclaration_semi]
-        VarDeclaration [VariableDeclaration_semi]
-        RestOfVarDeclarations  [repeat VariableDeclaration_semi]
+	VarDeclaration [VariableDeclaration_semi]
+	RestOfVarDeclarations  [repeat VariableDeclaration_semi]
     where not
-        VarDeclaration [isHandleDeclaration] 
+	VarDeclaration [isHandleDeclaration] 
     by
-        RestOfVarDeclarations
+	RestOfVarDeclarations
 end rule
 
 
 function isHandleDeclaration
     match [VariableDeclaration_semi]
-        Idents [IdentList] : HANDLE ;
+	Idents [IdentList] : HANDLE ;
 end function
 
 
 rule mergeVariableDeclarations
     replace [repeat declaration]
-        VAR VarDeclaration1 [repeat VariableDeclaration_semi]
-        VAR VarDeclaration2 [repeat VariableDeclaration_semi]
+	VAR VarDeclaration1 [repeat VariableDeclaration_semi]
+	VAR VarDeclaration2 [repeat VariableDeclaration_semi]
 
     construct NewVarDeclaration [repeat VariableDeclaration_semi]
-        VarDeclaration1 [. VarDeclaration2] 
-                        [mergeIdentLists]
+	VarDeclaration1 [. VarDeclaration2] 
+			[mergeIdentLists]
     by
-        VAR NewVarDeclaration
+	VAR NewVarDeclaration
 end rule
 
 
 rule mergeIdentLists
     replace [repeat VariableDeclaration_semi]
-        Idents1 [list id+] : HANDLE ;
-        Idents2 [list id+] : HANDLE ;
-        RestOfVarDeclarations [repeat VariableDeclaration_semi]
+	Idents1 [list id+] : HANDLE ;
+	Idents2 [list id+] : HANDLE ;
+	RestOfVarDeclarations [repeat VariableDeclaration_semi]
     construct NewIdents [list id+]
-        Idents1 [, Idents2]
+	Idents1 [, Idents2]
     by
-        NewIdents : HANDLE ;
-        RestOfVarDeclarations
+	NewIdents : HANDLE ;
+	RestOfVarDeclarations
 end rule
 
 
 function transformHandleStatements HandleIds [list id]
     deconstruct HandleIds
-        HandleId [id] , OptMoreHandleIds [list id]
+	HandleId [id] , OptMoreHandleIds [list id]
     construct ReleaseHandleStatement [statement_semi]
-        'ReleaseHandle (HandleId);
+	'ReleaseHandle (HandleId);
     replace [repeat statement_semi]
-        Statements [repeat statement_semi]
+	Statements [repeat statement_semi]
     by
-        'AllocHandle (HandleId);
-        Statements [. ReleaseHandleStatement] 
-                   [transformHandleStatements OptMoreHandleIds]
+	'AllocHandle (HandleId);
+	Statements [. ReleaseHandleStatement] 
+	           [transformHandleStatements OptMoreHandleIds]
 end function
 
 
@@ -250,7 +250,7 @@ rule transformSelectStatements ModuleId [id]
   replace [block]
       Declarations [repeat declaration]
       BEGIN 
-        Statements [repeat statement_semi]
+	Statements [repeat statement_semi]
       END
   where
       Statements [containsSelectStatement]
@@ -262,23 +262,23 @@ rule transformSelectStatements ModuleId [id]
       VAR PortListId : 'tPortList ;
       Declarations
       BEGIN
-        Statements [transformSelectStatement ModuleId PortListId]
+	Statements [transformSelectStatement ModuleId PortListId]
       END
 end rule
 
 
 rule containsSelectStatement
     match [statement]
-        Statement [SelectStatement]
+	Statement [SelectStatement]
 end rule
 
 
 rule transformSelectStatement ModuleId [id] PortListId [id]
   replace [repeat statement_semi]
       SELECT
-        FirstAlternative [alternative] 
-        RestOfAlternatives [repeat or_alternative] 
-        OptElse [opt else_StatementSequence]
+	FirstAlternative [alternative] 
+	RestOfAlternatives [repeat or_alternative] 
+	OptElse [opt else_StatementSequence]
       END ;
       RestOfStatements [repeat statement_semi]
 
@@ -287,32 +287,32 @@ rule transformSelectStatement ModuleId [id] PortListId [id]
 
   construct PortListStatements [repeat statement_semi]
       AllocPortListStatement 
-          [mapAlternativeToIf FirstAlternative PortListId ModuleId]
-          [mapAlternativesToIfs RestOfAlternatives PortListId ModuleId]
+	  [mapAlternativeToIf FirstAlternative PortListId ModuleId]
+	  [mapAlternativesToIfs RestOfAlternatives PortListId ModuleId]
 
   construct emptyOrCase [repeat or_case]
-        %% nothing
+	%% nothing
   construct OrCases [repeat or_case]
         emptyOrCase [mapAlternativeToCase FirstAlternative ModuleId]
-                    [mapAlternativesToCases RestOfAlternatives ModuleId] 
+		    [mapAlternativesToCases RestOfAlternatives ModuleId] 
 
   deconstruct OrCases
-        '| FirstCase [case]
-           RestOfCases [repeat or_case]
+	'| FirstCase [case]
+	   RestOfCases [repeat or_case]
 
   construct CaseWaitOnPortList [statement_semi]
-        CASE 'WaitOnPortList (PortListId) OF
-          FirstCase 
-          RestOfCases
-        END;
+	CASE 'WaitOnPortList (PortListId) OF
+	  FirstCase 
+	  RestOfCases
+	END;
 
   construct ReleasePortListStatement [statement_semi]
-        'ReleasePortList (PortListId);
+	'ReleasePortList (PortListId);
 
   construct NewStatements [repeat statement_semi]
       PortListStatements [. CaseWaitOnPortList]
-                         [. ReleasePortListStatement]
-                         [. RestOfStatements]
+			 [. ReleasePortListStatement]
+			 [. RestOfStatements]
   by
       NewStatements
 end rule
@@ -326,14 +326,14 @@ function mapAlternativesToCases Alternatives [repeat or_alternative] ModuleId [i
       OrCases [repeat or_case]
   by 
       OrCases [mapAlternativeToCase FirstAlternative ModuleId]
-              [mapAlternativesToCases RestOfAlternatives ModuleId] 
+	      [mapAlternativesToCases RestOfAlternatives ModuleId] 
 end function
 
 
 function mapAlternativeToCase Alternative [alternative] ModuleId [id]
   deconstruct Alternative
       OptExpnAnd [opt BoolAnd] CommCall [CommunicationCall] : 
-          AlternativeStatements [repeat statement_semi] 
+	  AlternativeStatements [repeat statement_semi] 
   deconstruct CommCall
       CommOp [CommName] ( PortId [id] , ExpnList [ExpList] ) OptHandle [opt handle]
   construct CommStatement [statement]
@@ -342,8 +342,8 @@ function mapAlternativeToCase Alternative [alternative] ModuleId [id]
       RestOfCases [repeat or_case]
   by
       '| ModuleId.PortId : 
-          CommStatement [transformCommunicationPrimitives ModuleId] ; 
-          AlternativeStatements
+	  CommStatement [transformCommunicationPrimitives ModuleId] ; 
+	  AlternativeStatements
       RestOfCases 
 end function
 
@@ -356,14 +356,14 @@ function mapAlternativesToIfs Alternatives [repeat or_alternative] PortListId [i
       Statements [repeat statement_semi]
   by 
       Statements [mapAlternativeToIf FirstAlternative PortListId ModuleId]
-                 [mapAlternativesToIfs RestOfAlternatives PortListId ModuleId] 
+	         [mapAlternativesToIfs RestOfAlternatives PortListId ModuleId] 
 end function
 
 
 function mapAlternativeToIf Alternative [alternative] PortListId [id] ModuleId [id]
   deconstruct Alternative
       Guard [guard] : 
-          AlternativeStatements [StatementSequence] 
+	  AlternativeStatements [StatementSequence] 
   replace [repeat statement_semi]
       Statements [repeat statement_semi] 
   by 
@@ -382,7 +382,7 @@ function buildGuard1 Guard [guard] PortListId [id] ModuleId [id]
 
   construct IfStatement [statement_semi]
       IF Expn THEN 
-          'InsertPort (PortListId, ModuleId.PortId, HandleId); 
+	  'InsertPort (PortListId, ModuleId.PortId, HandleId); 
       END;
 
   replace [repeat statement_semi]

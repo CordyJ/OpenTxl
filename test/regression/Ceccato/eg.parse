@@ -1,21 +1,21 @@
-        PROGRAM "CRGMCC", NOCLR ::
-        CONST REVISIONE$="15.11.2006" ::
-        DCL y_euro$=tyzY_EURO ::
-        FIELD=M,y_euro ::
-           DCL     _euro#         ::
-           DCL     _ndec#         ::
-           DCL     _a6dec#        ::
-           DCL     _a7dec#        ::
-           DCL     _a6mul&=8      ::
-           DCL     _a7mul&=8      ::
-           DCL     _azieuro#      ::
-           DCL     _azideclieu$=8 ::
-           DCL     _reuritl&=8    ::
-           DCL     _divisa$=3 ::
-           DCL     _inveuro#      ::
-           DCL     _invdivisa$=3 ::
-           DCL     _invndec# ::
-           DCL     _eurofil$=3 ::
+	PROGRAM "CRGMCC", NOCLR ::
+	CONST REVISIONE$="15.11.2006" ::
+	DCL y_euro$=tyzY_EURO ::
+	FIELD=M,y_euro ::
+	   DCL     _euro#         ::
+	   DCL     _ndec#         ::
+	   DCL     _a6dec#        ::
+	   DCL     _a7dec#        ::
+	   DCL     _a6mul&=8      ::
+	   DCL     _a7mul&=8      ::
+	   DCL     _azieuro#      ::
+	   DCL     _azideclieu$=8 ::
+	   DCL     _reuritl&=8    ::
+	   DCL     _divisa$=3 ::
+	   DCL     _inveuro#      ::
+	   DCL     _invdivisa$=3 ::
+	   DCL     _invndec# ::
+	   DCL     _eurofil$=3 ::
 CONST ardbdizversion$="19980325"  ::
 FUNCTION FRTDS10135$=1() ::
  FRTDS10135="1" ::
@@ -761,7 +761,7 @@ ENDF ::
         FIELD=m,CASPOST ::
            DCL CASPOSTFF$=2 ::
            DCL CASPOSTNR$=5 ::
-        FIELD=M ::
+	FIELD=M ::
         DCL AREACONTABILITA$=400 ::
         FIELD=M,AREACONTABILITA ::
            DCL AZICONT$=2           ::
@@ -985,816 +985,816 @@ ENDF ::
            DCL HFUNDOWN$=16         ::
            DCL HWFILLER$=39 ::
            DCL HWSKEYRET$=120       ::
-        FIELD=M ::
-        CONST PRG_VERSIONE%=5     ::
-        DCL   CLI_VERSIONE%       ::
-        DCL RETURN_197#           ::
+	FIELD=M ::
+	CONST PRG_VERSIONE%=5     ::
+	DCL   CLI_VERSIONE%       ::
+	DCL RETURN_197#           ::
 SEGMENT 0 ::
-        aribt000(string,y_euro,revisione,rtds000_version) ::
+	aribt000(string,y_euro,revisione,rtds000_version) ::
 ESEG 0 ::
-        SEGMENT 220 ::
-        DATINI="19920710" ::
-        BENVAL="19920921" ::
-        CODINI="000000000" ::
-        CODFIN="999999999" ::
-        IF NBYFILKEY<>2 ::
-           CODFIN="009999999" ::
-        ENDIF ::
-        SINOSTAMPA="SI" ::
-        SINOAGG="NO" ::
-        SINOPRT="NO" ::
-        R1=8 ::
-        R2=R1+1 ::
-        R3=R2+1 ::
-        R4=R3+1 ::
-        R5=R4+1 ::
-        R6=R5+1 ::
-        R7=R6+1 ::
-        T1=01 ::
-        T2=T1+23 ::
+	SEGMENT 220 ::
+	DATINI="19920710" ::
+	BENVAL="19920921" ::
+	CODINI="000000000" ::
+	CODFIN="999999999" ::
+	IF NBYFILKEY<>2 ::
+	   CODFIN="009999999" ::
+	ENDIF ::
+	SINOSTAMPA="SI" ::
+	SINOAGG="NO" ::
+	SINOPRT="NO" ::
+	R1=8 ::
+	R2=R1+1 ::
+	R3=R2+1 ::
+	R4=R3+1 ::
+	R5=R4+1 ::
+	R6=R5+1 ::
+	R7=R6+1 ::
+	T1=01 ::
+	T2=T1+23 ::
 10       ::
-        PRINT=1: CLEAR ::
-        PRINT=1:TAB(01,01),ATB(2),TESTSEG,ATB(0) ::
-        PRINT=1:TAB(T1,R1),"Dal conto........... :" ::
-        PRINT=1:TAB(T1,R2)," al conto........... :" ::
-        PRINT=1:TAB(T1,R3),"Stampa lista (SI/NO) :" ::
-        PRINT=1:TAB(T1,R4),"Addebito     (SI/NO) :" ::
-        PRINT=1:TAB(T1,R5),"Causale di addebito. :" ::
-        PRINT=1:TAB(T1,R6),"Valuta di addebito.. :" ::
-        PRINT=1:TAB(T1,R7),"Contabile    (SI/NO) :" ::
-        PRINT=1:TAB(01,23),L ::
+	PRINT=1: CLEAR ::
+	PRINT=1:TAB(01,01),ATB(2),TESTSEG,ATB(0) ::
+	PRINT=1:TAB(T1,R1),"Dal conto........... :" ::
+	PRINT=1:TAB(T1,R2)," al conto........... :" ::
+	PRINT=1:TAB(T1,R3),"Stampa lista (SI/NO) :" ::
+	PRINT=1:TAB(T1,R4),"Addebito     (SI/NO) :" ::
+	PRINT=1:TAB(T1,R5),"Causale di addebito. :" ::
+	PRINT=1:TAB(T1,R6),"Valuta di addebito.. :" ::
+	PRINT=1:TAB(T1,R7),"Contabile    (SI/NO) :" ::
+	PRINT=1:TAB(01,23),L ::
 200     PRINT=1:TAB(01,24),B,TAB(01,24),ATB(2)," ESC ",ATB(0),"=fine          " ::
-        COLKEY=T2 ::
-        RIGKEY=R1 ::
-        COMDUPKEY=CODINI ::
-        SINO0099KEY="SI" ::
-        GOSUB &ASKEY ::
-        CODINI=SUBSTR(COMDUPKEY,1,NBYTESKEY) ::
-        IF LABKEY="       " GOTO 210 ::
-        IF LABKEY="24RIGA " GOTO 200 ::
-        IF LABKEY="&LABESC" GOTO 9000 ::
-        GOTO 200 ::
+	COLKEY=T2 ::
+	RIGKEY=R1 ::
+	COMDUPKEY=CODINI ::
+	SINO0099KEY="SI" ::
+	GOSUB &ASKEY ::
+	CODINI=SUBSTR(COMDUPKEY,1,NBYTESKEY) ::
+	IF LABKEY="       " GOTO 210 ::
+	IF LABKEY="24RIGA " GOTO 200 ::
+	IF LABKEY="&LABESC" GOTO 9000 ::
+	GOTO 200 ::
 210     PRINT=1:TAB(01,24),B,TAB(01,24),ATB(2)," ESC ",ATB(0),"=fine                     ",ATB(2)," UP ",ATB(0),"=input precedente        " ::
-        COLKEY=T2 ::
-        RIGKEY=R2 ::
-        COMDUPKEY=CODFIN ::
-        SINO0099KEY="SI" ::
-        GOSUB &ASKEY ::
-        CODFIN=SUBSTR(COMDUPKEY,1,NBYTESKEY) ::
-        IF LABKEY="       " GOTO 220 ::
-        IF LABKEY="24RIGA " GOTO 210 ::
-        IF LABKEY="&LABUP " GOTO 200 ::
-        IF LABKEY="&LABESC" GOTO 9000 ::
-        GOTO 210 ::
+	COLKEY=T2 ::
+	RIGKEY=R2 ::
+	COMDUPKEY=CODFIN ::
+	SINO0099KEY="SI" ::
+	GOSUB &ASKEY ::
+	CODFIN=SUBSTR(COMDUPKEY,1,NBYTESKEY) ::
+	IF LABKEY="       " GOTO 220 ::
+	IF LABKEY="24RIGA " GOTO 210 ::
+	IF LABKEY="&LABUP " GOTO 200 ::
+	IF LABKEY="&LABESC" GOTO 9000 ::
+	GOTO 210 ::
 220     ASK=1,I=9000,U=210:TAB(T2,R3),SINOSTAMPA=TAB(T2),SINOSTAMPA ::
-        PRINT=1:TAB(T2),SINOSTAMPA ::
-        IF (SINOSTAMPA<>"SI") AND (SINOSTAMPA<>"NO") GOTO 220 ::
+	PRINT=1:TAB(T2),SINOSTAMPA ::
+	IF (SINOSTAMPA<>"SI") AND (SINOSTAMPA<>"NO") GOTO 220 ::
 230     ASK=1,I=9000,U=220:TAB(T2,R4),SINOAGG=TAB(T2),SINOAGG ::
-        PRINT=1:TAB(T2),SINOAGG ::
-        IF (SINOAGG<>"SI") AND (SINOAGG<>"NO") GOTO 230 ::
-        IF (SINOSTAMPA="NO") AND (SINOAGG="NO") GOTO 230 ::
-        IF SINOAGG="NO" ::
-           PRINT=1:TAB(01,R5),B ::
-           PRINT=1:TAB(01,R6),B ::
-           PRINT=1:TAB(01,R7),B ::
-           GOTO 300 ::
-        ENDIF ::
+	PRINT=1:TAB(T2),SINOAGG ::
+	IF (SINOAGG<>"SI") AND (SINOAGG<>"NO") GOTO 230 ::
+	IF (SINOSTAMPA="NO") AND (SINOAGG="NO") GOTO 230 ::
+	IF SINOAGG="NO" ::
+	   PRINT=1:TAB(01,R5),B ::
+	   PRINT=1:TAB(01,R6),B ::
+	   PRINT=1:TAB(01,R7),B ::
+	   GOTO 300 ::
+	ENDIF ::
 240     ASK=1,I=9000,U=230:TAB(T2,R5),COMCAU=TAB(T2),COMCAU ::
-        PRINT=1:TAB(T2),COMCAU ::
-        KEYCAUSA="7"+COMCAU ::
-        SEARCH=NFUCAUSA,KEYCAUSA:240,E,CAUDES(1),LD(NFUCAUSA) ::
-        PRINT=1:TAB(T2+4),CAUDES(1) ::
+	PRINT=1:TAB(T2),COMCAU ::
+	KEYCAUSA="7"+COMCAU ::
+	SEARCH=NFUCAUSA,KEYCAUSA:240,E,CAUDES(1),LD(NFUCAUSA) ::
+	PRINT=1:TAB(T2+4),CAUDES(1) ::
 250     DATAPRSEC=BENVAL ::
-        DATINP=GIO+MES+SEC+ANN ::
-        ASK=1,I=9000,U=240:TAB(T2,R6),GIO,"/",MES,"/",SEC,ANN=TAB(T2),DATINP ::
-        DATOUT=DATA8900 ::
-        IF DATOUT=" " GOTO 250 ::
-        PRINT=1:TAB(T2),DATOUT ::
-        BENVAL=SS+AA+MM+GG ::
+	DATINP=GIO+MES+SEC+ANN ::
+	ASK=1,I=9000,U=240:TAB(T2,R6),GIO,"/",MES,"/",SEC,ANN=TAB(T2),DATINP ::
+	DATOUT=DATA8900 ::
+	IF DATOUT=" " GOTO 250 ::
+	PRINT=1:TAB(T2),DATOUT ::
+	BENVAL=SS+AA+MM+GG ::
 260     ASK=1,I=9000,U=250:TAB(T2,R7),SINOPRT=TAB(T2),SINOPRT ::
-        PRINT=1:TAB(T2),SINOPRT ::
-        IF (SINOPRT<>"SI") AND (SINOPRT<>"NO") GOTO 260 ::
+	PRINT=1:TAB(T2),SINOPRT ::
+	IF (SINOPRT<>"SI") AND (SINOPRT<>"NO") GOTO 260 ::
 300     PRINT=1:TAB(01,24),B,TAB(01,24),ATB(2)," ESC ",ATB(0),"=fine         ",ATB(2)," F1 ",ATB(0)," per confermare " ::
-        ASK=1,I=9000,0x11=&F1:=T ::
-        GOTO 300 ::
+	ASK=1,I=9000,0x11=&F1:=T ::
+	GOTO 300 ::
 &F1     PRINT=1:TAB(01,20),B,TAB(20,20),ATB(2)," ELABORAZIONE IN CORSO ",ATB(0) ::
-        PRINT=1:TAB(01,24),B,TAB(01,24),ATB(2)," F6 ",ATB(0)," per interrompere l'elaborazione " ::
-        PAG=0 ::
-        NRIGA=0 ::
-        FOR I=1 TO 10 ::
-           P(I)=0 ::
-        NEXT I ::
-        KDR=CODINI ::
-        SEARCH=NFUDERIS,KDR:&DWDR,E,DNDG,LD(NFUDERIS) ::
-        GOTO &DWDR1 ::
+	PRINT=1:TAB(01,24),B,TAB(01,24),ATB(2)," F6 ",ATB(0)," per interrompere l'elaborazione " ::
+	PAG=0 ::
+	NRIGA=0 ::
+	FOR I=1 TO 10 ::
+	   P(I)=0 ::
+	NEXT I ::
+	KDR=CODINI ::
+	SEARCH=NFUDERIS,KDR:&DWDR,E,DNDG,LD(NFUDERIS) ::
+	GOTO &DWDR1 ::
 &DWDR   DOWN=NFUDERIS:&ENDDR,E,KDR,LT(NFUDERIS) ::
-        OP &OP ,F6 ::
-        GOTO &DWDR1 ::
+	OP &OP ,F6 ::
+	GOTO &DWDR1 ::
 &OP     IF F6<>0x16 GOTO &DWDR1 ::
-        PRINT=1:TAB(01,24),B,TAB(01,24),ATB(2)," ESC ",ATB(0)," per terminare       ",ATB(2)," F1 ",ATB(0)," per proseguire" ::
-        ASK=1,I=&ENDDR,0x11=&OP1:=T ::
-        GOTO &OP ::
+	PRINT=1:TAB(01,24),B,TAB(01,24),ATB(2)," ESC ",ATB(0)," per terminare       ",ATB(2)," F1 ",ATB(0)," per proseguire" ::
+	ASK=1,I=&ENDDR,0x11=&OP1:=T ::
+	GOTO &OP ::
 &OP1    PRINT=1:TAB(01,24),B,TAB(01,24),ATB(2)," F6 ",ATB(0)," per interrompere l'elaborazione " ::
 &DWDR1  IF KDR>CODFIN GOTO &ENDDR ::
-        IF (DSTATO="E") OR (DSTATO="L") ::
-           IF DDATUM<DATINI GOTO &DWDR ::
-        ENDIF ::
-        DIVISAMOV=DDIVISA ::
-        SETDIVISA(DIVISAMOV) ::
-        K1=DNDG ::
-        SEARCH=NFUANAGE,K1:&DWDR2,E,TIPO,LD(NFUANAGE) ::
+	IF (DSTATO="E") OR (DSTATO="L") ::
+	   IF DDATUM<DATINI GOTO &DWDR ::
+	ENDIF ::
+	DIVISAMOV=DDIVISA ::
+	SETDIVISA(DIVISAMOV) ::
+	K1=DNDG ::
+	SEARCH=NFUANAGE,K1:&DWDR2,E,TIPO,LD(NFUANAGE) ::
 &DWDR2  IF E<>0 ::
-           TITOLO=" " ::
-           RAGSO1=DPORRAG ::
-           RAGSO2=" " ::
-           INDIRIZZO=DPORIND ::
-           CAP=DPORCAP ::
-           CITTARES=DPORCIT ::
-           PROV=DPORPRO ::
-           LINGUA="0" ::
-        ENDIF ::
-        PRINT=1:TAB(01,21),KDR," ",RAGSO1 ::
-        TITOLOCORR=TITOLO ::
-        RAGSO1CORR=RAGSO1 ::
-        RAGSO2CORR=RAGSO2 ::
-        INDIRICORR=INDIRIZZO ::
-        CAPCORR=CAP ::
-        CITTACORR=CITTARES ::
-        PROVCORR=PROV ::
-        CABCORR=SEDLEG ::
-        STATOCORR=ESTERO ::
-        CODLINGUA=LINGUA ::
-        INDLINGUA=CONV(LINGUA)+1 ::
-        GOSUB 1000                ::
-        IF COMSALCTP>0 ::
-           IF SINOSTAMPA="SI" ::
-              GOSUB &STAMPA ::
-           ENDIF ::
-           IF SINOAGG="SI" ::
-              EPOCAVAL=EPOCAOD ::
-              LDGO.SEG 45 ::
-              GOSUB &AGGDR ::
-           ENDIF ::
-        ENDIF ::
-        GOTO &DWDR ::
+	   TITOLO=" " ::
+	   RAGSO1=DPORRAG ::
+	   RAGSO2=" " ::
+	   INDIRIZZO=DPORIND ::
+	   CAP=DPORCAP ::
+	   CITTARES=DPORCIT ::
+	   PROV=DPORPRO ::
+	   LINGUA="0" ::
+	ENDIF ::
+	PRINT=1:TAB(01,21),KDR," ",RAGSO1 ::
+	TITOLOCORR=TITOLO ::
+	RAGSO1CORR=RAGSO1 ::
+	RAGSO2CORR=RAGSO2 ::
+	INDIRICORR=INDIRIZZO ::
+	CAPCORR=CAP ::
+	CITTACORR=CITTARES ::
+	PROVCORR=PROV ::
+	CABCORR=SEDLEG ::
+	STATOCORR=ESTERO ::
+	CODLINGUA=LINGUA ::
+	INDLINGUA=CONV(LINGUA)+1 ::
+	GOSUB 1000                ::
+	IF COMSALCTP>0 ::
+	   IF SINOSTAMPA="SI" ::
+	      GOSUB &STAMPA ::
+	   ENDIF ::
+	   IF SINOAGG="SI" ::
+	      EPOCAVAL=EPOCAOD ::
+	      LDGO.SEG 45 ::
+	      GOSUB &AGGDR ::
+	   ENDIF ::
+	ENDIF ::
+	GOTO &DWDR ::
 &ENDDR  IF P(1)>0 ::
-           PRINT=2:TAB(01),GENER(130,"-") ::
-           PRINT=2:TABV(1) ::
-           PRINT=2:TAB(01),((EUROPRINT("SN9"))),P(1) ::
-           PRINT=2:TAB(50),((EUROPRINT("SN12"))),P(2) ::
-           PRINT=2:TAB(70),((EUROPRINT("SN12"))),P(3) ::
-           PRINT=2: PAGE ::
-           PRINT=2:SALTOPAG ::
-        ENDIF ::
-        GOTO 10 ::
+	   PRINT=2:TAB(01),GENER(130,"-") ::
+	   PRINT=2:TABV(1) ::
+	   PRINT=2:TAB(01),((EUROPRINT("SN9"))),P(1) ::
+	   PRINT=2:TAB(50),((EUROPRINT("SN12"))),P(2) ::
+	   PRINT=2:TAB(70),((EUROPRINT("SN12"))),P(3) ::
+	   PRINT=2: PAGE ::
+	   PRINT=2:SALTOPAG ::
+	ENDIF ::
+	GOTO 10 ::
 1000     ::
-        COMSALCTP=DSALAT(_EURO) ::
-        CCONTO=KDR ::
-        CDATA="99999999" ::
-        CTERM="zzzzz" ::
-        CREG="zzzzzz" ::
-        SEARCH=NFUKECDR,KEYECC:1100,E ::
+	COMSALCTP=DSALAT(_EURO) ::
+	CCONTO=KDR ::
+	CDATA="99999999" ::
+	CTERM="zzzzz" ::
+	CREG="zzzzzz" ::
+	SEARCH=NFUKECDR,KEYECC:1100,E ::
 1100    UP=NFUKECDR:1900,E,KEYECC,LT(NFUKECDR) ::
-        IF CCONTO<>KDR GOTO 1900 ::
-        IF CDATA<DATINI GOTO 1900 ::
-        RTERM=CTERM ::
-        RDATA=CDATA ::
-        RREG=CREG ::
-        SEARCH=NFUMOVDR,KEYMDR:1110,E,RSIGLA,LD(NFUMOVDR) ::
+	IF CCONTO<>KDR GOTO 1900 ::
+	IF CDATA<DATINI GOTO 1900 ::
+	RTERM=CTERM ::
+	RDATA=CDATA ::
+	RREG=CREG ::
+	SEARCH=NFUMOVDR,KEYMDR:1110,E,RSIGLA,LD(NFUMOVDR) ::
 1110    IF E<>0 ::
-           PRINT=1:TAB(01,24),B,BELL,TAB(01,24)," Errore in ",NF(NFUMOVDR)," : ",E," ",KEYMDR ::
-           ASK=1:BELL=T ::
-        ENDIF ::
-        IF RSEGNO="D" ::
-           COMSALCTP=COMSALCTP+RIMPOR(_EURO) ::
-        ELSE ::
-           COMSALCTP=COMSALCTP-RIMPOR(_EURO) ::
-        ENDIF ::
-        GOTO 1100 ::
+	   PRINT=1:TAB(01,24),B,BELL,TAB(01,24)," Errore in ",NF(NFUMOVDR)," : ",E," ",KEYMDR ::
+	   ASK=1:BELL=T ::
+	ENDIF ::
+	IF RSEGNO="D" ::
+	   COMSALCTP=COMSALCTP+RIMPOR(_EURO) ::
+	ELSE ::
+	   COMSALCTP=COMSALCTP-RIMPOR(_EURO) ::
+	ENDIF ::
+	GOTO 1100 ::
 1900    RETURN ::
 &STAMPA  ::
-        IF PAG=0 ::
-           GOSUB &TESTA ::
-        ENDIF ::
-        IF NRIGA=55 ::
-           PRINT=2:TAB(01),GENER(130,"-") ::
-           PRINT=2:TABV(1) ::
-           PRINT=2:TAB(110),"SEGUE -->" ::
-           GOSUB &TESTA ::
-        ENDIF ::
-        COLKEY=01 ::
-        RIGKEY=0 ::
-        COMDUPKEY=KDR ::
-        DEVICEKEY=2 ::
-        GOSUB &PRKEY ::
-        PRINT=2:TAB(14),RAGSO1 ::
-        PRINT=2:TAB(50),((EUROPRINT("SN12"))),COMSALCTP ::
-        M1=EUROROUN(COMSALCTP*0.006) ::
-        PRINT=2:TAB(70),((EUROPRINT("SN12"))),M1 ::
-        IF (DSTATO="E") OR (DSTATO="L") ::
-           PRINT=2:TAB(90),"ESTINTO" ::
-        ENDIF ::
-        IF (DSTATO="D") OR (DSTATO="T") ::
-           PRINT=2:TAB(90),"BLOCCATO DARE" ::
-        ENDIF ::
-        PRINT=2:TABV(1) ::
-        NRIGA=NRIGA+1 ::
-        P(1)=P(1)+1 ::
-        P(2)=P(2)+COMSALCTP ::
-        P(3)=P(3)+M1 ::
-        RETURN ::
+	IF PAG=0 ::
+	   GOSUB &TESTA ::
+	ENDIF ::
+	IF NRIGA=55 ::
+	   PRINT=2:TAB(01),GENER(130,"-") ::
+	   PRINT=2:TABV(1) ::
+	   PRINT=2:TAB(110),"SEGUE -->" ::
+	   GOSUB &TESTA ::
+	ENDIF ::
+	COLKEY=01 ::
+	RIGKEY=0 ::
+	COMDUPKEY=KDR ::
+	DEVICEKEY=2 ::
+	GOSUB &PRKEY ::
+	PRINT=2:TAB(14),RAGSO1 ::
+	PRINT=2:TAB(50),((EUROPRINT("SN12"))),COMSALCTP ::
+	M1=EUROROUN(COMSALCTP*0.006) ::
+	PRINT=2:TAB(70),((EUROPRINT("SN12"))),M1 ::
+	IF (DSTATO="E") OR (DSTATO="L") ::
+	   PRINT=2:TAB(90),"ESTINTO" ::
+	ENDIF ::
+	IF (DSTATO="D") OR (DSTATO="T") ::
+	   PRINT=2:TAB(90),"BLOCCATO DARE" ::
+	ENDIF ::
+	PRINT=2:TABV(1) ::
+	NRIGA=NRIGA+1 ::
+	P(1)=P(1)+1 ::
+	P(2)=P(2)+COMSALCTP ::
+	P(3)=P(3)+M1 ::
+	RETURN ::
 &TESTA   ::
-        IF PAG>0 ::
-           PRINT=2: PAGE ::
-        ELSE ::
-           PRINT=2:TABV(0) ::
-        ENDIF ::
-        PAG=PAG+1 ::
-        NRIGA=0 ::
-        PRINT=2:TAB(01),"LISTA DEGLI ADDEBITI RELATIVI AL D.L. 333 DELL' 11 LUGLIO 1992 EFFETTUATI IL ",Z1(1),"/",Z1(2),"/",Z1(3),Z1(4) ::
-        PRINT=2:TABV(1) ::
-        PRINT=2:TAB(01),"=======================================================================================" ::
-        PRINT=2:TABV(2) ::
-        PRINT=2:TAB(01),GENER(130,"-") ::
-        PRINT=2:TABV(1) ::
-        PRINT=2:TAB(01),"CONTO N." ::
-        PRINT=2:TAB(14),"RAGIONE SOCIALE" ::
-        PRINT=2:TAB(50),"SALDO CONTABILE" ::
-        PRINT=2:TAB(70),"        IMPOSTA" ::
-        PRINT=2:TAB(90),"NOTE" ::
-        PRINT=2:TABV(1) ::
-        PRINT=2:TAB(01),GENER(130,"-") ::
-        PRINT=2:TABV(1) ::
-        RETURN ::
+	IF PAG>0 ::
+	   PRINT=2: PAGE ::
+	ELSE ::
+	   PRINT=2:TABV(0) ::
+	ENDIF ::
+	PAG=PAG+1 ::
+	NRIGA=0 ::
+	PRINT=2:TAB(01),"LISTA DEGLI ADDEBITI RELATIVI AL D.L. 333 DELL' 11 LUGLIO 1992 EFFETTUATI IL ",Z1(1),"/",Z1(2),"/",Z1(3),Z1(4) ::
+	PRINT=2:TABV(1) ::
+	PRINT=2:TAB(01),"=======================================================================================" ::
+	PRINT=2:TABV(2) ::
+	PRINT=2:TAB(01),GENER(130,"-") ::
+	PRINT=2:TABV(1) ::
+	PRINT=2:TAB(01),"CONTO N." ::
+	PRINT=2:TAB(14),"RAGIONE SOCIALE" ::
+	PRINT=2:TAB(50),"SALDO CONTABILE" ::
+	PRINT=2:TAB(70),"        IMPOSTA" ::
+	PRINT=2:TAB(90),"NOTE" ::
+	PRINT=2:TABV(1) ::
+	PRINT=2:TAB(01),GENER(130,"-") ::
+	PRINT=2:TABV(1) ::
+	RETURN ::
 &AGGDR   ::
-        SEARCH.M=NFUDERIS,KDR:&ERR74,E,INKDR,LM(NFUDERIS) ::
+	SEARCH.M=NFUDERIS,KDR:&ERR74,E,INKDR,LM(NFUDERIS) ::
 &ERR74  IF E=74 ::
-           PRINT=1:TAB(01,24),B,TAB(01,24),"Conto ",KDR," bloccato da altro terminale - attendere. " ::
-           WAIT 3 ::
-           PRINT=1:TAB(01,24),B,TAB(01,24),ATB(2)," F6 ",ATB(0)," per interrompere l'elaborazione " ::
-           GOTO &AGGDR ::
-        ENDIF ::
-        IF (DSTATO="E") OR (DSTATO="L")      ::
-           RETURN ::
-        ENDIF ::
-        COMDPOSSE=DPOSSE ::
-        KCONTO=KDR ::
-        NRIGHEMOV=1 ::
-        FI=1 ::
-        GOSUB &AGGPRT ::
-        IMPORTOMOV(FI)=EUROROUN(COMSALCTP*0.006) ::
-        SEGNOMOV(FI)="D"                  ::
-        CAUSALMOV(FI)=COMCAU              ::
-        TESTASMOV(FI)=TESTAS              ::
-        DESCAUMOV(FI)=CAUDES(1)           ::
-        DESCA1MOV(FI)=" "                 ::
-        DESCA2MOV(FI)=" "                 ::
-        NRIGVERMOV(FI)=0                  ::
-        CAUMASKMOV(FI)=CAUMASK            ::
-        ASSEGNMOV(FI)=" "                 ::
-        CTPARTMOV(FI)=MMCCSSSS            ::
-        VALUTAMOV(FI)=BENVAL              ::
-        DISPONMOV(FI)=Z1(3)+Z1(4)+Z1(2)+Z1(1)     ::
-        SALDOCMOV(FI)=DSALAT(_EURO)-IMPORTOMOV(FI) ::
-        SCONFINMOV(FI)=0                  ::
-        INDISPOMOV(FI)=0                  ::
-        IMPAVVMOV(FI)=0                   ::
-        NPAVVMOV(FI)=" "                  ::
-        TESTSPMOV(FI)=TESTSP              ::
-        TESTCFMOV(FI)=TESTCF              ::
-        TESTFOMOV(FI)=" "                 ::
-        TESTSTMOV(FI)=" "                 ::
-        PENALEMOV(FI)=0                   ::
-        CAUPVMOV(FI)=0                    ::
-        SNESIMOV(FI)=SNESIBITORE          ::
-        CAUUICMOV(FI)=CAUUICMAF           ::
-        TIPOLOGMOV(FI)=" "                ::
-        TIPOAGG=7 ::
-        IF SINOPRT="SI" ::
+	   PRINT=1:TAB(01,24),B,TAB(01,24),"Conto ",KDR," bloccato da altro terminale - attendere. " ::
+	   WAIT 3 ::
+	   PRINT=1:TAB(01,24),B,TAB(01,24),ATB(2)," F6 ",ATB(0)," per interrompere l'elaborazione " ::
+	   GOTO &AGGDR ::
+	ENDIF ::
+	IF (DSTATO="E") OR (DSTATO="L")      ::
+	   RETURN ::
+	ENDIF ::
+	COMDPOSSE=DPOSSE ::
+	KCONTO=KDR ::
+	NRIGHEMOV=1 ::
+	FI=1 ::
+	GOSUB &AGGPRT ::
+	IMPORTOMOV(FI)=EUROROUN(COMSALCTP*0.006) ::
+	SEGNOMOV(FI)="D"                  ::
+	CAUSALMOV(FI)=COMCAU              ::
+	TESTASMOV(FI)=TESTAS              ::
+	DESCAUMOV(FI)=CAUDES(1)           ::
+	DESCA1MOV(FI)=" "                 ::
+	DESCA2MOV(FI)=" "                 ::
+	NRIGVERMOV(FI)=0                  ::
+	CAUMASKMOV(FI)=CAUMASK            ::
+	ASSEGNMOV(FI)=" "                 ::
+	CTPARTMOV(FI)=MMCCSSSS            ::
+	VALUTAMOV(FI)=BENVAL              ::
+	DISPONMOV(FI)=Z1(3)+Z1(4)+Z1(2)+Z1(1)     ::
+	SALDOCMOV(FI)=DSALAT(_EURO)-IMPORTOMOV(FI) ::
+	SCONFINMOV(FI)=0                  ::
+	INDISPOMOV(FI)=0                  ::
+	IMPAVVMOV(FI)=0                   ::
+	NPAVVMOV(FI)=" "                  ::
+	TESTSPMOV(FI)=TESTSP              ::
+	TESTCFMOV(FI)=TESTCF              ::
+	TESTFOMOV(FI)=" "                 ::
+	TESTSTMOV(FI)=" "                 ::
+	PENALEMOV(FI)=0                   ::
+	CAUPVMOV(FI)=0                    ::
+	SNESIMOV(FI)=SNESIBITORE          ::
+	CAUUICMOV(FI)=CAUUICMAF           ::
+	TIPOLOGMOV(FI)=" "                ::
+	TIPOAGG=7 ::
+	IF SINOPRT="SI" ::
 &AGGASK    PRINT=1:TAB(01,24),B,TAB(01,24),ATB(2)," F1 ",ATB(0)," per stampare la contabile ",ATB(2)," F5 ",ATB(0)," =no stampa " ::
-           ASK=1,0x11=&AGGF1,0x15=&AGGF5:=T ::
-           GOTO &AGGASK ::
+	   ASK=1,0x11=&AGGF1,0x15=&AGGF5:=T ::
+	   GOTO &AGGASK ::
 &AGGF1     IF CAUMASKMOV(FI)=" " ::
-              KEYFORMA="MVDRDA "+CODLINGUA ::
-           ELSE ::
-              KEYFORMA=CAUMASKMOV(FI)+CODLINGUA ::
-           ENDIF ::
-           SEARCH=NFUFORMA,KEYFORMA:&AGGF5,E,FORDESC,LD(NFUFORMA) ::
-           LDGO.SEG 101 ::
-        ENDIF ::
+	      KEYFORMA="MVDRDA "+CODLINGUA ::
+	   ELSE ::
+	      KEYFORMA=CAUMASKMOV(FI)+CODLINGUA ::
+	   ENDIF ::
+	   SEARCH=NFUFORMA,KEYFORMA:&AGGF5,E,FORDESC,LD(NFUFORMA) ::
+	   LDGO.SEG 101 ::
+	ENDIF ::
 &AGGF5  LDGO.SEG 108 ::
-        RETURN ::
+	RETURN ::
 &AGGPRT  ::
-        NLOOP74=0 ::
+	NLOOP74=0 ::
 &PRT01  K16=TERCOD ::
-        SEARCH.M=NFCASSA,K16:&ER16A,E,INK16,LM(NFCASSA) ::
-        GOTO &PRT02 ::
+	SEARCH.M=NFCASSA,K16:&ER16A,E,INK16,LM(NFCASSA) ::
+	GOTO &PRT02 ::
 &ER16A  IF E<>74 GOTO &ER16B ::
-        IF NLOOP74=50 ::
-           PRINT=1:TAB(01,24),B,TAB(01,24),"Record di ",NF(NFCASSA)," bloccato. Provvedere allo sblocco. " ::
-           ASK=1:=T ::
-           PRINT=1:TAB(01,24),B ::
-           NLOOP74=0 ::
-        ENDIF ::
-        WAIT 1 ::
-        NLOOP74=NLOOP74+1 ::
-        GOTO &PRT01 ::
+	IF NLOOP74=50 ::
+	   PRINT=1:TAB(01,24),B,TAB(01,24),"Record di ",NF(NFCASSA)," bloccato. Provvedere allo sblocco. " ::
+	   ASK=1:=T ::
+	   PRINT=1:TAB(01,24),B ::
+	   NLOOP74=0 ::
+	ENDIF ::
+	WAIT 1 ::
+	NLOOP74=NLOOP74+1 ::
+	GOTO &PRT01 ::
 &PRT02  IF CRPROT(1)<CONV(CRPROTMOV(1)) ::
-           CRPROT(1)=CONV(CRPROTMOV(1)) ::
-        ENDIF ::
-        MODIF=NFCASSA,K16:&ER16B,E,CRNOME,LD(NFCASSA) ::
-        CRPROTMOV(1)=CONV(CRPROT(1)+1) ::
-        RETURN ::
+	   CRPROT(1)=CONV(CRPROTMOV(1)) ::
+	ENDIF ::
+	MODIF=NFCASSA,K16:&ER16B,E,CRNOME,LD(NFCASSA) ::
+	CRPROTMOV(1)=CONV(CRPROT(1)+1) ::
+	RETURN ::
 &ER16B  PRINT=1:TAB(01,24),B,BELL,TAB(01,24),"Errore in ",NF(NFCASSA)," ",E," ",K16 ::
-        ASK=1:=T ::
-        PRINT=1:TAB(01,24),B ::
+	ASK=1:=T ::
+	PRINT=1:TAB(01,24),B ::
 &PRT03  RETURN ::
 &PRKEY   ::
-        CGOSUB="&PRKEY" ::
-        LDGO.SEG 234 ::
-        RETURN ::
+	CGOSUB="&PRKEY" ::
+	LDGO.SEG 234 ::
+	RETURN ::
 &ASKEY   ::
-        CGOSUB="&ASKEY" ::
-        LDGO.SEG 234 ::
-        RETURN ::
+	CGOSUB="&ASKEY" ::
+	LDGO.SEG 234 ::
+	RETURN ::
 9000    SEGCHAIN=0 ::
-        RET.SEG ::
-        STOP ::
-        ESEG 220 ::
-        SEGMENT 230 ::
-        DCL ROTDIVISA$=3 ::
-        DCL TIPOGEST$=1 ::
-        BB=TESTSEG ::
+	RET.SEG ::
+	STOP ::
+	ESEG 220 ::
+	SEGMENT 230 ::
+	DCL ROTDIVISA$=3 ::
+	DCL TIPOGEST$=1 ::
+	BB=TESTSEG ::
 &M10    R1=5 ::
-        R2=R1+2 ::
-        R3=R2+2 ::
-        R4=R3+2 ::
-        R5=R4+2 ::
-        R6=R5+2 ::
-        R7=R6+2 ::
-        R8=R7+2 ::
-        T1=13 ::
-        T2=T1+51 ::
-        PRINT=1: CLEAR ::
-        PRINT=1:TAB(01,01),ATB(2),TESTSEG,ATB(0) ::
-        PRINT=1:TAB(T1,R1),"Addebita / Accredita un importo................. = ",ATB(2)," F1 ",ATB(0) ::
-        PRINT=1:TAB(T1,R2),"Addebita Assicurazione.......................... = ",ATB(2)," F2 ",ATB(0) ::
-        PRINT=1:TAB(T1,R3),"Addebita Spese Minime........................... = ",ATB(2)," F3 ",ATB(0) ::
-        PRINT=1:TAB(T1,R4),"Addebita Imposta di bollo....................... = ",ATB(2)," F4 ",ATB(0) ::
-        PRINT=1:TAB(01,23),L ::
+	R2=R1+2 ::
+	R3=R2+2 ::
+	R4=R3+2 ::
+	R5=R4+2 ::
+	R6=R5+2 ::
+	R7=R6+2 ::
+	R8=R7+2 ::
+	T1=13 ::
+	T2=T1+51 ::
+	PRINT=1: CLEAR ::
+	PRINT=1:TAB(01,01),ATB(2),TESTSEG,ATB(0) ::
+	PRINT=1:TAB(T1,R1),"Addebita / Accredita un importo................. = ",ATB(2)," F1 ",ATB(0) ::
+	PRINT=1:TAB(T1,R2),"Addebita Assicurazione.......................... = ",ATB(2)," F2 ",ATB(0) ::
+	PRINT=1:TAB(T1,R3),"Addebita Spese Minime........................... = ",ATB(2)," F3 ",ATB(0) ::
+	PRINT=1:TAB(T1,R4),"Addebita Imposta di bollo....................... = ",ATB(2)," F4 ",ATB(0) ::
+	PRINT=1:TAB(01,23),L ::
 &M100   PRINT=1:TAB(01,24),B,TAB(01,24),ATB(2)," ESC ",ATB(0)," per terminare   " ::
-        ASK=1,I=&FINE,0x11=&F1,0x12=&F2,0x13=&F3,0x14=&F4:=T ::
-        GOTO &M100 ::
+	ASK=1,I=&FINE,0x11=&F1,0x12=&F2,0x13=&F3,0x14=&F4:=T ::
+	GOTO &M100 ::
 &F1     TESTSEG=INCLUD(18,"            ADDEBITA / ACCREDITA UN IMPORTO       ") ::
-        GOTO 10 ::
+	GOTO 10 ::
 &F2     TESTSEG=INCLUD(18,"               ADDEBITA ASSICURAZIONE               ") ::
-        LDGO.SEG 231 ::
-        GOTO &F80 ::
+	LDGO.SEG 231 ::
+	GOTO &F80 ::
 &F3     TESTSEG=INCLUD(18,"               ADDEBITA SPESE MINIME                ") ::
-        LDGO.SEG 232 ::
-        GOTO &F80 ::
+	LDGO.SEG 232 ::
+	GOTO &F80 ::
 &F4     TESTSEG=INCLUD(18,"               ADDEBITA IMPOSTA DI BOLLO            ") ::
-        LDGO.SEG 233 ::
-        GOTO &F80 ::
+	LDGO.SEG 233 ::
+	GOTO &F80 ::
 &F80    TESTSEG=BB ::
-        GOTO &M10 ::
+	GOTO &M10 ::
 &FINE   BB=SPACE(80) ::
-        RET.SEG ::
-        STOP ::
+	RET.SEG ::
+	STOP ::
 10      CODINI="000000000" ::
-        CODFIN="999999999" ::
-        IF NBYFILKEY<>2 ::
-           CODFIN="009999999" ::
-        ENDIF ::
-        DATFIN="99999999" ::
-        DATINI="00000000" ::
-        SINOSTAMPA="SI" ::
-        SINOAGG="NO" ::
-        SINOPRT="NO" ::
-        REGINI="000000" ::
-        REGFIN="999999" ::
-        SNZOOM="Z"              ::
-        CAPPAG=0                ::
-        COMCAU=" "              ::
-        COMSEG=" "              ::
-        ORDIMP=0                ::
-        BENVAL=DATAODIERNA      ::
-        ROTDIVISA="EUR" ::
-        TIPOGEST="Z" ::
-        R1=5 ::
-        R2=R1+1 ::
-        R3=R2+1 ::
-        R4=R3+1 ::
-        R5=R4+3 ::
-        R6=R5+2 ::
-        R7=R6+1 ::
-        R8=R7+1 ::
-        R9=R8+1 ::
-        RA=R9+1 ::
-        RB=RA+1 ::
-        T1=01 ::
-        T2=T1+36 ::
-        PRINT=1: CLEAR ::
-        PRINT=1:TAB(01,01),ATB(2),TESTSEG,ATB(0) ::
-        PRINT=1:TAB(T1,R1),"Dal conto....................... :" ::
-        PRINT=1:TAB(T1,R2)," al conto....................... :" ::
-        PRINT=1:TAB(T1,R3),"Dalla sottocategoria............ :" ::
-        PRINT=1:TAB(T1,R4)," Alla sottocategoria............ :" ::
-        PRINT=1:TAB(T1,R4+1),"Dalla data apertura............. :" ::
-        PRINT=1:TAB(T1,R4+2)," Alla data apertura............. :" ::
-        PRINT=1:TAB(T1,R5),"P=Portore  N=Nominativo  Z=Tutti :" ::
-        PRINT=1:TAB(T1,R5+1),"Tipo gestione................... :" ::
-        PRINT=1:TAB(T1,R6),"Causale Operazione.............. :" ::
-        PRINT=1:TAB(T1,R7),"Rapporti in Divisa (ITL/EUR).... :" ::
-        PRINT=1:TAB(T1,R8),"Se saldo contabile maggiore di.. :" ::
-        PRINT=1:TAB(T1,R9),"Importo Operazione.............. :" ::
-        PRINT=1:TAB(T1,RA),"Segno   Operazione.............. :" ::
-        PRINT=1:TAB(T1,RB),"Valuta  Operazione.............. :" ::
-        PRINT=1:TAB(01,23),L ::
+	CODFIN="999999999" ::
+	IF NBYFILKEY<>2 ::
+	   CODFIN="009999999" ::
+	ENDIF ::
+	DATFIN="99999999" ::
+	DATINI="00000000" ::
+	SINOSTAMPA="SI" ::
+	SINOAGG="NO" ::
+	SINOPRT="NO" ::
+	REGINI="000000" ::
+	REGFIN="999999" ::
+	SNZOOM="Z"              ::
+	CAPPAG=0                ::
+	COMCAU=" "              ::
+	COMSEG=" "              ::
+	ORDIMP=0                ::
+	BENVAL=DATAODIERNA      ::
+	ROTDIVISA="EUR" ::
+	TIPOGEST="Z" ::
+	R1=5 ::
+	R2=R1+1 ::
+	R3=R2+1 ::
+	R4=R3+1 ::
+	R5=R4+3 ::
+	R6=R5+2 ::
+	R7=R6+1 ::
+	R8=R7+1 ::
+	R9=R8+1 ::
+	RA=R9+1 ::
+	RB=RA+1 ::
+	T1=01 ::
+	T2=T1+36 ::
+	PRINT=1: CLEAR ::
+	PRINT=1:TAB(01,01),ATB(2),TESTSEG,ATB(0) ::
+	PRINT=1:TAB(T1,R1),"Dal conto....................... :" ::
+	PRINT=1:TAB(T1,R2)," al conto....................... :" ::
+	PRINT=1:TAB(T1,R3),"Dalla sottocategoria............ :" ::
+	PRINT=1:TAB(T1,R4)," Alla sottocategoria............ :" ::
+	PRINT=1:TAB(T1,R4+1),"Dalla data apertura............. :" ::
+	PRINT=1:TAB(T1,R4+2)," Alla data apertura............. :" ::
+	PRINT=1:TAB(T1,R5),"P=Portore  N=Nominativo  Z=Tutti :" ::
+	PRINT=1:TAB(T1,R5+1),"Tipo gestione................... :" ::
+	PRINT=1:TAB(T1,R6),"Causale Operazione.............. :" ::
+	PRINT=1:TAB(T1,R7),"Rapporti in Divisa (ITL/EUR).... :" ::
+	PRINT=1:TAB(T1,R8),"Se saldo contabile maggiore di.. :" ::
+	PRINT=1:TAB(T1,R9),"Importo Operazione.............. :" ::
+	PRINT=1:TAB(T1,RA),"Segno   Operazione.............. :" ::
+	PRINT=1:TAB(T1,RB),"Valuta  Operazione.............. :" ::
+	PRINT=1:TAB(01,23),L ::
 200     PRINT=1:TAB(01,24),B,TAB(01,24),ATB(2)," ESC ",ATB(0),"=fine          " ::
-        COLKEY=T2 ::
-        RIGKEY=R1 ::
-        COMDUPKEY=CODINI ::
-        SINO0099KEY="SI" ::
-        GOSUB &ASKEY ::
-        CODINI=SUBSTR(COMDUPKEY,1,NBYTESKEY) ::
-        IF LABKEY="       " GOTO 210 ::
-        IF LABKEY="24RIGA " GOTO 200 ::
-        IF LABKEY="&LABESC" GOTO 9000 ::
-        GOTO 200 ::
+	COLKEY=T2 ::
+	RIGKEY=R1 ::
+	COMDUPKEY=CODINI ::
+	SINO0099KEY="SI" ::
+	GOSUB &ASKEY ::
+	CODINI=SUBSTR(COMDUPKEY,1,NBYTESKEY) ::
+	IF LABKEY="       " GOTO 210 ::
+	IF LABKEY="24RIGA " GOTO 200 ::
+	IF LABKEY="&LABESC" GOTO 9000 ::
+	GOTO 200 ::
 210     PRINT=1:TAB(01,24),B,TAB(01,24),ATB(2)," ESC ",ATB(0),"=fine                     ",ATB(2)," UP ",ATB(0),"=input precedente        " ::
-        COLKEY=T2 ::
-        RIGKEY=R2 ::
-        COMDUPKEY=CODFIN ::
-        SINO0099KEY="SI" ::
-        GOSUB &ASKEY ::
-        CODFIN=SUBSTR(COMDUPKEY,1,NBYTESKEY) ::
-        IF CODFIN<CODINI GOTO 210 ::
-        IF LABKEY="       " GOTO 220 ::
-        IF LABKEY="24RIGA " GOTO 210 ::
-        IF LABKEY="&LABUP " GOTO 200 ::
-        IF LABKEY="&LABESC" GOTO 9000 ::
-        GOTO 210 ::
+	COLKEY=T2 ::
+	RIGKEY=R2 ::
+	COMDUPKEY=CODFIN ::
+	SINO0099KEY="SI" ::
+	GOSUB &ASKEY ::
+	CODFIN=SUBSTR(COMDUPKEY,1,NBYTESKEY) ::
+	IF CODFIN<CODINI GOTO 210 ::
+	IF LABKEY="       " GOTO 220 ::
+	IF LABKEY="24RIGA " GOTO 210 ::
+	IF LABKEY="&LABUP " GOTO 200 ::
+	IF LABKEY="&LABESC" GOTO 9000 ::
+	GOTO 210 ::
 220     PRINT=1:TAB(T2,R3),SPACE(35) ::
-        COM3=SUBSTR(REGINI,1,3) ::
-        M1=CONV(COM3) ::
-        ASK=1,I=9000,U=210:TAB(T2,R3),(Z3),M1=TAB(T2),(N3),M1 ::
-        COM3=CONV(M1) ::
-        PRINT=1:TAB(T2),COM3 ::
-        REGINI=COM3+"000" ::
-        IF COM3="000" ::
-           PRINT=1:TAB(T2+5),"Dalla Prima  " ::
-        ELSE ::
-           K3="SCDR"+COM3 ::
-           SEARCH=NFK3,K3:220,E,DESCR,LD(NFK3) ::
-           PRINT=1:TAB(T2+5),DESCR ::
-           REGFIN=REGINI ::
-        ENDIF ::
+	COM3=SUBSTR(REGINI,1,3) ::
+	M1=CONV(COM3) ::
+	ASK=1,I=9000,U=210:TAB(T2,R3),(Z3),M1=TAB(T2),(N3),M1 ::
+	COM3=CONV(M1) ::
+	PRINT=1:TAB(T2),COM3 ::
+	REGINI=COM3+"000" ::
+	IF COM3="000" ::
+	   PRINT=1:TAB(T2+5),"Dalla Prima  " ::
+	ELSE ::
+	   K3="SCDR"+COM3 ::
+	   SEARCH=NFK3,K3:220,E,DESCR,LD(NFK3) ::
+	   PRINT=1:TAB(T2+5),DESCR ::
+	   REGFIN=REGINI ::
+	ENDIF ::
 230     PRINT=1:TAB(T2,R4),SPACE(35) ::
-        PRINT=1:TAB(01,24),B ::
-        PRINT=1:TAB(01,24),ATB(2)," ESC ",ATB(0)," = Per Terminare           ",ATB(2)," UP ",ATB(0)," = Input Precedente " ::
-        COM3=SUBSTR(REGFIN,1,3) ::
-        M1=CONV(COM3) ::
-        ASK=1,I=9000,U=220:TAB(T2,R4),(Z3),M1=TAB(T2),(N3),M1 ::
-        COM3=CONV(M1) ::
-        PRINT=1:TAB(T2),COM3 ::
-        REGFIN=COM3+"000" ::
-        IF COM3="999" ::
-           PRINT=1:TAB(T2+5)," All'Ultima  " ::
-        ELSE ::
-           K3="SCDR"+COM3 ::
-           SEARCH=NFK3,K3:230,E,DESCR,LD(NFK3) ::
-           PRINT=1:TAB(T2+5),DESCR ::
-        ENDIF ::
+	PRINT=1:TAB(01,24),B ::
+	PRINT=1:TAB(01,24),ATB(2)," ESC ",ATB(0)," = Per Terminare           ",ATB(2)," UP ",ATB(0)," = Input Precedente " ::
+	COM3=SUBSTR(REGFIN,1,3) ::
+	M1=CONV(COM3) ::
+	ASK=1,I=9000,U=220:TAB(T2,R4),(Z3),M1=TAB(T2),(N3),M1 ::
+	COM3=CONV(M1) ::
+	PRINT=1:TAB(T2),COM3 ::
+	REGFIN=COM3+"000" ::
+	IF COM3="999" ::
+	   PRINT=1:TAB(T2+5)," All'Ultima  " ::
+	ELSE ::
+	   K3="SCDR"+COM3 ::
+	   SEARCH=NFK3,K3:230,E,DESCR,LD(NFK3) ::
+	   PRINT=1:TAB(T2+5),DESCR ::
+	ENDIF ::
 233     RDOPTION(RDOPT_0," ") ::
-        RDPLUS(T2+12,25,"00000000=Dalla prima") ::
-        TASTO = RDDATA(T2,R4+1,"<ENTU>",DATINI) ::
-        SELECT TASTO ::
-          CASE "UP-" ::
-             GOTO 230 ::
-          CASE "ESC" ::
-             GOTO 9000 ::
-        ENDSEL ::
+	RDPLUS(T2+12,25,"00000000=Dalla prima") ::
+	TASTO = RDDATA(T2,R4+1,"<ENTU>",DATINI) ::
+	SELECT TASTO ::
+	  CASE "UP-" ::
+	     GOTO 230 ::
+	  CASE "ESC" ::
+	     GOTO 9000 ::
+	ENDSEL ::
 235     RDOPTION(RDOPT_9," ") ::
-        RDPLUS(T2+12,25,"99999999=All'ultima") ::
-        TASTO = RDDATA(T2,R4+2,"<ENTU>",DATFIN) ::
-        SELECT TASTO ::
-          CASE "ESC" ::
-             GOTO 9000 ::
-          CASE "UP-" ::
-             GOTO 233 ::
-        ENDSEL ::
-        IF DATFIN < DATINI ::
-           GOTO 235 ::
-        ENDIF ::
+	RDPLUS(T2+12,25,"99999999=All'ultima") ::
+	TASTO = RDDATA(T2,R4+2,"<ENTU>",DATFIN) ::
+	SELECT TASTO ::
+	  CASE "ESC" ::
+	     GOTO 9000 ::
+	  CASE "UP-" ::
+	     GOTO 233 ::
+	ENDSEL ::
+	IF DATFIN < DATINI ::
+	   GOTO 235 ::
+	ENDIF ::
 240     ASK=1,I=9000,U=235:TAB(T2,R5),SNZOOM=TAB(T2),SNZOOM ::
-        PRINT=1:TAB(T2),SNZOOM ::
-        IF SNZOOM="P" ::
-           PRINT=1:TAB(T2+05),"Portatore " ::
-           PRINT=1:TAB(T2,R5+1),"Z" ::
-           PRINT=1:TAB(T2+05,R5+1),"Tutti     " ::
-           GOTO 250 ::
-        ENDIF ::
-        IF SNZOOM="N" ::
-           PRINT=1:TAB(T2+05),"Nominativo" ::
-           PRINT=1:TAB(T2,R5+1),"Z" ::
-           PRINT=1:TAB(T2+05,R5+1),"Tutti     " ::
-           GOTO 250 ::
-        ENDIF ::
-        IF SNZOOM="Z" ::
-           PRINT=1:TAB(T2+05),"Tutti     " ::
-           PRINT=1:TAB(T2,R5+1),"Z" ::
-           PRINT=1:TAB(T2+05,R5+1),"Tutti     " ::
-           GOTO 250 ::
-        ENDIF ::
-        GOTO 240 ::
+	PRINT=1:TAB(T2),SNZOOM ::
+	IF SNZOOM="P" ::
+	   PRINT=1:TAB(T2+05),"Portatore " ::
+	   PRINT=1:TAB(T2,R5+1),"Z" ::
+	   PRINT=1:TAB(T2+05,R5+1),"Tutti     " ::
+	   GOTO 250 ::
+	ENDIF ::
+	IF SNZOOM="N" ::
+	   PRINT=1:TAB(T2+05),"Nominativo" ::
+	   PRINT=1:TAB(T2,R5+1),"Z" ::
+	   PRINT=1:TAB(T2+05,R5+1),"Tutti     " ::
+	   GOTO 250 ::
+	ENDIF ::
+	IF SNZOOM="Z" ::
+	   PRINT=1:TAB(T2+05),"Tutti     " ::
+	   PRINT=1:TAB(T2,R5+1),"Z" ::
+	   PRINT=1:TAB(T2+05,R5+1),"Tutti     " ::
+	   GOTO 250 ::
+	ENDIF ::
+	GOTO 240 ::
 &TIPOGES ::
-        TASTO=RDLIST(T2,R5+1,T2+5,20,"<ENT10U>","Z=Tutti","DRGEST",TIPOGEST) ::
-        SELECT TASTO ::
-           CASE "ESC" ::
-              GOTO 9000 ::
-           CASE "UP-" ::
-              GOTO 240 ::
-        ENDSEL ::
+	TASTO=RDLIST(T2,R5+1,T2+5,20,"<ENT10U>","Z=Tutti","DRGEST",TIPOGEST) ::
+	SELECT TASTO ::
+	   CASE "ESC" ::
+	      GOTO 9000 ::
+	   CASE "UP-" ::
+	      GOTO 240 ::
+	ENDSEL ::
 250 ::
 260     ASK=1,I=9000,U=&TIPOGES:TAB(T2,R6),COMCAU=TAB(T2),COMCAU ::
-        PRINT=1:TAB(T2),COMCAU ::
-        CAUTIP="7" ::
-        CAUSAL=COMCAU ::
-        SEARCH=NFUCAUSA,KEYCAUSA:260,E,CAUDES(1),LD(NFUCAUSA) ::
-        PRINT=1:TAB(T2+05),CAUDES(1) ::
-        COMSEG=SEGNO ::
+	PRINT=1:TAB(T2),COMCAU ::
+	CAUTIP="7" ::
+	CAUSAL=COMCAU ::
+	SEARCH=NFUCAUSA,KEYCAUSA:260,E,CAUDES(1),LD(NFUCAUSA) ::
+	PRINT=1:TAB(T2+05),CAUDES(1) ::
+	COMSEG=SEGNO ::
 280     ASK=1,I=9000,U=260:TAB(T2,R7),ROTDIVISA=TAB(T2),ROTDIVISA ::
-        PRINT=1:TAB(T2),ROTDIVISA ::
-        IF (ROTDIVISA <> "ITL") AND (ROTDIVISA <> "EUR")  GOTO 280 ::
-        SetDivisa(ROTDIVISA) ::
+	PRINT=1:TAB(T2),ROTDIVISA ::
+	IF (ROTDIVISA <> "ITL") AND (ROTDIVISA <> "EUR")  GOTO 280 ::
+	SetDivisa(ROTDIVISA) ::
 285     ASK=1,I=9000,U=280:TAB(T2,R8),((EUROPRINT("SN12Z"))),CAPPAG=TAB(T2),((EUROASK("N12"))),CAPPAG ::
-        PRINT=1:TAB(T2),((EUROPRINT("SN12Z"))),CAPPAG ::
+	PRINT=1:TAB(T2),((EUROPRINT("SN12Z"))),CAPPAG ::
 290     ASK=1,I=9000,U=280:TAB(T2,R9),((EUROPRINT("SN12Z"))),ORDIMP=TAB(T2),((EUROASK("N12"))),ORDIMP ::
-        PRINT=1:TAB(T2),((EUROPRINT("SN12Z"))),ORDIMP ::
-        IF ORDIMP=0 GOTO 290 ::
+	PRINT=1:TAB(T2),((EUROPRINT("SN12Z"))),ORDIMP ::
+	IF ORDIMP=0 GOTO 290 ::
 300     PRINT=1:TAB(01,24),B ::
-        PRINT=1:TAB(01,24),ATB(2)," ESC ",ATB(0)," = Per Terminare           ",ATB(2)," UP ",ATB(0)," = Input Precedente " ::
-        ASK=1,I=9000,U=290:TAB(T2,RA),COMSEG=TAB(T2),COMSEG ::
-        PRINT=1:TAB(T2),COMSEG ::
-        IF (COMSEG<>"D") AND (COMSEG<>"A") GOTO 300 ::
-        IF SEGNO<>" " ::
-           IF COMSEG<>SEGNO ::
-              PRINT=1:TAB(01,24),B ::
-              PRINT=1:TAB(01,24),ATB(2)," ATTENZIONE : ",ATB(0)," Segno non congruo con la causale !!! " ::
-              ASK=1:BELL=T ::
-              GOTO 300 ::
-           ENDIF ::
-        ENDIF ::
+	PRINT=1:TAB(01,24),ATB(2)," ESC ",ATB(0)," = Per Terminare           ",ATB(2)," UP ",ATB(0)," = Input Precedente " ::
+	ASK=1,I=9000,U=290:TAB(T2,RA),COMSEG=TAB(T2),COMSEG ::
+	PRINT=1:TAB(T2),COMSEG ::
+	IF (COMSEG<>"D") AND (COMSEG<>"A") GOTO 300 ::
+	IF SEGNO<>" " ::
+	   IF COMSEG<>SEGNO ::
+	      PRINT=1:TAB(01,24),B ::
+	      PRINT=1:TAB(01,24),ATB(2)," ATTENZIONE : ",ATB(0)," Segno non congruo con la causale !!! " ::
+	      ASK=1:BELL=T ::
+	      GOTO 300 ::
+	   ENDIF ::
+	ENDIF ::
 310     DATAPRSEC=BENVAL ::
-        DATINP=GIO+MES+SEC+ANN ::
-        ASK=1,I=9000,U=300:TAB(T2,RB),GIO,"/",MES,"/",SEC,ANN=TAB(T2),DATINP ::
-        DATOUT=DATA8900 ::
-        IF DATOUT=" " GOTO 310 ::
-        PRINT=1:TAB(T2),DATOUT ::
-        BENVAL=SS+AA+MM+GG ::
+	DATINP=GIO+MES+SEC+ANN ::
+	ASK=1,I=9000,U=300:TAB(T2,RB),GIO,"/",MES,"/",SEC,ANN=TAB(T2),DATINP ::
+	DATOUT=DATA8900 ::
+	IF DATOUT=" " GOTO 310 ::
+	PRINT=1:TAB(T2),DATOUT ::
+	BENVAL=SS+AA+MM+GG ::
 500     PRINT=1:TAB(01,24),B,BELL ::
-        PRINT=1:TAB(01,24),ATB(2)," ESC ",ATB(0),"=per terminare              ",ATB(2)," F1 ",ATB(0),"=per confermare " ::
-        ASK=1,I=9000,0x11=1000:=T ::
-        GOTO 500 ::
+	PRINT=1:TAB(01,24),ATB(2)," ESC ",ATB(0),"=per terminare              ",ATB(2)," F1 ",ATB(0),"=per confermare " ::
+	ASK=1,I=9000,0x11=1000:=T ::
+	GOTO 500 ::
 1000    PRINT=1:TAB(01,20),B,TAB(20,20),ATB(2)," ELABORAZIONE IN CORSO ",ATB(0) ::
-        PRINT=1:TAB(01,24),B,TAB(01,24),ATB(2)," F6 ",ATB(0)," per interrompere l'elaborazione " ::
-        PAG=0 ::
-        NRIGA=0 ::
-        FOR I=1 TO 10 ::
-           P(I)=0 ::
-        NEXT I ::
-        KDR=CODINI ::
-        SEARCH=NFUDERIS,KDR:&DWDR,E,DNDG,LD(NFUDERIS) ::
-        GOTO &DWDR1 ::
+	PRINT=1:TAB(01,24),B,TAB(01,24),ATB(2)," F6 ",ATB(0)," per interrompere l'elaborazione " ::
+	PAG=0 ::
+	NRIGA=0 ::
+	FOR I=1 TO 10 ::
+	   P(I)=0 ::
+	NEXT I ::
+	KDR=CODINI ::
+	SEARCH=NFUDERIS,KDR:&DWDR,E,DNDG,LD(NFUDERIS) ::
+	GOTO &DWDR1 ::
 &DWDR   DOWN=NFUDERIS:&ENDDR,E,KDR,LT(NFUDERIS) ::
-        IF KDR>CODFIN GOTO &ENDDR ::
-        IF (DATINI<>"00000000") OR (DATFIN<>"99999999") ::
-           IF DDATAP < DATINI GOTO &DWDR ::
-           IF DDATAP > DATFIN GOTO &DWDR ::
-        ENDIF ::
-        PRINT=1:TAB(01,21),KDR,(W40),B ::
-        OP &OP ,F6 ::
-        GOTO &DWDR1 ::
+	IF KDR>CODFIN GOTO &ENDDR ::
+	IF (DATINI<>"00000000") OR (DATFIN<>"99999999") ::
+	   IF DDATAP < DATINI GOTO &DWDR ::
+	   IF DDATAP > DATFIN GOTO &DWDR ::
+	ENDIF ::
+	PRINT=1:TAB(01,21),KDR,(W40),B ::
+	OP &OP ,F6 ::
+	GOTO &DWDR1 ::
 &OP     IF F6<>0x16 GOTO &DWDR1 ::
-        PRINT=1:TAB(01,24),B,TAB(01,24),ATB(2)," ESC ",ATB(0)," per terminare       ",ATB(2)," F1 ",ATB(0)," per proseguire" ::
-        ASK=1,I=&ENDDR,0x11=&OP1:=T ::
-        GOTO &OP ::
+	PRINT=1:TAB(01,24),B,TAB(01,24),ATB(2)," ESC ",ATB(0)," per terminare       ",ATB(2)," F1 ",ATB(0)," per proseguire" ::
+	ASK=1,I=&ENDDR,0x11=&OP1:=T ::
+	GOTO &OP ::
 &OP1    PRINT=1:TAB(01,24),B,TAB(01,24),ATB(2)," F6 ",ATB(0)," per interrompere l'elaborazione " ::
 &DWDR1  IF KDR > CODFIN                            GOTO &ENDDR ::
-        IF (DSTATO="E") OR (DSTATO="L")            GOTO &DWDR ::
-        IF DSOTCAT<SUBSTR(REGINI,1,3)              GOTO &DWDR ::
-        IF DSOTCAT>SUBSTR(REGFIN,1,3)              GOTO &DWDR ::
-        IF DSALAT(_EURO)<=CAPPAG                   GOTO &DWDR ::
-        IF (DDIVISA<>"ITL") AND (DDIVISA <> "EUR") GOTO &DWDR ::
-        IF DDIVISA <> ROTDIVISA                    GOTO &DWDR ::
-        DIVISAMOV=DDIVISA ::
-        IF SNZOOM<>"Z" ::
-           IF SNZOOM<>DRTIPO GOTO &DWDR ::
-        ENDIF ::
-        IF TIPOGEST<>"Z" ::
-           IF TIPOGEST<>DGESTLIB GOTO &DWDR ::
-        ENDIF ::
-        DIVISAMOV=DDIVISA ::
-        SETDIVISA(DIVISAMOV) ::
-        EPOCAVAL=EPOCAOD ::
-        LDGO.SEG 45 ::
+	IF (DSTATO="E") OR (DSTATO="L")            GOTO &DWDR ::
+	IF DSOTCAT<SUBSTR(REGINI,1,3)              GOTO &DWDR ::
+	IF DSOTCAT>SUBSTR(REGFIN,1,3)              GOTO &DWDR ::
+	IF DSALAT(_EURO)<=CAPPAG                   GOTO &DWDR ::
+	IF (DDIVISA<>"ITL") AND (DDIVISA <> "EUR") GOTO &DWDR ::
+	IF DDIVISA <> ROTDIVISA                    GOTO &DWDR ::
+	DIVISAMOV=DDIVISA ::
+	IF SNZOOM<>"Z" ::
+	   IF SNZOOM<>DRTIPO GOTO &DWDR ::
+	ENDIF ::
+	IF TIPOGEST<>"Z" ::
+	   IF TIPOGEST<>DGESTLIB GOTO &DWDR ::
+	ENDIF ::
+	DIVISAMOV=DDIVISA ::
+	SETDIVISA(DIVISAMOV) ::
+	EPOCAVAL=EPOCAOD ::
+	LDGO.SEG 45 ::
 &DR10   SEARCH.M=NFUDERIS,KDR:&DR20,E,INKDR,LM(NFUDERIS) ::
 &DR20   IF E<>0 ::
-           IF E=74 ::
-              PRINT=1:TAB(01,24),B,TAB(01,24),"Conto ",KDR," bloccato da altro terminale - attendere. " ::
-              WAIT 3 ::
-              PRINT=1:TAB(01,24),B,TAB(01,24),ATB(2)," F6 ",ATB(0)," per interrompere l'elaborazione " ::
-              GOTO &DR10 ::
-           ELSE ::
-              PRINT=1:TAB(01,24),B ::
-              PRINT=1:TAB(01,24)," Errore in ",NF(NFUDERIS)," : ",E,"  ",KDR ::
-              ASK=1,I=9000:BELL=T ::
-              GOTO &DWDR ::
-           ENDIF ::
-        ENDIF ::
-        IMPMOV=ORDIMP ::
-        IF COMSEG="D" ::
-           IF DSALAT(_EURO)<IMPMOV ::
-              IMPMOV=DSALAT(_EURO) ::
-           ENDIF ::
-        ENDIF ::
-        IF MMCCSSSS=" " ::
-           E=CaricaUcolcc(KDR,DSOTCAT) ::
-           IF E = 0 ::
-              FORMINI=COLLPC(5) ::
-           ENDIF ::
-        ELSE ::
-           FORMINI=MMCCSSSS ::
-        ENDIF ::
+	   IF E=74 ::
+	      PRINT=1:TAB(01,24),B,TAB(01,24),"Conto ",KDR," bloccato da altro terminale - attendere. " ::
+	      WAIT 3 ::
+	      PRINT=1:TAB(01,24),B,TAB(01,24),ATB(2)," F6 ",ATB(0)," per interrompere l'elaborazione " ::
+	      GOTO &DR10 ::
+	   ELSE ::
+	      PRINT=1:TAB(01,24),B ::
+	      PRINT=1:TAB(01,24)," Errore in ",NF(NFUDERIS)," : ",E,"  ",KDR ::
+	      ASK=1,I=9000:BELL=T ::
+	      GOTO &DWDR ::
+	   ENDIF ::
+	ENDIF ::
+	IMPMOV=ORDIMP ::
+	IF COMSEG="D" ::
+	   IF DSALAT(_EURO)<IMPMOV ::
+	      IMPMOV=DSALAT(_EURO) ::
+	   ENDIF ::
+	ENDIF ::
+	IF MMCCSSSS=" " ::
+	   E=CaricaUcolcc(KDR,DSOTCAT) ::
+	   IF E = 0 ::
+	      FORMINI=COLLPC(5) ::
+	   ENDIF ::
+	ELSE ::
+	   FORMINI=MMCCSSSS ::
+	ENDIF ::
 &NOCTP  K1=DNDG ::
-        SEARCH=NFUANAGE,K1:&DWDR2,E,TIPO,LD(NFUANAGE) ::
+	SEARCH=NFUANAGE,K1:&DWDR2,E,TIPO,LD(NFUANAGE) ::
 &DWDR2  IF E<>0 ::
-           TITOLO=" " ::
-           RAGSO1=DPORRAG ::
-           RAGSO2=" " ::
-           INDIRIZZO=DPORIND ::
-           CAP=DPORCAP ::
-           CITTARES=DPORCIT ::
-           PROV=DPORPRO ::
-        ENDIF ::
-        PRINT=1:TAB(01,21),KDR," ",RAGSO1 ::
-        TITOLOCORR=TITOLO ::
-        RAGSO1CORR=RAGSO1 ::
-        RAGSO2CORR=RAGSO2 ::
-        INDIRICORR=INDIRIZZO ::
-        CAPCORR=CAP ::
-        CITTACORR=CITTARES ::
-        PROVCORR=PROV ::
-        CABCORR=SEDLEG ::
-        STATOCORR=ESTERO ::
-        GOSUB &STAMPA ::
-        GOSUB &AGGDR ::
-        GOTO &DWDR ::
+	   TITOLO=" " ::
+	   RAGSO1=DPORRAG ::
+	   RAGSO2=" " ::
+	   INDIRIZZO=DPORIND ::
+	   CAP=DPORCAP ::
+	   CITTARES=DPORCIT ::
+	   PROV=DPORPRO ::
+	ENDIF ::
+	PRINT=1:TAB(01,21),KDR," ",RAGSO1 ::
+	TITOLOCORR=TITOLO ::
+	RAGSO1CORR=RAGSO1 ::
+	RAGSO2CORR=RAGSO2 ::
+	INDIRICORR=INDIRIZZO ::
+	CAPCORR=CAP ::
+	CITTACORR=CITTARES ::
+	PROVCORR=PROV ::
+	CABCORR=SEDLEG ::
+	STATOCORR=ESTERO ::
+	GOSUB &STAMPA ::
+	GOSUB &AGGDR ::
+	GOTO &DWDR ::
 &ENDDR  IF P(1)>0 ::
-           PRINT=2:TAB(01),GENER(130,"-") ::
-           PRINT=2:TABV(1) ::
-           PRINT=2:TAB(01),((EUROPRINT("SN9"))),P(1) ::
-           PRINT=2:TAB(50),((EUROPRINT("SN12"))),P(2) ::
-           PRINT=2:TAB(70),((EUROPRINT("SN12"))),P(3) ::
-           PRINT=2: PAGE ::
-           PRINT=2:SALTOPAG ::
-        ENDIF ::
-        GOTO 10 ::
+	   PRINT=2:TAB(01),GENER(130,"-") ::
+	   PRINT=2:TABV(1) ::
+	   PRINT=2:TAB(01),((EUROPRINT("SN9"))),P(1) ::
+	   PRINT=2:TAB(50),((EUROPRINT("SN12"))),P(2) ::
+	   PRINT=2:TAB(70),((EUROPRINT("SN12"))),P(3) ::
+	   PRINT=2: PAGE ::
+	   PRINT=2:SALTOPAG ::
+	ENDIF ::
+	GOTO 10 ::
 &STAMPA  ::
-        IF PAG=0 ::
-           GOSUB &TESTA ::
-        ENDIF ::
-        IF NRIGA=50 ::
-           PRINT=2:TAB(01),GENER(130,"-") ::
-           PRINT=2:TABV(1) ::
-           PRINT=2:TAB(110),"SEGUE -->" ::
-           GOSUB &TESTA ::
-        ENDIF ::
-        COLKEY=01 ::
-        RIGKEY=0 ::
-        COMDUPKEY=KDR ::
-        DEVICEKEY=2 ::
-        GOSUB &PRKEY ::
-        PRINT=2:TAB(14),RAGSO1 ::
-        PRINT=2:TAB(50),((EUROPRINT("SN12"))),DSALAT(_EURO) ::
-        PRINT=2:TAB(70),((EUROPRINT("SN12"))),IMPMOV ::
-        PRINT=2:TAB(92),COMSEG ::
-        IF COMSEG="D" ::
-           IF (DSTATO="D") OR (DSTATO="T") ::
-              PRINT=2:TAB(100),"BLOCCATO DARE" ::
-           ENDIF ::
-        ELSE ::
-           IF (DSTATO="A") OR (DSTATO="T") ::
-              PRINT=2:TAB(100),"BLOCCATO AVERE" ::
-           ENDIF ::
-        ENDIF ::
-        PRINT=2:TABV(1) ::
-        NRIGA=NRIGA+1 ::
-        P(1)=P(1)+1 ::
-        P(2)=P(2)+DSALAT(_EURO) ::
-        P(3)=P(3)+IMPMOV ::
-        RETURN ::
+	IF PAG=0 ::
+	   GOSUB &TESTA ::
+	ENDIF ::
+	IF NRIGA=50 ::
+	   PRINT=2:TAB(01),GENER(130,"-") ::
+	   PRINT=2:TABV(1) ::
+	   PRINT=2:TAB(110),"SEGUE -->" ::
+	   GOSUB &TESTA ::
+	ENDIF ::
+	COLKEY=01 ::
+	RIGKEY=0 ::
+	COMDUPKEY=KDR ::
+	DEVICEKEY=2 ::
+	GOSUB &PRKEY ::
+	PRINT=2:TAB(14),RAGSO1 ::
+	PRINT=2:TAB(50),((EUROPRINT("SN12"))),DSALAT(_EURO) ::
+	PRINT=2:TAB(70),((EUROPRINT("SN12"))),IMPMOV ::
+	PRINT=2:TAB(92),COMSEG ::
+	IF COMSEG="D" ::
+	   IF (DSTATO="D") OR (DSTATO="T") ::
+	      PRINT=2:TAB(100),"BLOCCATO DARE" ::
+	   ENDIF ::
+	ELSE ::
+	   IF (DSTATO="A") OR (DSTATO="T") ::
+	      PRINT=2:TAB(100),"BLOCCATO AVERE" ::
+	   ENDIF ::
+	ENDIF ::
+	PRINT=2:TABV(1) ::
+	NRIGA=NRIGA+1 ::
+	P(1)=P(1)+1 ::
+	P(2)=P(2)+DSALAT(_EURO) ::
+	P(3)=P(3)+IMPMOV ::
+	RETURN ::
 &TESTA   ::
-        IF PAG>0 ::
-           PRINT=2: PAGE ::
-        ELSE ::
-           PRINT=2:TABV(0) ::
-        ENDIF ::
-        PAG=PAG+1 ::
-        NRIGA=0 ::
-        PRINT=2:TAB(01),"LISTA DELLE OPERAZIONI DI DEPOSITO A RISPARMIO EFFETTUATE IL ",Z1(1),"/",Z1(2),"/",Z1(3),Z1(4) ::
-        PRINT=2:TAB(110),"Pag.:",(N4),PAG ::
-        PRINT=2:TABV(2) ::
-        PRINT=2:TAB(01),"CAUSALE OPERAZIONE : ",COMCAU,"  ",CAUDES(1) ::
-        PRINT=2:TABV(2) ::
-        PRINT=2:TAB(01),GENER(130,"-") ::
-        PRINT=2:TABV(1) ::
-        PRINT=2:TAB(001),"CONTO N." ::
-        PRINT=2:TAB(014),"RAGIONE SOCIALE" ::
-        PRINT=2:TAB(050),"SALDO CONTABILE" ::
-        PRINT=2:TAB(070),"        IMPORTO" ::
-        PRINT=2:TAB(090),"SEGNO" ::
-        PRINT=2:TAB(100),"NOTE" ::
-        PRINT=2:TABV(1) ::
-        PRINT=2:TAB(01),GENER(130,"-") ::
-        PRINT=2:TABV(1) ::
-        RETURN ::
+	IF PAG>0 ::
+	   PRINT=2: PAGE ::
+	ELSE ::
+	   PRINT=2:TABV(0) ::
+	ENDIF ::
+	PAG=PAG+1 ::
+	NRIGA=0 ::
+	PRINT=2:TAB(01),"LISTA DELLE OPERAZIONI DI DEPOSITO A RISPARMIO EFFETTUATE IL ",Z1(1),"/",Z1(2),"/",Z1(3),Z1(4) ::
+	PRINT=2:TAB(110),"Pag.:",(N4),PAG ::
+	PRINT=2:TABV(2) ::
+	PRINT=2:TAB(01),"CAUSALE OPERAZIONE : ",COMCAU,"  ",CAUDES(1) ::
+	PRINT=2:TABV(2) ::
+	PRINT=2:TAB(01),GENER(130,"-") ::
+	PRINT=2:TABV(1) ::
+	PRINT=2:TAB(001),"CONTO N." ::
+	PRINT=2:TAB(014),"RAGIONE SOCIALE" ::
+	PRINT=2:TAB(050),"SALDO CONTABILE" ::
+	PRINT=2:TAB(070),"        IMPORTO" ::
+	PRINT=2:TAB(090),"SEGNO" ::
+	PRINT=2:TAB(100),"NOTE" ::
+	PRINT=2:TABV(1) ::
+	PRINT=2:TAB(01),GENER(130,"-") ::
+	PRINT=2:TABV(1) ::
+	RETURN ::
 &AGGDR   ::
-        COMDPOSSE=DPOSSE ::
-        KCONTO=KDR ::
-        NRIGHEMOV=1 ::
-        FI=1 ::
-        GOSUB &AGGPRT ::
-        IMPORTOMOV(FI)=IMPMOV             ::
-        SEGNOMOV(FI)=COMSEG               ::
-        CAUSALMOV(FI)=COMCAU              ::
-        TESTASMOV(FI)=TESTAS              ::
-        DESCAUMOV(FI)=CAUDES(1)           ::
-        DESCA1MOV(FI)=" "                 ::
-        DESCA2MOV(FI)=" "                 ::
-        NRIGVERMOV(FI)=0                  ::
-        CAUMASKMOV(FI)=CAUMASK            ::
-        ASSEGNMOV(FI)=" "                 ::
-        CTPARTMOV(FI)=FORMINI             ::
-        VALUTAMOV(FI)=BENVAL              ::
-        DISPONMOV(FI)=Z1(3)+Z1(4)+Z1(2)+Z1(1)     ::
-        SALDOCMOV(FI)=DSALAT(_EURO)-IMPORTOMOV(FI) ::
-        SCONFINMOV(FI)=0                  ::
-        INDISPOMOV(FI)=0                  ::
-        IMPAVVMOV(FI)=0                   ::
-        NPAVVMOV(FI)=" "                  ::
-        TESTSPMOV(FI)=TESTSP              ::
-        TESTCFMOV(FI)=TESTCF              ::
-        TESTFOMOV(FI)=" "                 ::
-        TESTSTMOV(FI)=" "                 ::
-        PENALEMOV(FI)=0                   ::
-        CAUPVMOV(FI)=0                    ::
-        SNESIMOV(FI)=SNESIBITORE          ::
-        CAUUICMOV(FI)=CAUUICMAF           ::
-        TIPOLOGMOV(FI)=" "                ::
-        TIPOAGG=7 ::
-        LDGO.SEG 108 ::
-        RETURN ::
+	COMDPOSSE=DPOSSE ::
+	KCONTO=KDR ::
+	NRIGHEMOV=1 ::
+	FI=1 ::
+	GOSUB &AGGPRT ::
+	IMPORTOMOV(FI)=IMPMOV             ::
+	SEGNOMOV(FI)=COMSEG               ::
+	CAUSALMOV(FI)=COMCAU              ::
+	TESTASMOV(FI)=TESTAS              ::
+	DESCAUMOV(FI)=CAUDES(1)           ::
+	DESCA1MOV(FI)=" "                 ::
+	DESCA2MOV(FI)=" "                 ::
+	NRIGVERMOV(FI)=0                  ::
+	CAUMASKMOV(FI)=CAUMASK            ::
+	ASSEGNMOV(FI)=" "                 ::
+	CTPARTMOV(FI)=FORMINI             ::
+	VALUTAMOV(FI)=BENVAL              ::
+	DISPONMOV(FI)=Z1(3)+Z1(4)+Z1(2)+Z1(1)     ::
+	SALDOCMOV(FI)=DSALAT(_EURO)-IMPORTOMOV(FI) ::
+	SCONFINMOV(FI)=0                  ::
+	INDISPOMOV(FI)=0                  ::
+	IMPAVVMOV(FI)=0                   ::
+	NPAVVMOV(FI)=" "                  ::
+	TESTSPMOV(FI)=TESTSP              ::
+	TESTCFMOV(FI)=TESTCF              ::
+	TESTFOMOV(FI)=" "                 ::
+	TESTSTMOV(FI)=" "                 ::
+	PENALEMOV(FI)=0                   ::
+	CAUPVMOV(FI)=0                    ::
+	SNESIMOV(FI)=SNESIBITORE          ::
+	CAUUICMOV(FI)=CAUUICMAF           ::
+	TIPOLOGMOV(FI)=" "                ::
+	TIPOAGG=7 ::
+	LDGO.SEG 108 ::
+	RETURN ::
 &AGGPRT  ::
-        NLOOP74=0 ::
+	NLOOP74=0 ::
 &PRT01  K16=TERCOD ::
-        SEARCH.M=NFCASSA,K16:&ER16A,E,INK16,LM(NFCASSA) ::
-        GOTO &PRT02 ::
+	SEARCH.M=NFCASSA,K16:&ER16A,E,INK16,LM(NFCASSA) ::
+	GOTO &PRT02 ::
 &ER16A  IF E<>74 GOTO &ER16B ::
-        IF NLOOP74=50 ::
-           PRINT=1:TAB(01,24),B,TAB(01,24),"Record di ",NF(NFCASSA)," bloccato. Provvedere allo sblocco. " ::
-           ASK=1:=T ::
-           PRINT=1:TAB(01,24),B ::
-           NLOOP74=0 ::
-        ENDIF ::
-        WAIT 1 ::
-        NLOOP74=NLOOP74+1 ::
-        GOTO &PRT01 ::
+	IF NLOOP74=50 ::
+	   PRINT=1:TAB(01,24),B,TAB(01,24),"Record di ",NF(NFCASSA)," bloccato. Provvedere allo sblocco. " ::
+	   ASK=1:=T ::
+	   PRINT=1:TAB(01,24),B ::
+	   NLOOP74=0 ::
+	ENDIF ::
+	WAIT 1 ::
+	NLOOP74=NLOOP74+1 ::
+	GOTO &PRT01 ::
 &PRT02  IF CRPROT(1)<CONV(CRPROTMOV(1)) ::
-           CRPROT(1)=CONV(CRPROTMOV(1)) ::
-        ENDIF ::
-        MODIF=NFCASSA,K16:&ER16B,E,CRNOME,LD(NFCASSA) ::
-        CRPROTMOV(1)=CONV(CRPROT(1)+1) ::
-        RETURN ::
+	   CRPROT(1)=CONV(CRPROTMOV(1)) ::
+	ENDIF ::
+	MODIF=NFCASSA,K16:&ER16B,E,CRNOME,LD(NFCASSA) ::
+	CRPROTMOV(1)=CONV(CRPROT(1)+1) ::
+	RETURN ::
 &ER16B  PRINT=1:TAB(01,24),B,BELL,TAB(01,24),"Errore in ",NF(NFCASSA)," ",E," ",K16 ::
-        ASK=1:=T ::
-        PRINT=1:TAB(01,24),B ::
+	ASK=1:=T ::
+	PRINT=1:TAB(01,24),B ::
 &PRT03  RETURN ::
 &PRKEY   ::
-        CGOSUB="&PRKEY" ::
-        LDGO.SEG 234 ::
-        RETURN ::
+	CGOSUB="&PRKEY" ::
+	LDGO.SEG 234 ::
+	RETURN ::
 &ASKEY   ::
-        CGOSUB="&ASKEY" ::
-        LDGO.SEG 234 ::
-        RETURN ::
+	CGOSUB="&ASKEY" ::
+	LDGO.SEG 234 ::
+	RETURN ::
 7900     ::
-        CGOSUB="&G7900" ::
-        LDGO.SEG 201 ::
-        RETURN ::
+	CGOSUB="&G7900" ::
+	LDGO.SEG 201 ::
+	RETURN ::
 9000    GOTO &F80 ::
-        RET.SEG ::
-        STOP ::
-        ESEG 230 ::
-        END ::
+	RET.SEG ::
+	STOP ::
+	ESEG 230 ::
+	END ::

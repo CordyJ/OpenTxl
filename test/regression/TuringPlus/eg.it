@@ -4,209 +4,209 @@
 body "tree_ops.st" module trees
 
     body function kidNP % (which : nat, parentNP : nodePT) : nodePT
-        pre which >= 1
-        var register c := nodes (parentNP).kidsCP
-        for kid : 2 .. which 
-            c := cells (c).restCP
-        end for
-        result cells (c).firstNP
+	pre which >= 1
+	var register c := nodes (parentNP).kidsCP
+	for kid : 2 .. which 
+	    c := cells (c).restCP
+	end for
+	result cells (c).firstNP
     end kidNP
 
     inline function kid1NP (nodeP : nodePT) : nodePT
-        result cells (nodes (nodeP).kidsCP).firstNP
+	result cells (nodes (nodeP).kidsCP).firstNP
     end kid1NP
 
     inline function kid2NP (nodeP : nodePT) : nodePT
-        result cells (cells (nodes (nodeP).kidsCP).restCP).firstNP
+	result cells (cells (nodes (nodeP).kidsCP).restCP).firstNP
     end kid2NP
 
     inline function kid3NP (nodeP : nodePT) : nodePT
-        result cells (cells (cells (nodes (nodeP).kidsCP).restCP).restCP).firstNP
+	result cells (cells (cells (nodes (nodeP).kidsCP).restCP).restCP).firstNP
     end kid3NP
 
     inline function kid4NP (nodeP : nodePT) : nodePT
-        result cells (cells (cells (cells (nodes (nodeP).kidsCP).restCP).restCP).restCP).firstNP
+	result cells (cells (cells (cells (nodes (nodeP).kidsCP).restCP).restCP).restCP).firstNP
     end kid4NP
 
     body function plural_emptyP % (pluralNP : nodePT) : boolean
-        result kid1NP (pluralNP) = emptyStringNP
+	result kid1NP (pluralNP) = emptyStringNP
     end plural_emptyP
 
     body function plural_firstNP % (pluralNP : nodePT) : nodePT
-        result kid1NP (kid1NP (pluralNP))
+	result kid1NP (kid1NP (pluralNP))
     end plural_firstNP
 
     body function plural_restNP % (pluralNP : nodePT) : nodePT
-        result kid2NP (kid1NP (pluralNP))
+	result kid2NP (kid1NP (pluralNP))
     end plural_restNP
 
     body function patternOrReplacement_litsAndVarsAndExpsNP 
-            % (patternOrReplacementNP : nodePT) : nodePT
-        pre identTable (nodes (patternOrReplacementNP).name) = "pattern" or
-             identTable (nodes (patternOrReplacementNP).name) = "replacement"
-        result kid1NP (patternOrReplacementNP)
+	    % (patternOrReplacementNP : nodePT) : nodePT
+	pre identTable (nodes (patternOrReplacementNP).name) = "pattern" or
+	     identTable (nodes (patternOrReplacementNP).name) = "replacement"
+	result kid1NP (patternOrReplacementNP)
     end patternOrReplacement_litsAndVarsAndExpsNP
 
     body function external_nameT % (externalNP : nodePT) : tokenT
-        pre identTable (nodes(externalNP).name) = "externalStatement"
-        result nodes(kid3NP(externalNP)).name
+	pre identTable (nodes(externalNP).name) = "externalStatement"
+	result nodes(kid3NP(externalNP)).name
     end external_nameT
 
     body function external_formalsNP % (externalNP : nodePT) : nodePT
-        pre identTable (nodes (externalNP).name) = "externalStatement"
-        result kid4NP(externalNP)
+	pre identTable (nodes (externalNP).name) = "externalStatement"
+	result kid4NP(externalNP)
     end external_formalsNP
 
     function listRepeatOrOptTargetName (listRepeatOrOptNP : nodePT) : string
-        if nodes (kid1NP (kid2NP (listRepeatOrOptNP))).kind = kindT.id then
-            result identTable (nodes (kid1NP (kid2NP (listRepeatOrOptNP))).name)
-        else
-            assert literalP (kid1NP (kid2NP (listRepeatOrOptNP)))
-            const literalT : tokenT := literal_tokenT (kid1NP (kid2NP (listRepeatOrOptNP)))
-            result "lit__" + identTable (literalT)
-        end if
+    	if nodes (kid1NP (kid2NP (listRepeatOrOptNP))).kind = kindT.id then
+	    result identTable (nodes (kid1NP (kid2NP (listRepeatOrOptNP))).name)
+	else
+	    assert literalP (kid1NP (kid2NP (listRepeatOrOptNP)))
+	    const literalT : tokenT := literal_tokenT (kid1NP (kid2NP (listRepeatOrOptNP)))
+	    result "lit__" + identTable (literalT)
+	end if
     end listRepeatOrOptTargetName
 
     function descriptionTargetT (descriptionNP : nodePT) : tokenT
-        % Given a list, repeat, opt or nonterminal description, 
-        % return its nonterminal target name
-        
-        pre identTable (nodes (descriptionNP).name) = "description"
+	% Given a list, repeat, opt or nonterminal description, 
+	% return its nonterminal target name
+	
+	pre identTable (nodes (descriptionNP).name) = "description"
      
-        const descriptionName := identTable (nodes (kid1NP (descriptionNP)).name)
-        
-        var posn : tokenT
+	const descriptionName := identTable (nodes (kid1NP (descriptionNP)).name)
+	
+	var posn : tokenT
 
-        if descriptionName  = "listDescription" then
-            ident.install ("list__" +
-                listRepeatOrOptTargetName (kid1NP (descriptionNP)), posn)
-        elsif descriptionName = "repeatDescription" then
-            ident.install ("repeat__" +
-                listRepeatOrOptTargetName (kid1NP (descriptionNP)), posn)
-        elsif descriptionName = "list1Description" then
-            ident.install ("list_1_" +
-                listRepeatOrOptTargetName (kid1NP (descriptionNP)), posn)
-        elsif descriptionName = "repeat1Description" then
-            ident.install ("repeat_1_" +
-                listRepeatOrOptTargetName (kid1NP (descriptionNP)), posn)
-        elsif descriptionName = "optDescription" then
-            ident.install ("opt__" +
-                listRepeatOrOptTargetName (kid1NP (descriptionNP)), posn)
-        else
-            posn := nodes (kid1NP (descriptionNP)).name
-        end if
+	if descriptionName  = "listDescription" then
+	    ident.install ("list__" +
+		listRepeatOrOptTargetName (kid1NP (descriptionNP)), posn)
+	elsif descriptionName = "repeatDescription" then
+	    ident.install ("repeat__" +
+		listRepeatOrOptTargetName (kid1NP (descriptionNP)), posn)
+	elsif descriptionName = "list1Description" then
+	    ident.install ("list_1_" +
+		listRepeatOrOptTargetName (kid1NP (descriptionNP)), posn)
+	elsif descriptionName = "repeat1Description" then
+	    ident.install ("repeat_1_" +
+		listRepeatOrOptTargetName (kid1NP (descriptionNP)), posn)
+	elsif descriptionName = "optDescription" then
+	    ident.install ("opt__" +
+		listRepeatOrOptTargetName (kid1NP (descriptionNP)), posn)
+	else
+	    posn := nodes (kid1NP (descriptionNP)).name
+	end if
 
-        result posn
+	result posn
 
     end descriptionTargetT
 
     body function rule_targetT % (ruleNP : nodePT) : tokenT
-        pre identTable (nodes (ruleNP).name) = "ruleStatement" or
-             identTable (nodes (ruleNP).name) = "functionStatement" 
+	pre identTable (nodes (ruleNP).name) = "ruleStatement" or
+	     identTable (nodes (ruleNP).name) = "functionStatement" 
      
-        const bracketedDescriptionNP := kidNP (7,ruleNP)
-        assert identTable (nodes (bracketedDescriptionNP).name) = "bracketedDescription"
-        const descriptionNP := kid2NP (bracketedDescriptionNP)
-        assert identTable (nodes (descriptionNP).name) = "description"
+	const bracketedDescriptionNP := kidNP (7,ruleNP)
+	assert identTable (nodes (bracketedDescriptionNP).name) = "bracketedDescription"
+	const descriptionNP := kid2NP (bracketedDescriptionNP)
+	assert identTable (nodes (descriptionNP).name) = "description"
 
-        result descriptionTargetT (descriptionNP)
+	result descriptionTargetT (descriptionNP)
     end rule_targetT
 
     body function construct_varNameT % (constructNP : nodePT) : tokenT
-        pre identTable (nodes (constructNP).name) = "constructPart"
-        result nodes(kid2NP(constructNP)).name
+	pre identTable (nodes (constructNP).name) = "constructPart"
+	result nodes(kid2NP(constructNP)).name
     end construct_varNameT
 
     body function construct_targetT% (constructNP : nodePT) : tokenT
-        pre identTable (nodes (constructNP).name) = "constructPart"
+	pre identTable (nodes (constructNP).name) = "constructPart"
 
-        const bracketedDescriptionNP := kid3NP(constructNP)
-        assert identTable (nodes (bracketedDescriptionNP).name) = "bracketedDescription"
-        const descriptionNP := kid2NP (bracketedDescriptionNP)
-        assert identTable (nodes (descriptionNP).name) = "description"
+	const bracketedDescriptionNP := kid3NP(constructNP)
+	assert identTable (nodes (bracketedDescriptionNP).name) = "bracketedDescription"
+	const descriptionNP := kid2NP (bracketedDescriptionNP)
+	assert identTable (nodes (descriptionNP).name) = "description"
 
-        result descriptionTargetT (descriptionNP)
+	result descriptionTargetT (descriptionNP)
     end construct_targetT
 
     body function construct_replacementNP% (constructNP : nodePT) : nodePT
-        pre identTable (nodes (constructNP).name) = "constructPart"
-        result kid4NP(constructNP)
+	pre identTable (nodes (constructNP).name) = "constructPart"
+	result kid4NP(constructNP)
     end construct_replacementNP
 
     body function deconstruct_varNameT% (constructNP : nodePT) : tokenT
-        result nodes(kid2NP(constructNP)).name
+	result nodes(kid2NP(constructNP)).name
     end deconstruct_varNameT
 
     body function deconstruct_patternNP% (constructNP : nodePT) : nodePT
-        result kid3NP(constructNP)
+	result kid3NP(constructNP)
     end deconstruct_patternNP
 
     body function rule_nameT % (ruleNP : nodePT) : tokenT
-        pre identTable (nodes (ruleNP).name) = "ruleStatement"
-         or identTable (nodes (ruleNP).name) = "functionStatement"
-        result nodes (kid2NP (ruleNP)).name
+	pre identTable (nodes (ruleNP).name) = "ruleStatement"
+	 or identTable (nodes (ruleNP).name) = "functionStatement"
+	result nodes (kid2NP (ruleNP)).name
     end rule_nameT
 
     body function rule_prePatternNP % (ruleNP : nodePT) : nodePT
-        pre (identTable (nodes (ruleNP).name) = "ruleStatement" or
-             identTable (nodes (ruleNP).name) = "functionStatement") 
-        result kid4NP (ruleNP)
+	pre (identTable (nodes (ruleNP).name) = "ruleStatement" or
+	     identTable (nodes (ruleNP).name) = "functionStatement") 
+	result kid4NP (ruleNP)
     end rule_prePatternNP
 
     body function ruleCall_nameT % (ruleCallNP : nodePT) : tokenT
-        pre identTable (nodes (ruleCallNP).name) = "ruleCall"
-        result nodes (kid2NP (ruleCallNP)).name
+	pre identTable (nodes (ruleCallNP).name) = "ruleCall"
+	result nodes (kid2NP (ruleCallNP)).name
     end ruleCall_nameT
 
     body function ruleCall_literalsNP % (ruleCallNP : nodePT) : nodePT
-        pre identTable (nodes (kid3NP (ruleCallNP)).name) = "literals"
-        result kid3NP (ruleCallNP)
+	pre identTable (nodes (kid3NP (ruleCallNP)).name) = "literals"
+	result kid3NP (ruleCallNP)
     end ruleCall_literalsNP
 
     body function bracketedDescription_idT % (bracketedDescriptionNP : nodePT) : tokenT
-        pre identTable (nodes (bracketedDescriptionNP).name) = "bracketedDescription"
-        result nodes (kid1NP (kid2NP (bracketedDescriptionNP))).name
+	pre identTable (nodes (bracketedDescriptionNP).name) = "bracketedDescription"
+	result nodes (kid1NP (kid2NP (bracketedDescriptionNP))).name
     end bracketedDescription_idT
 
     body function bracketedDescription_listRepeatOrOptTargetNP  
-            % (bracketedDescriptionNP : nodePT) : nodePT
-        pre identTable (nodes (bracketedDescriptionNP).name) = "bracketedDescription"
-        const listRepeatOrOptNP := kid1NP(kid2NP(bracketedDescriptionNP))
-        result kid2NP (listRepeatOrOptNP)
+	    % (bracketedDescriptionNP : nodePT) : nodePT
+	pre identTable (nodes (bracketedDescriptionNP).name) = "bracketedDescription"
+	const listRepeatOrOptNP := kid1NP(kid2NP(bracketedDescriptionNP))
+	result kid2NP (listRepeatOrOptNP)
     end bracketedDescription_listRepeatOrOptTargetNP
 
     body function firstTime_nameT % (firstTimeNP : nodePT) : tokenT
-        pre identTable (nodes (firstTimeNP).name) = "firstTime"
-        result nodes (kid1NP (firstTimeNP)).name
+	pre identTable (nodes (firstTimeNP).name) = "firstTime"
+	result nodes (kid1NP (firstTimeNP)).name
     end firstTime_nameT
 
     body function firstTime_typeT % (firstTimeNP : nodePT) : tokenT
-        pre identTable (nodes (firstTimeNP).name) = "firstTime"
+	pre identTable (nodes (firstTimeNP).name) = "firstTime"
 
-        const descriptionNP : nodePT := kid3NP (firstTimeNP)
-        assert identTable (nodes (descriptionNP).name) = "description"
+	const descriptionNP : nodePT := kid3NP (firstTimeNP)
+	assert identTable (nodes (descriptionNP).name) = "description"
 
-        result descriptionTargetT (descriptionNP)
+	result descriptionTargetT (descriptionNP)
     end firstTime_typeT
 
     body function expression_baseT % (expressionNP : nodePT) : tokenT
-        pre identTable (nodes (expressionNP).name) = "expression"
-        result nodes (kid1NP (expressionNP)).name
+	pre identTable (nodes (expressionNP).name) = "expression"
+	result nodes (kid1NP (expressionNP)).name
     end expression_baseT
 
     body function expression_ruleCallsNP % (expressionNP : nodePT) : nodePT
-        pre identTable (nodes (kid2NP (expressionNP)).name) = "ruleCalls"
-        result kid2NP (expressionNP)
+	pre identTable (nodes (kid2NP (expressionNP)).name) = "ruleCalls"
+	result kid2NP (expressionNP)
     end expression_ruleCallsNP
 
     body function program_statementsNP % (programNP : nodePT) : nodePT
-        pre identTable (nodes (kid1NP (programNP)).name) = "statements"
-        result kid1NP (programNP)
+	pre identTable (nodes (kid1NP (programNP)).name) = "statements"
+	result kid1NP (programNP)
     end program_statementsNP
 
     body function keys_literalsNP % (keyListNP : nodePT) : nodePT
-        pre identTable (nodes (kid2NP (keyListNP)).name) = "literals"
-        result kid2NP (keyListNP)
+	pre identTable (nodes (kid2NP (keyListNP)).name) = "literals"
+	result kid2NP (keyListNP)
     end keys_literalsNP
 
     body function define_nameT % (defineNP : nodePT) : tokenT
@@ -214,18 +214,18 @@ body "tree_ops.st" module trees
     end define_nameT
 
     body function define_literalsAndBracketedIdsNP % (defineNP : nodePT) : nodePT
-        pre identTable (nodes (defineNP).name) = "defineStatement"
+	pre identTable (nodes (defineNP).name) = "defineStatement"
         result kid3NP (defineNP)
     end define_literalsAndBracketedIdsNP
 
     body function define_barOrdersNP % (defineNP : nodePT) : nodePT
-        pre identTable (nodes (defineNP).name) = "defineStatement"
+	pre identTable (nodes (defineNP).name) = "defineStatement"
         result kid4NP (defineNP)
     end define_barOrdersNP
 
     body function statement_keyDefRuleNP % (statementNP : nodePT) : nodePT
-        pre identTable (nodes (statementNP).name) = "statement"
-        result kid1NP (statementNP)
+	pre identTable (nodes (statementNP).name) = "statement"
+	result kid1NP (statementNP)
     end statement_keyDefRuleNP
 
     body function condition_expressionNP % (conditionNP : nodePT) : nodePT

@@ -1,45 +1,45 @@
 TXL Example Specification
 -------------------------
 
-Name:   
-        CGdb.Txl
-        EPdb.Txl
-        FHdb.Txl
+Name:	
+	CGdb.Txl
+	EPdb.Txl
+	FHdb.Txl
 
 Description:
-        Early proof-of-concept prototypes for an automatic programming 
-        system designed to support automatic instantiation of C coding
-        templates from Prolog-style design factbases.  The project later
-        went on to use TXL to implement a general purpose multi-linguistic 
-        metaprogramming system, described in "Practical Metaprogramming",
-        J.R. Cordy & M. Shukla, Proc. CASCON'92, IBM Centre for Advanced
-        Studies 1992 Conference, Toronto, October 1992.
+	Early proof-of-concept prototypes for an automatic programming 
+	system designed to support automatic instantiation of C coding
+	templates from Prolog-style design factbases.  The project later
+	went on to use TXL to implement a general purpose multi-linguistic 
+	metaprogramming system, described in "Practical Metaprogramming",
+	J.R. Cordy & M. Shukla, Proc. CASCON'92, IBM Centre for Advanced
+	Studies 1992 Conference, Toronto, October 1992.
 
-        CGdb.Txl transforms a structured Prolog factbase describing the
-        interface to a library of C functions into the C 'glue' routines 
-        necessary to provide access to the C library from M-Prolog programs.
+	CGdb.Txl transforms a structured Prolog factbase describing the
+	interface to a library of C functions into the C 'glue' routines 
+	necessary to provide access to the C library from M-Prolog programs.
 
-        EPdb.Txl transforms the same factbase into a C entry-point array
-        mapping the M-Prolog string names of the functions in the library
-        to pointers to the glue routines.
+	EPdb.Txl transforms the same factbase into a C entry-point array
+	mapping the M-Prolog string names of the functions in the library
+	to pointers to the glue routines.
 
-        FHdb.Txl transforms the same factbase into a set of C external
-        function declarations for the C library routines.
+	FHdb.Txl transforms the same factbase into a set of C external
+	function declarations for the C library routines.
 
-        The GL.facts factbase given as an example is an abridged 
-        specification of the Silicon Graphics standard GL graphics library.
+	The GL.facts factbase given as an example is an abridged 
+	specification of the Silicon Graphics standard GL graphics library.
 
 Author:
-        J.R. Cordy
+   	J.R. Cordy
 
 Affiliation:
-        Software Technology Laboratory
-        Queen's University, Kingston, Canada
+	Software Technology Laboratory
+	Queen's University, Kingston, Canada
 
 Date:
-        May 1992
+	May 1992
 
 Examples:
-        txl GL.facts CGdb.Txl
-        txl GL.facts EPdb.Txl
-        txl GL.facts FHdb.Txl
+	txl GL.facts CGdb.Txl
+	txl GL.facts EPdb.Txl
+	txl GL.facts FHdb.Txl

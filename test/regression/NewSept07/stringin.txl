@@ -12,8 +12,8 @@ function main
     %% construct S [stringlit]
         %% _ [gets]
     construct FS [stringlit]
-        _ [fgets "fileeg.stringin"]
+	_ [fgets "fileeg.stringin"]
     by
-        %% S
-        FS
+	%% S
+	FS
 end function

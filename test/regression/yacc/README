@@ -1,23 +1,23 @@
 TXL Example Specification
 -------------------------
 
-Name:   
-        yacc.Txl
+Name:	
+	yacc.Txl
 
 Description:
-        A TXL program to help transform Yacc grammars to
-        TXL grammars.  This can help get you started with
-        handling a new language using TXL.
+	A TXL program to help transform Yacc grammars to
+	TXL grammars.  This can help get you started with
+	handling a new language using TXL.
 
 Author:
-        C. Xie
+	C. Xie
 
 Affiliation:
-        Software Technology Laboratory, Queen's University
+	Software Technology Laboratory, Queen's University
 
 Date:
-        April 1994
+	April 1994
 
 Examples:
-        txl simple.yacc
-        txl SL.yacc
+	txl simple.yacc
+	txl SL.yacc

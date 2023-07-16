@@ -1,22 +1,22 @@
 TXL Example Specification
 -------------------------
 
-Name:   
-        sequenceops.Txl
+Name:	
+	sequenceops.Txl
 
 Description:
-        Demonstration of paradigms for working with sequences in
-        TXL 8 using the built-in external operations [length],
-        [select], [head] and [tail].
+	Demonstration of paradigms for working with sequences in
+	TXL 8 using the built-in external operations [length],
+	[select], [head] and [tail].
 
 Author:
-        J.R. Cordy
+   	J.R. Cordy
 
 Affiliation:
-        Queen's University
+	Queen's University
 
 Date:
-        April 1995
+	April 1995
 
 Example:
-        txl example.sequenceops
+	txl example.sequenceops

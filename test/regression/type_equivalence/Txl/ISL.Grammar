@@ -2,315 +2,315 @@
 % J.R. Cordy, GMD Karlsruhe, 24.10.90
 
 comments
-        '%
+	'%
 end comments
 
 compounds
-        ++  ==
+	++  ==
 end compounds
 
 keys
-        component  'end  use  port  entry  exit  types  result  invert  linked
+	component  'end  use  port  entry  exit  types  result  invert  linked
 end keys
 
 define program
-        [FileSpec]
+	[FileSpec]
 end define
 
 define FileSpec
-        [repeat UnitSpec]
+	[repeat UnitSpec]
 end define
 
 define UnitSpec
-        [ComponentSpec]
-    |   [TypeUnitSpec]
+	[ComponentSpec]
+    |	[TypeUnitSpec]
 end define
 
 define ComponentSpec
-                                                                [NL]
-        component [Ident] [opt FormalParams] [opt Interface] ;  [NL][IN]
-            [opt ComponentBody]                                 [EX]
-        'end [opt Ident] .                                      [NL]
+								[NL]
+	component [Ident] [opt FormalParams] [opt Interface] ;	[NL][IN]
+	    [opt ComponentBody]					[EX]
+	'end [opt Ident] .					[NL]
 end define
 
 define Ident
-        [id]
+	[id]
 end define
 
 define FormalParams
-        ( [FormalParamList] )
+	( [FormalParamList] )
 end define
 
 define FormalParamList
-        [repeat FormalParam+]
+	[repeat FormalParam+]
 end define
 
 define FormalParam
-        [IdentList] : [Type] [opt DefaultPart] ;        [NL]
+	[IdentList] : [Type] [opt DefaultPart] ;	[NL]
 end define
 
 define DefaultPart
-        = [Constant]
+	= [Constant]
 end define
 
 define Interface
-        = [PortDecList]
+	= [PortDecList]
 end define
 
 define PortDecList
-        [PortDecl] [repeat pp_PortDecl]
+	[PortDecl] [repeat pp_PortDecl]
 end define
 
 define pp_PortDecl
-        ++ [PortDecl]
+	++ [PortDecl]
 end define
 
 define PortDecl
-        [Direction] [Ident]
+	[Direction] [Ident]
 end define
 
 define Expr
-        [number] 
-    |   [Ident]
-    |   ( [Expr] )
-    |   [Expr] + [Expr]
-    |   [Expr] - [Expr]
-    |   [Expr] * [Expr]
-    |   [Expr] / [Expr]
-    |   [Expr] % [Expr]
-    |   - [Expr]
+	[number] 
+    |	[Ident]
+    |	( [Expr] )
+    |	[Expr] + [Expr]
+    |	[Expr] - [Expr]
+    |	[Expr] * [Expr]
+    |	[Expr] / [Expr]
+    |	[Expr] % [Expr]
+    |	- [Expr]
 end define
 
 define ComponentBody
-        [SentenceList]
+	[SentenceList]
 end define
 
 define SentenceList
-        [repeat Sentence]
+	[repeat Sentence]
 end define
 
 define Sentence
-        ;               [NL]
-    |   [UseClause] ;   [NL]
-    |   [PortClause] ;  [NL]
+	;		[NL]
+    |	[UseClause] ;	[NL]
+    |	[PortClause] ;	[NL]
 end define
 
 define UseClause
-        use [Ident] [opt SelectionPart]
+	use [Ident] [opt SelectionPart]
 end define
 
 define SelectionPart
-        : [IdentRenameList]
+	: [IdentRenameList]
 end define
 
 define IdentRenameList
-        [list IdentRename+]
+	[list IdentRename+]
 end define
 
 define IdentRename
-        [Ident] [opt RenamePart]
+	[Ident] [opt RenamePart]
 end define
 
 define IdentList
-        [list Ident+]
+	[list Ident+]
 end define
 
 define ExprList
-        [list Expr+]
+	[list Expr+]
 end define
 
 define RenamePart
-        / [Ident]
+	/ [Ident]
 end define
 
 define PortClause
-        port [opt Direction] [IdentList] [opt TypeInfo]
+	port [opt Direction] [IdentList] [opt TypeInfo]
 end define
 
 define Direction
-        entry | exit
+	entry | exit
 end define
 
 define TypeInfo
-        : [Type]
+	: [Type]
 end define
 
 define TypeUnitSpec
-                                [NL]
-        types [Ident] ;         [NL][IN]
-            [opt TypeUnitBody]  [EX]
-        'end [opt Ident] .      [NL]
+				[NL]
+	types [Ident] ;		[NL][IN]
+	    [opt TypeUnitBody]	[EX]
+	'end [opt Ident] .	[NL]
 end define
 
 define TypeUnitBody
-        [StatementList]
+	[StatementList]
 end define
 
 define StatementList
-        [repeat Statement+]
+	[repeat Statement+]
 end define
 
 define Statement
-        ;               [NL]
-    |   [ConstDef] ;    [NL]
-    |   [UseClause] ;   [NL]
-    |   [PortClause] ;  [NL]
-    |   [TypeClause] ;  [NL]
+	;		[NL]
+    |	[ConstDef] ;	[NL]
+    |	[UseClause] ;	[NL]
+    |	[PortClause] ;	[NL]
+    |	[TypeClause] ;	[NL]
 end define
 
 define ConstDef
-        [Ident] == [Constant]
+	[Ident] == [Constant]
 end define
 
 define Constant
-        [Expr] | [stringlit]
+	[Expr] | [stringlit]
 end define
 
 define TypeClause
-        [Ident] [opt GenericPart] [opt FormalParamPart] = [Type]
+	[Ident] [opt GenericPart] [opt FormalParamPart] = [Type]
 end define
 
 define GenericPart
-        '[ [IdentDefaultTypeList] ']
+	'[ [IdentDefaultTypeList] ']
 end define
 
 define FormalParamPart
-        ( [IdentDefaultExprList] )
+	( [IdentDefaultExprList] )
 end define
 
 define IdentDefaultTypeList
-        [list IdentDefaultType+]
+	[list IdentDefaultType+]
 end define
 
 define IdentDefaultType
-        [Ident] [opt DefaultType]
+	[Ident] [opt DefaultType]
 end define
 
 define DefaultType
-        = [Ident]
+	= [Ident]
 end define
 
 define IdentDefaultExprList
-        [list IdentDefaultExpr+]
+	[list IdentDefaultExpr+]
 end define
 
 define IdentDefaultExpr
-        [Ident] [opt DefaultExpr]
+	[Ident] [opt DefaultExpr]
 end define
 
 define DefaultExpr
-        = [Constant]
+	= [Constant]
 end define
 
 define Type
-        [TypeExtension]
-    |   [DynamicType]
-    |   [Type1]
+	[TypeExtension]
+    |	[DynamicType]
+    |	[Type1]
 end define
 
 define Type1
-        [StructuredType]
-    |   [PortType]
-    |   [SimpleType]
-    |   [FlattenType]
-    |   ( [Type] }
+	[StructuredType]
+    |	[PortType]
+    |	[SimpleType]
+    |	[FlattenType]
+    |	( [Type] }
 end define
 
 define SimpleType
-        [Ident] [opt GenericParam] [opt ValueParam]
+	[Ident] [opt GenericParam] [opt ValueParam]
 end define
 
 define GenericParam
-        '[ [SimpleTypeList] ']
+	'[ [SimpleTypeList] ']
 end define
 
 define ValueParam
-        ( [ExprList] )
+	( [ExprList] )
 end define
 
 define PortType
-        port [SimpleTypeList] [opt ReturnPart]
+	port [SimpleTypeList] [opt ReturnPart]
 end define
 
 define SimpleTypeList
-        [list SimpleType+]
+	[list SimpleType+]
 end define
 
 define ReturnPart
-        result [SimpleTypeList]
+	result [SimpleTypeList]
 end define
 
 define StructuredType
-        [ArrayType]
-    |   [RecordType]
-    |   [VariantType]
-    |   [PortSetType]
+	[ArrayType]
+    |	[RecordType]
+    |	[VariantType]
+    |	[PortSetType]
 end define
 
 define ArrayType
-        '[ [DimensionList] '] [SimpleType]
+	'[ [DimensionList] '] [SimpleType]
 end define
 
 define DimensionList
-        [list Expr+]
+	[list Expr+]
 end define
 
 define RecordType
-        ( [FieldList] )
+	( [FieldList] )
 end define
 
 define FieldList
-        [repeat Field+]
+	[repeat Field+]
 end define
 
 define Field
-        [IdentList] : [Type] ;
+	[IdentList] : [Type] ;
 end define
 
 define VariantType
-        < [VariantList] >
+	< [VariantList] >
 end define
 
 define VariantList
-        [list VariantDef+]
+	[list VariantDef+]
 end define
 
 define VariantDef
-        [Ident] : [Type]
+	[Ident] : [Type]
 end define
 
 define PortSetType
-        { [opt PortListOptInvertPart] }
+	{ [opt PortListOptInvertPart] }
 end define
 
 define PortListOptInvertPart
-        [PortList] [opt InvertPart]
+	[PortList] [opt InvertPart]
 end define
 
 define PortList
-        [repeat PortDef+]
+	[repeat PortDef+]
 end define
 
 define PortDef
-        [IdentList] : [Type] ;  [NL]
+	[IdentList] : [Type] ;	[NL]
 end define
 
 define InvertPart
-        invert [PortList]
+	invert [PortList]
 end define
 
 define DynamicType
-        ^ [Type1]
+	^ [Type1]
 end define
 
 define TypeExtension
-        [Type1] [repeat pp_Type1] 
+	[Type1] [repeat pp_Type1] 
 end define
 
 define pp_Type1
-        ++ [Type1]
+	++ [Type1]
 end define
 
 define FlattenType
-        linked [Type1]
+	linked [Type1]
 end define

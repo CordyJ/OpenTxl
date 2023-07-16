@@ -1,2 +1,48 @@
 % Grammar for the language Abacus (1.1)
-% Oscar Neierstrasz, Centre d'Informatique, U. Gen
+% Oscar Neierstrasz, Centre d'Informatique, U. Genève
+
+% Abacus is an executable notation for describing concurrent behaviours, 
+% based loosely on ideas from CSP and CCS.  The notation is suggestive of CSP.  
+% This grammar is the basis for two prototype extensions to Abacus
+% implemented using TXL, the Cascade dialect and the Compound dialect.
+
+comments
+    	'%
+end comments
+
+define program
+	[repeat statement]
+end define
+
+define statement
+	[processDefinition] 	[NL]
+    |	[evaluation]		[NL]
+end define
+
+define processDefinition
+	[id] = [choices]
+end define
+
+define choice
+	[id] [guard] [id]
+end define
+
+define guard 
+	'?  |  '!
+end define
+
+define choices
+	[choice] [repeat altChoice]
+end define
+
+define altChoice
+	'+  [choice]
+end define
+
+define evaluation
+	'[ [id] [repeat concurrentProcess] ']
+end define
+
+define concurrentProcess
+	'& [id]
+end define

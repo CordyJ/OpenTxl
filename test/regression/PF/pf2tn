@@ -7,8 +7,8 @@ set Dialect="$1:e"
 set Arch=`arch`
 
 if ( "$Dialect" != PF ) then
-        echo "Usage:  PFtoTN {PFfilename}.PF"
-        exit
+	echo "Usage:  PFtoTN {PFfilename}.PF"
+	exit
 endif
 
 txl $1 > $Program.TN

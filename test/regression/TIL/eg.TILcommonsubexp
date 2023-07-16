@@ -11,7 +11,7 @@ c := b + i;
 for i := 1 to 10 do
     a := b + i;
     if b + i != 10 then
-        c := b;
+	c := b;
     else
         c := b + i;
     end
@@ -20,7 +20,7 @@ end
 while b != 10 do
     a := b + i;
     if b + i != 10 then
-        a := c;
+	a := c;
     else
         c := b + i;
     end

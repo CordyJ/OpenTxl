@@ -20,11 +20,11 @@ while y != 0 do
     j := 1;
     while j != 100 do
         var k;
-        k := a + z;
-        b := j * z;
-        d := (y + z) * d;
-        e := (x + z) * r;
-        j := j + 1;
+	k := a + z;
+	b := j * z;
+	d := (y + z) * d;
+	e := (x + z) * r;
+	j := j + 1;
     end 
     c := a + y;
     m := y * b;

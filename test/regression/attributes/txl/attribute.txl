@@ -6,7 +6,7 @@
 % of the number 1,  e.g., 1, one, "one", "1".
 
 define program
-        [repeat attributedtoken]
+	[repeat attributedtoken]
 end define
 
 % The attribution could be attached to any nonterminal at all.
@@ -21,13 +21,13 @@ end define
 % alternative.
 
 define attributedtoken
-        [unattributedtoken] [attribute]
+	[unattributedtoken] [attribute]
 end define
 
 define unattributedtoken
-        [id]
-    |   [number]
-    |   [stringlit]
+	[id]
+    |	[number]
+    |	[stringlit]
 end define
 
 % We exploit TXL's ordered ambiguous parsing to avoid
@@ -37,15 +37,15 @@ end define
 % The order of these alternatives is essential.
 
 define attribute
-        [empty]
-    |   [ONE]
+	[empty]
+    |	[ONE]
     % and any number of others ...
 end define
 
 % Each attribute must itself derive [empty] so as not to change output.
 
 define ONE
-        [empty]
+	[empty]
 end define
 
 % external function debug
@@ -54,67 +54,67 @@ end define
 
 function main
     replace [program]
-        Input [repeat attributedtoken]
+	Input [repeat attributedtoken]
     by
-        % Show the original input ...
-        Input [message '"Original input:"] [print]      
-            % ... we can see the attribution with [debug] ...
-            [attributeOnes] [message '"Attributed tree:"] [debug] 
-            % ... and demonstrate by converting all tokens attributed ONE to 1
-            [normalizeOnes] [message '"Normalized output:"] 
+	% Show the original input ...
+	Input [message '"Original input:"] [print]	
+	    % ... we can see the attribution with [debug] ...
+	    [attributeOnes] [message '"Attributed tree:"] [debug] 
+	    % ... and demonstrate by converting all tokens attributed ONE to 1
+	    [normalizeOnes] [message '"Normalized output:"] 
 end function
 
 rule attributeOnes
     replace [attributedtoken]
-        AT [attributedtoken]
+	AT [attributedtoken]
     where
-        AT [?attributeids] [?attributestrings] [?attributenumbers]
+	AT [?attributeids] [?attributestrings] [?attributenumbers]
     by
-        AT [attributeids]
-           [attributestrings]
-           [attributenumbers]
+	AT [attributeids]
+	   [attributestrings]
+	   [attributenumbers]
 end rule
 
 function attributeids
     % We only attribute those ids that are equal to ONE
     replace [attributedtoken]
-        Id [id]
+	Id [id]
     where
-        Id [= 'one] 
+	Id [= 'one] 
     construct ONEattribute [ONE]
-        % empty
+	% empty
     by
-        Id ONEattribute
+	Id ONEattribute
 end function
 
 function attributestrings
     % We only attribute those strings that are equal to ONE
     replace [attributedtoken]
-        S [stringlit]
+	S [stringlit]
     where
-        S [= '"1"] [= '"one"]
+	S [= '"1"] [= '"one"]
     construct ONEattribute [ONE]
-        % empty
+	% empty
     by
-        S ONEattribute
+	S ONEattribute
 end function
 
 function attributenumbers
     % We attribute those number that are equal to ONE
     replace [attributedtoken]
-        N [number]
+	N [number]
     where
-        N [= 1] 
+	N [= 1] 
     construct ONEattribute [ONE]
-        % empty
+	% empty
     by
-        N ONEattribute
+	N ONEattribute
 end function
 
 rule normalizeOnes
     % We turn everything attributed as ONE into the literal number 1.
     replace [attributedtoken]
-        T [unattributedtoken] Attr [ONE]
+	T [unattributedtoken] Attr [ONE]
     by
-        1
+	1
 end rule

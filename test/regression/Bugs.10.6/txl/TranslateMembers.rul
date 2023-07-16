@@ -5,278 +5,278 @@
 % % *****
 % % common to class body, interface body
 % ---------------------------------------------------------------------------- 
-% ********* CLASS BODY SECTION  *********
+% ********* CLASS BODY SECTION	*********
 % ---------------------------------------------------------------------------- 
 % [0]Member Declarations[Constructor,Method,Nested Types(static,nonStatic)----
 function translateMemberDeclaration
-        replace*[member_declaration]
-                Member[member_declaration]
-        by
-                Member[translateTypeDecl]%2 static nested types only    
-                      %[translateMethodConstructor] 1 
+	replace*[member_declaration]
+		Member[member_declaration]
+	by
+		Member[translateTypeDecl]%2 static nested types only	
+		      %[translateMethodConstructor] 1 
 end function
 % *************************************************************************
 % [1]Methods or constructors Declarations-----------------------------------
 function translateMethodConstructor
-        %match only the top level methods or constructors
-        skipping [type_declaration]
-        replace*[member_declaration]
-                MC[method_or_constructor_declaration]
-                %deconstruct Member
-                %MC[method_or_constructor_declaration]
-        by
-                MC[translateMethods]
-                  [doConChaining]% if a super class is called
-                  [translateConstructors]% modifiers,declarator and block
-                  [changMethodArray][changeConstructorArray]
+	%match only the top level methods or constructors
+	skipping [type_declaration]
+	replace*[member_declaration]
+		MC[method_or_constructor_declaration]
+		%deconstruct Member
+		%MC[method_or_constructor_declaration]
+	by
+		MC[translateMethods]
+		  [doConChaining]% if a super class is called
+		  [translateConstructors]% modifiers,declarator and block
+		  [changMethodArray][changeConstructorArray]
 end function
 % [1-1]Method Declaration-------------------------------------------------------
 % find a method and further transform its parts
 function translateMethods
-        replace[method_or_constructor_declaration]
-                Modifiers[repeat modifier] TypeSpecify[type_specifier]
-                MDeclar[method_declarator]
-                ThrowsClause[opt throws] 
-                MBody[method_body]      
-        by
-                Modifiers[changeMethodModifiers]
-                TypeSpecify[changeDataTypes][changeArrayTypes]
-                MDeclar[changeMethodDeclarator]
-                %ThrowsClause %not allowed in C#
-                MBody[translateBlock]
+	replace[method_or_constructor_declaration]
+		Modifiers[repeat modifier] TypeSpecify[type_specifier]
+		MDeclar[method_declarator]
+		ThrowsClause[opt throws] 
+		MBody[method_body]	
+	by
+		Modifiers[changeMethodModifiers]
+		TypeSpecify[changeDataTypes][changeArrayTypes]
+		MDeclar[changeMethodDeclarator]
+		%ThrowsClause %not allowed in C#
+		MBody[translateBlock]
 end function
 % [1-1-1]-------------------------------------------------------
 % change the method name and parameters
 % If it is the main method then capitalize the letter M
 function changeMethodDeclarator
-        replace [method_declarator]
-           Name[method_name] '( FormalParms[list formal_parameter] ') Dim[repeat dimension] 
-           construct NewFormalParms[list formal_parameter]
-                _[changeFormalParamsDataTypes each FormalParms ]
-          
-        by
-          Name[changeMain] '( NewFormalParms ')Dim
+	replace [method_declarator]
+	   Name[method_name] '( FormalParms[list formal_parameter] ') Dim[repeat dimension] 
+	   construct NewFormalParms[list formal_parameter]
+		_[changeFormalParamsDataTypes each FormalParms ]
+	  
+	by
+	  Name[changeMain] '( NewFormalParms ')Dim
 end function
 % [1-1-2]------------------------------------------------------
 % chang modifiers to C# equivelant and
 % preserve the different rules applied for the access
 function changeMethodModifiers
     construct JavaModifiers [repeat modifier]
-        'native  
+    	'native  
     construct CSModifiers [repeat modifier]
-        'extern 
+    	'extern 
     replace * [ repeat modifier]
         Modifiers [repeat modifier]
     by
-        Modifiers [$ each JavaModifiers CSModifiers ]
-                  [changeAbstract]
-                  [makeVirtual]
-                  [changeProtected]
-                  [removeNonCS]      
+	Modifiers [$ each JavaModifiers CSModifiers ]
+	          [changeAbstract]
+	          [makeVirtual]
+	          [changeProtected]
+	          [removeNonCS]      
 end function
 % [1-1-3]------------------------------------------------------
 % abstract members must be public
 % if they are not already protected
 function changeAbstract
 replace [repeat modifier]
-           Modifiers[repeat modifier]
-        where Modifiers[containAbstract] 
-        by
-           Modifiers[addPublic]
+	   Modifiers[repeat modifier]
+	where Modifiers[containAbstract] 
+	by
+	   Modifiers[addPublic]
 end function
 % [1-1-4]------------------------------------------------------
 % add virtual if the method is
 % not final or abstract or static or private
 function makeVirtual
 replace [repeat modifier]
-                Modifiers[repeat modifier]
-        where not Modifiers[containFinal][containAbstract][containStatic][containPrivate] 
-        by
-                'virtual 
-                Modifiers[addPublic]
+		Modifiers[repeat modifier]
+	where not Modifiers[containFinal][containAbstract][containStatic][containPrivate] 
+	by
+		'virtual 
+		Modifiers[addPublic]
 end function
 % [1-1-5]------------------------------------------------------
 % replace protected by two modifiers
 % protected and internal
 function changeProtected
-        replace * [ repeat modifier]
-                'protected
-        by
-                'internal 'protected
+	replace * [ repeat modifier]
+		'protected
+	by
+		'internal 'protected
 end function
 % [1-1-6]------------------------------------------------------
 % remove final,transient and volatile
 % not exist in C# 
 rule removeNonCS
-        replace [repeat modifier]
-           CurrentModifier[modifier]
-           RemainingModifiers[repeat modifier]
-        where CurrentModifier[isFinal][isTransient][isVolatile]
-        by
-           RemainingModifiers
+	replace [repeat modifier]
+	   CurrentModifier[modifier]
+	   RemainingModifiers[repeat modifier]
+	where CurrentModifier[isFinal][isTransient][isVolatile]
+	by
+	   RemainingModifiers
 end rule
 % [1-1-7]------------------------------------------------------
 % virtual or abstract members must be public
 % if they are not already private or protected
 function addPublic
-        replace [repeat modifier]
-                Modifiers[repeat modifier]
-        where not Modifiers[containPublic][containPrivate][containProtected] 
-        by
-           'public 
-            Modifiers
+	replace [repeat modifier]
+		Modifiers[repeat modifier]
+	where not Modifiers[containPublic][containPrivate][containProtected] 
+	by
+	   'public 
+	    Modifiers
 end function
 % Checking if the modifiers list  
 % contains specific modifier 
 % [1-1-8]------------------------------------------------------
 rule containFinal
-        match [repeat modifier]
-           CurrentModifier[modifier]
-           RemainingModifiers[repeat modifier]
-        where CurrentModifier[isFinal]
+	match [repeat modifier]
+	   CurrentModifier[modifier]
+	   RemainingModifiers[repeat modifier]
+	where CurrentModifier[isFinal]
 end rule
 % [1-1-9]------------------------------------------------------
 rule containAbstract
-        match [repeat modifier]
-           CurrentModifier[modifier]
-           RemainingModifiers[repeat modifier]
-        where CurrentModifier[isAbstract]
+	match [repeat modifier]
+	   CurrentModifier[modifier]
+	   RemainingModifiers[repeat modifier]
+	where CurrentModifier[isAbstract]
 end rule
 % [1-1-10]-----------------------------------------------------
 rule containPublic
-        match [repeat modifier]
-           CurrentModifier[modifier]
-           RemainingModifiers[repeat modifier]
-        where CurrentModifier[isPublic]
+	match [repeat modifier]
+	   CurrentModifier[modifier]
+	   RemainingModifiers[repeat modifier]
+	where CurrentModifier[isPublic]
 end rule
 % [1-1-11]-----------------------------------------------------
 rule containPrivate
-        match [repeat modifier]
-           CurrentModifier[modifier]
-           RemainingModifiers[repeat modifier]
-        where CurrentModifier[isPrivate]
+	match [repeat modifier]
+	   CurrentModifier[modifier]
+	   RemainingModifiers[repeat modifier]
+	where CurrentModifier[isPrivate]
 end rule
 % [1-1-12]-----------------------------------------------------
 rule containProtected
-        match [repeat modifier]
-           CurrentModifier[modifier]
-           RemainingModifiers[repeat modifier]
-        where CurrentModifier[isProtected]
+	match [repeat modifier]
+	   CurrentModifier[modifier]
+	   RemainingModifiers[repeat modifier]
+	where CurrentModifier[isProtected]
 end rule
 % Checking if a modifier is one of 
 % final,transient and volatile 
 % [1-1-13]------------------------------------------------------
 function isFinal
-        match [modifier]
-                'final
+	match [modifier]
+		'final
 end function
 % [1-1-14]-----------------------------------------------------
 function isAbstract
-        match [modifier]
-                'abstract
+	match [modifier]
+		'abstract
 end function
 % [1-1-15]-----------------------------------------------------
 function isPublic
-        match [modifier]
-                'public
+	match [modifier]
+		'public
 end function
 % [1-1-16]-----------------------------------------------------
 function isPrivate
-        match [modifier]
-                'private
+	match [modifier]
+		'private
 end function
 % [1-1-17]-----------------------------------------------------
 function isProtected
-        match [modifier]
-                'protected
+	match [modifier]
+		'protected
 end function
 % [1-1-18]-----------------------------------------------------
 function isTransient
-        match [modifier]
-                'transient
+	match [modifier]
+		'transient
 end function
 % [1-1-19]------------------------------------------------------
 function isVolatile
-        match [modifier]
-                'volatile
+	match [modifier]
+		'volatile
 end function
 % change method name from main to Main
 % [1-1-20]------------------------------------------------------
 function changeMain
 replace[method_name]
-        'main
+	'main
 by
-        'Main
+	'Main
 end function
 % [1-1-21]------------------------------------------------------
 % change arrays for all formal parameters in the method
 function changMethodArray
-        replace[method_or_constructor_declaration]
-                Modifiers[repeat modifier] 
-                ReturnedType[type_specifier] Name[declared_name]
-                '( FormalParms[list formal_parameter] ') Dim[repeat dimension] 
-                ThrowsClause[opt throws] 
-                Body[method_body]
-        construct NewFormalParms[list formal_parameter]
-                FormalParms[changeMethodConArrayDimentions ]
-        by
-                Modifiers
-                ReturnedType Name
-                '( NewFormalParms ') Dim 
-                ThrowsClause 
-                Body
+	replace[method_or_constructor_declaration]
+		Modifiers[repeat modifier] 
+		ReturnedType[type_specifier] Name[declared_name]
+		'( FormalParms[list formal_parameter] ') Dim[repeat dimension] 
+		ThrowsClause[opt throws] 
+		Body[method_body]
+	construct NewFormalParms[list formal_parameter]
+		FormalParms[changeMethodConArrayDimentions ]
+	by
+		Modifiers
+		ReturnedType Name
+		'( NewFormalParms ') Dim 
+		ThrowsClause 
+		Body
 
 end function
 % [1-1-22]------------------------------------------------------
 % change arrays from int b [] to int []b 
 rule changeMethodConArrayDimentions 
-        replace[formal_parameter]
-                FormalParm[formal_parameter]
-        deconstruct FormalParm
-                FinalOpt[opt 'final] DataType[type_name] Name[declared_name]Dim[repeat dimension]
-        by
-                FinalOpt DataType Dim Name
+	replace[formal_parameter]
+		FormalParm[formal_parameter]
+	deconstruct FormalParm
+		FinalOpt[opt 'final] DataType[type_name] Name[declared_name]Dim[repeat dimension]
+	by
+		FinalOpt DataType Dim Name
 end rule
 % [1-1-23]------------------------------------------------------
 % find a data type within the formal parameter and change 
 % its data type
 function changeFormalParamsDataTypes FormalParm[formal_parameter]
-        replace[list formal_parameter]
-                FormalParms[list formal_parameter]
-        deconstruct FormalParm  
-                FinalOpt[opt 'final] DataType[type_specifier] Name[variable_name]
-        construct NewFormalParm[formal_parameter]
-                FinalOpt DataType[changeDataTypes][changeArrayTypes] Name
-        by
-                FormalParms[, NewFormalParm]
+	replace[list formal_parameter]
+		FormalParms[list formal_parameter]
+	deconstruct FormalParm	
+		FinalOpt[opt 'final] DataType[type_specifier] Name[variable_name]
+	construct NewFormalParm[formal_parameter]
+		FinalOpt DataType[changeDataTypes][changeArrayTypes] Name
+	by
+		FormalParms[, NewFormalParm]
 end function
 % ****************************************************************************************
 % [1-2]Constructor Declaration----------------------------------
 % find a constructor and further transform its parts
 % a constructor is a special method
 function translateConstructors
-        replace[method_or_constructor_declaration]
-                Modifiers[repeat modifier] 
-                ConDeclar[constructor_declarator] 
-                ThrowsClause[opt throws] 
-                ConBody[constructor_body]
+	replace[method_or_constructor_declaration]
+		Modifiers[repeat modifier] 
+		ConDeclar[constructor_declarator] 
+		ThrowsClause[opt throws] 
+		ConBody[constructor_body]
 
-        by
-                Modifiers[changeConstructorModifiers]
-                ConDeclar[changeConstructorDeclarator]
-                %ThrowsClause %not allowed in C#
-                ConBody [translateBlock]%[changeConstructorInheritance ConDeclar]
+	by
+		Modifiers[changeConstructorModifiers]
+		ConDeclar[changeConstructorDeclarator]
+		%ThrowsClause %not allowed in C#
+		ConBody [translateBlock]%[changeConstructorInheritance ConDeclar]
 
 end function
 % [1-2-1]-------------------------------------------------------
 % change the constructor header
 function changeConstructorDeclarator
-        replace [constructor_declarator]
-           Name[class_name] '( FormalParms[list formal_parameter]') %Init[opt constructor_initializer]  
-           construct NewFormalParms[list formal_parameter]
-                _[changeFormalParamsDataTypes each FormalParms ]
-        by
-           Name '( NewFormalParms')%Init
+	replace [constructor_declarator]
+	   Name[class_name] '( FormalParms[list formal_parameter]') %Init[opt constructor_initializer]  
+	   construct NewFormalParms[list formal_parameter]
+		_[changeFormalParamsDataTypes each FormalParms ]
+	by
+	   Name '( NewFormalParms')%Init
 end function
 % [1-2-2]-------------------------------------------------------
 % public,protected,private are only allowed
@@ -285,276 +285,276 @@ function changeConstructorModifiers
     replace * [ repeat modifier]
         Modifiers [repeat modifier]
     by
-        Modifiers [setDefaultAccess][changeProtected]             
+	Modifiers [setDefaultAccess][changeProtected]		  
 end function
 % [1-2-3]-------------------------------------------------------
 % if no access modifier is specified
 % java default is friendly access,C# default is private access
 function setDefaultAccess
-        replace [repeat modifier]
-                Modifiers [repeat modifier]
-                construct ModifiersLength[number]
-                        _[length Modifiers]
-        where
-                ModifiersLength[< 1]
-        by
-                'internal       
-        end function
+	replace [repeat modifier]
+		Modifiers [repeat modifier]
+		construct ModifiersLength[number]
+			_[length Modifiers]
+	where
+		ModifiersLength[< 1]
+	by
+		'internal	
+	end function
 % [1-2-4]-------------------------------------------------------
 % If the constructor accesses its base class
 % that is providing a call to super or this
 function doConChaining
-        replace[method_or_constructor_declaration]
-                Modifiers[repeat modifier] 
-                ConDeclar[constructor_declarator] 
-                ThrowsClause[opt throws] 
-                ConBody[constructor_body]
-        %check the first stmt if it is a call to super or this
-        where ConBody[containSuper][containThis]
-        by
-                Modifiers 
-                ConDeclar[changeToBase ConBody][changeToThis ConBody]
-                ThrowsClause %ommited later
-                ConBody [removeFirstStmt]
+	replace[method_or_constructor_declaration]
+		Modifiers[repeat modifier] 
+		ConDeclar[constructor_declarator] 
+		ThrowsClause[opt throws] 
+		ConBody[constructor_body]
+	%check the first stmt if it is a call to super or this
+	where ConBody[containSuper][containThis]
+	by
+		Modifiers 
+		ConDeclar[changeToBase ConBody][changeToThis ConBody]
+		ThrowsClause %ommited later
+		ConBody [removeFirstStmt]
 end function
 % Checking if the first statemnt in the block
 % is super or this
 % [1-2-5]-------------------------------------------------------
 function containSuper 
-        match [constructor_body]
-           '{
-               'super args[repeat component] ';
-               Remaining[repeat declaration_or_statement]
-           '}
+	match [constructor_body]
+	   '{
+	       'super args[repeat component] ';
+	       Remaining[repeat declaration_or_statement]
+	   '}
 end function
 % [1-2-6]-------------------------------------------------------
 function containThis 
-        match [constructor_body]
-           '{
-               'this args[repeat component] ';
-               Remaining[repeat declaration_or_statement]
-           '}
+	match [constructor_body]
+	   '{
+	       'this args[repeat component] ';
+	       Remaining[repeat declaration_or_statement]
+	   '}
 end function
 % [1-2-7]-------------------------------------------------------
 % change super() to : base()
 function changeToBase ConBody[constructor_body]
-        deconstruct ConBody
-        '{
-            'super args[repeat component] ';
-            Remaining[repeat declaration_or_statement]
-        '}
-        replace [constructor_declarator]
-           Name[class_name] '( FormalParms[list formal_parameter] ')
-        by
-          Name '( FormalParms ')': 'base args
+	deconstruct ConBody
+	'{
+	    'super args[repeat component] ';
+	    Remaining[repeat declaration_or_statement]
+	'}
+	replace [constructor_declarator]
+	   Name[class_name] '( FormalParms[list formal_parameter] ')
+	by
+	  Name '( FormalParms ')': 'base args
 end function
 % [1-2-8]-------------------------------------------------------
 % change this() to : this()
 function changeToThis ConBody[constructor_body]
-        deconstruct ConBody
-        '{
-            'this args[repeat component] ';
-            Remaining[repeat declaration_or_statement]
-        '}
-        replace [constructor_declarator]
-           Name[class_name] '( FormalParms[list formal_parameter] ')
-        by
-          Name '( FormalParms ')': 'this args
+	deconstruct ConBody
+	'{
+	    'this args[repeat component] ';
+	    Remaining[repeat declaration_or_statement]
+	'}
+	replace [constructor_declarator]
+	   Name[class_name] '( FormalParms[list formal_parameter] ')
+	by
+	  Name '( FormalParms ')': 'this args
 end function
 % [1-2-9]-------------------------------------------------------
 % after changing remove the super class call
 function removeFirstStmt 
-        replace [constructor_body]
-           '{
-               stmt[declaration_or_statement]
-               Remaining[repeat declaration_or_statement]
-           '}
-        by
-           '{ 
-              Remaining 
-           '}
+	replace [constructor_body]
+	   '{
+	       stmt[declaration_or_statement]
+	       Remaining[repeat declaration_or_statement]
+	   '}
+	by
+	   '{ 
+	      Remaining 
+	   '}
 end function
 % [1-2-10]-------------------------------------------------------
 % change arrays for all formal parameters in the constructor
 function changeConstructorArray
-        replace[method_or_constructor_declaration]
-                Modifiers[repeat modifier] 
-                Name[class_name] '( FormalParms[list formal_parameter]') 
-                ThrowsClause[opt throws] 
-                Body[constructor_body]
-        construct NewFormalParms[list formal_parameter]
-                FormalParms[changeMethodConArrayDimentions]
-        by
-                Modifiers Name '( NewFormalParms ')ThrowsClause 
-                Body
+	replace[method_or_constructor_declaration]
+		Modifiers[repeat modifier] 
+		Name[class_name] '( FormalParms[list formal_parameter]') 
+		ThrowsClause[opt throws] 
+		Body[constructor_body]
+	construct NewFormalParms[list formal_parameter]
+		FormalParms[changeMethodConArrayDimentions]
+	by
+		Modifiers Name '( NewFormalParms ')ThrowsClause 
+		Body
 
 end function
 % *************************************************************************
 % [2]Nested Declarations----------------------------------
 % Can have comments as part of declarations
 redefine type_declaration
-        ...
-|       [comment_NL][type_declaration] 
+	...
+|	[comment_NL][type_declaration] 
 end redefine
 
 function translateTypeDecl
-        replace[member_declaration]
-                NestedType[type_declaration]
-        by
-                NestedType[nonStaticNested][staticNested]
+	replace[member_declaration]
+		NestedType[type_declaration]
+	by
+		NestedType[nonStaticNested][staticNested]
 end function
 % [2-1]-------------------------------------------------------
 % transform the static nested class
 function staticNested
-        replace[type_declaration]
-                NestedType[type_declaration]
-        where not NestedType[isComment]
-        where NestedType[checkStatic]
-        by
-                NestedType[removeStatic][changeStaticClassHeader][changeStaticInterfaceHeader]
-                          %[removeStatic]
+	replace[type_declaration]
+		NestedType[type_declaration]
+	where not NestedType[isComment]
+	where NestedType[checkStatic]
+	by
+		NestedType[removeStatic][changeStaticClassHeader][changeStaticInterfaceHeader]
+			  %[removeStatic]
 end function
 % [2-2]-------------------------------------------------------
 % non static or inner classes are not transformed 
 function nonStaticNested
-        replace[type_declaration]
-                NestedType[type_declaration]
-        where not NestedType[isComment]
-        where not NestedType[checkStatic]
-        
-        construct S[stringlit]
-                "//J2C# NotSupported:Inner classes must be removed manually"
-        construct Comment[comment]
-                _[unquote S]    
-        construct RepeatCom[ repeat comment]
-                _[. Comment]
-        by
-                Comment NestedType
+	replace[type_declaration]
+		NestedType[type_declaration]
+	where not NestedType[isComment]
+	where not NestedType[checkStatic]
+	
+	construct S[stringlit]
+		"//J2C# NotSupported:Inner classes must be removed manually"
+	construct Comment[comment]
+		_[unquote S]	
+	construct RepeatCom[ repeat comment]
+		_[. Comment]
+	by
+		Comment NestedType
 end function
 % [2-3]-------------------------------------------------------
 % fetch for static classes
 function checkStatic
-        match [type_declaration]
-           ClassHead[class_header]ClassBody[class_body]
-           deconstruct *[repeat modifier]ClassHead
-                Modifiers[repeat modifier]
-        where Modifiers[containStatic]
+	match [type_declaration]
+	   ClassHead[class_header]ClassBody[class_body]
+	   deconstruct *[repeat modifier]ClassHead
+	   	Modifiers[repeat modifier]
+	where Modifiers[containStatic]
 end function
 % [2-4]-------------------------------------------------------
 % fetch all modifiers 
 rule containStatic
-        match [repeat modifier]
-           CurrentModifier[modifier]
-           RemainingModifiers[repeat modifier]
-        where CurrentModifier[isStatic]
+	match [repeat modifier]
+	   CurrentModifier[modifier]
+	   RemainingModifiers[repeat modifier]
+	where CurrentModifier[isStatic]
 end rule
 % [2-5]-------------------------------------------------------
 % match static key word 
 function isStatic
-        match [modifier]
-                'static
+	match [modifier]
+		'static
 end function
 % [2-6] match a comment 
 function isComment
-        match [type_declaration]
-                Comment[comment]
+	match [type_declaration]
+		Comment[comment]
 end function
 
 % [2-7]------------------------------------------------------
 % remove static because it is default in C# 
 rule removeStatic
-        replace [repeat modifier]
-           CurrentModifier[modifier]
-           RemainingModifiers[repeat modifier]
-        where CurrentModifier[isStatic]
-        by
-           RemainingModifiers
+	replace [repeat modifier]
+	   CurrentModifier[modifier]
+	   RemainingModifiers[repeat modifier]
+	where CurrentModifier[isStatic]
+	by
+	   RemainingModifiers
 end rule
 % [2-8]------------------------------------------------------
 % repeat the whole transformation again
 % for the inner static class
 function changeStaticClassHeader
-        replace [type_declaration]
-                ClassHead[class_header]ClassBody[class_body]
-                deconstruct ClassHead
-                        modifiers[repeat modifier] 'class Name[class_name] ExtendClause[opt extends_clause] ImplmntClause[opt implements_clause]
-                construct NewModifiers [repeat modifier]                
-                        modifiers[changeModifiers ]
-                construct NewImplement[opt implements_clause]
-                        ImplmntClause[changeImplement ExtendClause]
-                construct NewExtend [opt extends_clause ]               
-                        ExtendClause[changeExtend]
-                construct NewClassHead[class_header]
-                NewModifiers 'class Name NewExtend NewImplement
-        by
-                NewClassHead[addClassExtendToImplmt]
-                ClassBody [translateEmptyBody][changeClassBody]   
+	replace [type_declaration]
+		ClassHead[class_header]ClassBody[class_body]
+		deconstruct ClassHead
+			modifiers[repeat modifier] 'class Name[class_name] ExtendClause[opt extends_clause] ImplmntClause[opt implements_clause]
+		construct NewModifiers [repeat modifier]		
+			modifiers[changeModifiers ]
+		construct NewImplement[opt implements_clause]
+			ImplmntClause[changeImplement ExtendClause]
+		construct NewExtend [opt extends_clause ]		
+			ExtendClause[changeExtend]
+		construct NewClassHead[class_header]
+		NewModifiers 'class Name NewExtend NewImplement
+	by
+		NewClassHead[addClassExtendToImplmt]
+		ClassBody [translateEmptyBody][changeClassBody]   
 end function
 % [2-9]------------------------------------------------------
 % repeat the whole transformation again
 % for the inner static interface
 function changeStaticInterfaceHeader
-        replace [type_declaration]
-                InterfaceHead[interface_header] InterfaceBody[interface_body]
-                deconstruct InterfaceHead
-                        modifiers[repeat modifier] 'interface Name[interface_name] ExtendClause[opt extends_clause] ImplmntClause[opt implements_clause]
-                construct NewModifiers [repeat modifier]                
-                        modifiers[changeModifiers ]
-                construct NewImplement[opt implements_clause]
-                        ImplmntClause[changeImplement ExtendClause]
-                construct NewExtend [opt extends_clause]                
-                        ExtendClause[changeExtend]
-                construct NewInterfaceHead[interface_header]
-                NewModifiers 'interface Name NewExtend NewImplement
-        by
-                NewInterfaceHead[addInterfaceExtendToImplmt]
-                InterfaceBody [translateEmptyBody][changeInterfaceBody] 
+	replace [type_declaration]
+		InterfaceHead[interface_header] InterfaceBody[interface_body]
+		deconstruct InterfaceHead
+			modifiers[repeat modifier] 'interface Name[interface_name] ExtendClause[opt extends_clause] ImplmntClause[opt implements_clause]
+		construct NewModifiers [repeat modifier]		
+			modifiers[changeModifiers ]
+		construct NewImplement[opt implements_clause]
+			ImplmntClause[changeImplement ExtendClause]
+		construct NewExtend [opt extends_clause]		
+			ExtendClause[changeExtend]
+		construct NewInterfaceHead[interface_header]
+		NewModifiers 'interface Name NewExtend NewImplement
+	by
+		NewInterfaceHead[addInterfaceExtendToImplmt]
+		InterfaceBody [translateEmptyBody][changeInterfaceBody] 
 end function
 
 % ---------------------------------------------------------------------------- 
-% ********* INTERFACE BODY SECTION      *********
+% ********* INTERFACE BODY SECTION	*********
 % ---------------------------------------------------------------------------- 
 % [1]Method Declaration-------------------------------------------------------
 % find a method and further transform its parts
 function translateIntMethods
-        replace[repeat class_body_declaration]                               
-                Modifiers[repeat modifier] TypeSpecify[type_specifier]
-                MDeclar[method_declarator]
-                ThrowsClause[opt throws] 
-                MBody[method_body]      
-                RemainingRepeatBodyDecl[repeat class_body_declaration] 
-                
-        by
-                Modifiers[changeIntMethodModifiers]
-                TypeSpecify[changeDataTypes][changeArrayTypes]
-                MDeclar[changeMethodDeclarator]
-                %ThrowsClause %not allowed in C#
-                MBody[translateBlock]
-                RemainingRepeatBodyDecl[translateIntMethods]
+	replace[repeat class_body_declaration]                               
+		Modifiers[repeat modifier] TypeSpecify[type_specifier]
+		MDeclar[method_declarator]
+		ThrowsClause[opt throws] 
+		MBody[method_body]	
+		RemainingRepeatBodyDecl[repeat class_body_declaration] 
+		
+	by
+		Modifiers[changeIntMethodModifiers]
+		TypeSpecify[changeDataTypes][changeArrayTypes]
+		MDeclar[changeMethodDeclarator]
+		%ThrowsClause %not allowed in C#
+		MBody[translateBlock]
+		RemainingRepeatBodyDecl[translateIntMethods]
 end function
 % [2]------------------------------------------------------
 % chang modifiers to C# equivelant and
 % preserve the different rules applied for the access
 function changeIntMethodModifiers
-        construct JavaModifiers [repeat modifier]
-                'native  
-        construct CSModifiers [repeat modifier]
-                'extern 
-        replace * [ repeat modifier]
-                Modifiers [repeat modifier]
-        by
-                Modifiers [$ each JavaModifiers CSModifiers ]
-                        [removeIntPublic]% C# default is public
-                        %[changeAbstract][makeVirtual]not needed
-                        %[changeProtected][removeNonCS]not needed
+	construct JavaModifiers [repeat modifier]
+		'native  
+	construct CSModifiers [repeat modifier]
+		'extern 
+	replace * [ repeat modifier]
+		Modifiers [repeat modifier]
+	by
+		Modifiers [$ each JavaModifiers CSModifiers ]
+		  	[removeIntPublic]% C# default is public
+		  	%[changeAbstract][makeVirtual]not needed
+		  	%[changeProtected][removeNonCS]not needed
 end function
 % [3]------------------------------------------------------
 % remove public because it is default in C# 
 rule removeIntPublic
-        replace [repeat modifier]
-           CurrentModifier[modifier]
-           RemainingModifiers[repeat modifier]
-        where CurrentModifier[isPublic]
-        by
-           RemainingModifiers
+	replace [repeat modifier]
+	   CurrentModifier[modifier]
+	   RemainingModifiers[repeat modifier]
+	where CurrentModifier[isPublic]
+	by
+	   RemainingModifiers
 end rule

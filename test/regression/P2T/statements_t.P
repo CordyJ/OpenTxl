@@ -1,105 +1,105 @@
 % TXL 7.7a4
 % Andy Maloney, Queen's University, January 1995
-%       [part of 499 project]
+%	[part of 499 project]
 
 
 define p_componentSelector
 %% Pascal
-        '[ [list p_expression+] ']
-    |   . [id]
-    |   ^
+	'[ [list p_expression+] ']
+    |	. [id]
+    |	^
 %% Pascal
-        |
-        '( [list p_expression+] ')
+	|
+	'( [list p_expression+] ')
 end define
 
 
 define t_iterationStatements
 %% Turing
-        [opt init_statement]
-        'loop                                           [NL][IN]
-                [repeat p_statement]    [EX]
-        'end 'loop
+  	[opt init_statement]
+	'loop						[NL][IN]
+		[repeat p_statement]	[EX]
+	'end 'loop
 end define
 
 define init_statement
-        '% due to an error, this comment is required for the program to compile         [NL]
-        [repeat p_statement]    
+  	'% due to an error, this comment is required for the program to compile	 	[NL]
+	[repeat p_statement]	
 end define
 
 define p_otherStatement
-        'exit [opt whenPart]
+	'exit [opt whenPart]
 end define
 
 define whenPart
-        'when [opt 'not] '( [p_expression] ')
+	'when [opt 'not] '( [p_expression] ')
 end define
 
 
 %% *****
 %% statements
 
-function translatePascalStatements PascalStatement [p_statement]                        
-        replace [repeat p_statement]
-                SoFar [repeat p_statement]
-        
-        where not
-                PascalStatement [SemiColonOnly]                 %% eliminate semicolon-only statements
+function translatePascalStatements PascalStatement [p_statement]			
+	replace [repeat p_statement]
+		SoFar [repeat p_statement]
+	
+	where not
+		PascalStatement [SemiColonOnly]			%% eliminate semicolon-only statements
 
-        construct newPascalStatement [p_statement]
-                PascalStatement
-                        [changePascalStatement]
+	construct newPascalStatement [p_statement]
+		PascalStatement
+			[changePascalStatement]
 
-        by
-                SoFar [. newPascalStatement]
+	by
+		SoFar [. newPascalStatement]
 end function
 
 function changePascalStatement
-        replace [p_statement]
-                S [p_statement]
-        
-        construct newS [p_statement]    
-                S                       
-                        [changeWhile]
-                        [changeRepeat]
-                        [changeFor]
-                        [changeIfStatement]
-                        [changeWriteStatement]
-                        [changeSimpleWritelnStatement]
-                        [changeWritelnStatement]
-                        [changeReadStatement]
-                        [changeReadlnStatement]
-                        
-                        [changeArrayBrackets]
+	replace [p_statement]
+		S [p_statement]
+	
+	construct newS [p_statement]	
+		S			
+			[changeWhile]
+			[changeRepeat]
+			[changeFor]
+			[changeIfStatement]
+			[changeWriteStatement]
+			[changeSimpleWritelnStatement]
+			[changeWritelnStatement]
+			[changeReadStatement]
+			[changeReadlnStatement]
+			
+			[changeArrayBrackets]
 
-        where not
-                newS [= S]
-                
-        by
-                newS
-end function                    
+	where not
+		newS [= S]
+		
+	by
+		newS
+end function			
 
 function SemiColonOnly
-        match [p_statement]
-                ;
+	match [p_statement]
+		;
 end function
 
 function changeArrayBrackets
-        replace * [p_variable]
-                N [id] '[ LE [list p_expression+] ']
-                
-        by
-                N '( LE ')
+	replace * [p_variable]
+		N [id] '[ LE [list p_expression+] ']
+		
+	by
+		N '( LE ')
 end function
 
 function removeBeginEnd
-        replace [repeat p_statement]
-                'begin
-                        RS [repeat p_statement]
-                'end
-        
-        by
-                RS
+	replace [repeat p_statement]
+		'begin
+			RS [repeat p_statement]
+		'end
+	
+	by
+		RS
 end function
 
 
@@ -108,34 +108,34 @@ end function
 
 define p_whileStatement
 %%Pascal
-        'while [p_expression] 'do       [IN][NL]
-            [p_statement]               [EX]
+	'while [p_expression] 'do 	[IN][NL]
+	    [p_statement]		[EX]
 %% Turing
   |
-        [t_iterationStatements]
+  	[t_iterationStatements]
 end define
 
 function changeWhile
-        replace [p_statement]
-                'while E [p_expression] 'do 
-                        S [p_statement]
-                        
-        construct exitCondition [repeat p_statement]    
-                'exit 'when 'not '( E ')
-        
-        construct newS [repeat p_statement]
-                S 
-                
-        construct newS2 [repeat p_statement]
-                newS [removeBeginEnd]
-                
-        construct newBody [repeat p_statement]
-                _ [translatePascalStatements each newS2]
-                
-        by
-                'loop
-                        exitCondition [. newBody]
-                'end 'loop
+	replace [p_statement]
+		'while E [p_expression] 'do 
+			S [p_statement]
+			
+	construct exitCondition [repeat p_statement]	
+		'exit 'when 'not '( E ')
+	
+	construct newS [repeat p_statement]
+		S 
+		
+	construct newS2 [repeat p_statement]
+		newS [removeBeginEnd]
+		
+	construct newBody [repeat p_statement]
+		_ [translatePascalStatements each newS2]
+		
+	by
+		'loop
+			exitCondition [. newBody]
+		'end 'loop
 end function
 
 
@@ -144,39 +144,39 @@ end function
 
 define p_repeatStatement
 %% Pascal
-        'repeat                                         [IN][NL]
-            [repeat p_statement]        [EX]
-        'until [p_expression]
+	'repeat						[IN][NL]
+	    [repeat p_statement]	[EX]
+	'until [p_expression]
 %% Turing
   |
-        [t_iterationStatements]
+  	[t_iterationStatements]
 end define
 
 function changeRepeat
-        replace [p_statement]
-                'repeat
-                        S [repeat p_statement]
-                'until E [p_expression]
-                        
-        construct condition [p_statement]       
-                'exit 'when '( E ')
+	replace [p_statement]
+		'repeat
+			S [repeat p_statement]
+		'until E [p_expression]
+			
+	construct condition [p_statement]	
+		'exit 'when '( E ')
 
-        construct exitCondition [repeat p_statement]    
-                condition
-        
-        construct newS [repeat p_statement]
-                S
-                
-        construct newS2 [repeat p_statement]
-                newS [removeBeginEnd]
-                
-        construct newBody [repeat p_statement]
-                _ [translatePascalStatements each newS2]
+	construct exitCondition [repeat p_statement]	
+		condition
+	
+	construct newS [repeat p_statement]
+		S
+		
+	construct newS2 [repeat p_statement]
+		newS [removeBeginEnd]
+		
+	construct newBody [repeat p_statement]
+		_ [translatePascalStatements each newS2]
 
-        by
-                'loop
-                        newBody [. exitCondition]
-                'end 'loop
+	by
+		'loop
+			newBody [. exitCondition]
+		'end 'loop
 end function
 
 
@@ -185,56 +185,56 @@ end function
 
 define p_forStatement
 %% Pascal
-        for [id] := [p_expression] [p_toOrDownto] [p_expression] do     [IN][NL]
-            [p_statement]       [EX]
+	for [id] := [p_expression] [p_toOrDownto] [p_expression] do	[IN][NL]
+	    [p_statement]	[EX]
 %% Turing
   |
-        'for [opt 'decreasing] [opt id] : [p_expression] '.. [p_expression]     [NL][IN]
-            [repeat p_statement]                                                                                        [EX]
-        'end 'for
+	'for [opt 'decreasing] [opt id] : [p_expression] '.. [p_expression]	[NL][IN]
+	    [repeat p_statement]											[EX]
+	'end 'for
 end define
 
 function changeFor
-        replace [p_statement]
-                'for ID [id] ':= E1 [p_expression] TD [p_toOrDownto] E2 [p_expression] 'do
-                S [p_statement]
-                                        
-        deconstruct E2
-                newE [p_simpleExpression]
-                        
-        construct InitStatement [repeat p_statement]
-                ID ':= E1
+	replace [p_statement]
+		'for ID [id] ':= E1 [p_expression] TD [p_toOrDownto] E2 [p_expression] 'do
+	    	S [p_statement]
+	    				
+	deconstruct E2
+	 	newE [p_simpleExpression]
+	 		
+	construct InitStatement [repeat p_statement]
+		ID ':= E1
 
-        construct newInitStatement [repeat p_statement]
-                _ [translatePascalStatements each InitStatement]
+	construct newInitStatement [repeat p_statement]
+		_ [translatePascalStatements each InitStatement]
 
-        construct condition [p_expression]
-                ID '> newE
-                
-        construct eCondition [p_statement]      
-                'exit 'when '( condition ')
+	construct condition [p_expression]
+		ID '> newE
+		
+	construct eCondition [p_statement]	
+		'exit 'when '( condition ')
 
-        construct exitCondition [repeat p_statement]    
-                eCondition
+	construct exitCondition [repeat p_statement]	
+		eCondition
 
-        construct incrementor [repeat p_statement]
-                ID ':= ID '+ '1
+	construct incrementor [repeat p_statement]
+		ID ':= ID '+ '1
 
-        construct newS [repeat p_statement]
-                S 
-                
-        construct newS2 [repeat p_statement]
-                newS [removeBeginEnd] [.incrementor]
-                
-        construct newBody [repeat p_statement]
-                _ [translatePascalStatements each newS2]
+	construct newS [repeat p_statement]
+		S 
+		
+	construct newS2 [repeat p_statement]
+		newS [removeBeginEnd] [.incrementor]
+		
+	construct newBody [repeat p_statement]
+		_ [translatePascalStatements each newS2]
 
-        by
-                '% due to an error, this comment is required for the program to compile
-                newInitStatement
-                'loop
-                        exitCondition [. newBody]
-                'end 'loop
+	by
+  		'% due to an error, this comment is required for the program to compile
+  		newInitStatement
+		'loop
+			exitCondition [. newBody]
+		'end 'loop
 end function
 
 
@@ -244,93 +244,93 @@ end function
 
 define p_ifStatement
 %% Pascal
-        'if [p_expression] 'then        [IN][NL]
-            [p_statement]                       [EX]
-        [opt p_elsePart]
+	'if [p_expression] 'then	[IN][NL]
+	    [p_statement]			[EX]
+	[opt p_elsePart]
   |
 %% Turing
-        'if [p_expression] 'then        [IN][NL]
-                [repeat p_statement]    [EX]
-        [opt p_elsePart]
-        'end 'if                                        [NL]
+	'if [p_expression] 'then	[IN][NL]
+		[repeat p_statement]	[EX]
+	[opt p_elsePart]
+	'end 'if					[NL]
 end define
 
 define p_elsePart
 %% Pascal
-        else                            [NL]
-            [p_statement]
+	else 				[NL]
+	    [p_statement]
   |
 %% Turing
-        'elsif [p_expression] 'then             [IN][NL]
-                [repeat p_statement]            [EX]
-         [opt p_elsePart]
+	'elsif [p_expression] 'then		[IN][NL]
+		[repeat p_statement]		[EX]
+	 [opt p_elsePart]
   |
-        'else                                           [IN][NL]
-                [repeat p_statement]    [EX]
+	'else						[IN][NL]
+		[repeat p_statement]	[EX]
 end define
 
 
 function changeIfStatement
-        replace [p_statement]
-                'if E [p_expression] 'then
-                        S [p_statement]
-                OE [opt p_elsePart]
-                
-        construct newS [repeat p_statement]
-                S 
-                
-        construct newS2 [repeat p_statement]
-                newS [removeBeginEnd]
-                
-        construct newBody [repeat p_statement]
-                _ [translatePascalStatements each newS2]
-                
-        by
-                'if E 'then
-                        newBody
-                OE [changeElseIf] [changeElse]
-                'end 'if
+	replace [p_statement]
+		'if E [p_expression] 'then
+			S [p_statement]
+		OE [opt p_elsePart]
+		
+	construct newS [repeat p_statement]
+		S 
+		
+	construct newS2 [repeat p_statement]
+		newS [removeBeginEnd]
+		
+	construct newBody [repeat p_statement]
+		_ [translatePascalStatements each newS2]
+		
+	by
+		'if E 'then
+			newBody
+		OE [changeElseIf] [changeElse]
+		'end 'if
 end function
 
 % change 'else if' statements to 'elsif' statements
 rule changeElseIf
-        replace [p_elsePart]
-                'else 'if E [p_expression] 'then
-                        S [p_statement]
-                OE [opt p_elsePart]
-                
-        construct newS [repeat p_statement]
-                S 
-                
-        construct newS2 [repeat p_statement]
-                newS [removeBeginEnd]
-                
-        construct newBody [repeat p_statement]
-                _ [translatePascalStatements each newS2]
+	replace [p_elsePart]
+		'else 'if E [p_expression] 'then
+			S [p_statement]
+		OE [opt p_elsePart]
+		
+	construct newS [repeat p_statement]
+		S 
+		
+	construct newS2 [repeat p_statement]
+		newS [removeBeginEnd]
+		
+	construct newBody [repeat p_statement]
+		_ [translatePascalStatements each newS2]
 
-        by
-                'elsif E 'then
-                        newBody
-                OE
+	by
+		'elsif E 'then
+			newBody
+		OE
 end rule
 
 rule changeElse
-        replace [p_elsePart]
-                'else
-                        S [p_statement]
-                
-        construct newS [repeat p_statement]
-                S 
-                
-        construct newS2 [repeat p_statement]
-                newS [removeBeginEnd]
-                
-        construct newBody [repeat p_statement]
-                _ [translatePascalStatements each newS2]
-                
-        by
-                'else
-                        newBody
+	replace [p_elsePart]
+		'else
+			S [p_statement]
+		
+	construct newS [repeat p_statement]
+		S 
+		
+	construct newS2 [repeat p_statement]
+		newS [removeBeginEnd]
+		
+	construct newBody [repeat p_statement]
+		_ [translatePascalStatements each newS2]
+		
+	by
+		'else
+			newBody
 end rule
 
 
@@ -339,22 +339,22 @@ end rule
 
 define p_writeStatement
 %% Pascal
-        'write [p_writeArgumentList]
+	'write [p_writeArgumentList]
   |
 %% Turing
-        'put [list p_writeArgument+] [SP] '..
+	'put [list p_writeArgument+] [SP] '..
 end define
 
 
 function changeWriteStatement
-        replace [p_statement]
-                'write '( LWA [list p_writeArgument+] ')
-                
-        construct newLWA [list p_writeArgument+]
-                LWA [changeCharlit]
-                
-        by
-                'put newLWA '..
+	replace [p_statement]
+		'write '( LWA [list p_writeArgument+] ')
+		
+	construct newLWA [list p_writeArgument+]
+		LWA [changeCharlit]
+		
+	by
+		'put newLWA '..
 end function
 
 
@@ -363,50 +363,50 @@ end function
 
 define p_writelnStatement
 %% Pascal
-        writeln [opt p_writeArgumentList]
+	writeln [opt p_writeArgumentList]
   |
 %% Turing
-        'put [list p_writeArgument+]
+	'put [list p_writeArgument+]
 end define
 
 function changeSimpleWritelnStatement
-        replace [p_statement]
-                'writeln
-        
-        by
-                'put 'skip
+	replace [p_statement]
+		'writeln
+	
+	by
+		'put 'skip
 end function
 
 function changeWritelnStatement
-        replace [p_statement]
-                'writeln '( LWA [list p_writeArgument+] ')
-        
-        construct newLWA [list p_writeArgument+]
-                LWA [changeCharlit]
-                
-        by
-                'put newLWA
+	replace [p_statement]
+		'writeln '( LWA [list p_writeArgument+] ')
+	
+	construct newLWA [list p_writeArgument+]
+		LWA [changeCharlit]
+		
+	by
+		'put newLWA
 end function
 
 %% *****
 %% used for both write statement and writeln statement
 
 define p_writeArgument
-        [p_expression] [opt p_colonExpression]
+	[p_expression] [opt p_colonExpression]
   |
-        [stringlit] [opt p_colonExpression]
+	[stringlit] [opt p_colonExpression]
 end define
 
 %% change a charlit to a stringlit in a write or writeln argument
 rule changeCharlit
-        replace [p_writeArgument]
-                CL [charlit] OCE [opt p_colonExpression]
-        
-        construct SL [stringlit]
-                _ [+ CL]
-                
-        by
-                SL OCE
+	replace [p_writeArgument]
+		CL [charlit] OCE [opt p_colonExpression]
+	
+	construct SL [stringlit]
+		_ [+ CL]
+		
+	by
+		SL OCE
 end rule
 
 
@@ -415,19 +415,19 @@ end rule
 
 define p_readStatement
 %% Pascal
-        'read '( [list id+] ')
+	'read '( [list id+] ')
   |
 %% Turing
-        'get [list id+]
+	'get [list id+]
 end define
 
 
 function changeReadStatement
-        replace [p_statement]
-                'read '( IDS [list id+] ')
-                
-        by
-                'get IDS
+	replace [p_statement]
+		'read '( IDS [list id+] ')
+		
+	by
+		'get IDS
 end function
 
 %% *****
@@ -435,24 +435,24 @@ end function
 
 define p_readlnStatement
 %% Pascal
-        'readln
+	'readln
   |
 %% Turing
-        'var [id] ': 'string    [NL]
-        'get [id] ': '*
+	'var [id] ': 'string	[NL]
+	'get [id] ': '*
 end define
 
 function changeReadlnStatement
-        replace [p_statement]
-                'readln
-                
-        construct dummyID [id]
-                'dummy
-                
-        construct newID [id]
-                dummyID [!]
-                
-        by
-                'var newID ': 'string
-                'get newID ': '*
+	replace [p_statement]
+		'readln
+		
+	construct dummyID [id]
+		'dummy
+		
+	construct newID [id]
+		dummyID [!]
+		
+	by
+		'var newID ': 'string
+		'get newID ': '*
 end function

@@ -3,50 +3,50 @@
 % [part of master thesis project]
 
 % ------------------------------------------------------------------------------- 
-% *********     DATA TYPES SECTION      *********
+% *********	DATA TYPES SECTION	*********
 % ------------------------------------------------------------------------------- 
 % general rules used in more than one transformation
 
 % [1] first find a java primitive
 % then change it
 function changeDataTypes
-        replace[type_specifier]
-                DataType[primitive_type]
-        by
-                DataType[changePrimDataTypes]
+	replace[type_specifier]
+		DataType[primitive_type]
+	by
+		DataType[changePrimDataTypes]
 end function
 % [2]To change the primitive data types
 % byte to sbyte,boolean to bool
 % other data types are the same
 function changePrimDataTypes
-        replace [primitive_type]
-                JavaType[primitive_type]
-                import PrimDataTypesMapping [DataMapper]
-                deconstruct * [primitiveTable] PrimDataTypesMapping
-                        JavaType -> CSType [primitive_type]
-        by
-                CSType
+	replace [primitive_type]
+		JavaType[primitive_type]
+		import PrimDataTypesMapping [DataMapper]
+		deconstruct * [primitiveTable] PrimDataTypesMapping
+			JavaType -> CSType [primitive_type]
+	by
+		CSType
 end function
 % [3]changing the array declaration if it secifies
 % a primitive data type as its elements type
 function changeArrayTypes
-        replace[type_specifier]
-                ArrayType[type_name] Dimentions[repeat dimension+]
-                deconstruct *[primitive_type] ArrayType
-                        PrimType[primitive_type]
-        by
-                PrimType[changePrimDataTypes]Dimentions
+	replace[type_specifier]
+		ArrayType[type_name] Dimentions[repeat dimension+]
+		deconstruct *[primitive_type] ArrayType
+			PrimType[primitive_type]
+	by
+		PrimType[changePrimDataTypes]Dimentions
 end function
 % [4]change the exception name with the C# one
 % Exception names can be found in throw statement or 
 % in variable declaration or initializer
 function changeExceptionName
 replace *[qualified_name]
-        ExceptionName[qualified_name]
+	ExceptionName[qualified_name]
 import RunTimeExceptionsMapper [ExceptionMapper]
 deconstruct * [exceptionTable] RunTimeExceptionsMapper
-        ExceptionName -> CSName [qualified_name]
+	ExceptionName -> CSName [qualified_name]
 by
-        CSName
+	CSName
 end function
 

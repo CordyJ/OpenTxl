@@ -1,6 +1,0 @@
-include "ANSIC.Grammar"
-
-function mainRule
-    match [program]
-	P [program]
-end function

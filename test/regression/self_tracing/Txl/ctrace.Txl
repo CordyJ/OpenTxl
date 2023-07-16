@@ -8,7 +8,7 @@
 include "ANSIC.Grammar"
 
 keys
-        DONE__
+	DONE__
 end keys
 
 define real_statement
@@ -21,41 +21,41 @@ define real_statement
 end define
 
 define statement
-        [real_statement] [attr 'DONE__]
+	[real_statement] [attr 'DONE__]
 end define
 
 % external rule quote X [any]
 
 function main
     replace [program]
-        P [program]
+	P [program]
     by
-        P [addtracing1]
-          [addtracing2]
+	P [addtracing1]
+	  [addtracing2]
 end function
 
 rule addtracing1
     % Handle statements in sequences
     replace [repeat statement_or_preprocessor]
-        RS [real_statement] 
-        Rest [repeat statement_or_preprocessor]
+	RS [real_statement] 
+	Rest [repeat statement_or_preprocessor]
     construct QuoteRS [stringlit]
-        _ [quote RS]
+	_ [quote RS]
     by
-        fprintf (stderr, ">>> %s\n",  QuoteRS); DONE__ 
-        RS DONE__
-        Rest
+	fprintf (stderr, ">>> %s\n",  QuoteRS); DONE__ 
+	RS DONE__
+	Rest
 end rule
 
 rule addtracing2
     % Handle lone statements that need to be turned into blocks
     replace [statement]
-        RS [real_statement]
+    	RS [real_statement]
     construct QuoteRS [stringlit]
-        _ [quote RS]
+	_ [quote RS]
     by
-        {
-            fprintf (stderr, ">>> %s\n",  QuoteRS); DONE__ 
-            RS DONE__ 
-        } DONE__
+	{
+	    fprintf (stderr, ">>> %s\n",  QuoteRS); DONE__ 
+	    RS DONE__ 
+	} DONE__
 end rule

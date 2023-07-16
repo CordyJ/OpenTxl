@@ -18,150 +18,150 @@ procedure turtle (commandstring : string)
     var commands := commandstring
 
     loop
-        % Process next command in command string
-        exit when commands = ""
+	% Process next command in command string
+	exit when commands = ""
 
-        const command := commands (1)
-        commands := commands (2 .. *)
+	const command := commands (1)
+	commands := commands (2 .. *)
 
-        % Get count for direction, movement, macro, execute or color command
-        var count := 0
-        if command = "l" or command = "r" or command = "f" or command = "d"
-                or command = "s" or command = "m" or command = "e"
-                or command = "c" then
-            loop
-                exit when commands = "" or
-                    commands (1) < "0" or commands (1) > "9"
-                count := count * 10 + ord (commands (1)) - ord ("0")
-                commands := commands (2 .. *)
-            end loop
+	% Get count for direction, movement, macro, execute or color command
+	var count := 0
+	if command = "l" or command = "r" or command = "f" or command = "d"
+		or command = "s" or command = "m" or command = "e"
+		or command = "c" then
+	    loop
+		exit when commands = "" or
+		    commands (1) < "0" or commands (1) > "9"
+		count := count * 10 + ord (commands (1)) - ord ("0")
+		commands := commands (2 .. *)
+	    end loop
 
-            if count = 0 then
-                if command not= "d" then
-                    % Default count is 1
-                    count := 1
-                else
-                    % Default color is white
-                    count := WHITE
-                end if
-            end if
-        end if
+	    if count = 0 then
+		if command not= "d" then
+		    % Default count is 1
+		    count := 1
+		else
+		    % Default color is white
+		    count := WHITE
+		end if
+	    end if
+	end if
 
-        % Execute the command
+	% Execute the command
 
-        if command = "i" then
-            %   init
-            cls
-            put "Wait ..."
-            for x : turtle_minx .. turtle_maxx
-                for y : turtle_miny .. turtle_maxy
-                    turtle_image (x, y) := NONE
-                end for
-            end for
+	if command = "i" then
+	    %   init
+	    cls
+	    put "Wait ..."
+	    for x : turtle_minx .. turtle_maxx
+		for y : turtle_miny .. turtle_maxy
+		    turtle_image (x, y) := NONE
+		end for
+	    end for
 
-            for m : 1 .. 9
-                turtle_macro (m) := ""
-            end for
+	    for m : 1 .. 9
+		turtle_macro (m) := ""
+	    end for
 
-            turtle_x := 0
-            turtle_y := 0
-            turtle_dir := 0
-            turtle_pen := WHITE
-            cls
+	    turtle_x := 0
+	    turtle_y := 0
+	    turtle_dir := 0
+	    turtle_pen := WHITE
+	    cls
 
-        elsif command = "l" then
-            %   left
-            turtle_dir := (turtle_dir - count + 360) mod 360
+	elsif command = "l" then
+	    %   left
+	    turtle_dir := (turtle_dir - count + 360) mod 360
 
-        elsif command = "r" then
-            %   right
-            turtle_dir := (turtle_dir + count) mod 360
+	elsif command = "r" then
+	    %   right
+	    turtle_dir := (turtle_dir + count) mod 360
 
-        elsif command = "f" then
-            %   forward
-            const dx := cosd (turtle_dir)
-            const dy := sind (turtle_dir)
+	elsif command = "f" then
+	    %   forward
+	    const dx := cosd (turtle_dir)
+	    const dy := sind (turtle_dir)
 
-            if turtle_pen not= NONE then
-                for i : 0 .. count
-                    const ridx := round (i * dx)
-                    const ridy := round (i * dy)
-                    exit when turtle_y + ridy < turtle_miny or
-                        turtle_y + ridy > turtle_maxy or
-                        turtle_x + ridx < turtle_minx or
-                        turtle_x + ridx > turtle_maxx
-                    turtle_point (turtle_x + ridx, turtle_y + ridy)
-                end for
-            else
-                turtle_point (turtle_x, turtle_y)
-            end if
+	    if turtle_pen not= NONE then
+		for i : 0 .. count
+		    const ridx := round (i * dx)
+		    const ridy := round (i * dy)
+		    exit when turtle_y + ridy < turtle_miny or
+			turtle_y + ridy > turtle_maxy or
+			turtle_x + ridx < turtle_minx or
+			turtle_x + ridx > turtle_maxx
+		    turtle_point (turtle_x + ridx, turtle_y + ridy)
+		end for
+	    else
+		turtle_point (turtle_x, turtle_y)
+	    end if
 
-            turtle_x += round (count * dx)
+	    turtle_x += round (count * dx)
 
-            if turtle_x < turtle_minx then
-                turtle_x := turtle_minx
-            end if
+	    if turtle_x < turtle_minx then
+		turtle_x := turtle_minx
+	    end if
 
-            if turtle_x > turtle_maxx then
-                turtle_x := turtle_maxx
-            end if
+	    if turtle_x > turtle_maxx then
+		turtle_x := turtle_maxx
+	    end if
 
-            turtle_y += round (count * dy)
+	    turtle_y += round (count * dy)
 
-            if turtle_y < turtle_miny then
-                turtle_y := turtle_miny
-            end if
+	    if turtle_y < turtle_miny then
+		turtle_y := turtle_miny
+	    end if
 
-            if turtle_y > turtle_maxy then
-                turtle_y := turtle_maxy
-            end if
+	    if turtle_y > turtle_maxy then
+		turtle_y := turtle_maxy
+	    end if
 
-        elsif command = "u" then
-            %   pen up
-            turtle_pen := NONE
+	elsif command = "u" then
+	    %   pen up
+	    turtle_pen := NONE
 
-        elsif command = "d" then
-            %   pen down, color N
-            turtle_pen := count mod 8  % limit to legal background colors
+	elsif command = "d" then
+	    %   pen down, color N
+	    turtle_pen := count mod 8  % limit to legal background colors
 
-        elsif command = "s" then
-            %   store rest of command string as macro N
-            turtle_macro (count) := commands
-            commands := ""
+	elsif command = "s" then
+	    %   store rest of command string as macro N
+	    turtle_macro (count) := commands
+	    commands := ""
 
-        elsif command = "m" then
-            %   invoke macro N
-            turtle (turtle_macro (count))
+	elsif command = "m" then
+	    %   invoke macro N
+	    turtle (turtle_macro (count))
 
-        elsif command = "e" then
-            %   execute rest of command string N times
-            for i : 1 .. count
-                turtle (commands)
-            end for
+	elsif command = "e" then
+	    %   execute rest of command string N times
+	    for i : 1 .. count
+		turtle (commands)
+	    end for
 
-            commands := ""
-        end if
+	    commands := ""
+	end if
     end loop
 
     color (WHITE)
     colorback (BLACK)
 
     if turtle_depth = 1 then
-        % Tell current position, direction and color
-        locate (lines, 1)
-        put "(", turtle_x, ",", turtle_y, ") dir ", turtle_dir,
-            "  color ", turtle_pen, "        " ..
-        locate ((- turtle_miny + turtle_y) div 2 + 1,
-            - turtle_minx + turtle_x + 1)
-        if PC then
-            color (turtle_pen)
-        end if
-        put "o" ..
+	% Tell current position, direction and color
+	locate (lines, 1)
+	put "(", turtle_x, ",", turtle_y, ") dir ", turtle_dir,
+	    "  color ", turtle_pen, "        " ..
+	locate ((- turtle_miny + turtle_y) div 2 + 1,
+	    - turtle_minx + turtle_x + 1)
+	if PC then
+	    color (turtle_pen)
+	end if
+	put "o" ..
     end if
 
     if PC then
-        color (WHITE)
-        colorback (BLACK)
+	color (WHITE)
+	colorback (BLACK)
     end if
 
     turtle_depth -= 1

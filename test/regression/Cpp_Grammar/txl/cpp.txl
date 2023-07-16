@@ -1,7 +1,7 @@
 % Parse and pretty print ANSI C++ programs
 
 include "Cpp.grm"
-include "CppCommentOverrides.Grm"
+include "CppCommentOverrides.grm"
 
 function main
     replace [program]

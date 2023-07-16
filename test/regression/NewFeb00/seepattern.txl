@@ -1,25 +1,25 @@
 define program
-        [repeat thing]
+	[repeat thing]
 end define
 
 define thing
-        [idthing]
-    |   [see number] [numberthing]
+	[idthing]
+    |	[see number] [numberthing]
 end define
 
 define idthing
-        [id]
+	[id]
 end define
 
 define numberthing
-        [number]
+	[number]
 end define
 
 function main
-        match [program]
-                P [program]
-        deconstruct * [numberthing] P
-                N [numberthing]
-        construct T [thing]
-                N
+	match [program]
+		P [program]
+	deconstruct * [numberthing] P
+		N [numberthing]
+	construct T [thing]
+		N
 end function

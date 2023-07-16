@@ -9,67 +9,67 @@
 
 
 compounds
-        --* 
+	--* 
 end compounds
 
 keys    IDENTIFYING_REL RELATTIONSHIP ROLE ROLES
-        CREATE TABLE NOT NULL PRIMARY KEY FOREIGN 
-        CHARACTER INTEGER FLOAT   ON DELETE CASCADE
+	CREATE TABLE NOT NULL PRIMARY KEY FOREIGN 
+	CHARACTER INTEGER FLOAT   ON DELETE CASCADE
 end keys
 
 
 define tableDefinition
-        CREATE TABLE  [table] (         [IN]
-        [list attributeDefinition] )    [NL][EX]
-        [repeat uniqueConstraint]
+	CREATE TABLE  [table] (		[IN]
+        [list attributeDefinition] )	[NL][EX]
+	[repeat uniqueConstraint]
         [primaryKeyDefinition] 
         [repeat foreignKeyDefinition] [NL] 
 end define
 
 define notNull
-        'NOT 'NULL
+	'NOT 'NULL
 end define
 
 define attributeDefinition
-        [NL] [attribute] [dataType] [opt  notNull]
+	[NL] [attribute] [dataType] [opt  notNull]
 end define
 
 define uniqueConstraint
-        UNIQUE ( [attributelist] ) [NL]
+	UNIQUE ( [attributelist] ) [NL]
 end define
 
 define primaryKeyDefinition 
-        PRIMARY KEY ( [attributelist] ) [NL]
+        PRIMARY KEY ( [attributelist] )	[NL]
 end define
 
 %define EDconstraint
-%       ON DELETE CASCADE
+%	ON DELETE CASCADE
 %end define
 
 define foreignKeyDefinition 
         [opt IdentifyingRelComment] 
-        FOREIGN KEY ( [attributelist] )  [NL] [IN]
-            REFERENCES [table] %[opt EDconstraint] 
-            [opt SpecialComment] [EX][NL]
+	FOREIGN KEY ( [attributelist] )  [NL] [IN]
+	    REFERENCES [table] %[opt EDconstraint] 
+	    [opt SpecialComment] [EX][NL]
 end define
 
 define SpecialComment
-        [RelComment]
-        | [RoleComment]
+	[RelComment]
+	| [RoleComment]
 end define
 
 define IdentifyingRelComment
-        --* IDENTIFYING_REL: [relationshipName]   [NL]
-        --* ROLE: [role] [constraint] [NL] 
+	--* IDENTIFYING_REL: [relationshipName]   [NL]
+	--* ROLE: [role] [constraint] [NL] 
 end define
 
 define RelComment
-        [NL] --* RELATIONSHIP : [relationshipName]  [NL]
-        --* ROLES: [role] [constraint] , [role] [constraint] 
+	[NL] --* RELATIONSHIP : [relationshipName]  [NL]
+	--* ROLES: [role] [constraint] , [role] [constraint] 
 end define
 
 define RoleComment
-        --* ROLE : [role] [constraint] 
+	--* ROLE : [role] [constraint] 
 end define
 
 define attribute
@@ -77,7 +77,7 @@ define attribute
 end define
 
 define attributelist
-        [list attribute]
+    	[list attribute]
 end define
 
 define table
@@ -85,7 +85,7 @@ define table
 end define
 
 define int
-        '( [integernumber] ') 
+	'( [integernumber] ') 
 end define
 
 define dataType

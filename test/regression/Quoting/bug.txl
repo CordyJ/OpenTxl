@@ -16,10 +16,10 @@ end define
 
 function main
     match [program]
-        _ [repeat predicate]
+	_ [repeat predicate]
     construct Jimbo [predicate]
-        Jim ( Bo )
+	Jim ( Bo )
     construct Jimbob [predicate]
-        Jim ( Nancy, 'Jimbo )
+	Jim ( Nancy, 'Jimbo )
 end function
 
