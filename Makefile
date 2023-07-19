@@ -158,8 +158,8 @@ objs :
 clean :
 	/bin/rm -f bin/* lib/* objs/* 
 	/bin/rm -rf csrc 
-	cd test; make clean; cd ..
 	cd test/regression; make clean; cd ../..
+	cd test; make clean; cd ..
 
 # Production auto-generated C version
 

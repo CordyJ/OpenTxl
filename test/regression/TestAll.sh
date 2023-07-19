@@ -43,11 +43,13 @@ for dir in $dirs; do
             : > /tmp/tta-old$$
             (/usr/bin/time $OLDTXL -v -s 400 -w 200 $eg -o /tmp/tta-old$$ < /tmp/42 2>&1 ) >> $eg-oldoutput
             cat /tmp/tta-old$$ >> $eg-oldoutput
+            grep "TXL0" $eg-oldoutput >> /tmp/tta-old$$
 
             # Run new TXL
             : > /tmp/tta-new$$
             (/usr/bin/time ../$NEWTXL -v -s 400 -w 200 $eg -o /tmp/tta-new$$ < /tmp/42 2>&1 ) >> $eg-newoutput
             cat /tmp/tta-new$$ >> $eg-newoutput
+            grep "TXL0" $eg-newoutput >> /tmp/tta-new$$
 
             # Diff them
             if [ "`diff -q /tmp/tta-old$$ /tmp/tta-new$$`" != "" ]; then

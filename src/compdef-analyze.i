@@ -545,7 +545,7 @@ module analyzeGrammar
                 end if
             end for
             if derivesLeading (realdefineTP, defineTP) and not derives (realdefineTP, defineTP) then
-                error ("define'" + externalType (string@(ident.idents (tree.trees (defineTP).name))) + "'",
+                error ("define '" + externalType (string@(ident.idents (tree.trees (defineTP).name))) + "'",
                     "[" + externalType (string@(ident.idents (tree.trees (defineTP).name))) 
                     + "] is locally ambiguous when parsing sequences of [" 
                     + externalType (string@(ident.idents (tree.trees (tree.kid1TP (defineTP)).name))) + "]", WARNING, 217)
@@ -572,7 +572,7 @@ module analyzeGrammar
             assert tree.trees (realdefineTP).kind = kindT.generaterepeat or tree.trees (realdefineTP).kind = kindT.generatelist
 
             if derives (tree.kid1TP (realdefineTP), emptyTP) then
-                error ("define'" + externalType (string@(ident.idents (tree.trees (defineTP).name))) + "'",
+                error ("define '" + externalType (string@(ident.idents (tree.trees (defineTP).name))) + "'",
                     "[" + externalType (string@(ident.idents (tree.trees (defineTP).name)))
                     + "] is locally ambiguous when parsing sequences of ["
                     + externalType (string@(ident.idents (tree.trees (tree.kid1TP (defineTP)).name))) + "]", WARNING, 220)
@@ -624,7 +624,7 @@ module analyzeGrammar
 
         % Warn if we find one
         if hiddenRecursion then
-            error ("define'" + externalType (string@(ident.idents (tree.trees (defineTP).name))) + "'",
+            error ("define '" + externalType (string@(ident.idents (tree.trees (defineTP).name))) + "'",
                 "[" + externalType (string@(ident.idents (tree.trees (defineTP).name))) + "] is deeply left recursive",
                 WARNING, 221)
             put : 0, "  (parsing and/or syntax error detection may be slow)"

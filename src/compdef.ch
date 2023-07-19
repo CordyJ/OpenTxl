@@ -624,7 +624,7 @@ body module defineCompiler
             end loop
 
             if nkids > maxDefineKids then
-                error ("define '" + string@(ident.idents (defineNameT)) + "'",
+                error ("define/redefine '" + string@(ident.idents (defineNameT)) + "'",
                     "Too many elements or alternatives in one define" +
                     " (maximum " + intstr (maxDefineKids, 1) + ")", LIMIT_FATAL, 210)
             end if
@@ -793,10 +793,9 @@ body module defineCompiler
 
                 % Bubble sort (to preserve order precedence) before recursive alternatives
                 for decreasing k : kid .. 1
-                %% for decreasing k : kid .. 2
                     lastNonRecursiveKid := k
 
-                    exit when k = 1 %% 
+                    exit when k = 1
 
                     const kDefineTP := tree.kids (baseKid + k - 1)
 
@@ -814,123 +813,123 @@ body module defineCompiler
 
         % Step 2. Factor recursive and nonrecursive cases into subchoices 
         
-            if options.option (verbose_p) then
-                error ("define '" + string@(ident.idents (tree.trees (defineTP).name)) + "'", 
-                    "Optimized left recursive define", INFORMATION, 213)
-            end if
+        if options.option (verbose_p) then
+            error ("define '" + string@(ident.idents (tree.trees (defineTP).name)) + "'", 
+                "Optimized left recursive define", INFORMATION, 213)
+        end if
 
-            % Convert E -> T | E + T to left-factored form  
-            %   E -> E1 | E E2
-            %   E1 -> T
-            %   E2 -> + T
+        % Convert E -> T | E + T to left-factored form  
+        %   E -> E1 | E E2
+        %   E1 -> T
+        %   E2 -> + T
 
-            % Number of non-recursive and recursive alternatives
-            const nNonRecursiveKids := lastNonRecursiveKid
-            const nRecursiveKids := nkids - lastNonRecursiveKid
+        % Number of non-recursive and recursive alternatives
+        const nNonRecursiveKids := lastNonRecursiveKid
+        const nRecursiveKids := nkids - lastNonRecursiveKid
 
-            % First non-recursive and recursive alternatives
-            const nonRecursiveKidsKP := baseKid + 1
-            const recursiveKidsKP := baseKid + lastNonRecursiveKid + 1
+        % First non-recursive and recursive alternatives
+        const nonRecursiveKidsKP := baseKid + 1
+        const recursiveKidsKP := baseKid + lastNonRecursiveKid + 1
 
-            % Build the new define for E, with two alternatives, non-recursive (E1) and recursive (E E2)
-            const newDefineKidsKP := tree.newKids (2)
-            tree.setCount (defineTP, 2)
-            tree.setKids (defineTP, newDefineKidsKP)
+        % Build the new define for E, with two alternatives, non-recursive (E1) and recursive (E E2)
+        const newDefineKidsKP := tree.newKids (2)
+        tree.setCount (defineTP, 2)
+        tree.setKids (defineTP, newDefineKidsKP)
 
-            % Build a define for E1 with all non-recursive alternatives, and enter it as first alternative of the new E
-            if nNonRecursiveKids > 1 then
-                % Build a define for E1
-                const E1nameT := generateNewName (tree.trees (defineTP).name)
-                const E1index := symbol.enterSymbol (E1nameT, kindT.choose)
-                tree.setCount (symbol.symbols (E1index), nNonRecursiveKids)
-                tree.setKids (symbol.symbols (E1index), nonRecursiveKidsKP)
+        % Build a define for E1 with all non-recursive alternatives, and enter it as first alternative of the new E
+        if nNonRecursiveKids > 1 then
+            % Build a define for E1
+            const E1nameT := generateNewName (tree.trees (defineTP).name)
+            const E1index := symbol.enterSymbol (E1nameT, kindT.choose)
+            tree.setCount (symbol.symbols (E1index), nNonRecursiveKids)
+            tree.setKids (symbol.symbols (E1index), nonRecursiveKidsKP)
 
-                % Make an order node to reference E1 
-                const orderNameT := generateNewName (tree.trees (defineTP).name)
-                const orderIndex := symbol.enterSymbol (orderNameT, kindT.order)
-                tree.setCount (symbol.symbols (orderIndex), 1)
-
-                % Make it the first alternative of the new E
-                var newKid := tree.newKid 
-                tree.setKids (symbol.symbols (orderIndex), newKid)
-                tree.setKidTree (tree.trees (symbol.symbols (orderIndex)).kidsKP, symbol.symbols (E1index))
-                tree.setKidTree (newDefineKidsKP, symbol.symbols (orderIndex))
-            else
-                % Of course, if there is only one non-recursive alternative, it already is E1, 
-                % so just make it the first alternative of the new E
-                tree.setKidTree (newDefineKidsKP, tree.kids (nonRecursiveKidsKP))
-            end if
-
-            % Build a define for E2 with all recursive alternatives
-            const E2nameT := generateNewName (tree.trees (defineTP).name)
-            const E2index := symbol.enterSymbol (E2nameT, kindT.choose)
-            tree.setCount (symbol.symbols (E2index), nRecursiveKids)
-            tree.setKids (symbol.symbols (E2index), recursiveKidsKP)
-            
-            % Modify each recursive alternative to skip the recursive reference but preserve the tail
-            for k : recursiveKidsKP .. recursiveKidsKP + nRecursiveKids - 1
-                % Disconnect the alternative from its original nonterminal type in the symbol table,
-                % since we're going to change it
-                var newKidTP := tree.newTreeClone (tree.kids (k))
-                tree.setKidTree (k, newKidTP)
-                
-                % Skip the first (recursive) element of the alternative, to leave the tail (e.g., E + T => + T)
-                assert tree.trees (tree.kids (k)).kind = kindT.order
-                tree.setKids (tree.kids (k), tree.trees (tree.kids (k)).kidsKP + 1)
-                tree.setCount (tree.kids (k), tree.trees (tree.kids(k)).count - 1)
-
-                % If there was no tail on it, it was a circular recursion!
-                if tree.trees (tree.kids (k)).count = 0 then
-                    error ("define '" + string@(ident.idents (tree.trees (defineTP).name)) + "'",
-                        "Definition is circular", FATAL, 214) 
-                end if
-            end for
-            
-            % Build an order node for E E2 
+            % Make an order node to reference E1 
             const orderNameT := generateNewName (tree.trees (defineTP).name)
             const orderIndex := symbol.enterSymbol (orderNameT, kindT.order)
-            tree.makeTwoKids (symbol.symbols (orderIndex), defineTP, symbol.symbols (E2index))
+            tree.setCount (symbol.symbols (orderIndex), 1)
 
-            % Enter it as the second alternative for the new E
-            tree.setKidTree (newDefineKidsKP + 1, symbol.symbols (orderIndex))
-            
-            % After tne optimization, the parse structure for a recursive alternative E -> A (E + T)
-            % has been redefined to E -> A (E1 E2 (+ T)), so we must change the definition of nonterminal A 
-            % to match for consistency (otherwise, for example, patterns targeted at A will fail, 
-            % and other references to A will get a different parse)
-            
-            for k : 1 .. nRecursiveKids
-                % We have to do this the hard way since copyTree will go too deep!
-                
-                % First the (+ T) structure - its name is presently A
-                const AplusTTP := tree.kids (recursiveKidsKP + k - 1)
-                const AplusTcopyTP := tree.newTreeClone (AplusTTP)      % we can share the kids here without worry, so no tree copy
+            % Make it the first alternative of the new E
+            var newKid := tree.newKid 
+            tree.setKids (symbol.symbols (orderIndex), newKid)
+            tree.setKidTree (tree.trees (symbol.symbols (orderIndex)).kidsKP, symbol.symbols (E1index))
+            tree.setKidTree (newDefineKidsKP, symbol.symbols (orderIndex))
+        else
+            % Of course, if there is only one non-recursive alternative, it already is E1, 
+            % so just make it the first alternative of the new E
+            tree.setKidTree (newDefineKidsKP, tree.kids (nonRecursiveKidsKP))
+        end if
 
-                % Now build the selected E2 (+ T) structure, which is a choose with one choice
-                const AE2TP := tree.newTreeClone (symbol.symbols (E2index))
-                tree.makeOneKid (AE2TP, AplusTcopyTP)
-                
-                % Now the E1 E2 structure, which is an order
-                const AE1E2TP := tree.newTreeClone (symbol.symbols (orderIndex))
-                tree.makeTwoKids (AE1E2TP, tree.kids (tree.trees (symbol.symbols (orderIndex)).kidsKP) /*E1*/, AE2TP)
-                                
-                % Fix the names in the structure to the ones the parser will use at parse time
-                % WARNING - this must be completely consistent with parse.ch!
-                
-                % Use redundancy of rawname to swap names without a temporary
-                tree.setName (AE1E2TP, tree.trees (AplusTcopyTP).rawname)
-                tree.setName (AplusTcopyTP,  tree.trees (AE1E2TP).rawname)
-                tree.setRawName (AE1E2TP, tree.trees (AE1E2TP).name)
-                tree.setRawName (AplusTcopyTP, tree.trees (AplusTcopyTP).name)
-                                
-                % Find the left recursive form's original symbol table entry
-                const Aindex := symbol.lookupSymbol (tree.trees (AplusTTP).name)
-                assert Aindex not= NOT_FOUND
-                
-                % Update rather than replace it, to make sure that all other uses
-                % linked to it in the grammar are updated
-                tree.cloneTree (symbol.symbols (Aindex), AE1E2TP)
-            end for
+        % Build a define for E2 with all recursive alternatives
+        const E2nameT := generateNewName (tree.trees (defineTP).name)
+        const E2index := symbol.enterSymbol (E2nameT, kindT.choose)
+        tree.setCount (symbol.symbols (E2index), nRecursiveKids)
+        tree.setKids (symbol.symbols (E2index), recursiveKidsKP)
+        
+        % Modify each recursive alternative to skip the recursive reference but preserve the tail
+        for k : recursiveKidsKP .. recursiveKidsKP + nRecursiveKids - 1
+            % Disconnect the alternative from its original nonterminal type in the symbol table,
+            % since we're going to change it
+            var newKidTP := tree.newTreeClone (tree.kids (k))
+            tree.setKidTree (k, newKidTP)
+            
+            % Skip the first (recursive) element of the alternative, to leave the tail (e.g., E + T => + T)
+            assert tree.trees (tree.kids (k)).kind = kindT.order
+            tree.setKids (tree.kids (k), tree.trees (tree.kids (k)).kidsKP + 1)
+            tree.setCount (tree.kids (k), tree.trees (tree.kids(k)).count - 1)
+
+            % If there was no tail on it, it was a circular recursion!
+            if tree.trees (tree.kids (k)).count = 0 then
+                error ("define '" + string@(ident.idents (tree.trees (defineTP).name)) + "'",
+                    "Definition is circular", FATAL, 214) 
+            end if
+        end for
+        
+        % Build an order node for E E2 
+        const orderNameT := generateNewName (tree.trees (defineTP).name)
+        const orderIndex := symbol.enterSymbol (orderNameT, kindT.order)
+        tree.makeTwoKids (symbol.symbols (orderIndex), defineTP, symbol.symbols (E2index))
+
+        % Enter it as the second alternative for the new E
+        tree.setKidTree (newDefineKidsKP + 1, symbol.symbols (orderIndex))
+        
+        % After tne optimization, the parse structure for a recursive alternative E -> A (E + T)
+        % has been redefined to E -> A (E1 E2 (+ T)), so we must change the definition of nonterminal A 
+        % to match for consistency (otherwise, for example, patterns targeted at A will fail, 
+        % and other references to A will get a different parse)
+        
+        for k : 1 .. nRecursiveKids
+            % We have to do this the hard way since copyTree will go too deep!
+            
+            % First the (+ T) structure - its name is presently A
+            const AplusTTP := tree.kids (recursiveKidsKP + k - 1)
+            const AplusTcopyTP := tree.newTreeClone (AplusTTP)      % we can share the kids here without worry, so no tree copy
+
+            % Now build the selected E2 (+ T) structure, which is a choose with one choice
+            const AE2TP := tree.newTreeClone (symbol.symbols (E2index))
+            tree.makeOneKid (AE2TP, AplusTcopyTP)
+            
+            % Now the E1 E2 structure, which is an order
+            const AE1E2TP := tree.newTreeClone (symbol.symbols (orderIndex))
+            tree.makeTwoKids (AE1E2TP, tree.kids (tree.trees (symbol.symbols (orderIndex)).kidsKP) /*E1*/, AE2TP)
+                            
+            % Fix the names in the structure to the ones the parser will use at parse time
+            % WARNING - this must be completely consistent with parse.ch!
+            
+            % Use redundancy of rawname to swap names without a temporary
+            tree.setName (AE1E2TP, tree.trees (AplusTcopyTP).rawname)
+            tree.setName (AplusTcopyTP,  tree.trees (AE1E2TP).rawname)
+            tree.setRawName (AE1E2TP, tree.trees (AE1E2TP).name)
+            tree.setRawName (AplusTcopyTP, tree.trees (AplusTcopyTP).name)
+                            
+            % Find the left recursive form's original symbol table entry
+            const Aindex := symbol.lookupSymbol (tree.trees (AplusTTP).name)
+            assert Aindex not= NOT_FOUND
+            
+            % Update rather than replace it, to make sure that all other uses
+            % linked to it in the grammar are updated
+            tree.cloneTree (symbol.symbols (Aindex), AE1E2TP)
+        end for
         
     end refactorLeftRecursiveDefine
 
