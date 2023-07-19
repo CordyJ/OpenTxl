@@ -1060,7 +1060,7 @@ body module ruleCompiler
         const nameT := txltree.expression_baseT (expressionTP)
         rule.setPartName (partIndex, nameT)
 
-        context := "where condition '" + string@(ident.idents (nameT)) + "' in rule/function '" + 
+        context := "where condition '" + string@(ident.idents (nameT)) + "' of rule/function '" + 
             string@(ident.idents (ruleNameT)) + "'"
 
         % lookup name in varsSoFar - It must be there if we have a condition on it!

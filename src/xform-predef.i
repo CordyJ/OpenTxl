@@ -899,7 +899,7 @@ module predefs
 
                 if tree.trees (resultTP).kind >= firstLiteralKind then
                     if tree.trees (resultTP).kind = kindT.literal then
-                        predefinedError ("Scope of [parse] function is literal (probable cause: scope is [token], use [repeat token] instead)", applyingRuleName, callingRuleName)
+                        predefinedError ("Scope of [parse] function is a literal (possible cause: scope is [token], use [repeat token] instead)", applyingRuleName, callingRuleName)
                     end if
                     typename := tree_ops.literalTypeName (tree.trees (resultTP).kind)
                 end if

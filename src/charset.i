@@ -32,7 +32,7 @@
 
 % v11.1 Added NBSP (ASCII 160) as space character and separator
 
-% v11.2 Changed default ASCII Latin-1 alphabetics to remove â, Â and Ã, which conflict wiht UTF-8
+% v11.2 Changed default â, Â and Ã, which conflict with UTF-8
 
 module charset
 

@@ -739,7 +739,7 @@ module tree
         extract_XT := XT                
         extract_repeatXT := repeatXT    
 
-    % The following logic forces the extract to be done to a temporary, 
+        % The following logic forces the extract to be done to a temporary, 
         % without destroying the original target tree until the extract is completely successfully done.
         % This makes extract an atomic operation, which is necessary for garbage collection.
         
