@@ -99,6 +99,7 @@ module scanner
     % A7 20 .. A7 FF    (42784 .. 43007):       Latin Extended-D
     % AB 30 .. AB 6F    (43824 .. 43887):       Latin Extended-E
 
+#if UNICODE then
     % Automatically recogzining theses, since they don't conflict with ASCII
     % For the first few UTF-16 codes compatible with ASCII, we automatically change any two byte 
     % Unicode character C beginning with these to sequence pattern (C) 
@@ -111,6 +112,7 @@ module scanner
     % const * UNICODEC := 16#2C
     % const * UNICODED := 16#A7
     % const * UNICODEF := 16#AB
+#end if
 
     % Reserved TXL Pattern Codes - closest to 0 avoiding above
     const * PATTERN := 600
@@ -2584,6 +2586,7 @@ module scanner
                 nextUserTokenKind := type (kindT, (ord (nextUserTokenKind) + 1)) %% succ (nextUserTokenKind)
             end if
 
+        #if UNICODE then
             % Automatically sequence any two-byte Unicodes
             var i := 1
             loop
@@ -2599,6 +2602,7 @@ module scanner
                     i += 1
                 end if
             end loop
+        #end if
 
             % Fill in the entry
             setTokenPattern (newp, kind, name, pattern)
