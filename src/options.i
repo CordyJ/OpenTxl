@@ -28,6 +28,8 @@
 %       Removed old COBOL option flags
 %       Retired old ".Txl" and ".Grm" source file conventions 
 
+% v11.3 Add -p[rogress] virtual option (information messages), default to -q[uiet]
+
 
 % TXL option flags
 const * firstOption := 0
@@ -208,7 +210,8 @@ module options
             put : 0, "e.g., inputfile 'test.c' infers txlfile 'c.txl'."
             put : 0, ""
             put : 0, "Command options:"
-            put : 0, "  -q               Quiet - turn off all information messages"
+            put : 0, "  -q               Quiet - turn off all information messages (default)"
+            put : 0, "  -p               Progress - turn on information messages"
             put : 0, "  -v               Verbose - more detail in information messages"
         #if not NOLOADSTORE then
             put : 0, "  -c               Compile program to TXL byte code file 'txlfile.ctxl'"
@@ -291,6 +294,11 @@ module options
             % -v[erbose]
             option (verbose_p) := setting
             option (quiet_p) := not setting
+
+        elsif optionchar = 'p' then
+            % -p[rogress]
+            option (quiet_p) := not setting
+            option (verbose_p) := not setting
 
         elsif optionchar = 'q' then
             % -q[uiet]
@@ -650,10 +658,8 @@ module options
         useerror (false)
     end if
     
-    #if STANDALONE then
-        % Standalone applications are by default quiet
-        option (quiet_p) := true
-    #end if
+    % By default we are quiet
+    option (quiet_p) := true
 
     % Handle command line args, see if they make sense
     var argnum := 1

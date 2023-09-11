@@ -27,6 +27,8 @@
 
 % v11.0 Initial revision, revised from FreeTXL 10.8b (c) 1988-2022 Queen's University at Kingston
 
+% v11.2 Changed stack limit message to only when verbose_p
+
 
 % Turing+ Limits
 
@@ -160,7 +162,7 @@ if stackSize - reservedStack < defaultStackUse then
     const oldStackUse : addressint := defaultStackUse
     defaultStackUse := stackSize - reservedStack
     if defaultStackUse >= minimumStack then
-        if (not options.option (quiet_p)) and (not options.option (compile_p))  % we don't want to hear about it
+        if (options.option (verbose_p)) and (not options.option (compile_p))  % we don't want to hear about it
                 and (defaultStackUse < oldStackUse div 2 or options.option (verbose_p)) then
             error ("", "Stack limit less than recommended for TXL size (probable cause: shell stack limit)", WARNING, 911)
             error ("", "Recursion stack limit reduced from " + intstr (oldStackUse,1) 

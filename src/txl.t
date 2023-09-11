@@ -38,13 +38,15 @@
 
 % v11.2 Corrected Unicode conflict with Latin-1 character set
 %       Added shallow extract [^/]
+%       Changed default message level to quiet
+%       Changed stack limit message to when verbose only
 
 
 % Global symbols granted to child modules
 include "globals.i"
 
 % TXL version
-const * version := "OpenTxl v11.2 (21.7.23) (c) 2023 James R. Cordy and others"
+const * version := "OpenTxl v11.2 (11.9.23) (c) 2023 James R. Cordy and others"
 
 % Phase
 const * INITIALIZE := 0

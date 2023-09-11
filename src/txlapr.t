@@ -29,7 +29,7 @@
 % v11.0 Initial revision, revised from FreeTXL 10.8b (c) 1988-2022 Queen's University at Kingston
 %       Reprogrammed and remodularized to improve maintainability
 
-put : 0, "OpenTxl Profiler v11.0 (20.10.22) (c) 2022 James R. Cordy and others" 
+put : 0, "OpenTxl Profiler v11.2 (11.9.23) (c) 2023 James R. Cordy and others" 
 
 include "%system"
 
