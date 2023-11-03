@@ -3,19 +3,19 @@
 
 % Copyright 2022, James R. Cordy and others
 
-% Permission is hereby granted, free of charge, to any person obtaining a copy of this software 
-% and associated documentation files (the “Software”), to deal in the Software without restriction, 
-% including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, 
-% and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, 
+% Permission is hereby granted, free of charge, to any person obtaining a copy of this software
+% and associated documentation files (the “Software”), to deal in the Software without restriction,
+% including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
+% and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so,
 % subject to the following conditions:
 
-% The above copyright notice and this permission notice shall be included in all copies 
+% The above copyright notice and this permission notice shall be included in all copies
 % or substantial portions of the Software.
 
-% THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, 
-% INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE 
-% AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, 
-% DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, 
+% THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+% INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE
+% AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+% DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 % OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 % Abstract
@@ -24,7 +24,7 @@
 % Compiles the rule and functions in the TXL program into a rule table which encodes the pattern
 % and replacement parse trees to be matched or instantiated when the rules are run.
 % Takes as input the parsed TXL program as a parse tree according to the TXL bootstrap grammar
-% and processes the contents of each parsed rule and function statement. 
+% and processes the contents of each parsed rule and function statement.
 
 % Modification Log
 
@@ -32,19 +32,20 @@
 %       Remodularized to improve maintainability
 % v11.1 Added anonymous conditions, e.g., where _ [test]
 %       Fixed local variable binding bug
+% v11.3 Added multiple skip criteria, e.g., skipping [x] skipping [y] replace [z] ...
 
 parent "txl.t"
 
 stub module ruleCompiler
-    import 
+    import
         var tree, tree_ops, var ident, charset, symbol, scanner, txltree,
         var rule, var mainRule,
         var inputTokens, var lastTokenIndex, var failTokenIndex,
         var parser, var unparser,
-        kindType, typeKind, 
-        options, error, patternError, externalType, stackBase 
+        kindType, typeKind,
+        options, error, patternError, externalType, stackBase
 
-    export 
+    export
         makeRuleTable
 
     procedure makeRuleTable (txlParseTreeTP : treePT)
@@ -57,15 +58,15 @@ body module ruleCompiler
     % Current compiling context
     var context := ""
     var currentRuleIndex := 0
-    
+
     % Is this program polymorphic?
     var polymorphicProgram : boolean := false
-    
+
 
     procedure processRuleCall (scopetype : tokenT,
-            ruleCallTP : treePT, varsSoFar : localsListT, 
+            ruleCallTP : treePT, varsSoFar : localsListT,
             var parsedCallTP : treePT, isConditionCall : boolean)
-    
+
         var isCondition := isConditionCall
 
         const ruleName := txltree.ruleCall_nameT (ruleCallTP)
@@ -73,7 +74,7 @@ body module ruleCompiler
 
         % Remember that we called this rule
         rule.enterRuleCall (context, currentRuleIndex, ruleIndex)
-        
+
         % for rule calls, name represents called rule index
         parsedCallTP := tree.newTreeInit (kindT.ruleCall, ruleIndex, ruleIndex, 0, nilKid)
 
@@ -100,9 +101,9 @@ body module ruleCompiler
             % parameter type consistency
 
             if scopetype not= r.target and r.target not= any_T and scopetype not= any_T then
-                if r.defined then 
+                if r.defined then
                     if r.kind = ruleKind.functionRule and not r.starred then
-                        error (context, "Scope of function '" + string@(ident.idents (r.name)) + 
+                        error (context, "Scope of function '" + string@(ident.idents (r.name)) +
                             "' is not of target type", WARNING, 301)
                     end if
                 else
@@ -110,16 +111,16 @@ body module ruleCompiler
                     rule.setTarget (ruleIndex, any_T)
                 end if
             end if
-                
+
 
             if isCondition then
                 if r.defined and (not r.isCondition) then
-                    error (context, "'replace' rule '" + string@(ident.idents (r.name)) + 
+                    error (context, "'replace' rule '" + string@(ident.idents (r.name)) +
                         "' used as 'where' condition", FATAL, 302)
                 end if
                 rule.setIsCondition (ruleIndex, true)
             end if
-    
+
             % actuals parse like literals, even when they are not!
             var literalsTP := txltree.ruleCall_literalsTP (ruleCallTP)
 
@@ -127,13 +128,13 @@ body module ruleCompiler
 
             if tree.plural_emptyP (literalsTP) then
                 if r.localVars.nformals not= 0 then
-                    error (context, "Number of parameters to rule/function '" + 
+                    error (context, "Number of parameters to rule/function '" +
                         string@(ident.idents (r.name)) + "' differs from definition or previous call", FATAL, 303)
                 end if
-                
-                % if it is a (polymorphic) predefined function, check the type of the scope 
+
+                % if it is a (polymorphic) predefined function, check the type of the scope
                 % now to save doing it at run time
-                if r.kind = ruleKind.predefinedFunction then 
+                if r.kind = ruleKind.predefinedFunction then
                     rule.checkPredefinedFunctionScopeAndParameters (context, ruleIndex,
                         scopetype, empty_T, empty_T)
                 end if
@@ -178,7 +179,7 @@ body module ruleCompiler
                     if localIndex not= 0 then
                         % it's a variable
                         rule.incLocalRefs (varsSoFar.localBase + localIndex, 1)
-                        
+
                         % keep track of the last reference if in a replacement
                         rule.setLocalLastRef (varsSoFar.localBase + localIndex, tree.kids (parsedActualsKP))
                         tree.setKind (tree.kids (parsedActualsKP), kindT.subsequentUse)
@@ -213,16 +214,16 @@ body module ruleCompiler
                             p1type := effectiveType
                         elsif actualCount = 2 then
                             p2type := effectiveType
-                        end if 
+                        end if
 
                     else
-                        % it's a literal 
+                        % it's a literal
                         const literalKind := txltree.literal_kindT (tree.plural_firstTP (literalsTP))
 
-                        if literalKind = kindT.id 
+                        if literalKind = kindT.id
                                 and not txltree.isQuotedLiteral (tree.plural_firstTP (literalsTP)) then
                             error (context, "Literal actual parameter '" +
-                                string@(ident.idents (actualRawName)) + "' of rule/function '" + 
+                                string@(ident.idents (actualRawName)) + "' of rule/function '" +
                                 string@(ident.idents (r.name)) + "' is not quoted", WARNING, 307)
                         end if
 
@@ -240,8 +241,8 @@ body module ruleCompiler
 
                         if literalType not= formalType and formalType not= any_T then
                             error (context, "Type of actual parameter '" +
-                                string@(ident.idents (actualName)) + 
-                                "' of rule/function '" + string@(ident.idents (r.name)) + 
+                                string@(ident.idents (actualName)) +
+                                "' of rule/function '" + string@(ident.idents (r.name)) +
                                 "' does not agree with definition or previous call", FATAL, 306)
                         end if
 
@@ -249,9 +250,9 @@ body module ruleCompiler
                             p1type := literalType
                         elsif actualCount = 2 then
                             p2type := literalType
-                        end if 
+                        end if
                     end if
-        
+
                     literalsTP := tree.plural_restTP (literalsTP)
 
                     if tree.plural_emptyP (literalsTP) then
@@ -263,11 +264,11 @@ body module ruleCompiler
                         exit
                     end if
 
-                    parsedActualsKP := tree.newKid 
+                    parsedActualsKP := tree.newKid
                 end for
 
                 % mark end of actuals with nilTree
-                parsedActualsKP := tree.newKid 
+                parsedActualsKP := tree.newKid
                 tree.setKidTree (parsedActualsKP, nilTree)
 
                 if not tree.plural_emptyP (literalsTP) then
@@ -275,33 +276,33 @@ body module ruleCompiler
                         string@(ident.idents (r.name)) + "' differs from definition or previous call", FATAL, 309)
                 end if
 
-                % if it is a (polymorphic) predefined function, check the types of scope 
+                % if it is a (polymorphic) predefined function, check the types of scope
                 % and parameters now to save doing it at run time
-                if r.kind = ruleKind.predefinedFunction then 
+                if r.kind = ruleKind.predefinedFunction then
                     rule.checkPredefinedFunctionScopeAndParameters (context, ruleIndex, scopetype, p1type, p2type)
                 end if
-                        
+
             end if
 
         else
             % first call - must enter parameter types and count
-            rule.setCalled (ruleIndex, true) 
+            rule.setCalled (ruleIndex, true)
             rule.setTarget (ruleIndex, scopetype)
             rule.setIsCondition (ruleIndex, isCondition)
             rule.setLocalBase (ruleIndex, rule.ruleFormalCount) % special temporary space for formal info
 
             % allow for maximum parameters
             if rule.ruleFormalCount + maxParameters > maxTotalParameters then
-                error (context, "Too many total parameters of rules in TXL program (>" + 
+                error (context, "Too many total parameters of rules in TXL program (>" +
                     intstr (maxTotalParameters, 0) + ")", LIMIT_FATAL, 336)
             end if
-    
+
             % actuals parse like literals, even when they are not!
             var literalsTP := txltree.ruleCall_literalsTP (ruleCallTP)
             var actualCount := 0
-        
+
             if not tree.plural_emptyP (literalsTP) then
-                var newKid := tree.newKid 
+                var newKid := tree.newKid
                 tree.setKids (parsedCallTP, newKid)
                 var parsedActualsKP : kidPT := tree.trees (parsedCallTP).kidsKP
                 loop
@@ -346,7 +347,7 @@ body module ruleCompiler
                     if localIndex not= 0 then
                         % it's a variable
                         rule.incLocalRefs (varsSoFar.localBase + localIndex, 1)
-                        
+
                         % keep track of the last reference if in a replacement
                         rule.setLocalLastRef (varsSoFar.localBase + localIndex, tree.kids (parsedActualsKP))
                         tree.setKind (tree.kids (parsedActualsKP), kindT.subsequentUse)
@@ -369,20 +370,20 @@ body module ruleCompiler
                         end if
                         rule.setLocalType (r.localVars.localBase + actualCount, effectiveType)
                     else
-                        % it's a literal 
+                        % it's a literal
                         const literalKind := txltree.literal_kindT (tree.plural_firstTP (literalsTP))
 
-                        if literalKind = kindT.id 
+                        if literalKind = kindT.id
                                 and not txltree.isQuotedLiteral (tree.plural_firstTP (literalsTP)) then
                             error (context, "Literal actual parameter '" +
-                                string@(ident.idents (actualRawName)) + "' of rule/function '" + 
+                                string@(ident.idents (actualRawName)) + "' of rule/function '" +
                                 string@(ident.idents (r.name)) + "' is not quoted", WARNING, 307)
                         end if
 
                         tree.setKind (tree.kids (parsedActualsKP), literalKind)
 
                         const literalType := tree_ops.literalTypeName (tree.trees (tree.kids (parsedActualsKP)).kind)
-                        rule.setLocalType (r.localVars.localBase + actualCount, literalType) 
+                        rule.setLocalType (r.localVars.localBase + actualCount, literalType)
 
                         if eaching then
                             % we're in the scope of an 'each' - so a literal can't be right!
@@ -390,15 +391,15 @@ body module ruleCompiler
                                 string@(ident.idents (r.name)) + "' is not a list or repeat", FATAL, 305)
                         end if
                     end if
-        
+
                     literalsTP := tree.plural_restTP (literalsTP)
                     exit when tree.plural_emptyP (literalsTP)
-        
-                    parsedActualsKP := tree.newKid 
+
+                    parsedActualsKP := tree.newKid
                 end loop
 
                 % mark end of actuals with nilTree
-                parsedActualsKP := tree.newKid 
+                parsedActualsKP := tree.newKid
                 tree.setKidTree (parsedActualsKP, nilTree)
             end if
 
@@ -413,31 +414,31 @@ body module ruleCompiler
         rule.setCalled (ruleIndex, true)
 
     end processRuleCall
-    
+
 
     var lastWarningTokensTP := nilTree
-    
-    
+
+
     procedure parseVarOrExp (patternTokensTP : treePT,
             varsSoFarAddress : addressint, productionTP : treePT, var parseTP : treePT,
             var isVarOrExp : boolean, var varOrExpMatches : boolean)
-    
+
         bind var varsSoFar to localsListT@(varsSoFarAddress)
 
         % Parse a local variable binding or reference (patternTokensTP) in a pattern or replacement.
 
-        % Given a local variable binding (kindT.firstTime, e.g. X[T]), 
-        % reference (kindT.subsequentUse or kindT.expression), or potential reference (kindT.literal), 
-        % determine if it really is a local variable reference (isVarOrExp), 
+        % Given a local variable binding (kindT.firstTime, e.g. X[T]),
+        % reference (kindT.subsequentUse or kindT.expression), or potential reference (kindT.literal),
+        % determine if it really is a local variable reference (isVarOrExp),
         % and whether it matches the production nonterminal type (varOrExpMatches).
 
-        % If so, return its parse node (parseTP) and enter or bind it to the corresponding local variable (in varsSoFar). 
+        % If so, return its parse node (parseTP) and enter or bind it to the corresponding local variable (in varsSoFar).
 
         if patternTokensTP = emptyTP then
             isVarOrExp := false
             return
         end if
-    
+
         % Case 1: A literal identifier in a pattern or replacement
         %         may be a context-dependent reference to a local variable
 
@@ -449,32 +450,32 @@ body module ruleCompiler
             if localIndex = 0 then
                 % It really was a literal after all
                 isVarOrExp := false
-                
+
                 if not txltree.isQuotedLiteral (patternTokensTP) then
                     % Warn if it is a type name, possibly unintended error
                     const terminalT := txltree.literal_tokenT (patternTokensTP)
                     var terminalIndex := symbol.lookupSymbol (terminalT)
 
                     if terminalIndex not= symbol.UNDEFINED and lastWarningTokensTP not= patternTokensTP then
-                        error (context, "Type name '" + 
-                            string@(ident.idents (terminalT)) + "' used as a literal identifier (use [" + 
-                            string@(ident.idents (terminalT)) + "] or '" + string@(ident.idents (terminalT)) + 
+                        error (context, "Type name '" +
+                            string@(ident.idents (terminalT)) + "' used as a literal identifier (use [" +
+                            string@(ident.idents (terminalT)) + "] or '" + string@(ident.idents (terminalT)) +
                             " instead)", WARNING, 315)
                         lastWarningTokensTP := patternTokensTP
                     end if
                 end if
-                
+
                 return
             end if
-            
-            if txltree.isQuotedLiteral (patternTokensTP) then 
-                % If it's quoted it really is a literal after all 
+
+            if txltree.isQuotedLiteral (patternTokensTP) then
+                % If it's quoted it really is a literal after all
                 isVarOrExp := false
 
-                % Warn if it's also a local variable name, possibly unintended error 
+                % Warn if it's also a local variable name, possibly unintended error
                 if lastWarningTokensTP not= patternTokensTP then
-                    error (context, "Variable name '" + 
-                        string@(ident.idents(txltree.literal_tokenT (patternTokensTP))) + 
+                    error (context, "Variable name '" +
+                        string@(ident.idents(txltree.literal_tokenT (patternTokensTP))) +
                         "' is quoted as a literal identifier (possibly by mistake?)", WARNING, 316)
                     lastWarningTokensTP := patternTokensTP
                 end if
@@ -484,7 +485,7 @@ body module ruleCompiler
 
             % OK, it's not a literal, it really is a reference to a local variable
             isVarOrExp := true
-    
+
             % Does it match the production nonterminal type?
             if tree_ops.treeIsTypeP (productionTP, rule.ruleLocals (varsSoFar.localBase + localIndex).typename) then
                 varOrExpMatches := true
@@ -499,7 +500,7 @@ body module ruleCompiler
                 % It's a local variable reference, but doesn't match the production type, so parse fails
                 varOrExpMatches := false
             end if
-    
+
 
         % Case 2: A binding occurence of a local variable in a pattern (e.g., X[T])
 
@@ -515,7 +516,7 @@ body module ruleCompiler
 
             % Enter it in the rule's local variables
             const localIndex := rule.enterLocalVar (context, varsSoFar, ftname, txltree.firstTime_typeT (patternTokensTP))
-    
+
             % Check that its production type is defined
             const symbolIndex := symbol.findSymbol (rule.ruleLocals (varsSoFar.localBase + localIndex).typename)
 
@@ -525,17 +526,17 @@ body module ruleCompiler
 
                 % Successful parse of a local variable binding
                 const localName := rule.ruleLocals (varsSoFar.localBase + localIndex).name
-                parseTP := tree.newTreeInit (kindT.firstTime, localName, localName, localIndex /*save looking for it later*/, nilKid)           
+                parseTP := tree.newTreeInit (kindT.firstTime, localName, localName, localIndex /*save looking for it later*/, nilKid)
 
             else
                 % It's a local variable binding, but it doesn't match the production type, so parse fails
                 varOrExpMatches := false
                 % Don't forget to unenter it from the locals table, it may be tried again
-                rule.unenterLocalVar (context, varsSoFar, ftname) 
+                rule.unenterLocalVar (context, varsSoFar, ftname)
             end if
-    
 
-        % Case 3: A reference to a local variable in a replacement, possibly with rule calls 
+
+        % Case 3: A reference to a local variable in a replacement, possibly with rule calls
 
         elsif string@(ident.idents (tree.trees (patternTokensTP).name)) = "TXL_expression_" then
 
@@ -543,11 +544,11 @@ body module ruleCompiler
             % If it's not a defined local variable, it may be a literal identifier
 
             var localIndex := rule.lookupLocalVar ("", varsSoFar, txltree.expression_baseT (patternTokensTP))
-    
+
             if localIndex = 0 then
                 % It is a literal
                 isVarOrExp := false
-                
+
                 % Check for rule calls
                 if not tree.plural_emptyP ( txltree.expression_ruleCallsTP (patternTokensTP)) then
                     % Rule calls on a literal!
@@ -562,14 +563,14 @@ body module ruleCompiler
                     var terminalIndex := symbol.lookupSymbol (terminalT)
 
                     if terminalIndex not= symbol.UNDEFINED and lastWarningTokensTP not= patternTokensTP then
-                        error (context, "Type name '" + 
-                            string@(ident.idents (terminalT)) + "' used as a literal identifier (use [" + 
-                            string@(ident.idents (terminalT)) + "] or '" + string@(ident.idents (terminalT)) + 
+                        error (context, "Type name '" +
+                            string@(ident.idents (terminalT)) + "' used as a literal identifier (use [" +
+                            string@(ident.idents (terminalT)) + "] or '" + string@(ident.idents (terminalT)) +
                             " instead)", WARNING, 315)
                         lastWarningTokensTP := patternTokensTP
                     end if
                 end if
-                    
+
                 return
             end if
 
@@ -590,11 +591,11 @@ body module ruleCompiler
                 rule.incLocalRefs (varsSoFar.localBase + localIndex, 1)
                 rule.setLocalLastRef (varsSoFar.localBase + localIndex, parseTP)
 
-                % A local variable reference in a replacement may have rule calls (e.g., X[R1][R2}) 
+                % A local variable reference in a replacement may have rule calls (e.g., X[R1][R2})
                 % Make children of type ruleCall
                 var ruleCallsTP := txltree.expression_ruleCallsTP (patternTokensTP)
                 const ruleCallsTPcopy := ruleCallsTP
-    
+
                 % Are there any rule calls?
                 if not tree.plural_emptyP (ruleCallsTP) then
                     % If so, remember that they act on the local variable
@@ -631,14 +632,14 @@ body module ruleCompiler
                 % It's a local variable reference, but it doesn't match the production type, so parse fails
                 varOrExpMatches := false
             end if
-    
+
         else
             error (context, "Fatal TXL error in parseVarOrExp", INTERNAL_FATAL, 318)
         end if
-    
+
     end parseVarOrExp
-    
-    
+
+
     procedure parsePattern (var litsAndVarsAndExpsTP : treePT,
             varsSoFar : localsListT, productionTP : treePT, var parseTP : treePT)
 
@@ -647,9 +648,9 @@ body module ruleCompiler
         lastTokenIndex := 0
         loop
             lastTokenIndex += 1
-            
+
             exit when lastTokenIndex > maxPatternTokens
-            
+
             exit when tree.plural_emptyP (lves)
 
             bind var inputToken to inputTokens (lastTokenIndex)
@@ -660,10 +661,10 @@ body module ruleCompiler
 
             % A token may have been an id or keyword when parsed as TXL,
             % but what it is in the object language may be different!
-            if inputToken.kind = kindT.id 
+            if inputToken.kind = kindT.id
                     or inputToken.kind = kindT.key then
                 if scanner.keyP (inputToken.token) then
-                    % this language thinks it's a keyword 
+                    % this language thinks it's a keyword
                     inputToken.kind := kindT.key
                 else
                     % nope, just a normal id
@@ -673,28 +674,28 @@ body module ruleCompiler
 
             lves := tree.plural_restTP (lves)
         end loop
-        
+
         if lastTokenIndex > maxPatternTokens then
             error (context, "Pattern or replacement too large (> " + intstr (maxPatternTokens, 1) + " tokens)", LIMIT_FATAL, 319)
         end if
 
         bind var inputToken to inputTokens (lastTokenIndex)
         inputToken.tree := emptyTP
-        inputToken.token := empty_T  
-        inputToken.rawtoken := empty_T  
-        inputToken.kind := kindT.empty  
-    
+        inputToken.token := empty_T
+        inputToken.rawtoken := empty_T
+        inputToken.kind := kindT.empty
+
         if options.option (tree_print_p) then
             put : 0, ""
         end if
 
-        parser.initializeParse (context, false, true, false, addr (varsSoFar), parseVarOrExp) 
+        parser.initializeParse (context, false, true, false, addr (varsSoFar), parseVarOrExp)
         parser.parse (productionTP, parseTP)
-    
+
         if parseTP = nilTree then
             patternError (failTokenIndex, context, productionTP)
         end if
-    
+
         if options.option (pattern_print_p) then
             var pcontext := context
             loop
@@ -707,8 +708,8 @@ body module ruleCompiler
             put : 0, "----- End Parse Tree -----", skip
         end if
     end parsePattern
-    
-    
+
+
     procedure processPatternOrReplacement (goalName : tokenT,
             patternOrReplacementTP : treePT,
             var parseTP : treePT,
@@ -719,7 +720,7 @@ body module ruleCompiler
             txltree.patternOrReplacement_litsAndVarsAndExpsTP (patternOrReplacementTP)
         var symbolIndex := symbol.findSymbol (goalName)
         const goalTP := symbol.symbols (symbolIndex)
-        
+
         parsePattern (litsAndVarsAndExpsTP, varsSoFar, goalTP, parseTP)
 
     end processPatternOrReplacement
@@ -734,9 +735,9 @@ body module ruleCompiler
         var nameT := txltree.construct_varNameT (constructTP)
         rule.setPartName (partIndex, nameT)
 
-        context := "construct '" + string@(ident.idents (nameT)) + "' of rule/function '" 
+        context := "construct '" + string@(ident.idents (nameT)) + "' of rule/function '"
             + string@(ident.idents (ruleNameT)) + "'"
-            
+
         if nameT = anonymous_T then
             const anonName := "_" + intstr (localVars.nlocals+1, 0) + "_"
             nameT := ident.install (anonName, kindT.id)
@@ -782,8 +783,8 @@ body module ruleCompiler
 
         % make a replacement to be the value
         var replacementTP, expsAndLitsTP : treePT
-        replacementTP := tree.newTree 
-        expsAndLitsTP := tree.newTree 
+        replacementTP := tree.newTree
+        expsAndLitsTP := tree.newTree
 
         var TXLreplacementT := ident.install ("TXL_replacement_", kindT.id)
         var TXLexpsAndLitsT := ident.install ("TXL_expsAndLits_", kindT.id)
@@ -791,14 +792,14 @@ body module ruleCompiler
         tree.setKind (replacementTP, kindT.choose)
         tree.setName (replacementTP, TXLreplacementT)
         tree.setRawName (replacementTP, TXLreplacementT)
-        var newKid := tree.newKid 
+        var newKid := tree.newKid
         tree.setKidTree (newKid, expsAndLitsTP)
         tree.setKids (replacementTP, newKid)
 
         tree.setKind (expsAndLitsTP, kindT.choose)
         tree.setName (expsAndLitsTP, TXLexpsAndLitsT)
         tree.setRawName (expsAndLitsTP, TXLexpsAndLitsT)
-        newKid := tree.newKid 
+        newKid := tree.newKid
         tree.setKids (expsAndLitsTP, newKid)
 
         % make the appropriate default value -
@@ -820,11 +821,11 @@ body module ruleCompiler
             % make a TXL replacement tree
             var indExpsAndLitsTP, expOrLitTP, emptyExpsAndLitsTP : treePT
 
-            newKid := tree.newKid 
+            newKid := tree.newKid
             tree.setKidTree (newKid, emptyTP)
             emptyExpsAndLitsTP := tree.newTreeInit (kindT.choose, TXLexpsAndLitsT, TXLexpsAndLitsT, 1, newKid)
 
-            var expOrLitKidKP := tree.newKid 
+            var expOrLitKidKP := tree.newKid
             % kid tree to be filled in below
             expOrLitTP := tree.newTreeInit (kindT.choose, TXLexpOrLitT, TXLexpOrLitT, 1, expOrLitKidKP)
 
@@ -834,14 +835,14 @@ body module ruleCompiler
             indExpsAndLitsTP := tree.newTreeInit (kindT.order, TXLindExpsAndLitsT, TXLindExpsAndLitsT, 2, newKids)
 
             % it only remains to fill in  tree.kids (expOrLitKidKP)
-            % with the literal or id expression for the default 
-            
+            % with the literal or id expression for the default
+
             if typeKind (targetT) >= firstLeafKind and typeKind (targetT) <= lastLeafKind then
 
-                var tokenTP := tree.newTree 
-                % real kind and value (.name) filled in below, depending on kind 
+                var tokenTP := tree.newTree
+                % real kind and value (.name) filled in below, depending on kind
 
-                newKid := tree.newKid 
+                newKid := tree.newKid
                 tree.setKidTree (newKid, tokenTP)
 
                 var literalTP := tree.newTreeInit (kindT.choose, TXLliteralT, TXLliteralT, 1, newKid)
@@ -897,20 +898,20 @@ body module ruleCompiler
             partIndex : partsBaseT,
             localVars : localsListT)
 
-        % create a new anonymous local construct as a parse of [empty], 
+        % create a new anonymous local construct as a parse of [empty],
         % and replace the original anonymous variable in the real construct
         % with the new anonymous local
-        
+
         const partName := string@(ident.idents (tree.trees (constructOrExportTP).name))
         assert partName = "TXL_constructPart_" or partName = "TXL_exportPart_"
-        
+
         const nameT := txltree.construct_varNameT (constructOrExportTP)
 
         if partName = "TXL_constructPart_" then
-            context := "construct '" + string@(ident.idents (nameT)) + "' of rule/function '" + 
+            context := "construct '" + string@(ident.idents (nameT)) + "' of rule/function '" +
                 string@(ident.idents (ruleNameT)) + "'"
         else
-            context := "export '" + string@(ident.idents (nameT)) + "' of rule/function '" + 
+            context := "export '" + string@(ident.idents (nameT)) + "' of rule/function '" +
                 string@(ident.idents (ruleNameT)) + "'"
         end if
 
@@ -922,7 +923,7 @@ body module ruleCompiler
             const localIndex := rule.lookupLocalVar (context, localVars, nameT)
 
             targetT := txltree.import_export_targetT (constructOrExportTP)
-            
+
             if targetT = NOT_FOUND then
                 if localIndex not= 0 then
                     targetT := rule.ruleLocals (localVars.localBase + localIndex).typename
@@ -936,8 +937,8 @@ body module ruleCompiler
                 end if
             end if
         end if
-        
-        % create the actual anonymous construct of that type 
+
+        % create the actual anonymous construct of that type
         makeAnonymousConstruct (targetT, partIndex, localVars)
 
         % make a reference for the new local and replace the anonymous
@@ -947,7 +948,7 @@ body module ruleCompiler
         % replace the anonymous in the real construct with the new local
         var anonymousExpressionTP : treePT
         anonymousExpressionTP := txltree.construct_anonymousExpressionTP (constructOrExportTP)
-        
+
         assert tree.trees (tree.kid1TP (anonymousExpressionTP)).name = anonymous_T
         tree.setKidTree (tree.trees (anonymousExpressionTP).kidsKP, anonTP)
 
@@ -963,7 +964,7 @@ body module ruleCompiler
         const nameT := txltree.deconstruct_varNameT (deconstructTP)
         rule.setPartName (partIndex, nameT)
 
-        context := "deconstruct '" + string@(ident.idents (nameT)) + "' of rule/function '" + 
+        context := "deconstruct '" + string@(ident.idents (nameT)) + "' of rule/function '" +
             string@(ident.idents (ruleNameT)) + "'"
 
         % lookup name in varsSoFar - it must be there if we're deconstructing it!
@@ -978,37 +979,60 @@ body module ruleCompiler
         rule.setPartNameRef (partIndex, localIndex)
         rule.setPartStarred (partIndex, txltree.deconstruct_isStarred (deconstructTP))
 
-        var targetT := rule.ruleLocals (localVars.localBase + localIndex).typename 
+        var targetT := rule.ruleLocals (localVars.localBase + localIndex).typename
         if txltree.deconstruct_isTyped (deconstructTP) then
             % search is explicitly typed
             targetT := txltree.deconstruct_targetT (deconstructTP)
-            
+
             % Warn if we can't get a match
-            if targetT not= rule.ruleLocals (localVars.localBase + localIndex).typename 
-                    and rule.ruleLocals (localVars.localBase + localIndex).typename not= any_T 
+            if targetT not= rule.ruleLocals (localVars.localBase + localIndex).typename
+                    and rule.ruleLocals (localVars.localBase + localIndex).typename not= any_T
                     and not rule.ruleParts (partIndex).starred then
                 error (context, "Typed deconstruct can never match", WARNING, 323)
             end if
         end if
         rule.setPartTarget (partIndex, targetT)
-        
-        % process skipping
-        const optSkippingTP := txltree.deconstruct_optSkippingTP (deconstructTP)
 
-        if tree.plural_emptyP (optSkippingTP) then
-            rule.setPartSkipName (partIndex, NOT_FOUND)
-        else
+        % process skipping
+        var optSkippingTP := txltree.deconstruct_optSkippingTP (deconstructTP)
+
+        % Now up to three of them allowed
+        rule.setPartSkipName (partIndex, NOT_FOUND)
+        rule.setPartSkipName (partIndex, NOT_FOUND)
+        rule.setPartSkipName (partIndex, NOT_FOUND)
+
+        if not tree.plural_emptyP (optSkippingTP) then
             rule.setPartSkipName (partIndex, txltree.optSkipping_nameT (optSkippingTP))
             % Check that the skipped production has been defined
             var symbolIndex := symbol.findSymbol (rule.ruleParts (partIndex).skipName)
-            % Check for optimizable case
-            if rule.ruleParts (partIndex).skipName = targetT 
-                    and tree_ops.isListOrRepeatType (rule.ruleLocals (localVars.localBase + localIndex).typename)
-                    and targetT = tree_ops.listOrRepeatBaseType (rule.ruleLocals (localVars.localBase + localIndex).typename) then
-                % skipping [X] deconstruct * [X] V [repeat/list X]
-                rule.setPartSkipRepeat (partIndex, true)
+
+            % Is there a second one?
+            optSkippingTP := txltree.optSkippingNextTP (optSkippingTP)
+
+            if not tree.plural_emptyP (optSkippingTP) then
+                rule.setPartSkipName (partIndex, txltree.optSkipping_nameT (optSkippingTP))
+                % Check that the skipped production has been defined
+                symbolIndex := symbol.findSymbol (rule.ruleParts (partIndex).skipName)
+
+                % How about a third one?
+                optSkippingTP := txltree.optSkippingNextTP (optSkippingTP)
+
+                if not tree.plural_emptyP (optSkippingTP) then
+                    rule.setPartSkipName (partIndex, txltree.optSkipping_nameT (optSkippingTP))
+                    % Check that the skipped production has been defined
+                    symbolIndex := symbol.findSymbol (rule.ruleParts (partIndex).skipName)
+                end if
+
             else
-                rule.setPartSkipRepeat (partIndex, false)
+                % Only one - check for optimizable case
+                if rule.ruleParts (partIndex).skipName = targetT
+                        and tree_ops.isListOrRepeatType (rule.ruleLocals (localVars.localBase + localIndex).typename)
+                        and targetT = tree_ops.listOrRepeatBaseType (rule.ruleLocals (localVars.localBase + localIndex).typename) then
+                    % skipping [X] deconstruct * [X] V [repeat/list X]
+                    rule.setPartSkipRepeat (partIndex, true)
+                else
+                    rule.setPartSkipRepeat (partIndex, false)
+                end if
             end if
         end if
 
@@ -1022,9 +1046,9 @@ body module ruleCompiler
             rule.setLocalPartOf (localVars.localBase + newlocal, rule.ruleParts (partIndex).nameRef)
             rule.setLocalRefs (localVars.localBase + newlocal, 0)
         end for
-        
+
         rule.setPartNegated (partIndex, txltree.deconstruct_negated (deconstructTP))
-        
+
         if rule.ruleParts (partIndex).negated then
             % all the bound variables are really anonymous, since they don't exist after the deconstruct
             for newlocal : oldVarCount + 1 .. localVars.nlocals
@@ -1042,7 +1066,7 @@ body module ruleCompiler
                 rule.setLocalRefs (localVars.localBase + localIndex, 0)
             end if
         end if
-        
+
     end processDeconstruct
 
 
@@ -1056,22 +1080,22 @@ body module ruleCompiler
         else
             rule.setPartKind (partIndex, partKind.cond)
         end if
-        
+
         const nameT := txltree.expression_baseT (expressionTP)
         rule.setPartName (partIndex, nameT)
 
-        context := "where condition '" + string@(ident.idents (nameT)) + "' of rule/function '" + 
+        context := "where condition '" + string@(ident.idents (nameT)) + "' of rule/function '" +
             string@(ident.idents (ruleNameT)) + "'"
 
         % lookup name in varsSoFar - It must be there if we have a condition on it!
         const localIndex := rule.findLocalVar (context, localVars, nameT)
 
-        % condition (where) counts as a reference 
+        % condition (where) counts as a reference
         rule.incLocalRefs (localVars.localBase + localIndex, 1)
 
         rule.setPartNameRef (partIndex, localIndex)
 
-        const targetT := rule.ruleLocals (localVars.localBase + localIndex).typename 
+        const targetT := rule.ruleLocals (localVars.localBase + localIndex).typename
         rule.setPartTarget (partIndex, targetT)
 
         % OK, now we cheat like hell.  What we are going to do is to embed
@@ -1108,7 +1132,7 @@ body module ruleCompiler
             processRuleCall (targetT, tree.plural_firstTP (ruleCallsTP), localVars, parsedCallTP, true)
             tree.setKidTree (lastKidKP, parsedCallTP)
             ruleCallsTP := tree.plural_restTP (ruleCallsTP)
-            lastKidKP += 1 
+            lastKidKP += 1
         end for
         assert tree.kids (lastKidKP) = nilTree
 
@@ -1125,13 +1149,13 @@ body module ruleCompiler
             partIndex : partsBaseT,
             localVars : localsListT)
 
-        % create a new anonymous local construct as a parse of [empty], 
+        % create a new anonymous local construct as a parse of [empty],
         % and replace the original anonymous variable in the condition
         % with the new anonymous local
-        
+
         const partName := string@(ident.idents (tree.trees (conditionTP).name))
         assert partName = "TXL_conditionPart_"
-        
+
         % create an anonymous construct of type [empty]
         makeAnonymousConstruct (id_T, partIndex, localVars)
 
@@ -1142,7 +1166,7 @@ body module ruleCompiler
         % replace the anonymous in the real construct with the new local
         var anonymousExpressionTP : treePT
         anonymousExpressionTP := txltree.condition_expressionTP (conditionTP)
-        
+
         assert tree.trees (tree.kid1TP (anonymousExpressionTP)).name = anonymous_T
         tree.setKidTree (tree.trees (anonymousExpressionTP).kidsKP, anonTP)
 
@@ -1155,11 +1179,11 @@ body module ruleCompiler
             localVars : localsListT)
 
         const nameT := txltree.construct_varNameT (importTP)
-        
+
         rule.setPartKind (partIndex, partKind.import_)
         rule.setPartName (partIndex, nameT)
 
-        context := "import '" + string@(ident.idents (nameT)) + "' of rule/function '" + 
+        context := "import '" + string@(ident.idents (nameT)) + "' of rule/function '" +
             string@(ident.idents (ruleNameT)) + "'"
 
         % lookup name in VarsSo far.  If it's there, then it's an error
@@ -1170,7 +1194,7 @@ body module ruleCompiler
 
         % find the target type of the import
         var targetT := txltree.import_export_targetT (importTP)
-        
+
         if targetT = NOT_FOUND then
             if localIndex not= 0 then
                 targetT := rule.ruleLocals (localVars.localBase + localIndex).typename
@@ -1183,7 +1207,7 @@ body module ruleCompiler
                 targetT := rule.ruleLocals (localVars.localBase + localIndex).typename
             end if
         end if
-        
+
         rule.setPartTarget (partIndex, targetT)
 
         % process pattern, if any
@@ -1226,11 +1250,11 @@ body module ruleCompiler
             localVars : localsListT)
 
         const nameT := txltree.construct_varNameT (exportTP)
-        
+
         rule.setPartKind (partIndex, partKind.export_)
         rule.setPartName (partIndex, nameT)
 
-        context := "export '" + string@(ident.idents (nameT)) + "' of rule/function '" + 
+        context := "export '" + string@(ident.idents (nameT)) + "' of rule/function '" +
             string@(ident.idents (ruleNameT)) + "'"
 
         % lookup name in VarsSo far.
@@ -1238,7 +1262,7 @@ body module ruleCompiler
 
         % find the target type of the export
         var targetT := txltree.import_export_targetT (exportTP)
-        
+
         if targetT = NOT_FOUND then
             if localIndex not= 0 then
                 targetT := rule.ruleLocals (localVars.localBase + localIndex).typename
@@ -1251,7 +1275,7 @@ body module ruleCompiler
                 targetT := rule.ruleLocals (localVars.localBase + localIndex).typename
             end if
         end if
-        
+
         rule.setPartTarget (partIndex, targetT)
 
         % process replacement, if any
@@ -1271,7 +1295,7 @@ body module ruleCompiler
                 localIndex := rule.enterLocalVar (context, localVars, nameT, targetT)
             end if
         end if
-        
+
         % even if it wasn't global before, it is now!
         rule.setLocalGlobal (localVars.localBase + localIndex, true)
 
@@ -1280,7 +1304,7 @@ body module ruleCompiler
         % we start each export with one reference to account for its probable use elsewhere.
         % if it was already bound, then we just increment its count
         rule.incLocalRefs (localVars.localBase + localIndex, 1)
-        
+
     end processExport
 
 
@@ -1290,14 +1314,14 @@ body module ruleCompiler
         % The default is a pattern that matches anything:
         %
         %       match [any]
-        %           _ [any] 
+        %           _ [any]
         %
         % We implement this by constructing the TXL bootstrap parse of that pattern.
 
-        % TXL_pattern order -> TXL_firstsAndLits choose -> TXL_indFirstsAndLits order -> 
-        %       TXL_firstOrLit choose -> 
-        %           (TXL_firstTime order -> 
-        %               (id (_), empty ([), TXL_description choose -> id (any), empty (])), 
+        % TXL_pattern order -> TXL_firstsAndLits choose -> TXL_indFirstsAndLits order ->
+        %       TXL_firstOrLit choose ->
+        %           (TXL_firstTime order ->
+        %               (id (_), empty ([), TXL_description choose -> id (any), empty (])),
         %                   TXL_firstsAndLits choose -> emptyTP)
 
         % The target type [any]
@@ -1307,7 +1331,7 @@ body module ruleCompiler
         tree.makeOneKid (TXLdescription_anyTP, anyTP)
 
         const TXLbracketedDescriptionT := ident.install ("TXL_bracketedDescription_", kindT.id)
-        const TXLbracketedDescription_anyTP := 
+        const TXLbracketedDescription_anyTP :=
             tree.newTreeInit (kindT.order, TXLbracketedDescriptionT, TXLbracketedDescriptionT, 0, nilKid)
         tree.makeThreeKids (TXLbracketedDescription_anyTP, emptyTP, TXLdescription_anyTP, emptyTP)
 
@@ -1317,34 +1341,34 @@ body module ruleCompiler
         const TXLindFirstsAndLitsT := ident.install ("TXL_indFirstsAndLits_", kindT.id)
         const TXLfirstOrLitT := ident.install ("TXL_firstOrLit_", kindT.id)
         const TXLfirstTimeT := ident.install ("TXL_firstTime_", kindT.id)
-        
+
         const TXLfirstTime_anyTP := tree.newTreeInit (kindT.order, TXLfirstTimeT, TXLfirstTimeT, 0, nilKid)
         const underscoreTP := tree.newTreeInit (kindT.id, underscore_T, underscore_T, 0, nilKid)
-        tree.makeFourKids (TXLfirstTime_anyTP, underscoreTP, emptyTP, TXLdescription_anyTP, emptyTP) 
-        
+        tree.makeFourKids (TXLfirstTime_anyTP, underscoreTP, emptyTP, TXLdescription_anyTP, emptyTP)
+
         const TXLfirstOrLit_anyTP := tree.newTreeInit (kindT.choose, TXLfirstOrLitT, TXLfirstOrLitT, 0, nilKid)
         tree.makeOneKid (TXLfirstOrLit_anyTP, TXLfirstTime_anyTP)
-        
-        const TXLfirstsAndLits_emptyTP := 
+
+        const TXLfirstsAndLits_emptyTP :=
             tree.newTreeInit (kindT.choose, TXLfirstsAndLitsT, TXLfirstsAndLitsT, 0, nilKid)
         tree.makeOneKid (TXLfirstsAndLits_emptyTP, emptyTP)
-        
-        const TXLindFirstsAndLits_anyTP := 
+
+        const TXLindFirstsAndLits_anyTP :=
             tree.newTreeInit (kindT.order, TXLindFirstsAndLitsT, TXLindFirstsAndLitsT, 0, nilKid)
         tree.makeTwoKids (TXLindFirstsAndLits_anyTP, TXLfirstOrLit_anyTP, TXLfirstsAndLits_emptyTP)
-        
+
         const TXLfirstsAndLits_anyTP := tree.newTreeInit (kindT.choose, TXLfirstsAndLitsT, TXLfirstsAndLitsT, 0, nilKid)
         tree.makeOneKid (TXLfirstsAndLits_anyTP, TXLindFirstsAndLits_anyTP)
-        
+
         const TXLpattern_anyTP := tree.newTreeInit (kindT.order, TXLpatternT, TXLpatternT, 0, nilKid)
         tree.makeOneKid (TXLpattern_anyTP, TXLfirstsAndLits_anyTP)
 
         % The match part match [any] _ [any]
 
-        % TXL_replaceOrMatchPart order -> 
-        %       (TXL_optSkippingBracketedDescription choose -> empty, 
-        %           TXL_replaceOrMatch choose -> id (match), 
-        %               TXL_optStarDollarHash choose -> empty, 
+        % TXL_replaceOrMatchPart order ->
+        %       (TXL_optSkippingBracketedDescription choose -> empty,
+        %           TXL_replaceOrMatch choose -> id (match),
+        %               TXL_optStarDollarHash choose -> empty,
         %                   TXL_bracketedDescription_anyTP, TXL_pattern_anyTP)
 
         const TXLreplaceOrMatchPartT := ident.install ("TXL_replaceOrMatchPart_", kindT.id)
@@ -1352,22 +1376,22 @@ body module ruleCompiler
         const TXLreplaceOrMatchT := ident.install ("TXL_replaceOrMatch_", kindT.id)
         const TXLoptStarDollarHashT := ident.install ("TXL_optStarDollarHash_", kindT.id)
 
-        const TXLoptSkippingBracketedDescription_emptyTP := tree.newTreeInit (kindT.choose, 
+        const TXLoptSkippingBracketedDescription_emptyTP := tree.newTreeInit (kindT.choose,
             TXLoptSkippingBracketedDescriptionT, TXLoptSkippingBracketedDescriptionT, 0, nilKid)
         tree.makeOneKid (TXLoptSkippingBracketedDescription_emptyTP, emptyTP)
 
-        const TXLreplaceOrMatch_matchTP := 
+        const TXLreplaceOrMatch_matchTP :=
             tree.newTreeInit (kindT.choose, TXLreplaceOrMatchT, TXLreplaceOrMatchT, 0, nilKid)
         const matchTP := tree.newTreeInit (kindT.id, match_T, match_T, 0, nilKid)
         tree.makeOneKid (TXLreplaceOrMatch_matchTP, matchTP)
 
-        const TXLoptStarDollarHash_emptyTP := 
+        const TXLoptStarDollarHash_emptyTP :=
             tree.newTreeInit (kindT.choose, TXLoptStarDollarHashT, TXLoptStarDollarHashT, 0, nilKid)
         tree.makeOneKid (TXLoptStarDollarHash_emptyTP, emptyTP)
 
-        const TXLreplaceOrMatchPart_anyTP := 
+        const TXLreplaceOrMatchPart_anyTP :=
             tree.newTreeInit (kindT.order, TXLreplaceOrMatchPartT, TXLreplaceOrMatchPartT, 0, nilKid)
-        tree.makeFiveKids (TXLreplaceOrMatchPart_anyTP, TXLoptSkippingBracketedDescription_emptyTP, 
+        tree.makeFiveKids (TXLreplaceOrMatchPart_anyTP, TXLoptSkippingBracketedDescription_emptyTP,
             TXLreplaceOrMatch_matchTP, TXLoptStarDollarHash_emptyTP, TXLbracketedDescription_anyTP, TXLpattern_anyTP)
 
         % Link the constructed match part into the rule's parse tree
@@ -1386,8 +1410,8 @@ body module ruleCompiler
         % create a new anonymous local construct as a parse of [empty],
         % replace the original anonymous in the replacement
         % with the new anonymous local
-        
-        % create the actual anonymous construct of the target type 
+
+        % create the actual anonymous construct of the target type
         makeAnonymousConstruct (targetT, partIndex, localVars)
 
         % make a reference for the new local and replace the anonymous
@@ -1397,7 +1421,7 @@ body module ruleCompiler
         % replace the anonymous in the real construct with the new local
         var anonymousExpressionTP : treePT
         anonymousExpressionTP := txltree.optByPart_anonymousExpressionTP (optByPartTP)
-        
+
         assert tree.trees (tree.kid1TP (anonymousExpressionTP)).name = anonymous_T
         tree.setKidTree (tree.trees (anonymousExpressionTP).kidsKP, anonTP)
 
@@ -1437,7 +1461,7 @@ body module ruleCompiler
 
                 % Check that the declared target production has been defined
                 var symbolIndex := symbol.findSymbol (declaredFormalType)
-    
+
                 if formal.typename not= declaredFormalType then
                     error (context, "Type of formal parameter '" + string@(ident.idents (formal.name)) +
                         "' does not agree with previous call", FATAL, 332)
@@ -1513,22 +1537,22 @@ body module ruleCompiler
         if replacementTP = nilTree then
             result nilTree
         end if
-        
+
         var treeTP := replacementTP
 
         const maxSearchDepth := 100
-        var searchStack : array 1 .. maxSearchDepth of 
-            record 
-                kidsKP, endKP : kidPT 
+        var searchStack : array 1 .. maxSearchDepth of
+            record
+                kidsKP, endKP : kidPT
             end record
         var searchTop := 0
         const searchBase := searchTop
-        
+
         loop
             if tree.trees (treeTP).kind = kindT.expression and tree.trees (treeTP).name = name then
                 lastrefTP := treeTP
             end if
-        
+
             if tree.trees (treeTP).kind >= firstLeafKind then
                 % A terminal -
                 % Pop any completed sequences ...
@@ -1546,7 +1570,7 @@ body module ruleCompiler
             elsif tree.trees (treeTP).kind = kindT.choose then
                 % One child - just go down to it (no need to come back)
                 treeTP := tree.kids (tree.trees (treeTP).kidsKP)
-    
+
             else
                 % Push a new sequence of subtrees to check
                 assert tree.trees (treeTP).kind = kindT.order or tree.trees (treeTP).kind = kindT.repeat or tree.trees (treeTP).kind = kindT.list
@@ -1554,7 +1578,7 @@ body module ruleCompiler
                 if searchTop >= maxSearchDepth then
                     result nilTree      % can't find out
                 end if
-                    
+
                 searchTop += 1
                 searchStack (searchTop).kidsKP := tree.trees (treeTP).kidsKP
                 searchStack (searchTop).endKP := searchStack (searchTop).kidsKP + tree.trees (treeTP).count - 1
@@ -1563,8 +1587,8 @@ body module ruleCompiler
         end loop
 
     end findLastRef
-    
-    
+
+
     procedure enterRuleBody (ruleIndex : int, ruleTP : treePT)
 
         const rulecontext := context
@@ -1572,7 +1596,7 @@ body module ruleCompiler
 
         bind r to rule.rules (ruleIndex)
 
-        % TXL 11.1, optional match/replace part 
+        % TXL 11.1, optional match/replace part
         if tree.plural_emptyP (txltree.rule_optReplaceOrMatchPartTP (ruleTP)) then
             % Add default target [any]
             rule.setTarget (ruleIndex, any_T)
@@ -1629,7 +1653,7 @@ body module ruleCompiler
                     prePatternCount += 1        % checked above (see 'sic')
                     % now process the real construct that uses it
                 end if
-                
+
                 processConstruct (txltree.rule_nameT (ruleTP), partTP, r.prePattern.partsBase + prePatternCount, r.localVars)
 
                 if r.kind not= ruleKind.functionRule then
@@ -1639,7 +1663,7 @@ body module ruleCompiler
                 end if
 
             elsif partName = "TXL_importPart_" then
-                
+
                 processImport (txltree.rule_nameT (ruleTP), partTP, r.prePattern.partsBase + prePatternCount, r.localVars)
 
             elsif partName = "TXL_exportPart_" then
@@ -1651,7 +1675,7 @@ body module ruleCompiler
                 end if
 
                 processExport (txltree.rule_nameT (ruleTP), partTP, r.prePattern.partsBase + prePatternCount, r.localVars)
-                    
+
             else
                 assert partName = "TXL_deconstructPart_"
                 processDeconstruct (txltree.rule_nameT (ruleTP), partTP, r.prePattern.partsBase + prePatternCount, r.localVars)
@@ -1666,28 +1690,51 @@ body module ruleCompiler
         % already checked above
         rule.incPartCount (prePatternCount)
 
-        % TXL 11.1, optional match/replace part 
+        % TXL 11.1, optional match/replace part
         if tree.plural_emptyP (txltree.rule_optReplaceOrMatchPartTP (ruleTP)) then
             % Add default match [any]
             makeDefaultMatchPart (ruleTP)
         end if
 
         % process skipping
-        const optSkippingTP := txltree.rule_optSkippingTP (ruleTP)
+        var optSkippingTP := txltree.rule_optSkippingTP (ruleTP)
 
-        if tree.plural_emptyP (optSkippingTP) then
-            rule.setSkipName (ruleIndex, NOT_FOUND)
-        else
+        % Now up to three of them allowed
+        rule.setSkipName (ruleIndex, NOT_FOUND)
+        rule.setSkipName (ruleIndex, NOT_FOUND)
+        rule.setSkipName (ruleIndex, NOT_FOUND)
+
+        if not tree.plural_emptyP (optSkippingTP) then
             rule.setSkipName (ruleIndex, txltree.optSkipping_nameT (optSkippingTP))
             % Check that the skipped production has been defined
             symbolIndex := symbol.findSymbol (r.skipName)
-            % Check for optimizable case
-            if r.skipName = r.target then
-                % skipping [X] match/replace * [X]
-                % potentially optimizable if all scopes are [repeat/list X]
-                rule.setSkipRepeat (ruleIndex, true)
+
+            % Is there a second one?
+            optSkippingTP := txltree.optSkippingNextTP (optSkippingTP)
+
+            if not tree.plural_emptyP (optSkippingTP) then
+                rule.setSkipName (ruleIndex, txltree.optSkipping_nameT (optSkippingTP))
+                % Check that the skipped production has been defined
+                symbolIndex := symbol.findSymbol (r.skipName2)
+
+                % How about a third one?
+                optSkippingTP := txltree.optSkippingNextTP (optSkippingTP)
+
+                if not tree.plural_emptyP (optSkippingTP) then
+                    rule.setSkipName (ruleIndex, txltree.optSkipping_nameT (optSkippingTP))
+                    % Check that the skipped production has been defined
+                    symbolIndex := symbol.findSymbol (r.skipName3)
+                end if
+
             else
-                rule.setSkipRepeat (ruleIndex, false)
+                % Check for optimizable case
+                if r.skipName = r.target then
+                    % skipping [X] match/replace * [X]
+                    % potentially optimizable if all scopes are [repeat/list X]
+                    rule.setSkipRepeat (ruleIndex, true)
+                else
+                    rule.setSkipRepeat (ruleIndex, false)
+                end if
             end if
         end if
 
@@ -1729,14 +1776,14 @@ body module ruleCompiler
             if partName = "TXL_conditionPart_" then
                 % If we've already done a post construct, it may be discarded
                 % when this condition fails.
-                % We correct for this possibility by marking each main pattern variable 
+                % We correct for this possibility by marking each main pattern variable
                 % (or descendant thereof) that has been changed in a post construct
-                % as having an extra reference.  
-                % This accounts for the possibility that its original value will be needed 
+                % as having an extra reference.
+                % This accounts for the possibility that its original value will be needed
                 % in the calling scope if/when this post condition fails.
                 if hasPostConstruct then
                     for i : r.localVars.nformals + 1 .. r.localVars.nlocals
-                        if rule.ruleLocals (r.localVars.localBase + i).changed 
+                        if rule.ruleLocals (r.localVars.localBase + i).changed
                                 and rule.ruleLocals (r.localVars.localBase + i).refs = 1 then
                             rule.incLocalRefs (r.localVars.localBase + i, 1)
                         end if
@@ -1765,7 +1812,7 @@ body module ruleCompiler
                 processConstruct (txltree.rule_nameT (ruleTP), partTP, r.postPattern.partsBase + postPatternCount, r.localVars)
 
             elsif partName = "TXL_importPart_" then
-                
+
                 processImport (txltree.rule_nameT (ruleTP), partTP, r.postPattern.partsBase + postPatternCount, r.localVars)
 
             elsif partName = "TXL_exportPart_" then
@@ -1783,14 +1830,14 @@ body module ruleCompiler
 
                 % If we've already done a post construct, it may be discarded
                 % when this condition fails.
-                % We correct for this possibility by marking each main pattern variable 
+                % We correct for this possibility by marking each main pattern variable
                 % (or descendant thereof) that has been changed in a post construct
-                % as having an extra reference.  
-                % This accounts for the possibility that its original value will be needed 
+                % as having an extra reference.
+                % This accounts for the possibility that its original value will be needed
                 % in the calling scope if/when this post condition fails.
                 if hasPostConstruct then
                     for i : r.localVars.nformals + 1 .. r.localVars.nlocals
-                        if rule.ruleLocals (r.localVars.localBase + i).changed 
+                        if rule.ruleLocals (r.localVars.localBase + i).changed
                                 and rule.ruleLocals (r.localVars.localBase + i).refs = 1 then
                             rule.incLocalRefs (r.localVars.localBase + i, 1)
                         end if
@@ -1815,9 +1862,9 @@ body module ruleCompiler
             if tree.plural_emptyP (optByPartTP) then
                 error (context, "'replace' rule/function must have a replacement", FATAL, 338)
             else
-                context := "replacement of " + ruleorfunction + " '" + 
+                context := "replacement of " + ruleorfunction + " '" +
                     string@(ident.idents (txltree.rule_nameT (ruleTP))) + "'"
-                
+
                 if txltree.optByPart_isAnonymous (optByPartTP) then
                     % add a construct for the empty anonymous
                     hasPostConstruct := true
@@ -1845,15 +1892,15 @@ body module ruleCompiler
                 end for
 
                 %% var resultTP : treePT
-                processPatternOrReplacement (txltree.rule_targetT (ruleTP), 
+                processPatternOrReplacement (txltree.rule_targetT (ruleTP),
                     txltree.optByPart_replacementTP (optByPartTP), resultTP, r.localVars)
                 rule.setReplacement (ruleIndex, resultTP)
-        
+
                 % mark the last reference of each main- or post-pattern variable as optimizable
                 % pre-pattern variables are not optimizable!
                 for i : r.localVars.nformals + 1 .. r.localVars.nlocals
-                    if rule.ruleLocals (r.localVars.localBase + i).lastref not= nilTree 
-                            and tree.trees (rule.ruleLocals (r.localVars.localBase + i).lastref).kind = kindT.expression 
+                    if rule.ruleLocals (r.localVars.localBase + i).lastref not= nilTree
+                            and tree.trees (rule.ruleLocals (r.localVars.localBase + i).lastref).kind = kindT.expression
                             and rule.ruleLocals (r.localVars.localBase + i).basetypename not= key_T             % JRC 10.6.99
                             and rule.ruleLocals (r.localVars.localBase + i).basetypename not= token_T then      % JRC 10.6.99
                         % we must be careful that the variable was not *deconstructed* from
@@ -1863,14 +1910,14 @@ body module ruleCompiler
                             exit when rule.ruleLocals (r.localVars.localBase + reali).partof = 0
                             reali := rule.ruleLocals (r.localVars.localBase + reali).partof
                         end loop
-                        if reali > r.localVars.nprelocals 
+                        if reali > r.localVars.nprelocals
                                 % and that it is not a global variable or deconstructed from one!
                                 and (not rule.ruleLocals (r.localVars.localBase + i).global)
                                 and (not rule.ruleLocals (r.localVars.localBase + reali).global) then
                             tree.setKind (rule.ruleLocals (r.localVars.localBase + i).lastref, kindT.lastExpression)
                         end if
                     end if
-                end for 
+                end for
             end if
 
         else
@@ -1881,11 +1928,11 @@ body module ruleCompiler
             rule.setReplacement (ruleIndex, nilTree)
 
             % If the match rule has a post construct, it may change a pattern
-            % variable - but match rules are not permitted to change anything. 
-            % We correct for this possibility by marking each main pattern variable 
+            % variable - but match rules are not permitted to change anything.
+            % We correct for this possibility by marking each main pattern variable
             % (or descendant thereof) that has been changed in a post construct
-            % as having an extra reference.  
-            % This accounts for the possibility that its original value will be needed 
+            % as having an extra reference.
+            % This accounts for the possibility that its original value will be needed
             % in the calling scope if the condition calling this match rule succeeds.
             if hasPostConstruct then
                 for i : r.localVars.nformals + 1 .. r.localVars.nlocals
@@ -1895,36 +1942,36 @@ body module ruleCompiler
                 end for
             end if
         end if
-        
+
         % synchronize the reference counts of children of deconstructed variables
         for i : r.localVars.nformals + 1 .. r.localVars.nlocals
             const parentvar := rule.ruleLocals (r.localVars.localBase + i).partof
             if parentvar not= 0 then
                 rule.incLocalRefs (r.localVars.localBase + i, rule.ruleLocals (r.localVars.localBase + parentvar).refs - 1)
-                
+
                 % if the deconstructed parent is referenced in the replacement,
                 % we cannot safely optimize the last reference to the child
                 if rule.ruleLocals (r.localVars.localBase + parentvar).lastref not= nilTree then
-                    if rule.ruleLocals (r.localVars.localBase + i).lastref not= nilTree 
+                    if rule.ruleLocals (r.localVars.localBase + i).lastref not= nilTree
                             and tree.trees (rule.ruleLocals (r.localVars.localBase + i).lastref).kind = kindT.lastExpression then
                         tree.setKind (rule.ruleLocals (r.localVars.localBase + i).lastref, kindT.expression)
                     end if
                 end if
-                
+
                 % if the child is referenced in the replacement,
                 % we cannot safely optimize the last reference to the deconstructed parent
                 if rule.ruleLocals (r.localVars.localBase + i).lastref not= nilTree then
-                    if rule.ruleLocals (r.localVars.localBase + parentvar).lastref not= nilTree 
+                    if rule.ruleLocals (r.localVars.localBase + parentvar).lastref not= nilTree
                             and tree.trees (rule.ruleLocals (r.localVars.localBase + parentvar).lastref).kind = kindT.lastExpression then
                         tree.setKind (rule.ruleLocals (r.localVars.localBase + parentvar).lastref, kindT.expression)
                     end if
                 end if
             end if
         end for
-        
+
         % fix the reference counts of local variables of special types [key] and [token] - JRC 10.6.99
         for i : r.localVars.nformals + 1 .. r.localVars.nlocals
-            if rule.ruleLocals (r.localVars.localBase + i).basetypename = key_T 
+            if rule.ruleLocals (r.localVars.localBase + i).basetypename = key_T
                 or rule.ruleLocals (r.localVars.localBase + i).basetypename = token_T then
                 % not optimizable!
                 rule.setLocalRefs (r.localVars.localBase + i, 9)
@@ -1939,12 +1986,12 @@ body module ruleCompiler
     procedure checkUserDefinedRuleName (name : tokenT)
         if index (string@(ident.idents (name)), "list_") = 1 or
                 index (string@(ident.idents (name)), "repeat_") = 1 or
-                index (string@(ident.idents (name)), "opt_") = 1 or 
-                index (string@(ident.idents (name)), "attr_") = 1 or 
+                index (string@(ident.idents (name)), "opt_") = 1 or
+                index (string@(ident.idents (name)), "attr_") = 1 or
                 index (string@(ident.idents (name)), "lit_") = 1 or
                 index (string@(ident.idents (name)), "push_") = 1 or
                 index (string@(ident.idents (name)), "pop_") = 1 or
-                index (string@(ident.idents (name)), "TXL_") = 1 then 
+                index (string@(ident.idents (name)), "TXL_") = 1 then
             error (context, "'list_', 'repeat_', 'opt_', 'attr_', 'lit_', 'push_', 'pop_' and 'TXL_' name prefixes are reserved for TXL internal use", FATAL, 340)
         end if
     end checkUserDefinedRuleName
@@ -1973,7 +2020,7 @@ body module ruleCompiler
         rule.setKind (ruleIndex, ruleKind.normalRule)
 
         if not r.called then
-            % TXL 11.1, optional match/replace part 
+            % TXL 11.1, optional match/replace part
             if tree.plural_emptyP (txltree.rule_optReplaceOrMatchPartTP (ruleTP)) then
                 rule.setIsCondition (ruleIndex, true)
             else
@@ -1996,8 +2043,8 @@ body module ruleCompiler
             end if
         end if
 
-        if txltree.rule_isDollared (ruleTP) and 
-                ((not r.isCondition) 
+        if txltree.rule_isDollared (ruleTP) and
+                ((not r.isCondition)
                    or r.postPattern.nparts not= 0) then % allow for visit-only match $ rules
             rule.setKind (ruleIndex, ruleKind.onepassRule)
         end if
@@ -2035,7 +2082,7 @@ body module ruleCompiler
         rule.setKind (ruleIndex, ruleKind.functionRule)
 
         if not r.called then
-            % TXL 11.1, optional match/replace part 
+            % TXL 11.1, optional match/replace part
             if tree.plural_emptyP (txltree.rule_optReplaceOrMatchPartTP (ruleTP)) then
                 rule.setIsCondition (ruleIndex, true)
             else
@@ -2069,22 +2116,22 @@ body module ruleCompiler
 
 
     procedure processUndefinedRules (var undefinedRules : boolean)
-    
-        % Check that all called rules are defined.  If there are any 
+
+        % Check that all called rules are defined.  If there are any
         % query rule calls [?R], create a copy of the rule table entry
         % for [R] for the query rule.
-    
+
         undefinedRules := false
-        
+
         % We use a loop rather than a for loop in case a match rule
         % with an undefined base rule adds the undefined rule to the
         % rule table (see below)
-        
+
         var r := nPredefinedRules + 1
-        
+
         loop
             exit when r > rule.nRules
-            
+
             if not rule.rules (r).defined then
                 % First check to see if it is a query rule
 
@@ -2101,29 +2148,29 @@ body module ruleCompiler
 
                     % ? on predefined rules is undefined
                     if realRuleIndex <= nPredefinedRules then
-                        error ("", "[?] is not defined on predefined function [" + 
+                        error ("", "[?] is not defined on predefined function [" +
                             string@(ident.idents (rule.rules (realRuleIndex).name)) + "]", DEFERRED, 352)
                         undefinedRules := true
                     end if
-                    
+
                     rule.cloneRule (r, realRuleIndex)
                     rule.setReplacement (r, nilTree)
                     rule.setIsCondition (r, true)
 
                     if rule.rules (r).defined then
-                    
+
                         if rule.rules (r).kind = ruleKind.normalRule or rule.rules (r).kind = ruleKind.onepassRule then
                             % optimize the new match rule by treating it as a deep function
                             rule.setStarred (r, true)
                             rule.setKind (r, ruleKind.functionRule)
                         end if
-                        
+
                         % If the new match rule has a post construct, it may change a pattern
-                        % variable - but match rules are not permitted to change anything. 
-                        % We correct for this possibility by marking each main pattern variable 
+                        % variable - but match rules are not permitted to change anything.
+                        % We correct for this possibility by marking each main pattern variable
                         % (or descendant thereof) that has been changed in a post construct
-                        % as having an extra reference.  
-                        % This accounts for the possibility that its original value will be needed 
+                        % as having an extra reference.
+                        % This accounts for the possibility that its original value will be needed
                         % in the calling scope if the condition calling this match rule succeeds.
                         var hasPostConstruct := false
                         for p : 1 .. rule.rules (r).postPattern.nparts
@@ -2131,10 +2178,10 @@ body module ruleCompiler
                                 hasPostConstruct := true
                             end if
                         end for
-        
+
                         if hasPostConstruct then
                             for i : rule.rules (r).localVars.nformals + 1 .. rule.rules (r).localVars.nlocals
-                                if rule.ruleLocals (rule.rules (r).localVars.localBase + i).changed 
+                                if rule.ruleLocals (rule.rules (r).localVars.localBase + i).changed
                                         and rule.ruleLocals (rule.rules (r).localVars.localBase + i).refs = 1 then
                                     rule.incLocalRefs (rule.rules (r).localVars.localBase + i, 1)
                                 end if
@@ -2148,24 +2195,24 @@ body module ruleCompiler
                     undefinedRules := true
                 end if
             end if
-            
+
             r += 1
         end loop
 
     end processUndefinedRules
-    
-    
+
+
     procedure processGlobalVariables (var globalErrors : boolean)
-    
+
         % Find all the global variables imported or exported from rules
         % and enter them in the global scope.  Check global variable type consistency.
-    
+
         globalErrors := false
 
         % set up predefined globals
         const repeat_stringlit_T := ident.install ("repeat_0_stringlit", kindT.id)
         var pdindex : int
-                
+
         % standard new predefined globals
         rule.setLocalBase (globalR, rule.ruleLocalCount)
         bind globalVars to rule.rules (globalR).localVars
@@ -2180,31 +2227,31 @@ body module ruleCompiler
         assert pdindex = TXLexitcodeG
 
         assert pdindex= numGlobalVars
-        
+
         assert rule.rules (globalR).localVars.nlocals = numGlobalVars
-        
+
         for ir : nPredefinedRules + 1 .. rule.nRules
             bind r to rule.rules (ir), globals to rule.rules (globalR)
-            
+
             for p : 1 .. r.prePattern.nparts
                 const partIndex := r.prePattern.partsBase + p
                 bind part to rule.ruleParts (partIndex)
 
                 if part.kind = partKind.import_ or part.kind = partKind.export_ then
-                        
+
                     const globalVarRef := rule.lookupLocalVar ("", globals.localVars, part.name)
-                    
+
                     if globalVarRef = 0 then
-                        const globalIndex := rule.enterLocalVar ("rule/function '" + string@(ident.idents (r.name)), globals.localVars, 
+                        const globalIndex := rule.enterLocalVar ("rule/function '" + string@(ident.idents (r.name)), globals.localVars,
                                 part.name, part.target)
                         rule.setPartGlobalRef (partIndex, globalIndex)
-                        
+
                     elsif rule.ruleParts (partIndex).target not= rule.ruleLocals (globals.localVars.localBase + globalVarRef).typename then
-                        error ("rule/function '" + string@(ident.idents (r.name)) + "'", 
+                        error ("rule/function '" + string@(ident.idents (r.name)) + "'",
                             "Type of imported/exported variable '" + string@(ident.idents (rule.ruleParts (partIndex).name))
                             + "' does not match global variable", DEFERRED, 354)
                         globalErrors := true
-                        
+
                     else
                         rule.setPartGlobalRef (partIndex, globalVarRef)
                     end if
@@ -2216,20 +2263,20 @@ body module ruleCompiler
                 bind part to rule.ruleParts (partIndex)
 
                 if part.kind = partKind.import_ or part.kind = partKind.export_ then
-                        
+
                     const globalVarRef := rule.lookupLocalVar ("", globals.localVars, part.name)
-                    
+
                     if globalVarRef = 0 then
-                        const globalIndex := rule.enterLocalVar ("rule/function '" + string@(ident.idents (r.name)), globals.localVars, 
+                        const globalIndex := rule.enterLocalVar ("rule/function '" + string@(ident.idents (r.name)), globals.localVars,
                                 part.name, part.target)
                         rule.setPartGlobalRef (partIndex, globalIndex)
 
                     elsif part.target not= rule.ruleLocals (globals.localVars.localBase + globalVarRef).typename then
-                        error ("rule/function '" + string@(ident.idents (r.name)) + "'", 
+                        error ("rule/function '" + string@(ident.idents (r.name)) + "'",
                             "Type of imported/exported variable '" + string@(ident.idents (part.name))
                             + "' does not match global variable", DEFERRED, 354)
                         globalErrors := true
-                        
+
                     else
                         rule.setPartGlobalRef (partIndex, globalVarRef)
                     end if
@@ -2239,11 +2286,11 @@ body module ruleCompiler
         end for
 
     end processGlobalVariables
-    
+
 
     var reachList : array 1 .. maxSymbols of treePT
     var reachLength := 0
-    
+
     function real_reachable (defineTP, targetTP : treePT, depth : int) : boolean
         % reachable (X,Y) = true if X is of type Y,
         %                 = true if X is of type choose, and reachable (one kid of X,Y)
@@ -2253,13 +2300,13 @@ body module ruleCompiler
             % give up, don't know, probably no
             result false
         end if
-        
+
         % Is this the one we're looking for?
-        if tree.trees (defineTP).name = tree.trees (targetTP).name 
-                    and tree.trees (defineTP).kind = tree.trees (targetTP).kind then 
+        if tree.trees (defineTP).name = tree.trees (targetTP).name
+                    and tree.trees (defineTP).kind = tree.trees (targetTP).kind then
             result true
         end if
-        
+
         % If not, is it worth looking deeper?
         if tree.trees (defineTP).kind >= firstLeafKind then
             result tree.trees (defineTP).kind = kindT.token and tree.trees (targetTP).kind >= firstLiteralKind
@@ -2269,7 +2316,7 @@ body module ruleCompiler
         if depth = 0 then
             reachLength := 0
         end if
-        
+
         for i : 1 .. reachLength
             if tree.trees (reachList (i)).name = tree.trees (defineTP).name
                     and tree.trees (reachList (i)).kind = tree.trees (defineTP).kind then
@@ -2277,19 +2324,19 @@ body module ruleCompiler
                 result false
             end if
         end for
-        
+
         assert reachLength < symbol.nSymbols
         reachLength += 1
         reachList (reachLength) := defineTP
-        
+
         % Now look deeper
         if tree.trees (defineTP).kind = kindT.generaterepeat
                 or tree.trees (defineTP).kind = kindT.generatelist then
             result tree.trees (targetTP).kind = kindT.empty
                     or real_reachable (tree.kid1TP (defineTP), targetTP, depth + 1)
-        elsif tree.trees (defineTP).kind = kindT.lookahead then 
+        elsif tree.trees (defineTP).kind = kindT.lookahead then
             result tree.trees (targetTP).kind = kindT.empty
-        elsif tree.trees (defineTP).kind = kindT.choose or tree.trees (defineTP).kind = kindT.leftchoose 
+        elsif tree.trees (defineTP).kind = kindT.choose or tree.trees (defineTP).kind = kindT.leftchoose
                 or tree.trees (defineTP).kind = kindT.order then
             for i : 1 .. tree.trees (defineTP).count
                 if real_reachable (tree.kidTP (i, defineTP), targetTP, depth + 1) then
@@ -2301,12 +2348,12 @@ body module ruleCompiler
             assert tree.trees (defineTP).count = 2
             result real_reachable (tree.kid2TP (defineTP), targetTP, depth + 1)
                 or real_reachable (tree.kid1TP (defineTP), targetTP, depth + 1)
-        else 
+        else
             result false
         end if
     end real_reachable
-    
-    
+
+
     const reachableCacheSize := 30
     var reachableCache : array 1 .. reachableCacheSize of
         record
@@ -2314,7 +2361,7 @@ body module ruleCompiler
             yes : boolean
         end record
     var reachableCacheTop := 0
-        
+
     function reachable (defineTP, targetTP : treePT) : boolean
         for i : 1 .. reachableCacheTop
             if reachableCache (i).targetTP = targetTP and reachableCache (i).defineTP = defineTP then
@@ -2332,8 +2379,8 @@ body module ruleCompiler
             result real_reachable (defineTP, targetTP, 0)
         end if
     end reachable
-    
-    
+
+
     function possiblyEmpty (r : ruleT, replacementTP : treePT, depth : int) : boolean
         % possiblyEmpty (X) = true if X is of type empty, generaterepeat or generatelist,
         %                   = true if X is of type choose, and possiblyEmpty (kid of X)
@@ -2343,19 +2390,19 @@ body module ruleCompiler
             % give up, don't know, probably yes
             result true
         end if
-        
+
         if tree.trees (replacementTP).kind = kindT.empty
-                or tree.trees (replacementTP).kind = kindT.generaterepeat 
-                or tree.trees (replacementTP).kind = kindT.generatelist 
+                or tree.trees (replacementTP).kind = kindT.generaterepeat
+                or tree.trees (replacementTP).kind = kindT.generatelist
                 or tree.trees (replacementTP).kind = kindT.lookahead then
             result true
-            
-        elsif tree.trees (replacementTP).kind = kindT.choose 
-                or  tree.trees (replacementTP).kind = kindT.leftchoose then 
+
+        elsif tree.trees (replacementTP).kind = kindT.choose
+                or  tree.trees (replacementTP).kind = kindT.leftchoose then
             result possiblyEmpty (r, tree.kid1TP (replacementTP), depth + 1)
-            
-        elsif tree.trees (replacementTP).kind = kindT.order 
-                or tree.trees (replacementTP).kind = kindT.repeat 
+
+        elsif tree.trees (replacementTP).kind = kindT.order
+                or tree.trees (replacementTP).kind = kindT.repeat
                 or tree.trees (replacementTP).kind = kindT.list then
             for i : 1 .. tree.trees (replacementTP).count
                 if not possiblyEmpty (r, tree.kidTP (i, replacementTP), depth + 1) then
@@ -2363,28 +2410,28 @@ body module ruleCompiler
                 end if
             end for
             result true
-            
+
         elsif tree.trees (replacementTP).kind = kindT.expression or  tree.trees (replacementTP).kind = kindT.lastExpression then
             % the count field tells us the ruleLocals index!
             const localIndex := tree.trees (replacementTP).count
             const symbolIndex := symbol.findSymbol (rule.ruleLocals (r.localVars.localBase + localIndex).typename)
-            
+
             result possiblyEmpty (r, symbol.symbols (symbolIndex), depth + 1)
 
-        else 
+        else
             result false
         end if
     end possiblyEmpty
 
 
     procedure unreachable_target_warning (ruleName, calledRuleName, localName, localTypeName : tokenT)
-        error ("rule/function '" + string@(ident.idents (ruleName)) + "'", 
+        error ("rule/function '" + string@(ident.idents (ruleName)) + "'",
             "Scope '" + string@(ident.idents (localName))
             + " [" + externalType (string@(ident.idents (localTypeName)))
             + "]' of call to rule/function '" + string@(ident.idents (calledRuleName))
             + "' can never contain a match", WARNING, 356)
     end unreachable_target_warning
-    
+
 
     procedure empty_result_warning (ruleName, calledRuleName, localName, localTypeName, repeat1TypeName : tokenT)
         error ("rule/function '" + string@(ident.idents (ruleName)) + "'",
@@ -2394,18 +2441,18 @@ body module ruleCompiler
             + "]' may yield an empty result for embedded [" + externalType (string@(ident.idents (repeat1TypeName)))
             + "]", WARNING, 357)
     end empty_result_warning
-    
+
 
     procedure checkRuleCallScopes (replacementTP : treePT, r : ruleT, var scopeErrors : boolean)
 
         % Find every rule call in the replacement tree and check that its scope type
         % is reasonable
-                
+
         if replacementTP = nilTree then
             return
         end if
 
-        
+
         case tree.trees (replacementTP).kind of
 
             label kindT.order, kindT.repeat, kindT.list :
@@ -2424,16 +2471,16 @@ body module ruleCompiler
 
                 checkRuleCallScopes (tree.kids (replacementKidKP), r, scopeErrors)
 
-            label kindT.literal, kindT.stringlit, kindT.charlit, kindT.number, kindT.id, kindT.comment, 
-                    kindT.usertoken1, kindT.usertoken2, kindT.usertoken3, kindT.usertoken4, kindT.usertoken5, 
+            label kindT.literal, kindT.stringlit, kindT.charlit, kindT.number, kindT.id, kindT.comment,
+                    kindT.usertoken1, kindT.usertoken2, kindT.usertoken3, kindT.usertoken4, kindT.usertoken5,
                     kindT.usertoken6, kindT.usertoken7, kindT.usertoken8, kindT.usertoken9, kindT.usertoken10,
-                    kindT.usertoken11, kindT.usertoken12, kindT.usertoken13, kindT.usertoken14, kindT.usertoken15, 
+                    kindT.usertoken11, kindT.usertoken12, kindT.usertoken13, kindT.usertoken14, kindT.usertoken15,
                     kindT.usertoken16, kindT.usertoken17, kindT.usertoken18, kindT.usertoken19, kindT.usertoken20,
-                    kindT.usertoken21, kindT.usertoken22, kindT.usertoken23, kindT.usertoken24, kindT.usertoken25, 
+                    kindT.usertoken21, kindT.usertoken22, kindT.usertoken23, kindT.usertoken24, kindT.usertoken25,
                     kindT.usertoken26, kindT.usertoken27, kindT.usertoken28, kindT.usertoken29, kindT.usertoken30,
                     kindT.empty, kindT.token, kindT.key, kindT.upperlowerid, kindT.upperid,
-                    kindT.lowerupperid, kindT.lowerid, kindT.floatnumber, 
-                    kindT.decimalnumber, kindT.integernumber, 
+                    kindT.lowerupperid, kindT.lowerid, kindT.floatnumber,
+                    kindT.decimalnumber, kindT.integernumber,
                     kindT.newline, kindT.space,                 % JRC 31.3.08
                     kindT.srclinenumber, kindT.srcfilename:     % JRC 14.12.07
                 return
@@ -2445,12 +2492,12 @@ body module ruleCompiler
                 var scopeSymbolIndex := symbol.findSymbol (rule.ruleLocals (r.localVars.localBase + localIndex).typename)
                 const scopeTypeTP := symbol.symbols (scopeSymbolIndex)
 
-                if ruleCallsKP not= nilKid 
-                        and index (string@(ident.idents (rule.ruleLocals (r.localVars.localBase + localIndex).name)), "_anonymous_") not= 1 then 
+                if ruleCallsKP not= nilKid
+                        and index (string@(ident.idents (rule.ruleLocals (r.localVars.localBase + localIndex).name)), "_anonymous_") not= 1 then
                     % Process each rule called, and check target is reachable from the scope
                     loop
                         assert tree.trees (tree.kids (ruleCallsKP)).kind = kindT.ruleCall
-            
+
                         % rule index encoded in the name field of the call!
                         const calledRuleIndex := tree.trees (tree.kids (ruleCallsKP)).name
 
@@ -2466,36 +2513,36 @@ body module ruleCompiler
                                 targetType0TP := symbol.symbols (targetIndex - 1)
                             end if
 
-                            if tree.trees (targetType0TP).name not= any_T 
+                            if tree.trees (targetType0TP).name not= any_T
                                     and tree.trees (scopeTypeTP).name not= any_T
-                                    and tree.trees (targetType0TP).name not= key_T 
+                                    and tree.trees (targetType0TP).name not= key_T
                                     and not reachable (scopeTypeTP, targetType0TP) then
                                 if not polymorphicProgram then
-                                    unreachable_target_warning (r.name, rule.rules (calledRuleIndex).name, 
+                                    unreachable_target_warning (r.name, rule.rules (calledRuleIndex).name,
                                         rule.ruleLocals (r.localVars.localBase + localIndex).name, rule.ruleLocals (r.localVars.localBase + localIndex).typename)
                                 end if
                             end if
-                            
+
                             % Second check: can we ever make an empty [repeat] in a scope containing [repeat+] ?
                             if options.option (analyze_p) then
                                 if (index (string@(ident.idents (rule.rules (calledRuleIndex).target)), "repeat_0_") = 1
                                             or index (string@(ident.idents (rule.rules (calledRuleIndex).target)), "list_0_") = 1)
-                                    and (rule.rules (calledRuleIndex).kind = ruleKind.normalRule or rule.rules (calledRuleIndex).kind = ruleKind.onepassRule 
-                                        or (rule.rules (calledRuleIndex).kind = ruleKind.functionRule and rule.rules (calledRuleIndex).starred)) 
-                                    and rule.rules (calledRuleIndex).replacementTP not= nilTree 
+                                    and (rule.rules (calledRuleIndex).kind = ruleKind.normalRule or rule.rules (calledRuleIndex).kind = ruleKind.onepassRule
+                                        or (rule.rules (calledRuleIndex).kind = ruleKind.functionRule and rule.rules (calledRuleIndex).starred))
+                                    and rule.rules (calledRuleIndex).replacementTP not= nilTree
                                         and possiblyEmpty (rule.rules (calledRuleIndex), rule.rules (calledRuleIndex).replacementTP, 0) then
                                     % The corresponding [repeat_1_X] or [list_1_X] follows the original in the symbol table
                                     const targetType1TP := symbol.symbols (targetIndex + 1)
                                     if reachable (scopeTypeTP, targetType1TP) then
-                                        empty_result_warning (r.name, rule.rules (calledRuleIndex).name, 
+                                        empty_result_warning (r.name, rule.rules (calledRuleIndex).name,
                                             rule.ruleLocals (r.localVars.localBase + localIndex).name, rule.ruleLocals (r.localVars.localBase + localIndex).typename,
                                             tree.trees (targetType1TP).name)
                                     end if
                                 end if
                             end if
-                            
+
                             % Third check: is an optimizable skipping [X] ever called with a scope that is not [repeat X] for the skipped [X]?
-                            if rule.rules (calledRuleIndex).skipRepeat then 
+                            if rule.rules (calledRuleIndex).skipRepeat then
                                 if tree_ops.isListOrRepeatType (tree.trees (scopeTypeTP).name)
                                         and tree.trees (targetTypeTP).name = tree_ops.listOrRepeatBaseType (tree.trees (scopeTypeTP).name) then
                                     % skipping [X] match/replace * [X] in [repeat/list X]
@@ -2505,36 +2552,36 @@ body module ruleCompiler
                                 end if
                             end if
                         end if
-            
+
                         ruleCallsKP += 1
                         exit when tree.kids (ruleCallsKP) = nilTree
                     end loop
                 end if
-                
+
             label :
                 error ("", "Fatal TXL error in checkRuleCallScopes", INTERNAL_FATAL, 359)
         end case
 
     end checkRuleCallScopes
-    
-    
+
+
     procedure processRuleCalls (var scopeErrors : boolean)
-    
+
         % Find all rule calls and check that their targets are reachable from their scopes.
-    
+
         scopeErrors := false
-        
+
         for r : nPredefinedRules + 1 .. rule.nRules
             checkRuleCallScopes (rule.rules (r).replacementTP, rule.rules (r), scopeErrors)
-            
+
             for p : 1 .. rule.rules (r).prePattern.nparts
                 bind part to rule.ruleParts (rule.rules (r).prePattern.partsBase + p)
-                if part.kind = partKind.construct or part.kind = partKind.export_ 
+                if part.kind = partKind.construct or part.kind = partKind.export_
                         or part.kind = partKind.cond or part.kind = partKind.assert_ then
                     checkRuleCallScopes (part.replacementTP, rule.rules (r), scopeErrors)
                 end if
             end for
-            
+
             for p : 1 .. rule.rules (r).postPattern.nparts
                 bind part to rule.ruleParts (rule.rules (r).postPattern.partsBase + p)
                 if part.kind = partKind.construct or part.kind = partKind.export_
@@ -2543,19 +2590,19 @@ body module ruleCompiler
                 end if
             end for
         end for
-        
+
         % Skipping main rule target is never optimizable - JRC 10.4d
         rule.setSkipRepeat (mainRule, false)
 
     end processRuleCalls
-    
-    
+
+
     function callsRule (ruleIndex : int, replacementTP : treePT) : boolean
 
         if replacementTP = nilTree then
             result false
         end if
-        
+
         case tree.trees (replacementTP).kind of
 
             label kindT.order, kindT.repeat, kindT.list :
@@ -2577,14 +2624,14 @@ body module ruleCompiler
                 result callsRule (ruleIndex, tree.kids (replacementKidKP))
 
             label kindT.literal, kindT.stringlit, kindT.charlit, kindT.number, kindT.id, kindT.comment,
-                    kindT.usertoken1, kindT.usertoken2, kindT.usertoken3, kindT.usertoken4, kindT.usertoken5, 
+                    kindT.usertoken1, kindT.usertoken2, kindT.usertoken3, kindT.usertoken4, kindT.usertoken5,
                     kindT.usertoken6, kindT.usertoken7, kindT.usertoken8, kindT.usertoken9, kindT.usertoken10,
-                    kindT.usertoken11, kindT.usertoken12, kindT.usertoken13, kindT.usertoken14, kindT.usertoken15, 
+                    kindT.usertoken11, kindT.usertoken12, kindT.usertoken13, kindT.usertoken14, kindT.usertoken15,
                     kindT.usertoken16, kindT.usertoken17, kindT.usertoken18, kindT.usertoken19, kindT.usertoken20,
-                    kindT.usertoken21, kindT.usertoken22, kindT.usertoken23, kindT.usertoken24, kindT.usertoken25, 
+                    kindT.usertoken21, kindT.usertoken22, kindT.usertoken23, kindT.usertoken24, kindT.usertoken25,
                     kindT.usertoken26, kindT.usertoken27, kindT.usertoken28, kindT.usertoken29, kindT.usertoken30,
                     kindT.empty, kindT.token, kindT.key, kindT.upperlowerid, kindT.upperid,
-                    kindT.lowerupperid, kindT.lowerid, kindT.floatnumber, 
+                    kindT.lowerupperid, kindT.lowerid, kindT.floatnumber,
                     kindT.decimalnumber, kindT.integernumber,
                     kindT.srclinenumber, kindT.srcfilename:     % JRC 14.12.07
 
@@ -2594,11 +2641,11 @@ body module ruleCompiler
                 % the count field tells us the ruleLocals index!
                 var ruleCallsKP : kidPT := tree.trees (replacementTP).kidsKP
 
-                if ruleCallsKP not= nilKid then 
+                if ruleCallsKP not= nilKid then
                     % Process each rule called, and check target is reachable from the scope
                     loop
                         assert tree.trees (tree.kids (ruleCallsKP)).kind = kindT.ruleCall
-            
+
                         % rule index encoded in the name field of the call!
                         if tree.trees (tree.kids (ruleCallsKP)).name = ruleIndex then
                             result true
@@ -2608,19 +2655,19 @@ body module ruleCompiler
                         exit when tree.kids (ruleCallsKP) = nilTree
                     end loop
                 end if
-                
+
                 result false
-                
+
             label :
                 error ("", "Fatal TXL error in callsRule", INTERNAL_FATAL, 360)
         end case
 
     end callsRule
-      
-    
+
+
     var callerIndex : array 1 .. maxRules of nat2       % 1 .. maxRules
     var callerDepth := 0
-    
+
     function callersPreImportGlobal (ruleIndex : int, globalName : tokenT) : boolean
         if callerDepth = rule.nRules then
             result false
@@ -2630,14 +2677,14 @@ body module ruleCompiler
                 result false
             end if
         end for
-        
+
         callerDepth += 1
         callerIndex (callerDepth) := ruleIndex
-        
+
         for rindex : nPredefinedRules + 1 .. rule.nRules
             bind r to rule.rules (rindex)
             for c : 1 .. r.calledRules.ncalls
-            
+
                 if rule.ruleCalls (r.calledRules.callBase + c) = ruleIndex then
                     const localIndex := rule.lookupLocalVar (context, r.localVars, globalName)
                     if localIndex not= 0 and rule.ruleLocals (r.localVars.localBase + localIndex).global then
@@ -2689,35 +2736,35 @@ body module ruleCompiler
         callerDepth -= 1
         result false
     end callersPreImportGlobal
-    
-    
-    procedure optimizeGlobalVariables 
-    
+
+
+    procedure optimizeGlobalVariables
+
         % Find all global variable tail-recursive updates
         % and optimize to avoid copying
-    
+
         for rindex : nPredefinedRules + 1 .. rule.nRules
             bind r to rule.rules (rindex)
             % If the last thing in the postpattern is a recursive export,
-            % and it is not referred to in the replacement (or following postexports), 
+            % and it is not referred to in the replacement (or following postexports),
             % then we can optimize it
             for decreasing i : r.postPattern.nparts .. 1
                 exit when rule.ruleParts (r.postPattern.partsBase + i).kind not= partKind.export_
-                
+
                 var lastRecursiveRefTP := nilTree
                 lastRecursiveRefTP := findLastRef (rule.ruleParts (r.postPattern.partsBase + i).name, rule.ruleParts (r.postPattern.partsBase + i).replacementTP)
-                
+
                 if lastRecursiveRefTP not= nilTree then
-                
-                    var lastPostExportRefTP := nilTree          
+
+                    var lastPostExportRefTP := nilTree
                     for j : i + 1 .. r.postPattern.nparts
                         lastPostExportRefTP := findLastRef (rule.ruleParts (r.postPattern.partsBase + i).name, rule.ruleParts (r.postPattern.partsBase + j).replacementTP)
                         exit when lastPostExportRefTP not= nilTree
                     end for
-                    
+
                     const lastReplacementRefTP := findLastRef (rule.ruleParts (r.postPattern.partsBase + i).name, r.replacementTP)
-                    
-                    if lastPostExportRefTP = nilTree and lastReplacementRefTP = nilTree 
+
+                    if lastPostExportRefTP = nilTree and lastReplacementRefTP = nilTree
                             and not callersPreImportGlobal (rindex, rule.ruleParts (r.postPattern.partsBase + i).name) then
                         tree.setKind (lastRecursiveRefTP, kindT.lastExpression)
                     end if
@@ -2759,7 +2806,7 @@ body module ruleCompiler
 
         % check that all rules have been defined, and process query rule conversions
         var undefinedRules := false
-        
+
         processUndefinedRules (undefinedRules)
 
         if undefinedRules then
@@ -2775,7 +2822,7 @@ body module ruleCompiler
                 exit
             end if
         end for
-        
+
         if rule.nRules = nPredefinedRules then
             error ("", "No rules/functions defined, assuming parse only", INFORMATION, 364)
             mainRule := rule.enterRule (mainRuleName)
@@ -2796,22 +2843,22 @@ body module ruleCompiler
             end if
         end if
 
-        % Process global variables and check that import/export types are consistent 
+        % Process global variables and check that import/export types are consistent
         var globalErrors := false
-        
+
         processGlobalVariables (globalErrors)
 
         if globalErrors then
             quit
         end if
-        
-        % Check that rule call scope types are reasonable 
+
+        % Check that rule call scope types are reasonable
         if options.option (analyze_p) then
             error ("", "Analyzing the transformation rule set", INFORMATION, 363)
         end if
-        
+
         var scopeErrors := false
-        
+
         processRuleCalls (scopeErrors)
 
         if scopeErrors then
@@ -2820,7 +2867,7 @@ body module ruleCompiler
 
         % Optimize global variable updates
         optimizeGlobalVariables
-        
+
     end makeRuleTable
 
 end ruleCompiler

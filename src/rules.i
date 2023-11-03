@@ -33,6 +33,8 @@
 % v11.1 Added new predefined function [faccess]
 %       Updated [system] predefined function to return success code for use in where clauses
 
+% v11.3 Added multiple skipping criteria for both patterns and deconstructors
+
 % The TXL Rule Table
 
 const * maxTotalParameters := maxRules * avgParameters
@@ -71,6 +73,8 @@ record
     globalRef : nat2    % 0 .. maxLocalVars
     target : tokenT
     skipName : tokenT
+    skipName2 : tokenT
+    skipName3 : tokenT
     replacementTP : treePT
     patternTP : treePT
     starred, negated, anded, skipRepeat : boolean
@@ -109,6 +113,8 @@ type * ruleT :
         calledRules : callsListT
         target : tokenT
         skipName : tokenT
+        skipName2 : tokenT
+        skipName3 : tokenT
         prePattern : partsListT
         patternTP : treePT
         postPattern : partsListT
@@ -310,6 +316,8 @@ module rule
         r.calledRules.callBase := ruleCallCount
         r.target := NOT_FOUND 
         r.skipName := NOT_FOUND 
+        r.skipName2 := NOT_FOUND 
+        r.skipName3 := NOT_FOUND 
         r.prePattern.nparts := 0
         r.prePattern.partsBase := rulePartCount
         r.postPattern.nparts := 0
@@ -511,7 +519,13 @@ module rule
     end setPostPatternNParts
 
     procedure setSkipName (ruleIndex : int, name : tokenT)
-        rules (ruleIndex).skipName := name
+        if rules (ruleIndex).skipName = NOT_FOUND then
+            rules (ruleIndex).skipName := name
+        elsif rules (ruleIndex).skipName2 = NOT_FOUND then
+            rules (ruleIndex).skipName2 := name
+        else
+            rules (ruleIndex).skipName3 := name
+        end if
     end setSkipName
 
     procedure incLocalCount (increment : int) 
@@ -599,7 +613,13 @@ module rule
     end setPartStarred
 
     procedure setPartSkipName (partIndex : partsBaseT, name : tokenT)
-        ruleParts (partIndex).skipName := name
+        if ruleParts (partIndex).skipName = NOT_FOUND then
+            ruleParts (partIndex).skipName := name
+        elsif ruleParts (partIndex).skipName2 = NOT_FOUND then
+            ruleParts (partIndex).skipName2 := name
+        else
+            ruleParts (partIndex).skipName3 := name
+        end if
     end setPartSkipName
 
     procedure setPartSkipRepeat (partIndex : partsBaseT, setting : boolean)
@@ -1221,6 +1241,8 @@ module rule
             pr.localVars.localBase := ruleLocalCount
             pr.target := NOT_FOUND
             pr.skipName := NOT_FOUND
+            pr.skipName2 := NOT_FOUND
+            pr.skipName3 := NOT_FOUND
             pr.prePattern.nparts := 0
             pr.patternTP := nilTree
             pr.postPattern.nparts := 0

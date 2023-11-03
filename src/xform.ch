@@ -29,6 +29,8 @@
 % v11.0 Initial revision, revised from FreeTXL 10.8b (c) 1988-2022 Queen's University at Kingston
 %       Modularized for easier maintenance and understanding 
 
+% v11.3 Added multiple skipping criteria for both patterns and deconstructors
+
 parent "txl.t"
 
 stub module transformer
@@ -423,7 +425,7 @@ body module transformer
 
     function searchTreeForDeconstructPatternSkipping (argPatternTP : treePT, 
             argTreeTP : treePT, var ruleEnvironment : ruleEnvironmentT,
-            skipName : tokenT) : boolean
+            skipName, skipName2, skipName3 : tokenT) : boolean
 
         % Rationale for the order of the following logic is the typical frequency
         % profile of the cases in production use at Legasys.  Here is a sample:
@@ -467,8 +469,8 @@ body module transformer
                 result true
             end if
         
-            if tree.trees (treeTP).kind >= firstLeafKind 
-                    or tree.trees (treeTP).name = skipName then
+            if tree.trees (treeTP).kind >= firstLeafKind or tree.trees (treeTP).name = skipName 
+                    or tree.trees (treeTP).name = skipName2 or tree.trees (treeTP).name = skipName3 then
                 % A terminal -
                 % Pop any completed sequences ...
                 loop
@@ -1089,7 +1091,8 @@ body module transformer
                             if part.skipRepeat then
                                 success := searchTreeForDeconstructPatternSkippingRepeat (part.patternTP, decValueTP, ruleEnvironment)
                             else
-                                success := searchTreeForDeconstructPatternSkipping (part.patternTP, decValueTP, ruleEnvironment, part.skipName)
+                                success := searchTreeForDeconstructPatternSkipping (part.patternTP, decValueTP, ruleEnvironment, 
+                                    part.skipName, part.skipName2, part.skipName3)
                             end if
                         end if
                     else
@@ -1330,7 +1333,7 @@ body module transformer
 
     function searchTreeForPatternSkipping (rule : ruleT, argTreeTP : treePT,
             var parentKP : kidPT, var ruleEnvironment : ruleEnvironmentT, 
-            skipName : tokenT) : boolean
+            skipName, skipName2, skipName3 : tokenT) : boolean
 
         var treeTP := argTreeTP
         var patternTP := rule.patternTP
@@ -1392,8 +1395,8 @@ body module transformer
                 #end if
             end if
         
-            if tree.trees (treeTP).kind >= firstLeafKind 
-                    or tree.trees (treeTP).name = skipName then
+            if tree.trees (treeTP).kind >= firstLeafKind or tree.trees (treeTP).name = skipName 
+                    or tree.trees (treeTP).name = skipName2 or tree.trees (treeTP).name = skipName3 then
                 % A terminal -
                 % Pop any completed sequences ...
                 loop
@@ -1542,7 +1545,8 @@ body module transformer
                 if rule.skipRepeat then
                     matched := searchTreeForPatternSkippingRepeat (rule, resultTP, parentKP, ruleEnvironment)
                 else
-                    matched := searchTreeForPatternSkipping (rule, resultTP, parentKP, ruleEnvironment, rule.skipName)
+                    matched := searchTreeForPatternSkipping (rule, resultTP, parentKP, ruleEnvironment, 
+                        rule.skipName, rule.skipName2, rule.skipName3)
                 end if
             end if
 
@@ -1651,7 +1655,8 @@ body module transformer
             if rule.skipRepeat then
                 matched := searchTreeForPatternSkippingRepeat (rule, resultTP, parentKP, ruleEnvironment)
             else
-                matched := searchTreeForPatternSkipping (rule, resultTP, parentKP, ruleEnvironment, rule.skipName)
+                matched := searchTreeForPatternSkipping (rule, resultTP, parentKP, ruleEnvironment, 
+                    rule.skipName, rule.skipName2, rule.skipName3)
             end if
         end if
 
@@ -1830,8 +1835,8 @@ body module transformer
                 end if
             end if          
 
-            if tree.trees (treeTP).kind >= firstLeafKind 
-                    or tree.trees (treeTP).name = rule.skipName then
+            if tree.trees (treeTP).kind >= firstLeafKind or tree.trees (treeTP).name = rule.skipName
+                    or tree.trees (treeTP).name = rule.skipName2 or tree.trees (treeTP).name = rule.skipName3 then
                 % A terminal -
                 % Pop any completed sequences ...
                 loop

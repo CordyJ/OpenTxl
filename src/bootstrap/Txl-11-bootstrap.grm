@@ -55,6 +55,8 @@
 % v11.1 Refactored and renamed rule body grammar.
 %       Added optional replace/match pattern part.
 
+% v11.3 Added multiple skipping clauses.
+
 define program
         [TXL_statements_]
 end define
@@ -217,6 +219,7 @@ end define
 
 define TXL_skippingBracketedDescription_
         'skipping [TXL_bracketedDescription_]
+        [TXL_optSkippingBracketedDescription_]
 end define
 
 define TXL_parts_

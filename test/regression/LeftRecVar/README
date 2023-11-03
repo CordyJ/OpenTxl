@@ -1,5 +1,0 @@
-An example of a bug introduced by the left recursion
-optimization.  The pattern of the main rule does not
-parse even though it is a legal form.
-
-Jim

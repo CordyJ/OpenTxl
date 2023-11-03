@@ -27,6 +27,7 @@
 % Modification Log
 
 % v11.0 Initial revision, revised from FreeTXL 10.8b (c) 1988-2022 Queen's University at Kingston
+% v11.3 Added multiple skipping criteria
 
 
 % TXL Load/Store/Standalone Facility
@@ -380,7 +381,7 @@ body module LoadStore
         nbytes := 0
         for i : 1 .. rule.nRules
             bind var r to ruleT@(addr(rule.rules (i)))
-            write : tf, r.name, r.target, r.skipName, r.patternTP, r.replacementTP, r.kind, 
+            write : tf, r.name, r.target, r.skipName, r.skipName2, r.skipName3, r.patternTP, r.replacementTP, r.kind, 
                 r.starred, r.isCondition, r.defined, r.called, r.skipRepeat
             write : tf, r.prePattern.nparts
             for pp : 1 .. r.prePattern.nparts
@@ -629,7 +630,7 @@ body module LoadStore
         read : tf, int@(addr(rule.nRules))
         for i : 1 .. rule.nRules
             bind var r to ruleT@(addr(rule.rules (i)))
-            read : tf, r.name, r.target, r.skipName, 
+            read : tf, r.name, r.target, r.skipName, r.skipName2, r.skipName3, 
                 r.patternTP, r.replacementTP, r.kind, 
                 r.starred, r.isCondition, r.defined, r.called, r.skipRepeat
             r.prePattern.partsBase := rule.rulePartCount
@@ -907,6 +908,8 @@ body module LoadStore
             ctxlgetbytes (addr (r.name), size (tokenT))
             ctxlgetbytes (addr (r.target), size (tokenT))
             ctxlgetbytes (addr (r.skipName), size (tokenT))
+            ctxlgetbytes (addr (r.skipName2), size (tokenT))
+            ctxlgetbytes (addr (r.skipName3), size (tokenT))
             ctxlgetint (addr (r.patternTP))
             ctxlgetint (addr (r.replacementTP))
             ctxlgetbytes (addr (r.kind), size (ruleKind))

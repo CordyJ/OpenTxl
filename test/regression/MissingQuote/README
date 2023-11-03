@@ -1,7 +1,0 @@
-This one's a beauty! 
-By failing to quote a '|' in one of the defines (query_expression),
-this Txl program misbehaves in such a way as to act like a heavily
-recursive grammar.  The net result is a segmentaiton violation
-due to HW stack overflow.  Hard to find!  Hard to diagnose!
-
-Jim
