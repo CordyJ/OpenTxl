@@ -1,0 +1,18 @@
+var GlobalDeclaration;
+var GlobalDeclaration;
+GlobalAssignment = 1;
+{
+    var LocalDeclaration;
+    var LocalDeclaration;
+    LocalExpression;
+    {
+        LocalAssignment = 1;
+        LocalAssignment = 2;
+        LocalExpression;
+    }
+}
+GlobalExpression;
+var GlobalDeclaration;
+GlobalAssignment = 1;
+GlobalAssignment = x;
+GlobalExpression;

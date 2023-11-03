@@ -26,6 +26,8 @@
 
 % v11.0 Initial revision, revised from FreeTXL 10.8b (c) 1988-2022 Queen's University at Kingston
 
+% v11.3 Corrected spacing bug for empty output tokens
+
 
 % Turing standard output stream codes
 const * stdout := -1
@@ -828,27 +830,87 @@ module unparser
                 % it's a leaf - print it out
                 bind leafName to string@(ident.idents (tree.trees (subtreeTP).rawname))
                 const lengthLeaf := length (leafName)
-                type char4095 : char (4095)
-                const leafName1 : char := type (char4095, leafName) (1)
-                
-                if emptyLine then
-                    outputindent (indent)
-                else
-                    if lineLength + 1 + lengthLeaf > options.outputLineLength then
-                        % must split the output line here
-                        if options.option (raw_p) or options.option (newline_p) then
-                            % raw output must have no new lines unless explicitly asked for!
-                            
-                            if outstream >= 0 then
-                                put : outstream, type (string, outputline) ..
+
+                % Ignore empty leaves completely
+                if lengthLeaf > 0 then
+                    type char4095 : char (4095)
+                    const leafName1 : char := type (char4095, leafName) (1)
+                    
+                    if emptyLine then
+                        outputindent (indent)
+                    else
+                        if lineLength + 1 + lengthLeaf > options.outputLineLength then
+                            % must split the output line here
+                            if options.option (raw_p) or options.option (newline_p) then
+                                % raw output must have no new lines unless explicitly asked for!
+                                
+                                if outstream >= 0 then
+                                    put : outstream, type (string, outputline) ..
+                                else
+                                    put type (string, outputline) ..
+                                end if
+
+                                outputindent (0)
+                                blankLine := false
+                                
+                                % since this line is continuing, need usual intra-line spacing - JRC 14.1.05
+                                if spacing then
+                                    if not options.option (raw_p) then
+                                        if charset.spaceAfterP (lastLeafNameEnd) 
+                                                and (charset.spaceBeforeP (leafName1) or tree.trees (subtreeTP).kind = kindT.number) then
+                                            type (string, outputline (lineLength + 1)) := " "
+                                            lineLength += 1
+                                        end if
+                                    elsif charset.idP (lastLeafNameEnd) and charset.idP (leafName1) 
+                                            and not options.option (charinput_p) then
+                                        type (string, outputline (lineLength + 1)) := " "
+                                        lineLength += 1
+                                    end if
+                                end if
+                                
+                            elsif not spacing then
+                                % not supposed to break at the moment - must choose an appropriate previous place to break
+                                var i := lineLength
+                                loop
+                                    exit when i = 0 or outputline (i) = ' '
+                                    i -= 1
+                                end loop
+                                if i < options.outputLineLength div 2 then
+                                    error ("", "Forced to split [SPOFF] output at line boundary", WARNING, 952)
+                                    i := lineLength
+                                end if
+                                
+                                % substring in place - don't try this at home, kids!
+                                const savedoutputlineip1 := outputline (i + 1)
+                                outputline (i + 1) := chr (0)       % EOS
+
+                                if outstream >= 0 then
+                                    put : outstream, type (string, outputline)
+                                else
+                                    put type (string, outputline)
+                                end if
+                                
+                                outputline (i + 1) := savedoutputlineip1 
+
+                                substr (type (string, savedoutputline), type (string, outputline), i + 1, lineLength)
+
+                                outputindent (indent + tempIndent)
+                                blankLine := false
+                                
+                                type (string, outputline (lineLength + 1)) := type (string, savedoutputline)
+                                lineLength := length (type (string, outputline))
+                                
                             else
-                                put type (string, outputline) ..
+                                if outstream >= 0 then
+                                    put : outstream, type (string, outputline)
+                                else
+                                    put type (string, outputline)
+                                end if
+                                outputindent (indent + tempIndent)
+                                blankLine := false
                             end if
 
-                            outputindent (0)
-                            blankLine := false
-                            
-                            % since this line is continuing, need usual intra-line spacing - JRC 14.1.05
+                        else
                             if spacing then
                                 if not options.option (raw_p) then
                                     if charset.spaceAfterP (lastLeafNameEnd) 
@@ -862,102 +924,46 @@ module unparser
                                     lineLength += 1
                                 end if
                             end if
-                            
-                        elsif not spacing then
-                            % not supposed to break at the moment - must choose an appropriate previous place to break
-                            var i := lineLength
-                            loop
-                                exit when i = 0 or outputline (i) = ' '
-                                i -= 1
-                            end loop
-                            if i < options.outputLineLength div 2 then
-                                error ("", "Forced to split [SPOFF] output at line boundary", WARNING, 952)
-                                i := lineLength
-                            end if
-                            
-                            % substring in place - don't try this at home, kids!
-                            const savedoutputlineip1 := outputline (i + 1)
-                            outputline (i + 1) := chr (0)       % EOS
-
-                            if outstream >= 0 then
-                                put : outstream, type (string, outputline)
-                            else
-                                put type (string, outputline)
-                            end if
-                            
-                            outputline (i + 1) := savedoutputlineip1 
-
-                            substr (type (string, savedoutputline), type (string, outputline), i + 1, lineLength)
-
-                            outputindent (indent + tempIndent)
-                            blankLine := false
-                            
-                            type (string, outputline (lineLength + 1)) := type (string, savedoutputline)
-                            lineLength := length (type (string, outputline))
-                            
-                        else
-                            if outstream >= 0 then
-                                put : outstream, type (string, outputline)
-                            else
-                                put type (string, outputline)
-                            end if
-                            outputindent (indent + tempIndent)
-                            blankLine := false
-                        end if
-
-                    else
-                        if spacing then
-                            if not options.option (raw_p) then
-                                if charset.spaceAfterP (lastLeafNameEnd) 
-                                        and (charset.spaceBeforeP (leafName1) or tree.trees (subtreeTP).kind = kindT.number) then
-                                    type (string, outputline (lineLength + 1)) := " "
-                                    lineLength += 1
-                                end if
-                            elsif charset.idP (lastLeafNameEnd) and charset.idP (leafName1) 
-                                    and not options.option (charinput_p) then
-                                type (string, outputline (lineLength + 1)) := " "
-                                lineLength += 1
-                            end if
                         end if
                     end if
-                end if
 
-                if lengthLeaf > options.outputLineLength then
-                    if (not options.option (raw_p)) and (not options.option (quiet_p)) then
-                        error ("", "Output token too long for output width", WARNING, 953)
-                    end if
-                    if outstream >= 0 then
-                        put : outstream, leafName
-                    else
-                        put leafName
-                    end if
-                    blankLine := false
-                    outputindent (indent)
-                else
-                    if lineLength + lengthLeaf > options.outputLineLength then
-                        % Since we already handled line overflow above, this can only mean
-                        % that the indent plus the leaf is too long
-                        assert lengthLeaf <= options.outputLineLength
-                        outputindent (options.outputLineLength - lengthLeaf)
-                    end if
-                    type (string, outputline (lineLength + 1)) := leafName 
-                    lineLength += lengthLeaf
-                    emptyLine := false
-                    if lineLength > 0 then 
-                        lastLeafNameEnd := outputline (lineLength) 
-                    else
-                        % an empty leaf on an empty line!
-                        lastLeafNameEnd := '\0' 
-                    end if
-                    % If the leaf ends in a newline, we may as well output it now
-                    if lastLeafNameEnd = '\r' or lastLeafNameEnd = '\n' then
+                    if lengthLeaf > options.outputLineLength then
+                        if (not options.option (raw_p)) and (not options.option (quiet_p)) then
+                            error ("", "Output token too long for output width", WARNING, 953)
+                        end if
                         if outstream >= 0 then
-                            put : outstream, type (string, outputline) ..
+                            put : outstream, leafName
                         else
-                            put  type (string, outputline) ..
+                            put leafName
                         end if
                         blankLine := false
                         outputindent (indent)
+                    else
+                        if lineLength + lengthLeaf > options.outputLineLength then
+                            % Since we already handled line overflow above, this can only mean
+                            % that the indent plus the leaf is too long
+                            assert lengthLeaf <= options.outputLineLength
+                            outputindent (options.outputLineLength - lengthLeaf)
+                        end if
+                        type (string, outputline (lineLength + 1)) := leafName 
+                        lineLength += lengthLeaf
+                        emptyLine := false
+                        if lineLength > 0 then 
+                            lastLeafNameEnd := outputline (lineLength) 
+                        else
+                            % an empty leaf on an empty line!
+                            lastLeafNameEnd := '\0' 
+                        end if
+                        % If the leaf ends in a newline, we may as well output it now
+                        if lastLeafNameEnd = '\r' or lastLeafNameEnd = '\n' then
+                            if outstream >= 0 then
+                                put : outstream, type (string, outputline) ..
+                            else
+                                put  type (string, outputline) ..
+                            end if
+                            blankLine := false
+                            outputindent (indent)
+                        end if
                     end if
                 end if
         end case

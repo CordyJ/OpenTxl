@@ -30,6 +30,9 @@
 
 % v11.1 Updated to match TXL 11.1 grammar
 
+% v11.3 Updated to match TXL 11.3 grammar
+%       Added multiple skipping criteria
+
 module txltree
     import 
         var tree, var ident, error
@@ -46,7 +49,7 @@ module txltree
         rule_nameT, rule_formalsTP, rule_prePatternTP, rule_postPatternTP, 
         rule_optReplaceOrMatchPartTP, rule_optByPartTP, 
         rule_isStarred, rule_isDollared,
-        rule_optSkippingTP, optSkipping_nameT, 
+        rule_optSkippingTP, optSkipping_nameT, optSkippingNextTP, 
         rule_replaceOrMatchT, rule_patternTP, 
         rule_targetBracketedDescriptionTP, rule_targetT, 
         optByPart_replacementTP, optByPart_isAnonymous, optByPart_anonymousExpressionTP,
@@ -446,6 +449,7 @@ module txltree
     % 
     % define TXL_skippingBracketedDescription_
     %   'skipping [TXL_bracketedDescription_]
+    %   [TXL_optSkippingBracketedDescription_]
     % end define
 
     function optSkipping_nameT (optSkippingTP : treePT) : tokenT
@@ -459,6 +463,16 @@ module txltree
 
         result descriptionTargetT (descriptionTP)
     end optSkipping_nameT
+
+    function optSkippingNextTP (optSkippingTP : treePT) : treePT
+        pre string@(ident.idents (tree.trees (optSkippingTP).name)) = "TXL_optSkippingBracketedDescription_"
+            and string@(ident.idents (tree.trees (tree.kid1TP(optSkippingTP)).name)) = "TXL_skippingBracketedDescription_"
+
+        const optSkippingBracketedDescriptionTP := tree.kid3TP (tree.kid1TP(optSkippingTP))
+        assert string@(ident.idents (tree.trees (optSkippingBracketedDescriptionTP).name)) = "TXL_optSkippingBracketedDescription_"
+
+        result optSkippingBracketedDescriptionTP
+    end optSkippingNextTP
         
     % define TXL_argument_
     %   [id] [TXL_bracketedDescription_]
