@@ -219,7 +219,8 @@ end define
 
 define TXL_skippingBracketedDescription_
         'skipping [TXL_bracketedDescription_]
-        [TXL_optSkippingBracketedDescription_]
+            [TXL_optBracketedDescription_]
+            [TXL_optBracketedDescription_]
 end define
 
 define TXL_parts_

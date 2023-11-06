@@ -49,7 +49,7 @@ module txltree
         rule_nameT, rule_formalsTP, rule_prePatternTP, rule_postPatternTP, 
         rule_optReplaceOrMatchPartTP, rule_optByPartTP, 
         rule_isStarred, rule_isDollared,
-        rule_optSkippingTP, optSkipping_nameT, optSkippingNextTP, 
+        rule_optSkippingTP, optSkippingNameT,
         rule_replaceOrMatchT, rule_patternTP, 
         rule_targetBracketedDescriptionTP, rule_targetT, 
         optByPart_replacementTP, optByPart_isAnonymous, optByPart_anonymousExpressionTP,
@@ -449,31 +449,36 @@ module txltree
     % 
     % define TXL_skippingBracketedDescription_
     %   'skipping [TXL_bracketedDescription_]
-    %   [TXL_optSkippingBracketedDescription_]
+    %       [TXL_optBracketedDescription_]
+    %       [TXL_optBracketedDescription_]
     % end define
 
-    function optSkipping_nameT (optSkippingTP : treePT) : tokenT
+    function optSkippingNameT (optSkippingTP : treePT, n : int) : tokenT
         pre string@(ident.idents (tree.trees (optSkippingTP).name)) = "TXL_optSkippingBracketedDescription_"
-            and string@(ident.idents (tree.trees (tree.kid1TP(optSkippingTP)).name)) = "TXL_skippingBracketedDescription_"
-
-        const bracketedDescriptionTP := tree.kid2TP (tree.kid1TP(optSkippingTP))
-        assert string@(ident.idents (tree.trees (bracketedDescriptionTP).name)) = "TXL_bracketedDescription_"
-        const descriptionTP := tree.kid2TP (bracketedDescriptionTP)
-        assert string@(ident.idents (tree.trees (descriptionTP).name)) = "TXL_description_"
-
-        result descriptionTargetT (descriptionTP)
-    end optSkipping_nameT
-
-    function optSkippingNextTP (optSkippingTP : treePT) : treePT
-        pre string@(ident.idents (tree.trees (optSkippingTP).name)) = "TXL_optSkippingBracketedDescription_"
-            and string@(ident.idents (tree.trees (tree.kid1TP(optSkippingTP)).name)) = "TXL_skippingBracketedDescription_"
-
-        const optSkippingBracketedDescriptionTP := tree.kid3TP (tree.kid1TP(optSkippingTP))
-        assert string@(ident.idents (tree.trees (optSkippingBracketedDescriptionTP).name)) = "TXL_optSkippingBracketedDescription_"
-
-        result optSkippingBracketedDescriptionTP
-    end optSkippingNextTP
         
+        const skippingBracketedDescriptionTP := tree.kid1TP (optSkippingTP)
+        assert string@(ident.idents (tree.trees (skippingBracketedDescriptionTP).name)) = "TXL_skippingBracketedDescription_"
+
+        var bracketedDescriptionTP := nilTree
+
+        if n = 1 then
+            bracketedDescriptionTP := tree.kid2TP (skippingBracketedDescriptionTP)
+            assert string@(ident.idents (tree.trees (bracketedDescriptionTP).name)) = "TXL_bracketedDescription_"
+        elsif n = 2 and not tree.plural_emptyP (tree.kid3TP (skippingBracketedDescriptionTP)) then
+            bracketedDescriptionTP := tree.kid1TP (tree.kid3TP (skippingBracketedDescriptionTP))
+            assert string@(ident.idents (tree.trees (bracketedDescriptionTP).name)) = "TXL_bracketedDescription_"
+        elsif n = 2 and not tree.plural_emptyP (tree.kid4TP (skippingBracketedDescriptionTP)) then
+            bracketedDescriptionTP := tree.kid1TP (tree.kid4TP (skippingBracketedDescriptionTP))
+            assert string@(ident.idents (tree.trees (bracketedDescriptionTP).name)) = "TXL_bracketedDescription_"
+        end if
+
+        if bracketedDescriptionTP = nilTree then
+            result NOT_FOUND
+        else 
+            result descriptionTargetT (tree.kid2TP (bracketedDescriptionTP))
+        end if
+    end optSkippingNameT
+
     % define TXL_argument_
     %   [id] [TXL_bracketedDescription_]
     % end define
