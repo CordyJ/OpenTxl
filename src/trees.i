@@ -114,7 +114,7 @@ type * parseTreeT :
     #end if
         count : countT          % how many children, or number of choice alternative
         name : tokenT           % normalized name or literal value
-        rawname : tokenT        % original name or literal value, or 'attr' indicator
+        rawname : tokenT        % original name or literal value
         kidsKP : kidPT          % list of children, or 'each' indicator
     end record
 

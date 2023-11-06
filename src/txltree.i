@@ -467,7 +467,7 @@ module txltree
         elsif n = 2 and not tree.plural_emptyP (tree.kid3TP (skippingBracketedDescriptionTP)) then
             bracketedDescriptionTP := tree.kid1TP (tree.kid3TP (skippingBracketedDescriptionTP))
             assert string@(ident.idents (tree.trees (bracketedDescriptionTP).name)) = "TXL_bracketedDescription_"
-        elsif n = 2 and not tree.plural_emptyP (tree.kid4TP (skippingBracketedDescriptionTP)) then
+        elsif n = 3 and not tree.plural_emptyP (tree.kid4TP (skippingBracketedDescriptionTP)) then
             bracketedDescriptionTP := tree.kid1TP (tree.kid4TP (skippingBracketedDescriptionTP))
             assert string@(ident.idents (tree.trees (bracketedDescriptionTP).name)) = "TXL_bracketedDescription_"
         end if
