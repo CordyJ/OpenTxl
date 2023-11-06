@@ -44,8 +44,7 @@ function main
 end function
 
 rule renameGlobalDeclarations
-    skipping [statement]
-    skipping [expression]
+    skipping [statement] [expression]
     replace $ [id]
         Id [id]
     by
@@ -53,8 +52,7 @@ rule renameGlobalDeclarations
 end rule
 
 function firstExpression Units [unit*]
-    skipping [block]
-    skipping [assignment]
+    skipping [block] [assignment]
     deconstruct * [expression] Units 
         E [expression]
     replace * [expression]
