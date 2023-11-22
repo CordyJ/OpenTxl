@@ -401,7 +401,7 @@ The lookahead modifiers only test the input for a match, they do not actually ac
 The nonterminal modifiers push and pop provide the ability to do local context-sensitive matching in a nonterminal definition.  For example, [push id] matches and saves any [id] in the input for later matching by a [pop id].  The nonterminal type modified by push or pop must be a  predefined or user token type.  An example of the use of push and pop is the matching of tag identifiers in XML:
 <pre>
     define matched_tag
-            < [push id] > [repeat content] </ [pop id] >
+            &lt; [push id] > [repeat content] &lt;/ [pop id] >
     end define
 </pre>
 The [matched_tag] nonterminal above will parse only elements whose opening and closing tag identifiers match, and will yield a syntax error for those that do not.
@@ -1112,7 +1112,7 @@ Conditions, like deconstructors, are considered to be refinements of the rule's 
 </p><p>
 The rules that are applied in a condition must all be condition rules, that is, rules that do not make a replacement (see "Condition Rules" below).
 </p><p>
-Several of the built-in functions (see 4.16, "Built-in Functions") are intended to be used as conditions, including [=], [<] and [>].  For example, the following rule will (bubble-)sort a sequence of numbers:
+Several of the built-in functions (see <a href="4.16">"Built-in Functions"</a>) are intended to be used as conditions, including [=], [&lt;] and [>].  For example, the following rule will (bubble-)sort a sequence of numbers:
 <pre>
     rule sort
         replace [repeat number]
@@ -1136,9 +1136,9 @@ For the condition function:
 <pre>
     function inorder N1 [number] N2 [number] N3 [number]
         where
-            N1 [< N2]
+            N1 [&lt; N2]
         where 
-            N2 [< N3]
+            N2 [&lt; N3]
     end function
 </pre>
 </p><p>
@@ -1473,7 +1473,8 @@ For example, the following rule, which reduces any sequence of repeated instance
 <p>
 Built-in functions provide a set of common operations that are difficult, awkward or inefficient to implement directly in TXL.   TXL predefines the following built-in functions.  For technical details and examples of the use of these functions, see the "Guide to TXL Built-In Functions".
 <pre>
-    <u>Arithmetic Operations</u>  (N1, N2 must be of type [number] or any other numeric type)
+<u>Arithmetic Operations</u>  
+(N1, N2 must be of type [number] or any other numeric type)
 
     N1 [+ N2]       numeric sum N1 + N2
     N1 [- N2]       numeric difference N1 - N2
@@ -1484,30 +1485,32 @@ Built-in functions provide a set of common operations that are difficult, awkwar
     N1 [round]      round N1 to integer
     N1 [trunc]      truncate N1 to integer
 
-    <u>Text Operations</u>  (T1, T2 must be of type [stringlit], [charlit], [id], [comment] or any other token type, 
-                      N1, N2 of type [number] or other numeric type)
+<u>Text Operations</u>  
+(T1, T2 must be of type [stringlit], [charlit], [id], [comment] or any other token type, 
+ N1, N2 of type [number] or other numeric type)
 
     T1 [+ T2]       concatenation of the text of T1 and T2
     T1 [: N1 N2]    substring of the text of T1 from char N1 through char N2 inclusive (1-origin)
     N1 [# T1]       length of text of T1
     N1 [index T1 T2]    index of the first instance of the text of T2 in T1, or zero if none found
 
-    <u>Text Case Conversion</u>  (T1, T2 must be of type [stringlit], [charlit], [id], [comment] 
-                           or any other predefined or user token type)
+<u>Text Case Conversion</u>  
+(T1, T2 must be of type [stringlit], [charlit], [id], [comment] or any other predefined or user token type)
 
     T1 [toupper]    replaces T1 with the text of T1 in upper case
     T1 [tolower]    replaces T1 with the text of T1 in lower case
 
-    <u>Operations on Identifiers</u>  (ID1, ID2 must be of type [id] or any other identifier type)
+<u>Operations on Identifiers</u>  
+(ID1, ID2 must be of type [id] or any other identifier type)
 
     ID1 [_ ID2]     identifier concatenation of ID1, underscore, and ID2
     ID1 [!]         globally unique new identifier beginning with ID1 
                       (e.g. if ID1 is 'Bob', the result may be 'Bob27')
 
-    <u>Operations on Sequences</u>  
-                (R1 must be of type [repeat T] for some type [T],
-                 R2 must be either of the same type [repeat T] or its element type [T],
-                 N1, N2 must be of type [number], and X1 can be of any type at all)
+<u>Operations on Sequences</u>  
+(R1 must be of type [repeat T] for some type [T],
+ R2 must be either of the same type [repeat T] or its element type [T],
+ N1, N2 must be of type [number], and X1 can be of any type at all)
 
     R1 [. R2]       replaces R1 with the sequence concatenation  of R1 and R2
     N1 [length R1]  replaces N1 with the length of the sequence R1
@@ -1522,9 +1525,9 @@ Built-in functions provide a set of common operations that are difficult, awkwar
                       contained in X1 (not including those recursively inside other [T]s)
                       to the sequence R1 of type [repeat T]
 
-    <u>Operations on Lists</u>        
-                (L1 must be of type [list X] for some type [X],
-                 L2 must be either of the same type [list X] or its element type [X])
+<u>Operations on Lists</u>        
+(L1 must be of type [list X] for some type [X],
+ L2 must be either of the same type [list X] or its element type [X])
 
     L1 [, L2]       replaces L1 with the list concatenation  of L1 and L2
     N1 [length L1]  replaces N1 with the length of the list L1
@@ -1532,44 +1535,46 @@ Built-in functions provide a set of common operations that are difficult, awkwar
     L1 [head N1]    replaces L1 with the sublist of L1 from element 1 through N1 inclusive (1-origin)
     L1 [tail N1]    replaces L1 with the sublist of L1 from element N1 to the end of L1 inclusive (1-origin)
 
-    <u>Numeric Comparisons</u>  (N1, N2 must both be of type [number] or other numeric type)
+<u>Numeric Comparisons</u>  
+(N1, N2 must both be of type [number] or other numeric type)
 
     N1 [= N2]       (condition) succeeds if  N1 is numerically equal to N2
     N1 [~= N2]      (condition) succeeds if  N1 is numerically not equal to N2
     N1 [> N2]       (condition) succeeds if  N1 is numerically greater than N2
     N1 [>= N2]      (condition) succeeds if  N1 is numerically greater than or equal to N2
-    N1 [< N2]       (condition) succeeds if  N1 is numerically less than N2
-    N1 [<= N2]      (condition) succeeds if  N1 is numerically less than or equal to N2
+    N1 [&lt; N2]       (condition) succeeds if  N1 is numerically less than N2
+    N1 [&lt;= N2]      (condition) succeeds if  N1 is numerically less than or equal to N2
 
-    <u>Text Comparisons</u>  (T1, T2 must be of type [stringlit], [charlit], [id], [comment] or any other
-                predefined or user token type)
+<u>Text Comparisons</u>  
+(T1, T2 must be of type [stringlit], [charlit], [id], [comment] or any other predefined or user token type)
 
     T1 [= T2]       (condition) succeeds if  the text of T1 is identical to the text of T2
     T1 [~= T2]      (condition) succeeds if  the text of T1 is not identical to the text of T2
     T1 [> T2]       (condition) succeeds if  the text of T1 is alphanumerically greater than the text of T2
     T1 [>= T2]      (condition) succeeds if  the text of T1 is alphanumerically >= the text of T2
-    T1 [< T2]       (condition) succeeds if  the text of T1 is alphanumerically less than the text of T2
-    T1 [<= T2]      (condition) succeeds if  the text of T1 is alphanumerically <= the text of T2
+    T1 [&lt; T2]       (condition) succeeds if  the text of T1 is alphanumerically less than the text of T2
+    T1 [&lt;= T2]      (condition) succeeds if  the text of T1 is alphanumerically <= the text of T2
 
-    <u>General Comparisons</u>  (X1, X2 must both be of the same type, which is not a built-in or user token type)
+<u>General Comparisons</u>  
+(X1, X2 must both be of the same type, which is not a built-in or user token type)
 
     X1 [= X2]       (condition) succeeds if X1 is treewise alphanumerically identical to X2
     X1 [~= X2]      (condition) succeeds if X1 is not treewise alphanumerically identical to X2
 
-    <u>Substring Search</u>  (T1, T2 must both be of type [stringlit], [charlit],
-                       [id] or any other identifier or user token type)
+<u>Substring Search</u>  
+(T1, T2 must both be of type [stringlit], [charlit], [id] or any other identifier or user token type)
 
     T1 [grep T2]    (condition) succeeds if the text of T2 is a substring of the text of T1
 
-    <u>Fast Ground Substitute</u>  (Y1, Y2 must both be of any same type, X1 can be any other type)
+<u>Fast Ground Substitute</u>  
+(Y1, Y2 must both be of any same type, X1 can be any other type)
 
     X1 [$ Y1 Y2]    result is X1 with Y2 substituted for every occurrence of Y1
                      (a fast one-pass substitution of Y2 for Y1)
 
-    <u>Type Conversions</u>  
-                (T1, T2 must be of type [stringlit], [charlit], [id], [comment] or any other 
-                 predefined or user token type, S1 must be of type [stringlit] or [charlit], 
-                 and X1, X2 can be any type at all)
+<u>Type Conversions</u>  
+(T1, T2 must be of type [stringlit], [charlit], [id], [comment] or any other predefined or user token type, 
+ S1 must be of type [stringlit] or [charlit], and X1, X2 can be any type at all)
 
     T1 [quote X1]   appends the output text of X1 to the text of T1 (same as [unparse])
     T1 [unquote S1] replaces the text of T1 with the unquoted text of S1
@@ -1578,15 +1583,16 @@ Built-in functions provide a set of common operations that are difficult, awkwar
     T1 [unparse X1] appends the output text of X1 to the text of T1  (same as [quote])
     X1 [reparse X2] replaces X1 of any type [T] with a parse of the leaves (terminal symbols) of X2 as a [T]
 
-    <u>Operations on Types</u>  (polymorphism operations, for use with [any] - ID1 must be of type [id]
-                          or any other identifier type, X1 of any type at all)
+<u>Operations on Types</u>  
+(polymorphism operations, for use with [any] - ID1 must be of type [id] or any other identifier type, 
+ X1 of any type at all)
 
     ID1 [typeof X1] replaces ID1 with the nonterminal type name of the type of X1
     X1 [istype ID1] (condition) succeeds if the nonterminal type name of X1 is ID1
 
-    <u>Input/Output Operations</u>    
-                (S1 must be of type [stringlit], [charlit], [id] or any other identifier type,
-                 F1 must be of type [stringlit] or [charlit], X1 can be any type)
+<u>Input/Output Operations</u>    
+(S1 must be of type [stringlit], [charlit], [id] or any other identifier type,
+ F1 must be of type [stringlit] or [charlit], X1 can be any type)
 
     X1 [read S1]    replaces X1 of any type [T] with a parse of the text file S1 as a [T]
     X1 [write S1]   writes the output text of X1 as the text file S1 (which is opened or created if necessary, 
@@ -1611,8 +1617,8 @@ Built-in functions provide a set of common operations that are difficult, awkwar
     X1 [fclose F1]  closes file F1 - only necessary if the file is to be reopened
     X1 [fopen F1 M1]    opens file F1 in the indicated mode M1, which must be one of  "get", "put" or "append" 
                           (only required if the file is to be opened "append")
-
-    <u>Debugging Aids</u>  (X1, X2 can be any type at all)
+<u>Debugging Aids</u>  
+(X1, X2 can be any type at all)
 
     X1 [message X2] outputs the output text of X2 to the standard error stream;
                       if X2 is of type [stringlit] or [charlit], it is unquoted
@@ -1623,14 +1629,16 @@ Built-in functions provide a set of common operations that are difficult, awkwar
     X1 [debug]      outputs the internal tree format of X1 to the standard error stream
     X1 [breakpoint] temporarily halts execution until a return key is pressed on the standard input
 
-    <u>Execution Control</u>  
-                (S1 must be of type [stringlit] or [charlit], N1 must be of type [number] or other numeric type, 
-                 X1 can be any type)
+<u>Execution Control</u>  
+(S1 must be of type [stringlit] or [charlit], N1 must be of type [number] or other numeric type, 
+ X1 can be any type)
 
-    X1 [pragma S1]  interpret the TXL command line options specified in S1 to dynamically change TXL options during execution
+    X1 [pragma S1]  interpret the TXL command line options specified in S1 to dynamically change TXL options 
+                      during execution
     X1 [quit N1]    immediately abort TXL execution with return code N1
 
-    <u>System Interface</u>  (S1, S2 must both be of type [stringlit] or [charlit], X1 can be any type at all)
+<u>System Interface</u>  
+(S1, S2 must both be of type [stringlit] or [charlit], X1 can be any type at all)
 
     X1 [system S1]  invoke /bin/sh to run the text of S1 as a shell command line; X1 is ignored and unchanged.
                       (most useful when used in conjunction with [write] and [read] to manipulate data in files)
@@ -1671,8 +1679,8 @@ Transformation rules can be used as condition rules by prepending a ? onto the n
 </pre>
 What was intended is that the rule should continue as long as rule R continues to do something to the scope.  This can be expressed using the condition:
 <pre>
-        where
-            Scope [?R]
+    where
+        Scope [?R]
 </pre>
 The rule invocation [?R] invokes replacement rule [R] as a condition rule - thus it only tests to see if it can match its pattern, and does no replacing.  If its pattern matches, then it succeeds and the condition passes, so the invoking rule continues, otherwise the condition fails and the invoking rule will stop.
 </p><p>
@@ -1689,8 +1697,8 @@ Condition rules can also be used in place of transformation rules in order to ac
 </p><p>
 The match clause of a condition rule is optional, for cases where the condition to be tested does not depend on the scope of the rule. In this case, the rule succeeds if all of the other parts (constructors, deconstructors, where clauses, etc. succeed), and fails otherwise. For condition rules that do not depend on their scope, the where condition can use the anonymous variable as scope, for example:
 <pre>
-        where
-            _ [parametersMatch each Formals Arguments]
+    where
+        _ [parametersMatch each Formals Arguments]
 </pre>
 </p>
 <h3><a id="4.18">4.18</a> One-Pass Condition Rules</h3>
@@ -1730,30 +1738,30 @@ Arbitrary Boolean conditions can be built up using combinations of where clauses
 </p><p>
 For example, if we want to specify the condition that a number N is less than or equal to another number M, we can specify the condition:
 <pre>
-        where
-            N [< M] [= M]   % less than M or equal to M
+    where
+        N [&lt; M] [= M]   % less than M or equal to M
 </pre>
-(Note: for the sake of the example only; of course we would use [<=] in this case.)
+(Note: for the sake of the example only; of course we would use [&lt;=] in this case.)
 </p><p> The union ("and") of two conditions can be represented either by using the where all form:
 <pre>
-        where all
-            N [< M] [> K]   % less than M and greater than K
+    where all
+        N [&lt; M] [> K]   % less than M and greater than K
 </pre>
 or perhaps more elegantly by using two where clauses in a row, which together succeed only if both conditions succeed.
 </p><p>
 For example, if we want to specify the condition that a number N is less than another number M and greater than a third number K as above, we can also use the two conditions:
 <pre>
-        where
-            N [< M]     % less than M
-        where
-            N [> K]     %   and greater than K
+    where
+        N [&lt; M]     % less than M
+    where
+        N [> K]     %   and greater than K
 </pre>
 Complex conditions can be built up by combining these forms with the use of not, for example, the condition that M be less than or equal to N and not greater than K can be expressed as:
 <pre>
-        where
-            N [< M] [= M]   % less than M or equal to M
-        where not
-            N [> K]     %   and  not greater than K
+    where
+        N [&lt; M] [= M]   % less than M or equal to M
+    where not
+        N [> K]     %   and  not greater than K
 </pre>
 </p>
 <h3><a id="4.20">4.20</a> Polymorphic Rules</h3>
@@ -1835,11 +1843,11 @@ For this reason, it is recommended that polymorphic replace rules and functions 
 </p><p>
 On the other hand, replace rules and functions of type [any] can be very powerful, and can conveniently achieve some otherwise awkward or difficult transforms when used with discipline.  Condition rules and functions of type [any] are never dangerous, and can be very useful as well.  In this section we explore some paradigms for the disciplined use of rules and functions of type [any] that are very powerful and relatively benign.
 </p><p>
-Generic property testing functions :  The safest useful thing that can be done with [any] is to write generic property testing functions, avoiding the necessity of writing many functions of the same shape.  The following example tests for containment of any object of any type in any other object of any type:
+Generic property testing functions :  The safest useful thing that can be done with [any] is to write generic property testing functions, avoiding the necessity of writing many functions of the same shape.  The following example tests for containment of any item of any type in any other item of any type:
 <pre>
-    function contains Object [any]
+    function contains Item [any]
         match * [any]
-            Object
+            Item
     end function
 </pre>
 On the face of it, this function is much like a searching deconstruct.  It's only when used with each that we really see its usefulness:
@@ -1879,7 +1887,7 @@ The best example of this technique is generic markup.  In generic markup, we def
 <pre>
     define markup
         % The [any] here allows us to mark up anything at all
-        '< [id] '>  [any]  '</ [id] '>
+        '&lt; [id] '>  [any]  '&lt;/ [id] '>
     end define
 </pre>
 Markup rules can then use this type to mark up anything at all, saving us the chore of changing the grammar every time we choose to make a markup rule for a new nonterminal.
@@ -1889,7 +1897,7 @@ Markup rules can then use this type to mark up anything at all, saving us the ch
             Any [any]
         % Make a marked-up copy of the scope ...
         construct Markup [markup]
-            '< Tag '>  Any '</ Tag '>
+            '&lt; Tag '>  Any '&lt;/ Tag '>
         % ... and recast it as an [any] so that it can replace it.
         deconstruct Markup
             MarkupAny [any]
@@ -1916,8 +1924,6 @@ If tomorrow we decide we need to mark up [statement]'s, then we can do so withou
     end rule
 </pre>
 Because we always preserve the entire tree structure of the marked-up [statement] intact in the result, other rules in the program will in general not be affected by this use of [any].
-</p><p>
-<b> generic parameters</b>
 </p>
 <h3><a id="5.">5.</a> The Unparsing Phase</h3>
 <p>
@@ -1975,12 +1981,12 @@ For example, the following  definition, when used with -raw, specifies that the 
 </p><p>
 When character-level input is specified using the -char command line option, -raw is on by default.  If two adjacent identifiers appear in -raw output, then they are separated by a space to distinguish them, unless -char is on, in which case they are concatenated instead.
 </p><p>
-Local spacing of output can also be explicitly controlled by the TXL program using the built-in nonterminals [SPOFF] and [SPON], which dynamically turn default output spacing off and on respectively during output.   For example, default spacing would normally put spaces around < and >, which is not appropriate for XML tags, so we can temporarily suspend default spacing in tags like so:
+Local spacing of output can also be explicitly controlled by the TXL program using the built-in nonterminals [SPOFF] and [SPON], which dynamically turn default output spacing off and on respectively during output.   For example, default spacing would normally put spaces around &lt; and >, which is not appropriate for XML tags, so we can temporarily suspend default spacing in tags like so:
 <pre>
     define XML_tag
-        < [SPOFF] [id] > [SPON]     % e.g., &lt;x>
+        &lt; [SPOFF] [id] > [SPON]     % e.g., &lt;x>
             [repeat content]
-        < [SPOFF] / [id] > [SPON]   % e.g., &lt;/x>
+        &lt; [SPOFF] / [id] > [SPON]   % e.g., &lt;/x>
     end define
 </pre>
 </p>
@@ -2116,23 +2122,23 @@ TXL preprocessor statements are interpreted line-wise, which means that the # ch
 </p><p>
 For example, the following line does not contain a preprocessor directive :
 <pre>
-        '[ Oldid [id] #end if Jimbo Jambo ']
+    '[ Oldid [id] #end if Jimbo Jambo ']
 </pre>
 The following preprocessor line is legal and does contain a preprocessor directive :
 <pre>
-        #end if JIMBO @#$%!(*& JAMBO or #define MUMBO JUMBO
+    #end if JIMBO @#$%!(*& JAMBO or #define MUMBO JUMBO
 </pre>
 This line is exactly equivalent to :
 <pre>
-        #end if
+    #end if
 </pre>
 Any number of spaces may appear between the leading # and the preprocessor command, and between items in a preprocessor command.  Thus the preprocessor directive :
 <pre>
-        #     define   FOO
+    #     define   FOO
 </pre>
 is exactly equivalent to :
 <pre>
-        #define FOO
+    #define FOO
 </pre>
 As in Turing and C, preprocessor symbols are by convention all upper case, but are not required to be so.  Any TXL identifier can be used as a TXL preprocessor symbol.
 </p><p>
@@ -2344,7 +2350,7 @@ Note:  This grammar does not include the syntax of preprocessor directives - see
         |   '[ ': [typeidOrQuotedLiteral] ']        % see
         |   '[ '~ [typeidOrQuotedLiteral] ']        % not
         |   '[ '> [typeidOrQuotedLiteral] ']        % push
-        |   '[ '< [typeidOrQuotedLiteral] ']        % pop
+        |   '[ '&lt; [typeidOrQuotedLiteral] ']        % pop
     end define
 
     define plusOrStar
@@ -2494,7 +2500,7 @@ Note:  This grammar does not include the syntax of preprocessor directives - see
     define special
             '! | '@ | '# | '$ | '^ | '& | '%
         |   '* | '( | ') | '_ | '+ | '{ | '}
-        |   ': | '< | '> | '? | '~ | '\
+        |   ': | '&lt; | '> | '? | '~ | '\
         |   '= | '- | '; | ', | '. | '/
         |   '[ | '] | '|        % these three must be quoted in TXL
     end define
