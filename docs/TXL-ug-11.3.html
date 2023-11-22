@@ -138,8 +138,9 @@ The following options are recognized by the txl command.
 <pre>
 (none)  Print version identification and short usage message.
 
-        If the txl command is run with no command arguments at all, version information for the installed 
-        TXL commands and a short usage message is printed on the terminal via the standard error stream.
+        If the txl command is run with no command arguments at all, version information for the 
+        installed TXL commands and a short usage message is printed on the terminal via the standard 
+        error stream.
 
 -h      Print version identification and a detailed help message on the terminal.   
 
@@ -152,172 +153,181 @@ The following options are recognized by the txl command.
         
 -p      Progress - turn on progress and information messages.
 
-        Print version identification and short progress messages indicating the stage of processing on the  
-        standard error stream as TXL runs. 
+        Print version identification and short progress messages indicating the stage of processing 
+        on the standard error stream as TXL runs. 
 
 -v      Verbose operation - give greater detail in information messages.  
 
-        Causes TXL to print more detailed progress messages giving information on space and files used by 
-        each stage of processing. Also enables a number of common warning messages that are suppressed by default.  
+        Causes TXL to print more detailed progress messages giving information on space and files 
+        used by each stage of processing. Also enables a number of common warning messages that are 
+        suppressed by default.  
 
 -c      Compile TXL program to TXL virtual machine byte code only (do not execute).  
 
-        The compiled TXL virtual machine byte code for the TXL program prog.txl is output to the file prog.ctxl .  
-        The TXL byte code file can be loaded and executed directly by subsequent txl commands using the -l option, 
-        thus avoiding the overhead of recompiling the program on every run. TXL byte code files can be converted 
-        to C and compiled to standalone TXL applications by the txlc command (see <a href="#5.">"The 'txlc' Command"</a> below).
+        The compiled TXL virtual machine byte code for the TXL program prog.txl is output to the file 
+        prog.ctxl. The TXL byte code file can be loaded and executed directly by subsequent txl commands 
+        using the -l option, thus avoiding the overhead of recompiling the program on every run. 
+        TXL byte code files can be converted to C and compiled to standalone TXL applications by the 
+        txlc command (see <a href="#5.">"The 'txlc' Command"</a> below).
 
 -l      Load and transform input using a previously compiled TXL program.  
 
-        The compiled TXL virtual machine byte code for the TXL program prog.txl is loaded directly from the file 
-        prog.ctxl, which must be a TXL byte code file created by a previous txl -c command. The name of the TXL 
-        byte code file can either be inferred from the suffix of the first argument file or be explicitly given as 
-        the second argument. In either case the suffix of the TXL program file is ignored and .ctxl is used instead.
+        The compiled TXL virtual machine byte code for the TXL program prog.txl is loaded directly from 
+        the file prog.ctxl, which must be a TXL byte code file created by a previous txl -c command. 
+        The name of the TXL byte code file can either be inferred from the suffix of the first argument 
+        file or be explicitly given as the second argument. In either case the suffix of the TXL program 
+        file is ignored and .ctxl is used instead.
 
 -d SYMBOL  Define the TXL preprocessor symbol SYMBOL.  
 
-        Sets the preprocessor symbol SYMBOL to defined, so that #ifdef SYMBOL preprocessor directives will succeed 
-        in the compile of the TXL program.
+        Sets the preprocessor symbol SYMBOL to defined, so that #ifdef SYMBOL preprocessor directives 
+        will succeed in the compile of the TXL program.
 
 -comment  Treat comments in the input file as input items.  
 
-        Normally TXL discards any comments in the input before parsing. When this option is used, comments are 
-        treated as input items to be parsed like any other.  Care must be take to insure that the input language 
-        grammar specified in the TXL program explicitly allows comments in all the expected places, otherwise syntax 
-        errors will be flagged.
+        Normally TXL discards any comments in the input before parsing. When this option is used, 
+        comments are treated as input items to be parsed like any other.  Care must be take to insure 
+        that the input language grammar specified in the TXL program explicitly allows comments in all 
+        the expected places, otherwise syntax errors will be flagged.
 
 -char   Treat all input characters (including newlines and spaces) as significant.   
 
-        Normally TXL treats newlines, spaces and tabs ("white space") in input as separators only. When this option 
-        is specified, all characters in the input are treated as significant and categorized as tokens to be parsed 
-        according to the grammar. This option enables the predefined token classes [space] (any sequence of spaces 
-        and tabs) and [newline] (a newline character).  The grammar must be crafted to accept newlines and spaces 
-        wherever they may occur in the input.  This option automatically suppresses all output spacing.
+        Normally TXL treats newlines, spaces and tabs ("white space") in input as separators only. 
+        When this option is specified, all characters in the input are treated as significant and 
+        categorized as tokens to be parsed according to the grammar. This option enables the predefined 
+        token classes [space] (any sequence of spaces and tabs) and [newline] (a newline character).  
+        The grammar must be crafted to accept newlines and spaces wherever they may occur in the input.  
+        This option automatically suppresses all output spacing.
 
 -newline  Treat newline characters only (not tabs and spaces) as significant.   
 
-        Normally TXL treats newlines, spaces and tabs ("white space") in input as separators only. When this option 
-        is specified, newline characters (i.e. line boundaries) in the input are treated as significant and 
-        categorized as tokens to be parsed according to the grammar. This option enables the predefined token class 
-        [newline] (a newline character, that is, ASCII LF (Unix/Linux) or CR/LF (Windows) ). The grammar must be 
-        crafted to accept newlines wherever they may occur in the input.  
+        Normally TXL treats newlines, spaces and tabs ("white space") in input as separators only. 
+        When this option is specified, newline characters (i.e. line boundaries) in the input are 
+        treated as significant and categorized as tokens to be parsed according to the grammar. 
+        This option enables the predefined token class [newline] (a newline character, that is, ASCII 
+        LF (Unix/Linux) or CR/LF (Windows) ). The grammar must be crafted to accept newlines wherever 
+        they may occur in the input.  
 
 -multiline  Allow tokens to cross line boundaries (default).   
 
-        By default TXL allows tokens such as [stringlit] and [charlit] to cross line boundaries in order to handle 
-        multi-line strings, as for example in C. Newlines inside a mutli-line token are preserved in the token text.  
-        For some languages and grammars it may be necessary to limit tokens to a single line by disabling this option 
-        using #pragma -nomultiline in the grammar.
+        By default TXL allows tokens such as [stringlit] and [charlit] to cross line boundaries in order 
+        to handle multi-line strings, as for example in C. Newlines inside a mutli-line token are 
+        preserved in the token text. For some languages and grammars it may be necessary to limit tokens
+        to a single line by disabling this option using #pragma -nomultiline in the grammar.
 
 -token  Treat newlines and spaces as separators only (default).
 
-        Disables character level input, and treats all newlines, spaces and tabs as separators only. This is the 
-        default input mode.
+        Disables character level input, and treats all newlines, spaces and tabs as separators only. 
+        This is the default input mode.
 
 -txl    Treat the input being transformed as TXL source.
 
-        This option makes it possible to transform TXL programs themselves using TXL. Sets the lexical conventions 
-        of the input to TXL's own defaults. In particular, disables unquoted character literals and enables treatment 
-        of single quotes as separate input tokens.
+        This option makes it possible to transform TXL programs themselves using TXL. Sets the lexical 
+        conventions of the input to TXL's own defaults. In particular, disables unquoted character 
+        literals and enables treatment of single quotes as separate input tokens.
 
 -attr   Print attributes in the transformed output.
 
-        By default attributes (items of type [attr X] for some X) are not printed in output. This option causes all 
-        attributes to be treated as regular output items.
+        By default attributes (items of type [attr X] for some X) are not printed in output. This 
+        option causes all attributes to be treated as regular output items.
 
 -raw    Output transformed source in raw (unspaced) format.  
 
-        Normally TXL uses a set of built-in spacing rules appropriate to most high-level programming languages for 
-        formatting output. This option turns off all spacing and line wrapping in output except where the output 
-        would otherwise be ambiguous (e.g. between two adjacent identifiers), and as explicitly specified in the 
-        grammar using [SP] and [NL]. When used in conjunction with [SP], [NL] and [IN]/[EX], this option gives the 
-        user complete control over output formatting.
+        Normally TXL uses a set of built-in spacing rules appropriate to most high-level programming 
+        languages for formatting output. This option turns off all spacing and line wrapping in output 
+        except where the output would otherwise be ambiguous (e.g. between two adjacent identifiers), 
+        and as explicitly specified in the grammar using [SP] and [NL]. When used in conjunction with 
+        [SP], [NL] and [IN]/[EX], this option gives the user complete control over output formatting.
 
 -id 'CCC'  Treat each of the characters in 'CCC' as a valid character in [id] tokens.  
 
-        Adds the given characters as valid identifier characters in the [id] predefined token class. More general 
-        control over [id] can be achieved using the tokens statement in the TXL program.
+        Adds the given characters as valid identifier characters in the [id] predefined token class. 
+        More general control over [id] can be achieved using the tokens statement in the TXL program.
 
 -sp 'CCC'  Treat each of the characters in 'CCC' as a space.  
 
-        Adds the given characters to the set of characters treated as equivalent to the space character and treated 
-        as separators.  If -char is specified, these characters will be added to those matched by the [space] 
-        predefined token class.
+        Adds the given characters to the set of characters treated as equivalent to the space character 
+        and treated as separators.  If -char is specified, these characters will be added to those 
+        matched by the [space] predefined token class.
 
 -esc 'C'  Use 'C' as the escape character in string and character literals.  
 
-        By default the escape character is '\'  (e.g., "Here: \" is an embedded quote" ). If either  "'" or  '"' 
-        is specified,  then '"' is used for string literals  (e.g.,  "Here: "" is an embedded quote") and "'" is 
-        used for character literals (e.g., 'Here: '' is an embedded quote'). 
+        By default the escape character is '\'  (e.g., "Here: \" is an embedded quote" ). If either  
+        "'" or  '"' is specified,  then '"' is used for string literals  (e.g.,  "Here: "" is an 
+        embedded quote") and "'" is used for character literals (e.g., 'Here: '' is an embedded quote'). 
 
 -upper  Translate all unquoted input to upper case.  
 
-        Translates all input tokens except [stringlit] and [charlit] to upper case on input, and preserves the 
-        change in output.
+        Translates all input tokens except [stringlit] and [charlit] to upper case on input, 
+        and preserves the change in output.
 
 -lower  Translate all unquoted input to lower case.  
 
-        Translates all input tokens except [stringlit] and [charlit] to lower case on input, and preserves the 
-        change in output.
+        Translates all input tokens except [stringlit] and [charlit] to lower case on input, 
+        and preserves the change in output.
 
 -case   Ignore case in input.  
 
-        By default TXL is case-sensitive, that is, abc, ABC and aBc are all treated as different. This option 
-        specifies that the input language is case-insensitive, that is, abc, ABC, aBc and Abc are all to be 
-        treated as the same. Original case of  input tokens is preserved in output unless explicitly changed by 
-        the TXL program (for example, using the [toupper] or [tolower] built-in functions). However, within the TXL 
-        program all identifiers and keywords will appear to be lower case only, so literal keywords or identifiers 
-        in nonterminal definitions, functions and rules should be coded in lower case.
+        By default TXL is case-sensitive, that is, abc, ABC and aBc are all treated as different. 
+        This option specifies that the input language is case-insensitive, that is, abc, ABC, aBc and 
+        Abc are all to be treated as the same. Original case of  input tokens is preserved in output 
+        unless explicitly changed by the TXL program (for example, using the [toupper] or [tolower] 
+        built-in functions). However, within the TXL program all identifiers and keywords will appear 
+        to be lower case only, so literal keywords or identifiers in nonterminal definitions, functions 
+        and rules should be coded in lower case.
 
 -w NNN  Set the maximum output line width to NNN characters.  
 
-        By default TXL formats output in at most 128 characters per line. NNN must be a positive integer between 20 
-        and 1024000.  This option has no effect when the -raw is used.
+        By default TXL formats output in at most 128 characters per line. NNN must be a positive integer 
+        between 20 and 1024000.  This option has no effect when the -raw is used.
 
 -in NN  Set the output indentation increment to NN characters.  
 
-        Sets the number of character positions indented by [IN] and exdented by [EX] directives to NN characters.
-        The default is 4 characters.
+        Sets the number of character positions indented by [IN] and exdented by [EX] directives to NN 
+        characters. The default is 4 characters.
 
 -tabnl  Allow [TAB_NN] directives to force a newline.  
 
-        Allow [TAB_NN] directives to force a new line in the output if necessary to align the next output token at 
-        output column NN.  This is the default.
+        Allow [TAB_NN] directives to force a new line in the output if necessary to align the next 
+        output token at output column NN. This is the default.
 
 -xml    Output the transformed input as an XML parse tree.  
 
-        Outputs the result of the transformation as an XML parse tree (only). Useful in converting source text to XML 
-        syntax trees, and when debugging transformations. See also the -Dparse and -Dresult debugging options.
+        Outputs the result of the transformation as an XML parse tree (only). Useful in converting 
+        source text to XML syntax trees, and when debugging transformations. See also the -Dparse and 
+        -Dresult debugging options.
 
 -i DIR  Add DIR to the TXL include file search path.  
 
-        Adds DIR to the set of directories searched for TXL include files that are not present in the present working 
-        directory or its ./txl subdirectory. The directories are searched in the order that their -i directives are given 
-        on the command line.  If an include file is not found in any of these directories, then TXL system library 
-        directory (e.g., /usr/local/lib/txl or C:\windows\txl ) is searched last.
+        Adds DIR to the set of directories searched for TXL include files that are not present in the 
+        present working directory or its ./txl subdirectory. The directories are searched in the order 
+        that their -i directives are given on the command line. If an include file is not found in any 
+        of these directories, then TXL system library directory (e.g., /usr/local/lib/txl or 
+        C:\windows\txl ) is searched last.
 
 -s MM   Set the TXL transform size to MM megabytes. 
 
-        Sets the virtual memory allocated to TXL compiler and transformer data structures to the indicated size.  
-        MM must be a positive integer between 10 and 1000 (5000 in 64-bit versions). In order to maximize transform 
-        efficiency, TXL liberally exploits the operating system's native virtual memory by artificially pre-allocating 
-        a fixed amount of static storage rather than attempting to manage storage dynamically. This strategy places 
-        static limits on the size of the input that can be processed as well as on the complexity and depth of the 
-        transformation that can be performed. This option explicitly sets the amount of static storage available 
-        and thus can be used to increase these limits. This option is normally used only when the system default limits 
-        have been exceeded or when permanently trimming the virtual memory used by a compiled TXL application.  
-        See also the -u option.
+        Sets the virtual memory allocated to TXL compiler and transformer to the indicated size.  
+        MM must be a positive integer between 10 and 1000 (5000 in 64-bit versions). In order to 
+        maximize transform efficiency, TXL liberally exploits the operating system's native virtual 
+        memory by artificially pre-allocating a fixed amount of static storage rather than attempting 
+        to manage storage dynamically. This strategy places static limits on the size of the input 
+        that can be processed as well as on the complexity and depth of the transformation that can be 
+        performed. This option explicitly sets the amount of static storage available and thus can be 
+        used to increase these limits. This option is normally used only when the system default limits 
+        have been exceeded or when permanently trimming the virtual memory used by a compiled TXL 
+        application. See also the -u option below.
 
 -u      Report TXL resource usage statistics at the end of the run.  
 
-        Prints a table of the static limits on the various TXL internal data structures and the amount of each actually 
-        used by the TXL run.  This option can be used to choose an appropriate transform size for typical input data 
-        (see the -s option above).
+        Prints a table of the static limits on the various TXL internal data structures and the amount 
+        of each actually used by the TXL run.  This option can be used to choose an appropriate 
+        transform size for typical input data (see the -s option above).
 
 -o FILE  Write the output of the transformation to file FILE instead of the standard output.
 
-        Normally TXL writes the output of the run to the standard output. This option redirects output to the specified 
-        file instead.
+        Normally TXL writes the output of the run to the standard output. This option redirects output 
+        to the specified file instead.
 
 -noOPTION  Turn command line option OPTION off.  
 
@@ -325,8 +335,8 @@ The following options are recognized by the txl command.
 
 - USERARGS  (Note the space after '-' !) Pass remaining command line arguments to the TXL program.  
 
-        Passes all following command line arguments to the TXL program in the predefined global variable TXLargs.  
-        For example, the command line :
+        Passes all following command line arguments to the TXL program in the predefined global variable 
+        TXLargs. For example, the command line :
 
             txl eg.in in.txl -s 100 - -myopt foo -otheropt
 
@@ -340,50 +350,56 @@ The following TXL debugging options are recognized by txl.  Some or all of these
 <pre>
 -analyze  Invoke the TXL grammar and rule set analyzer.  
 
-        Causes the TXL compiler to perform an additional set of checks on the grammar and rule set, including a check for 
-        ambiguities and potential efficiency issues in the grammar. This option may significantly slow down the compile.
+        Causes the TXL compiler to perform an additional set of checks on the grammar and rule set, 
+        including a check for ambiguities and potential efficiency issues in the grammar. This option 
+        may significantly slow down the compile.
 
 -Dscan  Print the input tokens to the standard error stream in XML format.
 
-        Prints the input tokens recognized by the TXL scanner on the terminal via the standard error stream.  
-        Useful when debugging token definitions and unexpected syntax errors.
+        Prints the input tokens recognized by the TXL scanner on the terminal via the standard error 
+        stream. Useful when debugging token definitions and unexpected syntax errors.
 
 -Dparse Print the input parse tree to the standard error stream in XML format.  
 
-        Print the input parse tree on the terminal via the standard error stream. Useful when debugging grammars, 
-        or in understanding why a pattern has not matched the input.
+        Print the input parse tree on the terminal via the standard error stream. Useful when debugging 
+        grammars, or in understanding why a pattern has not matched the input.
 
 -Dresult  Print the output parse tree to the standard error stream in XML format.  
 
-        Print the output parse tree on the terminal via the standard error stream. Useful when debugging grammars, 
-        or in understanding why output is not formatted as expected.
+        Print the output parse tree on the terminal via the standard error stream. Useful when debugging 
+        grammars, or in understanding why output is not formatted as expected.
 
 -Dgrammar  Print the program grammar to the standard error stream as a parse tree schema in XML format.  
 
-        TXL compiles input language grammars to a compact generic tree format used as both a pattern and a generator 
-        for parse trees of input. This option prints the compiled grammar tree for use in debugging subtle problems 
-        with a grammar.
+        TXL compiles input language grammars to a compact generic tree format used as both a pattern and 
+        a generator for parse trees of input. This option prints the compiled grammar tree for use in 
+        debugging subtle problems with a grammar.
 
--Dpattern  Print all pattern and replacement parse tree schemas to the standard error stream in XML format.  
+-Dpattern  Print all pattern and replacement parse tree schemas to the standard error stream 
+           in XML format.  
 
-        The parse tree of every pattern and replacement in the TXL program's rule set is printed on the terminal via the 
-        standard error stream. This option is useful in debugging patterns of rules that fail to match input as expected.
+        The parse tree of every pattern and replacement in the TXL program's rule set is printed on the 
+        terminal via the standard error stream. This option is useful in debugging patterns of rules 
+        that fail to match input as expected.
 
 -Drules  Print out the names of rules to the standard error stream as they are applied.  
 
-        A convenient trace of the order in which the rules and functions of the TXL program are actually invoked.
+        A convenient trace of the order in which the rules and functions of the TXL program are actually 
+        invoked.
 
 -Dapply  Print out the actual transformations made by rule applications on the terminal as they happen.
 
-        Useful for following the progress of a transformation. Transformations are output in the form A => B, 
-        where A and B are the text output form of the original and result scope of the transforming rule respectively.
+        Useful for following the progress of a transformation. Transformations are output in the form 
+        A => B, where A and B are the text output form of the original and result scope of the 
+        transforming rule respectively.
 </pre>
 </p>
 <h3><a id="2.3">2.3</a>  Accessing Command Line Arguments in TXL</h3>
 <p>
 TXL programs are passed command line arguments as predefined TXL global variables.  On every run, the following global variables are automatically predefined: 
 <pre>
-    TXLargs [repeat stringlit]      TXL program command line arguments (see the "- USERARGS" command line option)
+    TXLargs [repeat stringlit]      TXL program command line arguments 
+                                      (see the "- USERARGS" command line option)
     TXLprogram [stringlit]          The file path of the TXL program being run
     TXLinput [stringlit]            The file path of the main input to the TXL program
     TXLexitcode [number]            The exit code for the TXL run (default 0)
@@ -699,7 +715,8 @@ The following TXL options are recognized by txlc.  See "The 'txl' Command" above
 
 -raw    The application is to output transformed source in raw (unspaced) format.  
 
--id 'CCC'  The application is to treat each of the characters in 'CCC' as a valid character in [id] tokens.  
+-id 'CCC'  The application is to treat each of the characters in 'CCC' as a valid character 
+           in [id] tokens.  
 
 -sp 'CCC'  The application is to treat each of the characters in 'CCC' as a space.  
 
@@ -743,7 +760,8 @@ The following TXL options are recognized by applications created using txlc.  In
 
 -h      Print a short usage message on the terminal.
 
--p      Print version identification and progress information messages on the terminal as the application is run.
+-p      Print version identification and progress information messages on the terminal as the 
+        application is run.
 
 -v      Print more detailed progress and information messages as the application is run.  
 
@@ -751,7 +769,8 @@ The following TXL options are recognized by applications created using txlc.  In
 
 -s MM   Set the application's TXL transform size to MM megabytes. 
 
--o FILE  Write the output of the application's transformation to file FILE instead of the standard output.
+-o FILE  Write the output of the application's transformation to file FILE instead of the standard 
+         output.
 </pre>
 Command line options other than those above are assumed to be user program options and are passed to the standalone program in the TXL predefined global variable TXLargs (see <a href="#2.3">"Accessing Command Line Arguments in TXL"</a> above).
 </p>
@@ -809,7 +828,8 @@ Piped standard input makes chains of TXL transformations and mixed tool transfor
 <pre>
     txl originalinput stage1.txl | txl /dev/stdin stage2.txl | txl /dev/stdin stage3.txl > finaloutput
 
-    txl originalinput transform1.txl | grep "interesting patterns" | txl /dev/stdin transform2.txl > finaloutput
+    txl originalinput transform1.txl | grep "interesting patterns" | txl /dev/stdin transform2.txl 
+        > finaloutput
 
     grep "interesting patterns" originalinput | txl /dev/stdin transform.txl > finaloutput
 </pre>
@@ -827,8 +847,7 @@ For example, the following main program reads in lines of input consisting of se
         [empty]
     end define
 
-    % This rule intentionally goes on forever,
-    % repeatedly replacing its empty main input by itself -
+    % This rule intentionally goes on forever, repeatedly replacing its empty main input by itself -
     % the real work is in the interactive part 
     rule main
         replace [program]

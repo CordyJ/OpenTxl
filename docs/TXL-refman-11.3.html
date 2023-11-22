@@ -204,48 +204,48 @@ Certain predefined nonterminal types match the basic grammatical classes of inpu
 <pre>
     <u>Type</u>                <u>Matches</u>
 
-    [id]            Any identifier beginning with a letter or underscore and continuing with any number of 
-                    letters, digits and underscores.
+    [id]            Any identifier beginning with a letter or underscore and continuing with any number 
+                    of letters, digits and underscores.
 
                     For example:
                         ABC, abc, a9b56, aBc, AbC, a_7bc, Ab_C_, _abc, _22, _
 
-                    Letters include all of the alphabetic characters of the ISO Latin-1 character set as well 
-                    as the standard ASCII alphabetic characters. The set of characters to be recognized in 
-                    identifiers can be extended using the -idchars command line option, e.g. -idchars '$#' 
-                    causes both $ and # to be accepted in identifiers.
+                    Letters include all of the alphabetic characters of the ISO Latin-1 character set 
+                    as well as the standard ASCII alphabetic characters. The set of characters to be 
+                    recognized in identifiers can be extended using the -idchars command line option, 
+                    e.g. -idchars '$#' causes both $ and # to be accepted in identifiers.
 
-    [number]        Any unsigned integer or real number beginning with a digit and continuing with any number 
-                    of digits, an optional decimal point followed by at least one more digit, and an optional
-                    exponent beginning with the letter E or e and followed by an optional sign and at least 
-                    one digit.
+    [number]        Any unsigned integer or real number beginning with a digit and continuing with any 
+                    number of digits, an optional decimal point followed by at least one more digit, 
+                    and an optional exponent beginning with the letter E or e and followed by an 
+                    optional sign and at least one digit.
 
                     For example:
                         123, 12.34, 123.45e22
                         
-    [stringlit]     Any double quoted string literal beginning and ending with a double quote (") and consisting 
-                    of any number of characters between. Any character is allowed in a string literal except the 
-                    character " itself and the ASCII NUL character (Hex 00).  If a string escape character such 
-                    as "\" has been specified using the -esc command line option, then " may appear escaped in 
-                    the string literal (e.g., "\"").
+    [stringlit]     Any double quoted string literal beginning and ending with a double quote (") 
+                    and consisting of any number of characters between. Any character is allowed in 
+                    a string literal except the character " itself and the ASCII NUL character (Hex 00).
+                    If a string escape character such as "\" has been specified using the -esc command 
+                    line option, then " may appear escaped in the string literal (e.g., "\"").
 
                     For example:
                         "Hi there", "Hello \"There\"", ""
 
-    [charlit]       Any single quoted character literal beginning and ending with a single quote (') and 
-                    consisting of any number of characters between. Any character is allowed in a character 
-                    literal except the character ' itself and the ASCII NUL character (Hex 00). If a string escape 
-                    character such as "\" has been specified using the -esc command line option, then ' may appear 
-                    escaped in the character literal (e.g., '\'').
+    [charlit]       Any single quoted character literal beginning and ending with a single quote (') 
+                    and consisting of any number of characters between. Any character is allowed in a 
+                    character literal except the character ' itself and the ASCII NUL character (Hex 00).
+                    If a string escape character such as "\" has been specified using the -esc command 
+                    line option, then ' may appear escaped in the character literal (e.g., '\'').
 
                     For example:
                         'Hi there', 'Hello \'There\'', ''
 
-    [comment]       Any input language comment as defined in the comments section of the TXL program (see 
-                    "Comments Statement" below). Comment tokens are ignored by TXL unless the -comment command 
-                    line option is used, in which case they are accepted as input items. If comments are to be 
-                    accepted as input items, then the grammar defined by the TXL program must be prepared to 
-                    accept them wherever they may occur in the input.
+    [comment]       Any input language comment as defined in the comments section of the TXL program 
+                    (see "Comments Statement" below). Comment tokens are ignored by TXL unless the 
+                    -comment command line option is used, in which case they are accepted as input items.
+                    If comments are to be accepted as input items, then the grammar defined by the TXL 
+                    program must be prepared to accept them wherever they may occur in the input.
 </pre>
 </p>
 <p>
@@ -265,13 +265,15 @@ The -char command line option changes the default behaviour by making all white 
 <pre>
     <u>Type</u>                <u>Matches</u>
 
-    [space]         A white space token - that is, any sequence of blank (ASCII SP) and tab (ASCII HT) characters.  
-                    If white space is to be accepted as input, then the grammar defined by the TXL program must be 
-                    prepared to accept [space] tokens wherever they may occur in the input.
+    [space]         A white space token - that is, any sequence of blank (ASCII SP) and tab (ASCII HT) 
+                    characters. If white space is to be accepted as input, then the grammar defined by 
+                    the TXL program must be prepared to accept [space] tokens wherever they may occur 
+                    in the input.
 
-    [newline]       A newline token - that is, an NL (ASCII LF) character in Unix/Linux and MacOSX, or an end of line 
-                    (ASCII CR LF) in Windows.  If line boundaries are to be accepted as input, then the grammar defined 
-                    by the TXL program must be prepared to accept [newline] tokens wherever they may occur in the input.
+    [newline]       A newline token - that is, an NL (ASCII LF) character in Unix/Linux and MacOSX, 
+                    or an end of line (ASCII CR LF) in Windows. If line boundaries are to be accepted 
+                    as input, then the grammar defined by the TXL program must be prepared to accept 
+                    [newline] tokens wherever they may occur in the input.
 </pre>
 </p>
 <p>
@@ -330,25 +332,28 @@ Although not of interest to the majority of users, more advanced TXL programmers
 
     [key]           Any input language keyword as defined in the keys section of the TXL program (see 
                     "Keys Statement" below). Normally keywords appear in the grammar as literal terminal
-                    symbols representing themselves.  This nonterminal on the other hand accepts any keyword 
-                    of the input language at all, and is not normally used in any but the most sophisticated 
-                    TXL programs.
+                    symbols representing themselves.  This nonterminal on the other hand accepts any 
+                    keyword of the input language at all, and is not normally used in any but the most 
+                    sophisticated TXL programs.
 
-    [token]         Any input item which is not a keyword as defined in the keys section of the TXL program 
-                    (see "Keys Statement" below). This nonterminal accepts any input item at all, including all
-                    [id]s, [number]s, [stringlit]s, [charlit]s, [comment]s, and literal terminal symbols, 
-                    and is not normally used in any but the most sophisticated TXL programs.
+    [token]         Any input item which is not a keyword as defined in the keys section of the TXL 
+                    program (see "Keys Statement" below). This nonterminal accepts any input item at all,
+                    including all [id]s, [number]s, [stringlit]s, [charlit]s, [comment]s, and literal 
+                    terminal symbols, and is not normally used in any but the most sophisticated TXL 
+                    programs.
 </pre>
 </p><p>
 Some analysis transformations want to associate transformed output with the original source coordinates of the input source files.  The special pseudo-nonterminal types [srclinenumber] and [srcfilename] provide this capability by preserving source coordinates in the parse tree.  These nonterminals always match and consume no input, but in the resulting parse tree they store the original source file line number and file name of the point in the input where they are matched.
 <pre>
     <u>Type</u>                <u>Matches</u>
 
-    [srclinenumber] Always recognized regardless of input, but consumes no input items. In the resulting parse tree, 
-                    encodes the original source file line number of the input at the point where it is accepted.
+    [srclinenumber] Always recognized regardless of input, but consumes no input items. In the resulting
+                    parse tree, encodes the original source file line number of the input at the point 
+                    where it is accepted.
 
-    [srcfilename]   Always recognized regardless of input, but consumes no input items. In the resulting parse tree, 
-                    encodes the original source file path of the input at the point where it is accepted.
+    [srcfilename]   Always recognized regardless of input, but consumes no input items. In the resulting
+                    parse tree, encodes the original source file path of the input at the point where 
+                    it is accepted.
 </pre>
 </p><p>
 If either of these is specified in a nonterminal definition, it must also appear in all patterns and replacements matching the nonterminal.  Both will also appear in the output, unless specified as an attribute using the attr nonterminal modifier (see "Nonterminal Modifiers" below for details).
@@ -1514,9 +1519,11 @@ Built-in functions provide a set of common operations that are difficult, awkwar
 
     R1 [. R2]       replaces R1 with the sequence concatenation  of R1 and R2
     N1 [length R1]  replaces N1 with the length of the sequence R1
-    R1 [select N1 N2]   replaces R1 with the subsequence of R1 from element N1 through N2 inclusive (1-origin)
+    R1 [select N1 N2]  replaces R1 with the subsequence of R1 from element N1 through N2 inclusive 
+                         (1-origin)
     R1 [head N1]    replaces R1 with the subsequence of R1 from element 1 through N1 inclusive (1-origin)
-    R1 [tail N1]    replaces R1 with the subsequence of R1 from element N1 to the end of R1 inclusive (1-origin)
+    R1 [tail N1]    replaces R1 with the subsequence of R1 from element N1 to the end of R1 inclusive 
+                      (1-origin)
 
     R1 [^ X1]       ("extract") appends a sequence consisting of every subtree of type [T]
                       contained in X1 (including those recursively inside other [T]s) 
@@ -1531,9 +1538,11 @@ Built-in functions provide a set of common operations that are difficult, awkwar
 
     L1 [, L2]       replaces L1 with the list concatenation  of L1 and L2
     N1 [length L1]  replaces N1 with the length of the list L1
-    L1 [select N1 N2]   replaces L1 with the sublist of L1 from element N1 through N2 inclusive (1-origin)
+    L1 [select N1 N2]  replaces L1 with the sublist of L1 from element N1 through N2 inclusive 
+                         (1-origin)
     L1 [head N1]    replaces L1 with the sublist of L1 from element 1 through N1 inclusive (1-origin)
-    L1 [tail N1]    replaces L1 with the sublist of L1 from element N1 to the end of L1 inclusive (1-origin)
+    L1 [tail N1]    replaces L1 with the sublist of L1 from element N1 to the end of L1 inclusive 
+                      (1-origin)
 
 <u>Numeric Comparisons</u>  
 (N1, N2 must both be of type [number] or other numeric type)
@@ -1550,7 +1559,8 @@ Built-in functions provide a set of common operations that are difficult, awkwar
 
     T1 [= T2]       (condition) succeeds if  the text of T1 is identical to the text of T2
     T1 [~= T2]      (condition) succeeds if  the text of T1 is not identical to the text of T2
-    T1 [> T2]       (condition) succeeds if  the text of T1 is alphanumerically greater than the text of T2
+    T1 [> T2]       (condition) succeeds if  the text of T1 is alphanumerically greater than the text 
+                      of T2
     T1 [>= T2]      (condition) succeeds if  the text of T1 is alphanumerically >= the text of T2
     T1 [&lt; T2]       (condition) succeeds if  the text of T1 is alphanumerically less than the text of T2
     T1 [&lt;= T2]      (condition) succeeds if  the text of T1 is alphanumerically <= the text of T2
@@ -1573,15 +1583,16 @@ Built-in functions provide a set of common operations that are difficult, awkwar
                      (a fast one-pass substitution of Y2 for Y1)
 
 <u>Type Conversions</u>  
-(T1, T2 must be of type [stringlit], [charlit], [id], [comment] or any other predefined or user token type, 
- S1 must be of type [stringlit] or [charlit], and X1, X2 can be any type at all)
+(T1, T2 must be of type [stringlit], [charlit], [id], [comment] or any other predefined or user token 
+ type, S1 must be of type [stringlit] or [charlit], and X1, X2 can be any type at all)
 
     T1 [quote X1]   appends the output text of X1 to the text of T1 (same as [unparse])
     T1 [unquote S1] replaces the text of T1 with the unquoted text of S1
 
     X1 [parse T1]   replaces X1 of any type [T] with a parse of the text of T1 as a [T]
     T1 [unparse X1] appends the output text of X1 to the text of T1  (same as [quote])
-    X1 [reparse X2] replaces X1 of any type [T] with a parse of the leaves (terminal symbols) of X2 as a [T]
+    X1 [reparse X2] replaces X1 of any type [T] with a parse of the leaves (terminal symbols) of X2 
+                      as a [T]
 
 <u>Operations on Types</u>  
 (polymorphism operations, for use with [any] - ID1 must be of type [id] or any other identifier type, 
@@ -1595,8 +1606,8 @@ Built-in functions provide a set of common operations that are difficult, awkwar
  F1 must be of type [stringlit] or [charlit], X1 can be any type)
 
     X1 [read S1]    replaces X1 of any type [T] with a parse of the text file S1 as a [T]
-    X1 [write S1]   writes the output text of X1 as the text file S1 (which is opened or created if necessary, 
-                      written and closed)
+    X1 [write S1]   writes the output text of X1 as the text file S1 (which is opened or created if 
+                      necessary, written and closed)
     X1 [get]        inputs one line of text from the standard input and replaces X1 of any type [T] 
                       with a parse of the line of text as a [T]
     X1 [fget F1]    inputs one line of text from file F1 (which is opened if necessary) and replaces X1 
@@ -1611,12 +1622,17 @@ Built-in functions provide a set of common operations that are difficult, awkwar
     X1 [fputp F1 S1]    appends the text of S1 to file F1, with the output text of X1 inserted at the
                           point of the first "%" character in S1
     S1 [gets]       replaces S1 with one line of raw input text from the standard input
-    S1 [fgets F1]   replaces S1 with one line of raw input text from file F1 (which is opened if necessary)
+    S1 [fgets F1]   replaces S1 with one line of raw input text from file F1, which is opened if 
+                      necessary
     S1 [puts]       outputs the raw text of S1 as a line to the standard error stream
-    S1 [fputs F1]   outputs the raw text of S1 as a line to file F1, which is opened or created if necessary
+    S1 [fputs F1]   outputs the raw text of S1 as a line to file F1, which is opened or created if 
+                      necessary
     X1 [fclose F1]  closes file F1 - only necessary if the file is to be reopened
-    X1 [fopen F1 M1]    opens file F1 in the indicated mode M1, which must be one of  "get", "put" or "append" 
-                          (only required if the file is to be opened "append")
+    X1 [fopen F1 M1]    opens file F1 in the indicated mode M1, which must be one of  "get", "put" or 
+                          "append" (only required if the file is to be opened "append")
+    X1 [faccess F1 M1]  (condition) tests if the file F1 can be opened in the indicated mode M1, 
+                          which must be one of  "get", "put" or "append" 
+
 <u>Debugging Aids</u>  
 (X1, X2 can be any type at all)
 
@@ -1633,15 +1649,16 @@ Built-in functions provide a set of common operations that are difficult, awkwar
 (S1 must be of type [stringlit] or [charlit], N1 must be of type [number] or other numeric type, 
  X1 can be any type)
 
-    X1 [pragma S1]  interpret the TXL command line options specified in S1 to dynamically change TXL options 
-                      during execution
+    X1 [pragma S1]  interpret the TXL command line options specified in S1 to dynamically change TXL 
+                      options during execution
     X1 [quit N1]    immediately abort TXL execution with return code N1
 
 <u>System Interface</u>  
 (S1, S2 must both be of type [stringlit] or [charlit], X1 can be any type at all)
 
-    X1 [system S1]  invoke /bin/sh to run the text of S1 as a shell command line; X1 is ignored and unchanged.
-                      (most useful when used in conjunction with [write] and [read] to manipulate data in files)
+    X1 [system S1]  invoke /bin/sh to run the text of S1 as a shell command line; X1 is ignored and 
+                      unchanged. (Most useful when used in conjunction with [write] and [read] to 
+                      manipulate data in files)
     S1 [pipe S2]    invoke /bin/sh to run the shell command 'echo "text of S1" | text of S2'
                       and replace the text of S1 with the first line of the result
 </pre>
@@ -2581,6 +2598,7 @@ The implementation of lists is such that the pattern:
 </pre>
 matches any nonempty list, including the singleton list (even though it does not have a comma).
 This property simplifies working with lists and avoids the need to have separate rules for singleton lists.
+</p>
             </div>
         </td>
     </tr>
