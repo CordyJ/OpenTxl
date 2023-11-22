@@ -1,0 +1,1590 @@
+<html>
+<head>
+    <title>The TXL Built-in Functions</title>
+    <style>
+      div.scroll {
+        width: 95%;
+        height: 800px;
+        align: left;
+        overflow-y: auto;
+      }
+      h2 {
+          margin-top: 0;
+          margin-bottom: 0;
+      }
+      h3 {
+          margin-top: 0;
+          margin-bottom: 0;
+      }
+    </style>
+</head>
+<body>
+<br>
+<font face="sans-serif">
+<table align="center" width="95%" height="1000px">
+    <tr valign="top">
+        <td colspan=3>
+            <h2>The TXL Built-in Functions</h2>
+            <ul>
+            Version 11.3<br>
+            <p>
+            <font size="-1">
+            &copy; 1991-2023 James R. Cordy and others<br>
+            November 2023<br><br>
+            </font>
+            </p>
+            </ul>
+        </td>
+    </tr>
+    <tr valign="top" height="870px">
+        <td width="300px">
+            <div style="padding: 10px;background-color: #F0F0F0;" class="scroll">
+                <h3>Table of Contents</h3>
+                <font size="-1">
+                <br>
+                <a href="#1.">1.</a> Built-in Functions in TXL<br>
+                <br>
+
+                <a href="#2.">2.</a> Arithmetic Operations<br>
+                    <ul>
+                    <a href="#2.1">2.1</a> Real Arithmetic [+], [-], [*], [/]<br>
+                    <a href="#2.2">2.2</a> Integer Arithmetic [div], [rem]<br>
+                    <a href="#2.3">2.3</a> Numeric Rounding [round], [trunc]<br>
+                    </ul>
+
+                <a href="#3.">3.</a> Text Operations<br>
+                    <ul>
+                    <a href="#3.1">3.1</a> Concatenation, Substring and Length [+], [:], [#]<br>
+                    <a href="#3.2">3.2</a> Substring Search [index], [grep]<br>
+                    <a href="#3.3">3.3</a> Text Case Conversion [tolower], [toupper]<br>
+                    </ul>
+
+                <a href="#4.">4.</a> Operations on Identifiers<br>
+                    <ul>
+                    <a href="#4.1">4.1</a> Identifier Concatenation [+], [_]<br>
+                    <a href="#4.2">4.2</a> Unique Identifier Generation [!]<br>
+                    </ul>
+
+                <a href="#5.">5.</a> Operations on Sequences and Lists<br>
+                    <ul>
+                    <a href="#5.1">5.1</a> Sequence and List Concatenation [.], [,]<br>
+                    <a href="#5.2">5.2</a> Subsequence Selection [length], [select], [head], [tail]<br>
+                    <a href="#5.3">5.3</a> Type Extraction to a Sequence [^], [^/]<br>
+                    </ul>
+
+                <a href="#6.">6.</a> Comparison Operations<br>
+                    <ul>
+                    <a href="#6.1">6.1</a> Numeric Comparisons [=], [~=], [>], [>=], [&lt;], [&lt;=]<br>
+                    <a href="#6.2">6.2</a> Text Comparisons [=], [~=], [>], [>=], [&lt;], [&lt;=]<br>
+                    <a href="#6.3">6.3</a> General Comparisons  [=], [~=]<br>
+                    </ul>
+
+                <a href="#7.">7.</a> Fast Ground Substitute [$]<br>
+                <br>
+
+                <a href="#8.">8.</a> Type Conversion<br>
+                    <ul>
+                    <a href="#8.1">8.1</a> Conversion to Text [quote], [unquote]<br>
+                    <a href="#8.2">8.2</a> Dynamic Parsing [parse], [reparse], [unparse]<br>
+                    <a href="#8.3">8.3</a> Generic programming [typeof], [istype]<br>
+                    </ul>
+
+                <a href="#9.">9.</a> Programmed Input/Output <br>
+                    <ul>
+                    <a href="#9.1">9.1</a> File-oriented Input/Output [read], [write]<br>
+                    <a href="#9.2">9.2</a> Interactive Input/Output [get]/[fget], [put]/[fput], [getp], [putp]/[fputp], [gets]/[fgets], [puts]/[fputs], [fopen], [fclose], [faccess]<br>
+                    </ul>
+
+                <a href="#10.">10.</a> Debugging Aids<br>
+                    <ul>
+                    <a href="#10.1">10.1</a> Programmed Messages [message], [print], [printattr]<br>
+                    <a href="#10.2">10.2</a> Interactive Debugging [debug], [breakpoint]<br>
+                    </ul>
+
+                <a href="#11.">11.</a> Execution Control<br>
+                    <ul>
+                    <a href="#11.1">11.1</a> Dynamic Run Options [pragma]<br>
+                    <a href="#11.2">11.2</a> Programmed Abort [quit]<br>
+                    </ul>
+
+                <a href="#12.">12.</a> System Interface<br>
+                    <ul>
+                    <a href="#12.1">12.1</a> Execute System Command [system], [pipe]<br>
+                    </ul>
+                </font>
+            </div>
+        </td>
+
+        <td width="40px"> </td>
+
+        <td width="auto">
+            <div class="scroll">
+
+<h3><a id="1.">1.</a>  Built-in Functions in TXL</h3>
+<p>
+TXL built-in functions provide a set of common operations that are difficult, awkward, or inefficient to implement directly in TXL.  These consist of the arithmetic, text, and identifier operations and comparisons, list and sequence operations, interactive and file input/output, system access and debugging operations. <br>
+</p><p>
+The TXL built-in functions are built in to the TXL engine and are automatically available in all TXL programs.  They need not be imported or included explicitly.  With the exception of  [system] and [pipe], which are platform dependent, all built-in functions are available in all implementations of TXL.<br>
+</p>
+<h3><a id="2.">2.</a>  Arithmetic Operations</h3>
+<p>
+The arithmetic operations allow for numerical computation in TXL.  While TXL is not designed or recommended for numerical applications, many analyses and transformations appropriate to TXL require some numerical computation.  However, TXL is a symbolic computation system and all numeric tokens are internally represented by their text, not their value.  These operations convert the text to numeric values, perform the operations numerically, and convert the result back to text as a new token.  Thus TXL is not suitable for implementing programs that are primarily numerical in nature.<br>
+</p><p>
+All arithmetic operations are performed in double precision floating point arithmetic, although the result is represented in simplest terms, so X [+ 1] where X is 1 yields a result of 2, not 2.0e00.  The range of numerical computation in a TXL implementation is determined by double precision floating point representation of the host computer.  For example, on the Intel x86 architecture the range of values is approximately -1.8e+308 to +1.8e+308 with an exponent range of -308 to +308.<br>
+</p>
+<h3><a id="2.1">2.1</a>  Real Arithmetic</h3>
+<p>
+The basic arithmetic operations are [+] (addition), [-] (subtraction), [*] (multiplication), and [/] (division).  The operators all take a scope and one argument of type [number] (or equivalently, any other numeric type) and yield a number of the same type as result.  <br>
+</p><p>
+Although the operation is performed in double precision floating point, the result is always represented in simplest form - that is, as an integer if the result is an integer (e.g., 2, not 2.0e+00 and 35000, not 3.5e+04), and as a rounded decimal number if the result has a fractional part (e.g., 37.5, not 3.749999999e+01).  Results less than or equal to -1,000,000 or greater than or equal to +1,000,000 are represented in floating point notation, that is, 1.0e+06, not 1000000.<br>
+</p><p>
+For example, if A, B and C are [number]s bound to the values A=1, B=2.5 and C=3 respectively, then:
+<pre>
+    construct Bsquared [number] 
+        B [* B]                             % yields 6.25
+    construct FourAC [number] 
+        A [* C] [* 4]                       % yields 12
+    construct BsquaredMinusFourAC [number] 
+        Bsquared [- FourAC]                 % yields -5.75
+</pre>
+Note that the constructor FourAC cannot be written as 4 [* A] [* C], since TXL functions must be applied to a bound variable and cannot be applied directly to a terminal token as scope.  If the order of computation were important and the 4 must be first, then we would have to construct a variable with the value 4:
+<pre>
+    construct Four [number] 
+        4
+    construct FourAC [number] 
+        Four [* A] [* C]                    % still yields 12
+</pre>
+In the examples above we have used traditional TXL format  in the function applications, separating the argument from the function name (e.g., A [* C] ).  However, because the arithmetic functions use operator symbols rather than function names,  argument spacing is redundant and we can also write things like
+<pre>
+    construct CsquaredMinus1 [number] 
+        C[*C][-1]                           % yields 8
+</pre>
+While TXL is not designed for numerical computation, when necessary it is possible to write most numerical computations (albeit in a wordy form).  As an example, the function [factorial] below takes a number N as its scope, and recursively calculates N! (read 'N-factorial'), where  N! = N * (N-1) * (N-2)...* 2 * 1, for N > 0.
+<pre>
+    function factorial
+        replace [number]
+            N [number]
+        where 
+            N [> 1]
+        construct NminusOneFactorial [number]
+            N [- 1] [factorial]  % subtract 1, then recursively apply the function [factorial]
+        by
+            N [* NminusOneFactorial]
+    end function
+</pre>
+This function works by taking a number N, then checking to ensure that the N is strictly greater than 1.  It then proceeds to calculate the value of (N-1)! recursively.  This result is then multiplied to the original value of N,  to yield the result.  (Note that this function should really check for the 0! case (0! = 1), but this case has been left out for simplicity.)
+</p><p>
+An issue with numerical computation in TXL is the creation of new tokens for each result.  Since TXL is s symbolic manipulation languages, each result is converted to a text token of type [number] and entered into the TXL hash table.  If an excessive amount of numerical computation is carried out, the hash table can quickly fill to exceed TXL limits.  Thus TXL is not well suited as a numerical computation language, and the arithmetic functions should only be used as necessary in support of  a source transformation.
+</p><p>
+The four real arithmetic operations are summarized below:
+<pre>
+<u>Real Arithmetic Operations</u>  
+(N1, N2 must be of type [number] or any other numeric type)
+
+    N1 [+ N2]       numeric sum N1 + N2
+    N1 [- N2]       numeric difference N1 - N2
+    N1 [* N2]       numeric product N1 * N2
+    N1 [/ N2]       real numeric quotient N1 / N2
+</pre>
+
+</p>
+<h3><a id="2.2">2.2</a>  Integer Arithmetic</h3>
+<p>
+The arithmetic operations [div] (integer division) and [rem] (integer remainder) take a scope and argument of type [number] (or equivalently, any other numeric type) and yield an integer result of the same type.
+</p><p>
+For example, if N is a [number] bound to the value 10, then
+<pre>
+    construct Nslash3 [number] 
+        N [/ 3]                     % yields 3.333333333333, but
+    construct Ndiv3 [number] 
+        N [div 3]                   % yields 3, and
+    construct Nmod3 [number] 
+        N [rem 3]                   % yields 1
+</pre>
+As demonstrated by the [factorial] function in Section 2.1, the real arithmetic [+], [-], and [*] operations all yield integer results for integer operands.  However, while the results look and act as integers, the operations are  in fact implemented in double precision floating point , and if their result values become large (i.e., smaller than -1,000,000 or larger than 1,000,000), they will change to exponent notation.  For example, if N is bound to the value 10, then
+<pre>
+    construct Amillion [number] 
+        N [* 100000]                % yields 1.0e6, not 1000000
+    construct ALittleLess [number] 
+        N [* 99999]                 % yields 999990, not 9.9999e5
+</pre>
+Normally this difference is undetectable unless the number is output.  However, because TXL is a symbolic language and the symbol '1.0e6' is not identical to the symbol '1000000', the two will not match in a pattern.  So for example,
+<pre>
+    deconstruct Amillion 
+        1000000
+</pre>
+will fail, whereas using numerical comparison
+<pre>
+    where 
+        Amillion [= 1000000]
+</pre>
+will succeed because the comparison is carried out in double precision floating point and 1,000,000 can be represented exactly in that form.
+</p><p>
+The entire set of integer arithmetic operations is summarized below:
+<pre>
+<u>Integer Arithmetic Operations</u>  
+(N1, N2 must be of type [number] or any other numeric type)
+
+    N1 [+ N2]       numeric sum N1 + N2
+    N1 [- N2]       numeric difference N1 - N2
+    N1 [* N2]       numeric product N1 * N2
+    N1 [div N2]     integer quotient N1 / N2
+    N1 [rem N2]     integer remainder N1 / N2
+</pre>
+</p>
+<h3><a id="2.3">2.3</a>  Numeric Rounding</h3>
+<p>
+The arithmetic operations [round] and [trunc] provide explicit conversion of real results to integer.  [round] rounds its scope [number] to the nearest integer, with ties rounding up (e.g. rounding 1.25 down to 1, 1.75 up to 2, and 1.5 up to 2) and [trunc] truncates the fractional part (e.g., truncating 1.95 to 1).
+<pre>
+<u>Numeric Rounding Operations</u>  
+(N1 must be of type [number] or any other numeric type)
+
+    N1 [round]      rounded integer value of real number N1
+    N1 [trunc]      truncated integer part of real number N1
+</pre>
+</p><p>
+For example, if we wish to compute the  percent of total statements that are if statements, given Nstatements and NifStatements, both of type [number}, then
+<pre>
+    construct PercentIfStatements [number] 
+        NifStatements [/ Nstatements] [* 100] [round]
+</pre>
+</p>
+<h3><a id="3.">3.</a>  Text Operations</h3>
+<p>
+The text operations provide for direct manipulation of the text of tokens of any predefined or user token type.  Text operations act directly on the text of the token, and are not constrained to valid results for the token's type, so for example X [+ ".y"] where X is of type [id] and bound to the identifier foo, will yield an identifier with the text foo.y even if foo.y is not a valid input identifier in the target language.  
+</p><p>
+When applied to tokens of type [stringlit] or [charlit], token text is converted to unquoted evaluated form before the operation and back to quoted form afterwards.  In unquoted form all escaped characters are converted to their output representation (e.g, if the language escape convention is -esc '\', then "\n" becomes one newline character in the text), and any special characters in the quoted result are  automatically escaped (e.g., a newline character in the quoted result becomes "\n").
+</p><p>
+Token types can be mixed arbitrarily using the text operations - for example, an [id] can be concatenated to a [stringlit], and a [number] can be concatenated to a [charlit].  The [+] operation is overloaded, meaning arithmetic addition when its scope is a [number] or other numeric type, and text concatenation otherwise.
+</p>
+<h3><a id="3.1">3.1</a>  Concatenation, Substring and Length</h3>
+<p>
+The basic text operations are concatenation [+], substring [:], and length [#].
+</p><p>
+The concatenation operation [+] is used to append the text of one token onto the end of another.  When used on scopes of type [stringlit] or [charlit], the string quotes are stripped from the text before the operation and added to the result afterward.  
+</p><p>
+For example, if S is a [stringlit] variable bound to the string "Hello there", Id is an [id] bound to the identifier John, and N is a [number] bound to the value 4, then:
+<pre>
+    construct Greeting [stringlit]
+        S [+ " "] [+ Id] [+ "!"]    % yields "Hello there John!"
+    construct StrangeId [id]
+        Id [+ ", "] [+ S]           % yields 'John, Hello there' as the text of an [id]
+</pre>
+and:
+<pre>
+    construct Fact [stringlit]
+        _ [+ Id] [+ " has "] [+ N] [+ " siblings"]      % yields "John has 4 siblings"
+</pre>
+The text of tokens of different types may be combined using [+] to create, for example, meaningful error messages from a TXL program.  For example, given VarId and ProcId of type [id], the following outputs a message of the form "*** Error: XXX has not been defined in PPP" on the standard error stream:
+<pre>
+    construct Message [stringlit]
+        _ [+ "*** Error: '"] [+ VarId] [+ "' has not been defined in'"] [+ ProcId] [+ "'"]
+          [print]
+</pre>
+Concatenations are commonly coded beginning with the anonymous variable '_' as shown above to denote beginning with an empty text.  This has the advantage that we do not need a bound TXL variable of the same type to seed the sequence.
+</p><p>
+Tokens of any kind can be manipulated, for example, if the -comment flag is used to make [comment] a valid token, then we can create comments in our output.  The following creates a C comment of the form "/* XXX was here */".
+<pre>
+    construct Comment [comment]
+        _ [+ "/* "] [+ VarId] [+ " was here */"]
+</pre>
+The substring operation [:] takes the form S1 [: N1 N2].  It is used to make a substring of the text of any token bound to S1 and change it into the substring of S1 from character N1 through N2 inclusive (where N1, N2 are numbers N1 &lt; N2).  Character positions in TXL are indexed starting from 1.  
+</p><p>
+The substring built-in function normally expects N1 and N2 to be within the bounds of the string.  If N1 &lt; 1 or N2 > the length of the string, TXL will truncate them to fit by setting N1 &lt; 1 to 1 and N2 > length of string to the length of the string.  If  N2 &lt; N1, then the result is the empty string.
+</p><p>
+For example, if S is a TXL variable of type [stringlit] bound to the string "crystalline vase" , then
+<pre>
+    construct Glass [stringlit]
+        S [: 1 7]                       % yields "crystal"
+    construct Flagon [stringlit]
+        S [: 13 999]                    % yields "vase"
+    construct Oops [stringlit]
+        S [: 3 1]                       % yields "" (empty string)
+</pre>
+The construct of Flagon above demonstrates a common trick when using the substring function in TXL - using a large number (conventionally 999) as the second argument to mean "to end of string".
+</p><p>
+The length function {#] returns the length of the text of a token or string.   The scope of the operation must be a number, with a single token or string as a argument.  Using the length function, a cleaner and more general implementation of the construct of Flagon might be:
+<pre>
+    construct LenS [number]
+        _ [# S]                         % yields 16
+    construct Flagon [stringlit]
+        S [: 13 LenS]                   % still yields "vase"
+</pre>
+</p><p>
+This table summarizes the basic token text operations:
+<pre>
+<u>Basic Text Operations</u>
+(S1 must be of type [stringlit] or any other non-numeric token type, 
+ S2 of type [stringlit] or any other token type, N1 of type [number])
+
+    S1 [+ S2]       concatenation of S1 and S2
+    S1 [: N1 N2]    substring of S1 from char N1 through char N2 inclusive (1-origin)
+    N1 [# S2]       length of S2
+</pre>
+</p>
+<h3><a id="3.2">3.2</a>  Substring Search</h3>
+<p>
+The text operations [index] and [grep] provide the ability to search within the text of a string or other token's text representation.  Like other token text built-in functions, these can work on the text of [stringlit], [charlit] and any other token type.
+</p><p>
+The [index] function is used to replace the scope (which must be of type [number] or other numeric type) with the 1-origin index of the first occurrence of the second argument (of type [stringlit] or any other token type) within the first (also of type [stringlit] or any other token type).   If no occurrence is found then the function returns 0.
+</p><p>
+Most frequently the [index] function is used on with newly constructed number (denoted by the anonymous variable _ ) as scope.  For example, the following function takes a paragraph in English, parsed as a single [stringlt], and returns the first sentence of the paragraph.
+<pre>
+    function getFirstSentence
+        replace [stringlit]
+            Paragraph [stringlit]
+
+        % Find the first period in the paragraph,
+        % which is where the first sentence ends
+        construct DotIndex [number]
+            _ [index Paragraph "."] 
+
+        % Make sure we actually found one
+        deconstruct not DotIndex 
+            0
+
+        % Take from the first character to the first
+        % period in the paragraph as result
+        by
+            Paragraph [: 1 DotIndex] 
+    end function                 
+</pre>
+The [grep] function performs a similar text search but simply returns success or failure depending on whether an occurrence of the second argument's text is found in the first.  [grep] is a condition function, intended to be used as part of a TXL where clause, for example:
+<pre>
+    function warnIfFriendMentioned
+        % Given an email message text as a string,
+        % print a warning message if one of my friends is mentioned
+
+        construct Friends [repeat id]
+            'Jim 'Jane 'John 'Judy
+
+        % Given an email message
+        match [stringlit]
+            EmailMessage [stringlit]
+
+        % See if any of my friends is mentioned in it
+        where 
+            EmailMessage [grep each Friends] 
+
+        % If so print a message
+        construct _ [id] 
+            _ [message "Message mentions a friend!"]
+    end function                 
+</pre>
+Summary of text searching operations:
+<pre>
+<u>Text Search Operations</u>  
+(S1 must be of type [stringlit] or any other non-numeric token type, 
+ S2 of type [stringlit] or any other token type, N1 of type [number])
+
+    N1 [index S1 S2]    1-origin index of text of S1 in text of S2, or 0 if not found
+    S1 [grep S2]        (condition) true if text of S2 is a substring of text of S1
+</pre>
+</p>
+<h3><a id="3.3">3.3</a>  Text Case Conversion</h3>
+<p>
+The text operations [tolower] and [toupper] convert the alphabetic characters of the text of any token to lower case or upper case respectively.   Like all text functions, they can be applied to a scope of type [stringlit], [charlit] or any other token type.  For example, to normalize an HTML tag to standard lower case form, we might have the following:
+<pre>
+    function NormalizeTags
+        replace [html_tag]
+            &lt; Tagid [id] TagAttributes [repeat html_attribute] >
+                TagBody [repeat html_element] 
+            &lt;/ TagId >
+        by
+            &lt; Tagid [tolower] TagAttributes >
+                TagBody  
+            &lt;/ TagId [tolower] >
+    end function
+</pre>
+Summary of text case conversion operations:
+<pre>
+<u>Text Case Conversion Operations</u>   
+(S1 must be of type [stringlit] or any other token type)
+
+    S1 [tolower]        lower case version of S1
+    S1 [toupper]        upper case version of S1
+</pre>
+</p>
+<h3><a id="4.">4.</a>  Operations on Identifiers</h3>
+<p>
+As TXL is most often used in conjunction with other programming languages, special operations for identifiers have also been included among the built-in functions.  These include two different forms of identifier concatenation (that is, building a new identifier name out of two other identifiers), as well as a function to take an identifier and create a unique new identifier from it.
+</p>
+<h3><a id="4.1">4.1</a>  Identifier Concatenation</h3>
+<p>
+Identifier concatenation [+] uses the token text concatenation operator described in Section 3 with identifiers as scope and argument.  For example, given ProcId and VarId both of type [id], we can concatenate them with an underscore:
+<pre>
+    % make a globally unique identifier for a local variable
+    construct GlobalId [id]
+        ProcId [+ "_"] [+ VarId]    % given X and Y, yields X_Y
+</pre>
+Because concatenating identifiers using underscores is a common transformation, the [_] built-in function is provided as a shorthand:
+<pre>
+    construct GlobalId [id]
+        ProcId [_ VarId]            % given X and Y, yields X_Y
+</pre>
+</p>
+<h3><a id="4.2">4.2</a>  Unique Identifier Generation</h3>
+<p>
+Some transformations require the introduction of new identifiers in the transformed result.  The unique identifier function [!] assists in this. Given an identifier Id of type [id] as  scope, [!] creates a globally unique new identifier using Id as the base, concatenated with a number.  For example, if BaseId is a TXL variable of type [id] bound to the identifier Gollum, then:
+<pre>
+    construct UniqueId [id]
+        BaseId [!]      % yields a globally unique new identifier of the form Gollum234
+</pre>
+The base identifier need not come from the program, it can be specified as part of the constructor.  In this way a transformation can generate meaningful identifiers for its result.
+<pre>
+    construct ObjectId [id]
+        _ [+ "GenObject"] [!]   % yields unique new identifier of the form GenObject123
+</pre>
+The following is a summary of the identifier functions and how they are used.  Note that all of the token text operations of section 3 can also be used with identifiers as well.
+<pre>
+<u>Operations on Identifiers</u>  
+(ID1, ID2 must be of type [id] or any other identifier type)
+
+    ID1 [+ ID2]     identifier concatenation of ID1 and ID2
+    ID1 [_ ID2]     identifier concatenation of ID1, underscore, and ID2
+    ID1 [!]         globally unique new identifier beginning with ID1
+</pre>
+</p>
+<h3><a id="5.">5.</a>  Operations on Sequences and Lists</h3>
+<p>
+These operations are used to create and manipulate trees of type [repeat X] or [list X] for any type [X].  the operations are analogous to the token text operations, but for sequences of arbitrary type.  The result of each function is always a new sequence or list, but optimized to minimize element copying.
+</p>
+<h3><a id="5.1">5.1</a>  Sequence and List Concatenation</h3>
+<p>
+The sequence splice function [.] is used to splice an object of type [repeat X] for any type [X] to either an object of type [X] or an object of type [repeat X].  It is analogous to the string concatenation function [+] but for sequences rather than text.
+</p><p>
+Suppose, for example, that we wanted to design a function that constructs a sequence of even numbers: 2 4 6 8 ... 100.  We could do this in the following way:
+<pre>
+    function makeEvens PreviousNum [number]
+        replace [repeat number]
+            SequenceSoFar [number]
+        where 
+            PreviousNum [&lt; 100]
+        construct ThisNum [number]
+            PreviousNum [+2]
+        by
+            SequenceSoFar [. ThisNum] 
+                          [makeEvens ThisNum]
+    end function
+</pre>
+This function can be used in a construct beginning with an empty sequence (denoted by the anonymous variable _ ) like this:
+<pre>
+    construct NumberSequence [repeat number]
+        _ [makeEvens 0]     % yields 2 4 6 8 10 ... 100
+</pre>
+The list splice function [,]  is the analogous function for lists, used to splice objects of  [list X] to objects of type  [X] or [list X] for any type [X].  It works by taking the first list, adding a comma, then concatenating the second list or element to it, yielding a concatenated new list.  
+</p><p>
+For example, if FirstArgs and LastArgs are both TXL variables of type [list argument] bound to the lists a,b,c and 1,2,3 respectively, and Arg is a TXL variable of type [argument] bound to the argument f(x), then:
+<pre>
+    construct NewArgs [list argument]
+        FirstArgs [, Arg] [, LastArgs]      % yields a,b,c,f(x),1,2,3
+</pre>
+As in the case of other special symbol built-in functions, spacing is optional.
+</p>
+<h3><a id="5.2">5.2</a>  Subsequence Selection</h3>
+<p>
+Several built-in functions are provided for efficient manipulation of subsequences in indexed array-like fashion.  While any of these can be implemented recursively in TXL itself, the built-in functions are optimized to be significantly more efficient for large sequences.
+</p><p>
+The [length] function is analogous to the string length operator [#].  It takes as argument a tree of type [repeat X] or [list X] for any type X, and, when applied to a scope of type [number], returns the number of elements in the argument repeat.  Frequently the scope of the function is a newly constructed number (denoted by _ in a construct).
+</p><p>
+In this example, the [length] built-in function is used to check that the length of an argument list matches the length of a formal parameter list.
+<pre>
+    function checkArgumentListLength 
+            FormalParameters [list formal_parameter]
+        match [list argument_expn]
+            CallArguments [list argument_expn]  
+        
+        % Get the lengths of the formal and actuals lists
+        construct LengthFormals [number]
+            _ [length FormalParameters] 
+        construct LengthArguments [number]
+            _ [length CallArguments]
+        
+        % If they are not the same, print an error message
+        deconstruct not LengthFormals 
+            LengthActuals
+        construct Message [stringlit]
+            _ [message "Error: wrong number of arguments"]
+    end function
+</pre>
+The subsequence built-in function [select] and analogous to the substring operation [:].  When applied to a scope of type [repeat X] or [list X] for any type [X] and two arguments of type [number] N1 and N2, it returns the subsequence or sublist of the scope from position N1 through position N2 inclusive.  As always in TXL, positions are 1-origin.
+<pre>
+    % Get the next five statements in the sequence Statements
+    construct NextFiveStatements [repeat statement] 
+        Statements [select 1 5]
+
+    % Or the last five 
+    construct NumberOfStatementsMinus4 [number] 
+        _ [length Statements] [- 4]
+    construct LastFiveStatements [repeat statement] 
+        Statements [select NumberOfStatementsMinus4 99999]
+</pre>
+The construct of LastFiveStatements above demonstrates a common trick  in TXL - using a large number (conventionally 99999) as the second argument to mean "to end of the sequence".  A more elegant way to do this is to use the [tail] function - see below.
+</p><p>
+One way that the [select] function can be used is to treat a sequence [repeat X] as an array of type [X].  
+For example:
+<pre>
+    function subscript Array [repeat element] Index [number]
+        % Result is optional 
+        replace [opt element]
+            % none
+
+        % Get the subsequence of length 1 at Index
+        construct ElementSubsequence [repeat element] 
+            Array [select Index Index]
+
+        % Get the element in the subsequence
+        deconstruct ElementSubsequence
+            Element [element]
+        by
+            Element
+    end function
+</pre>
+Given a sequence such as Squares of type [repeat element] (where in this case [element] is defined as [number], perhaps initialized to the squares of the numbers 1 to N for some N) and an index of type [number], this function might be used something like this:
+<pre>
+    % Look up the square of 17
+    construct SquaresSub17 [opt element] 
+        _ [subscript Squares 17]
+    deconstruct SquaresSub17
+        Square17 [number]
+</pre>
+The [select] function normally expects positions N1 and N2 to be within the bounds of the sequence or list.  If N1 &lt; 1 or N2 > the length of the sequence or list, TXL will truncate them to fit by setting N1 &lt; 1 to 1 and N2 > length of sequence / list to the length of the sequence / list.  If  N2 &lt; N1, then the result is the empty sequence / list.
+</p><p>
+This total behavior of the [select] function means that the array indexing function above really should check that the index is within the bounds of the "array".  We can check that using the [length] function:
+<pre>
+    function safeSubscript Array [repeat element] Index [number]
+        % Result is optional 
+        replace [opt element]
+            % none
+
+        % Get the upper bound of the "array"
+        construct UpperBound [number] 
+            _ [length Array]
+
+        % Check Index is in bounds using TXL assertions
+        assert 
+            Index [>= 1]
+        assert 
+            Index [&lt;= UpperBound]
+
+        % Get the subsequence of length 1 at Index
+        construct ElementSubsequence [repeat element] 
+            Array [select Index Index]
+
+        % Get the element in the subsequence
+        deconstruct ElementSubsequence
+            Element [element]
+        by
+            Element
+    end function
+</pre>
+The [head] and [tail] built-in functions are specializations of [select] that can be used partition a scope of type [repeat X] or [list X], for any type [X.]   [head N]selects the first N elements of the sequence or list, and [tail N] selects the elements from element N to the last element of the sequence or list.  
+</p><p>
+We can use [head] and [tail] to make a more elegant version of our previous example taking the first and last five statements in a sequence:
+<pre>
+    % Get the next five statements in the sequence Statements
+    construct NextFiveStatements [repeat statement] 
+        Statements [head 5]
+
+    % Or the last five 
+    construct NumberOfStatementsMinus4 [number] 
+        _ [length Statements] [- 4]
+    construct LastFiveStatements [repeat statement] 
+        Statements [tail NumberOfStatementsMinus4]
+</pre>
+In this example, given a position N, we return a result that deletes the Nth element from a sequence.
+<pre>
+    function deleteElement N [number]
+        replace [repeat id]
+            Ids [repeat id]
+        construct NminusOne [number]
+            N [- 1]
+        construct NplusOne [number]
+            N [+ 1]
+        construct IdsBeforeElement [repeat id]
+            % Take identifiers in positions 1 through N-1
+            Ids [head Nminus1]  
+        construct IdsAfterElement [repeat id]
+            % Take identifiers in positions N+1 through to the end
+            Ids [tail Nplus1]      
+        by
+            % Stick them together
+            IdsBeforeElement [. IdsAfterElement] 
+    end function
+</pre>
+</p>
+<h3><a id="5.3">5.3</a>  Type Extraction to a Sequence</h3>
+<p>
+The element extract function [^] is used to create a [repeat X] sequence of all occurrences of items of type [X] in the tree bound to a TXL variable (which can be any type at all).  The type [X] to be extracted is specified by the element type of the scope of the function application, which must be of type [repeat X] for some type [X].  The first argument of the function application specifies the tree from which elements of type [X] are to be extracted.
+</p><p>
+The elements of the extracted sequence appear in the same left-right order as they appear in the original tree, with repetitions preserved.  If the grammar for type [X] is recursive (i.e., allows embedded [X]'s) then the embedded  [X]'s are also included in the sequence (thus every subtree of type [X] in the original appears in the result).  
+</p><p>
+This function is normally used in a new construct beginning with an empty sequence (denoted by the anonymous variable _ ).  For example, suppose that we wanted to extract all the identifiers from a program, and display them on the screen.  We would have a TXL program that looks like this:
+<pre>
+    function main
+        replace [program]
+            P [program]
+        construct AllIds [repeat id]
+            _ [^ P] [print]     % extract all identifiers and print them
+        by 
+            P
+    end function
+</pre>
+The extract function has a wide range of applications, and can be used effectively in combination with agile parsing to mark and collect interesting items in a program, as in this example, which identifies and prints out all calls to JDBC methods in a Java program:
+<pre>
+    % Use agile parsing to identify JDBC calls in Java
+    include "Java.Grm" 
+
+    redefine method_call 
+            [jdbc_call] [NL]    % [NL], so that calls output on separate lines
+        |   ... 
+    end redefine 
+
+    define jdbc_call 
+        [jdbc_name] [arguments] 
+    end define 
+
+    define jdbc_name 
+            'createStatement | 'prepareStatement 
+        |   'executeUpdate | 'executeQuery | 'getRow 
+    end define 
+
+    function main
+        match [program]     
+            P [program]
+
+        % Collect and output all the JDBC calls anywhere in the program
+        construct JDBCaspect [repeat jdbc_call]
+            _ [^ P] [print]
+    end function
+</pre>
+In some cases, and particularly when the type to be extracted is itself a sequence type (i.e., the type [X] to be extracted is a [repeat Y] for some [Y]), we want to extract only the top-level, non-recursive items, not those embedded inside them. For those cases, the built-in function [^/], "shallow extract" can be used.
+</p><p>
+For example, if we want to extract only those functions that are methods of a given class but not those sub-functions defined inside them, we might use a shallow extract like this:
+<pre>
+    % Get function definitions of the class scope only
+    construct ClassMethods [repeat function_definition]
+        _ [^ ClassBody]
+</pre>
+The following is a summary of the built-in functions for sequences and lists:
+<pre>
+<u>Operations on Sequences and Lists</u>   
+(R1 must be of type [repeat T] or [list T] for some type [T], 
+ R2 must be either of the same type [repeat T] or [list T] or its element type [T],
+ N1, N2 must be of type [number], and X1 can be of any type at all)
+
+    R1 [. R2]       sequence /list concatenation of R1 and R2
+
+    R1 [^ X1]       ("extract") where R1 is of type [repeat T], returns a sequence consisting of 
+                      every subtree of type [T] contained in X1
+
+    R1 [^/ X1]      ("shallow extract") where R1 is of type [repeat T], returns a sequence consisting of 
+                      every top-level (non-recursive) subtree of type [T] contained in X1
+
+    N1 [length R1]      length of the sequence R1
+
+    R1 [select N1 N2]   subsequence of R1 from element N1 through N2 inclusive (1-origin)
+
+    R1 [head N1]        subsequence of R1 from element 1 through N1 inclusive (1-origin)
+
+    R1 [tail N1]        subsequence of R1 from element N1 to the end of R1 inclusive (1-origin)
+</pre>
+</p>
+<h3><a id="6.">6.</a> Comparison Operations</h3>
+<p>
+TXL provides comparison built-in functions to allow for order-dependent transformation of numeric and alphanumeric text data.  The inequality operators [>], [>=], [&lt;] and [&lt;=] compare two arguments of the same type, which can be [number] or any other numeric type (for arithmetic ordering), or [stringlit], [charlit] or [id] (for alpha-numeric ordering).  The equality operators [=] and [~=] can be used with any two arguments of the same type.  Comparison operators can only be used in a where or where not clause to guard a replacement.
+</p>
+<h3><a id="6.1">6.1</a>  Numeric Comparisons</h3>
+<p>
+When used with numeric arguments, the comparison built-in functions [=], [~=], [>], [>=], [&lt;], [&lt;=] convert to double precision floating point representation for the comparison, for example, if X and Y are of type [number] bound to the values 2.54 and 5.75 respectively, then:
+<pre>
+    where 
+        X [&lt; Y]         % succeeds since 2.54 &lt; 5.75
+
+    where 
+        X [>= Y]        % fails since 2.54 is not >= 5.75
+
+    where 
+        X [+ 1] [> X]   % succeeds since 3.54 > 2.54
+
+    where not
+        X [* 2] [&lt; Y]   % fails since (2.54 * 2) = 5.08 is &lt; 5.75,
+                        % but the condition is negated
+</pre>
+The inequality operators can be used to order items in a sequence or table.  For example, the following rule, when applied to a TXL variable bound to a sequence of type [repeat number], will sort it into ascending order:
+<pre>
+    rule bubbleSortNumbers
+        replace [repeat number]
+            N1 [number] N2 [number] Rest [repeat number]
+        where
+            N1 [> N2]
+        by
+            N2 N1 Rest
+    end rule
+</pre>
+(Note that if the rule above had no Rest in its pattern, it would match only a subsequence of length 2, and therefore would only sort the last two numbers in a sequence.)
+</p><p>
+The equality comparisons [=], [~=] are defined for any two items of the same type.  If the compared type is [number] or any other numeric type, then the comparison is done by double precision floating point value.  For non-numeric types, the semantics of [=] is identical to that of a deconstruct (which is the preferred and more efficient form).  For numeric types, the two are different, for example, if N1 is a [number] bound to 0, and N2 is a [number] bound to 00, then
+<pre>
+    deconstruct N1  
+        N2          % fails since 0 is not identically 00
+
+    where 
+        N1 [= N2]   % succeeds since the numeric value of both 
+                    % 0 and 00 is 0
+</pre>
+The distinction between a [number] token and its value can be even more clearly seen in the case of -0,
+which is distinct from 0 when bound to a TXL [number] variable, but has the same value.
+</p>
+<h3><a id="6.2">6.2</a>  Text Comparisons</h3>
+<p>
+When applied to operands of type [stringlit], [charlit] or [id], the inequality operators [>], [>=], [&lt;] and [&lt;=] use ASCII alphanumeric (dictionary) text order, with longer strings being greater when the rest is equal.  For example, if F is a [stringlit] bound to "the fox", C is a [stringlit] bound to "the cat", and FS is a [stringlit] bound to "the foxes", then
+<pre>
+    where 
+        C [>= F]    % fails since "the cat" &lt; "the fox"
+
+    where 
+        F [&lt; FS]    % succeeds since "the fox" &lt; "the foxes"
+</pre>
+For [stringlit], [charlit] and [id] operands, the semantics of [=] and [~=] is identical to deconstruct and deconstruct not, which are the preferred forms.  Thus the following are equivalent:
+<pre>
+    where 
+        S1 [= S2]   % S1 identical to S2?
+
+    deconstruct S1
+        S2          % S1 identically S2?
+</pre>
+</p>
+<h3><a id="6.3">6.3</a>  General Comparisons</h3>
+<p>
+The equality operators [=] and [~=] are defined for any two operands of the same type.  When applied to non-numeric operands, the semantics of [=] and [~=] are identical to deconstruct and deconstruct not, which are the preferred forms.
+</p><p>
+Following is a summary of the comparison operators:
+<pre>
+<u>Inequality Comparisons</u>
+(X1, X2 must both be of type [stringlit], [charlit] or [id], 
+ <i>or</i> X1, X2 must both of type [number] or other numeric type)
+
+    X1 [> X2]       (condition) succeeds if  X1 > X2
+    X1 [>= X2]      (condition) succeeds if  X1 >= X2
+    X1 [&lt; X2]       (condition) succeeds if  X1 &lt; X2
+    X1 [&lt;= X2]      (condition) succeeds if  X1 &lt;= X2
+
+<u>Equality Comparisons</u>    
+(N1,N2 must both be of type [number] or other numeric type,
+ X1, X2 must both be of the same non-numeric type)
+
+    N1 [= N2]       (condition) succeeds if the value of N1 is equal to the value of N2
+    N1 [~= N2]      (condition) succeeds if the value of N1 is not equal to the value of N2
+
+    X1 [= X2]       (condition) succeeds if X1 is identical to X2  (same as deconstruct)
+    X1 [~= X2]      (condition) succeeds if X1 is not identical to X2  (same as deconstruct not)
+</pre>
+</p>
+<h3><a id="7.">7.</a>  Fast Ground Substitute</h3>
+<p>
+The fast ground substitute [$] function is simply a generic shorthand for a very common TXL operation - replace all occurrences of an item in a scope by another of the same type, for example, all occurrences of one identifier in a program by different identifier.  [$] takes a scope of any kind, and two arguments, both of the same type.  It returns a copy of the scope with all occurrences of the first argument replaced by the second argument.  
+<pre>
+<u>Fast Ground Substitute</u>  
+(Y1, Y2 must both be of the same type, X1 can be any other type)
+
+    X1 [$ Y1 Y2]    result is X1 with Y2 substituted for every occurrence of Y1
+</pre>
+For example, suppose we want to rename the formal parameter of a function to include the function name in its name.  We could write a TXL function to do it like this:
+<pre>
+    function renameParameterWithFunctionName
+        replace [function_declaration]
+            FunctionName [id] ( ParameterName [id] )
+            FunctionBody [block]
+
+        construct NewParameterName [id]
+            FunctionName [_ ParameterName]  % e.g., f_p
+
+        by
+            FunctionName ( NewParameterName )                   % change the formal parameter name
+            FunctionBody [$ ParameterName NewParameterName]     % change all references to it
+    end function
+</pre>
+</p>
+<h3><a id="8.">8.</a>  Type Conversion</h3>
+<p>
+TXL rules and functions are constrained to be type-preserving so that they can produce only well-formed results according to the grammar.  However, at times it is necessary to manipulate input in a non-structural or untyped way to achieve the desired result.  To support this possibility, TXL provides built-in functions to assist in disciplined dynamic type conversion, both to and from text and between types.  Using these functions, rules can dynamically invoke the TXL parser and unparser as part of the transformation.
+</p>
+<h3><a id="8.1">8.1</a>  Conversion to Text</h3>
+<p>
+Conversion to and from text form is supported by the [quote] and [unquote] built-in functions, which take an item of any type to and from [stringlit] or [charlit] of its text respectively.  The length of the text is limited by the TXL [stringlit] / [charlit] implementation maximum, typically 32768 characters.  See  the [read] and [write] functions for handling larger conversions using temporary files.
+</p><p>
+The [quote] function takes a argument of any type, and turns it into either a [stringlit] or a [charlit], depending on the scope type.  It concatenates the text of the argument to the scope string, so that text of several items can be concatenated easily, for example when making an error message.  Often [quote] is used in a construct statement with the empty variable ( _ ) as scope, in which case the new string is the quoted version of the argument.  
+</p><p>
+[quote] is very convenient n the creation of customized conditions and error messages, for example, if Expn is of type [expression], bound to the expression f(x)+y(z)/3 :
+<pre>
+    % Outputs a message of the form: 
+    %   *** Error, expression 'f(x) + y(z) / 3' may have a side effect
+
+    construct Message [stringlit]
+        _ [+ "*** Error, expression '"] [quote Expn] 
+          [+ "' may have a side effect"] [print]
+</pre>
+[quote] is particularly useful in transformations to self-documenting programs.  For example, the following function turns a C statement into a self-tracing version of itself :
+<pre>
+    function traceStatement
+        replace [statement]
+            Stmt [statement]
+
+        construct QuoteStmt [stringlit]
+            _ [quote Stmt]
+
+        by
+            {
+                fprintf (stderr, ">>> %s\n",  QuoteStmt);
+                Stmt
+            }
+    end function
+</pre>
+[quote] can be used in conjunction with the [parse] function to conveniently convert between types.  See  [parse] below.
+</p><p>
+The [unquote] function takes a argument of type [stringlit] or [charlit], and turns it into an identifier or any other token type (essentially just removing the quotes).  Note that the text of the argument does not necessarily have to be a legal identifier or instance of the token type.   For example, if S is a [stringlit] bound to the string "hi there", then :
+<pre>
+    construct FunnyId [id]
+        _ [unquote S]       % makes the strange identifier 'hi there'
+    construct FunnyAssignment [statement]
+        FunnyId := 5;       % makes the strange statement 'hi there := 5;'
+</pre>
+Note: Use of [unquote] is now deprecated, since the generalization of [+] makes it equivalent to:
+<pre>
+    construct FunnyId [id]
+        _ [+ S]             % makes the strange identifier 'hi there'
+</pre>
+The following summarizes the text conversion functions.
+<pre>
+<u>Text Conversion Operations</u>   
+(S1 must be of type [stringlit] or [charlit], 
+ T1 can be of type [id] or any other token type, 
+ and X1 can be of any type at all)
+
+    S1 [quote X1]       appends the output text of X1 to the text of S1 (same as [unparse])
+
+    T1 [unquote S1]     replaces the text of T1 with the unquoted text of S1
+</pre>
+</p>
+<h3><a id="8.2">8.2</a>  Dynamic Parsing</h3>
+<p>
+Some transformations need the ability to view the same source text from different perspectives, using different grammars or subgrammars, or by forcing a different parse than the default for some instance of an input form.  Others may benefit from the ability to parse text that is constructed as part of the transformation.  The ability to invoke the parser as part of a transformation is called dynamic parsing, and is supported by the TXL built-in functions [parse], [reparse] and [unparse].
+</p><p>
+The [parse] function takes an arbitrary [stringlit], [charlit], [id] or any other token type and attempts to scan and parse it as the scope type as if it were input.  For example, suppose that the TXL variable Text is of type [stringlit] and bound to the string  "int Counter;"  (the text of an integer variable declaration in C).  If the grammar has type [declaration] for C variable declarations, then the string could be parsed like so:
+<pre>
+    construct Decl [declaration]
+        _ [parse Text]
+</pre>
+If the string cannot be parsed as the given type, then a fatal error is raised and the TXL program is terminated, which can be inconvenient.  Using robust parsing, there is s simple paradigm to avoid this and make the parse robust:
+<pre>
+    % See if we can parse Text as a declaration
+    construct OptDecl [declaration_or_not]
+        _ [parse Text]
+
+    % Check if we got one
+    deconstruct OptDecl 
+        Decl [declaration]
+</pre>
+Where [declaration_or_not] is defined as:
+<pre>
+    define declaration_or_not
+            [declaration]
+        |   [not_declaration]
+    end define
+
+    define not_declaration
+        [repeat token_or_key]   % any sequence of input at all
+    end define
+
+    define token_or_key
+        [token] | [key]
+    end define
+</pre>
+The [reparse] function takes an argument of any nonterminal type,, and attempts to reparse the leaves (tokens) of its parse tree as the scope type as if it were input.  It is similar to [parse] except that it reparses directly from one type to another without converting to a string or rescanning the text.   The leaves parsed are not converted to text or rescanned, so they retain their original types and contents in the new parse.  If a rescan is required, for example when reparsing an item to character mode (Ðchar), then explicit conversion to text using [quote] and reparsing using [parse] will be necessary.
+</p><p>
+As an example, the small program below defines two kinds of inputs, [repeat thing] and [repeat thang].  Both allow inputs consisting of sequences of  numbers, identifiers and parentheses, but [thing] enforces matched parentheses whereas [thang] does not.  Because it is the first alternative, the program normally takes in a structured input parsed as [repeat thing], requiring fully nested parentheses.  
+<pre>
+    define program
+            [repeat thing]
+        |   [repeat thang]
+    end define
+
+    define thing
+        [id] | [number] | ( [repeat thing] )  % note nested parentheses
+    end define
+
+    define thang
+        [id] | [number] | ( | )               % note arbitrary parentheses
+    end define
+</pre>
+In the example below, in order to allow manipulation of the input in unstructured fashion (i.e., without the requirement of keeping parentheses nested and matched while transforming), the program uses [reparse] to construct the parse Thangs which views the input as the unstructured type [repeat thang].  
+</p><p>
+With this reparse the program is then free to manipulate the Thangs  in unstructured fashion, in this case by adding unmatched parentheses one by one.  The program then uses [reparse] once again, this time to reparse the unstructured NewNewThangs as the required result type, the structured type [repeat thing], to make certain that the parentheses we added are once again legally matched.
+<pre>
+    function main
+        replace [program]
+            Things [repeat thing]
+
+        % reparse to get unnested form
+        construct Thangs [repeat thang]
+            _ [reparse Things]
+
+        % add an unbalanced parenthesis at the head
+        construct NewThangs [repeat thang]
+            ( Thangs
+
+        % and another at the tail
+        construct CloseParen [thang]
+            )
+        construct NewNewThangs [repeat thang]
+            NewThangs [. CloseParen]
+
+        % reparse the result to check balanced
+        construct NewThings [repeat thing]
+            _ [reparse NewNewThings] 
+        by
+            NewThings
+    end function
+</pre>
+The [unparse] function is the inverse of [parse], converting any parsed argument to its text and appending it to the [stringlit], [charlit], [id] or any other token type given as scope.  The semantics and use of [unparse] is identical to [quote].
+</p><p>
+The following summarizes the dynamic parsing operations:
+<pre>
+<u>Dynamic Parsing Operations</u>   
+(T1, T2 must be of type [stringlit], [charlit], [id], [comment] or any other predefined or user token 
+ type, S1 must be of type [stringlit] or [charlit], and X1, X2 can be any type at all)
+
+    X1 [parse T1]       replaces X1 of any type [T] with a parse of the text of T1 as a [T]
+
+    T1 [unparse X1]     appends the output text of X1 to the text of T1  (same as [quote])
+
+    X1 [reparse X2]     replaces X1 of any type [T] with a parse of the leaves (terminal symbols) 
+                          of X2 as a [T]
+</pre>
+</p>
+<h3><a id="8.3">8.3</a>  Generic Programming</h3>
+<p>
+Using the general polymorphic nonterminal type [any] in TXL, it is possible to program many things generically that would otherwise involve many type-specific copies of widely used rules.  For example, a simple containment testing function can be made very general using [any] :
+<pre>
+    % Given an item of any nonterminal type,
+    % test whether the scope contains an instance of it
+
+    function contains Item [any]
+        match * [any]
+            Item
+    end function
+</pre>
+On the face of it, this function looks much like any use of it could be replaced by a deep deconstruct.  It's only when used with each that we really see its usefulness:
+<pre>
+    % Does this declaration have any of these attributes?
+    where 
+        Declaration [contains each InterestingAttributes]
+
+    % Does the this method mention any of these variables?
+    where 
+        Method [contains each Variables]
+</pre>
+Another obvious use of [any] is to enable writing abstraction functions that gather a set of rules that are to be applied together to the scope, when the scope can vary in type.  Again, this avoids the necessity of writing multiple copies of the same function for different scope types.  
+<pre>
+    function applyRules
+        replace [any]
+            Scope [any]
+        by
+            Scope [rule1]
+                  [rule2]
+                  [rule3]
+    end function
+</pre>
+Use of [any] creates untyped TXL variables that are opaque - that is, we don't know he nonterminal type of tree they are bound to.  The [typeof] and [istype] built-in functions are designed to support a limited amount of type-dependent generic programming with [any] variables.
+</p><p>
+The [typeof] function takes a scope of type [id] and replaces it with the nonterminal type name of the type of its argument, which should be of type [any].  This allow us to use the type in various ways, including for example making the parse of a tree explicit in XML :
+<pre>
+     % syntax of simple XML markup ([SPOFF] / [SPON] control output spacing)
+    define xml_markup
+        &lt; [SPOFF] [id] > [SPON]
+            [any] 
+        &lt; [SPOFF] / [id] > [SPON]
+    end define
+
+    % rule to mark up only specified nonterminals with their type
+    rule markupSpecifiedStructures 
+        % things to mark up - in this case all unstructured control
+        % statements in Java
+        construct SpecifiedTypes [repeat id]
+            'break_statement 'continue_statement 'return_statement
+            'throw_statement
+
+        % look at every node in the program's parse tree,
+        % but don't look inside already marked things
+        skipping [markup]
+        replace [any]
+            Subtree [any]
+
+        % get the type of this subtree
+        construct SubtreeType [id]
+            _ [typeof Subtree]
+
+        % see of it is one of those we're interested in
+        deconstruct * [id] SpecifiedTypes
+            SubtreeType
+
+        % if so mark it up
+        construct MarkedUpSubtree [xml_markup]
+            &lt; SubtreeType > Subtree &lt;/ SubtreeType >
+
+        % get generic version of marked up node
+        % (since this rule transforms [any])
+        deconstruct * [any] MarkedUpSubtree
+            AnyMarkedUpSubtree [any]
+        by
+            AnyMarkedUpSubtree
+    end rule
+</pre>
+The [istype] built-in function is a shorthand for testing the type of the tree bound to an [any].  For example, the statements above:
+<pre>
+    % get the type of this subtree
+    construct SubtreeType [id]
+        _ [typeof Subtree]
+
+    % see of it is one of those we're interested in
+    deconstruct * [id] SpecifiedTypes
+        SubtreeType
+</pre>
+Can be replaced with this simpler version using [istype] :
+<pre>
+    % see of it is one of those we're interested in
+    where 
+        Subtree [istype each SpecifiedTypes]
+</pre>
+Summary of generic programming functions:
+<pre>
+<u>Operations on Types</u>     
+(for use with [any] - ID1 must be of type [id] or any other identifier type, 
+ X1 can be of any type at all)
+
+    ID1 [typeof X1]     replaces ID1 with the nonterminal type name of the type of X1
+
+    X1 [istype ID1]     (condition) succeeds if the nonterminal type name of X1 is ID1
+</pre>
+</p>
+<h3><a id="9.">9.</a>  Programmed Input / Output </h3>
+<p>
+The input/output built-in functions allow TXL programs to deal with multiple input and output files and to interactively accept input or print output to the terminal or other files.  In general, files are automatically opened and closed as used, but explicit operations for programmed control over opening and closing of files is also provided.  
+</p><p>
+Terminal  input/output operations normally use the standard input stream (stdin on Unix/Linux) for input and the standard error stream (stderr on Unix/Linux) for terminal output.  However, console behavior can be platform dependent, and users should refer to the section on interactive TXL programs in the TXL User's Guide for specific platform details.
+</p>
+<h3><a id="9.1">9.1</a>  File-oriented Input / Output </h3>
+<p>
+At times a TXL program may need to deal with more than one input or output file, for example when processing include statements of a language, when merging two or more programs, or when splitting a program into aspects.  TXL provides the [read] and [write] built-in functions to support dynamic input and output file parsing and unparsing for this purpose.  Both [read] and [write] take as argument the name of a text file, which is automatically opened, created and closed as necessary before and after the operation.
+</p><p>
+The [read] function opens and parses a file whose filename is specified as a [stringlit] argument, replacing the scope with a parse of the file text as the scope type.  [read] can be particularly useful in writing a TXL program to parse and transform several programs in the same run, and in processing include files.  
+</p><p>
+For example, consider the following TXL function to compare two programs to see if they are clones modulo formatting, commenting and renaming :
+<pre>
+    function compareProgs FileName [stringlit]
+        % the first program is the scope - 
+        % parsing removes formatting and comments
+        match [program]
+            P1 [program]
+
+        % normalize P1 to anonymous identifiers
+        construct NormalizedP1 [program]
+            P1 [normalize] 
+
+        % the second program is read from the given file name -
+        % again, parsing removes formatting and comments
+        construct P2 [program]
+            _ [read FileName]  
+
+        % normalize P2 to anonymous identifiers
+        construct NormalizeP2 [program]
+            P2 [normalize]
+
+        % compare the normalized forms
+        deconstruct NormalizedP2
+            NormalizedP1
+
+        % print a message if they are the same
+        construct Message [id]
+            _ [message "The programs are clones!"]
+    end function
+
+    % Simple normalization rule - just make all identifiers the same
+    rule normalize
+        replace [id]
+            Id [id]
+        % don't go on forever!
+        deconstruct not Id
+            'x
+        by 
+            'x
+    end rule
+</pre>
+The [write] function is the inverse of [read].  It takes as argument a [stringlit] giving the filename of a file, and writes (as text) the leaves (tokens) of the scope to this file as unparsed text.  The scope may be of any type, and is not changed.  Output is formatted according to the grammar exactly as it would be in the main output of the TXL program.
+</p><p>
+[write] can be used to create multiple files as output, and can be useful in debugging, as results of individual transforms can be written to a file for future reference.  For example, we might have something like this:
+<pre>
+    function applyFunctions File1 [stringlit] File2 [stringlit]
+        replace [program]
+            P1 [program]
+        construct TransformedP1 [program]
+            P1 [DoSomething]        % Do a series of transformations here
+               [write File1]        % Write intermediate results to a file
+               [DoSomethingElse]    % More transformations 
+               [write File2]        % Second intermediate results
+               [DoTheRest]          % Final transformations    
+        by
+            TransformedP1
+    end function
+</pre>
+The file input/output operations can be summarized as:
+<pre>
+<u>File Input/Output Operations</u>  
+(S1 must be of type [stringlit], [charlit], [id] or any other identifier type, X1 can be of any type)
+
+    X1 [read S1]    replaces X1 of any type [T] with a parse of the text file S1 as a [T],
+                    automatically opening and closing the file before and after the operation
+
+    X1 [write S1]   writes the output text of X1 as the text file S1, automatically opening / 
+                    creating  and closing the file before and after the operation
+</pre>
+</p>
+<h3><a id="9.2">9.2</a>  Interactive Input / Output </h3>
+<p>
+The interactive input/output functions provide line-oriented access to the terminal and text files.  The [get], [getp], [gets], [put], [putp] and [puts] functions interact with the terminal console, and the corresponding [fget], [fgets], [fput], [fputp] and [fputs] functions allow line-oriented input/output to named files.  Line-oriented input/output is linewise synchronous, which means that the [get]/[fget] functions will wait until a complete line is available in the input on each operation, and [put]/[fput] functions will flush the output file following each output.
+</p><p>
+Files are automatically opened on the first access, and remain open until the TXL program finishes or the file is explicitly closed using [fclose].  Up to 5 line-oriented files may be simultaneously open, and use of [fclose] to explicitly close a file is unnecessary unless the program needs to reuse the 5 slots over the length of a run.
+</p><p>
+The [get] function takes no arguments, and reads one line of text from the terminal, scanning and parsing it as the  scope type (which can be of any type).
+<pre>
+    % interactively get a number from the terminal
+    construct InputNumber [number]
+        _ [get]
+</pre>
+The input must be parseable as the scope type.  For terminal input ([get], [getp]), if the input cannot be parsed then the user will be prompted for another input with a message of the form:
+<pre>
+    [number] input expected - try again (y/n)? 
+</pre>
+If the response is "y" then then another input line is read from the terminal, otherwise a fatal error is raised.  
+</p><p>
+[fget] is similar to [get], reading the next line of the argument text file and scanning and parsing it as the scope type.  It is always a fatal error if the input  to [fget] cannot be parsed as the scope type.   The argument file name is automatically opened for text input if it is not already open, and is kept open until the end of the run or it is explicitly closed using the [fclose] function.  
+</p><p>
+Lines of the input file are read one-by-one sequentially, returning an empty line at end of file.  Here is an example rules using [fget] to read an entire file of numbers, one per line, and returning their sum:
+<pre>
+    rule sumFile FileName [stringlit]
+        % The sum so far - we should be called beginning with 0
+        replace [number]
+            SumSoFar [number]
+
+        % Try to get the next number
+        construct OptNextNumber [opt number]
+            _ [fget FileName]
+
+        % If there wasn't one we're done
+        deconstruct OptNextNumber 
+            NextNumber [number]
+
+        % Otherwise add it in and continue
+        by
+            SumSoFar [+ NextNumber]
+    end rule
+</pre>
+<pre>
+    % Example use of this rule
+    construct SumOfMarks [number]
+        _ [sumFile "marks.txt"]
+</pre>
+[getp] differs from [get] in that it takes and argument [stringlit] which is used as the input prompt.  For example, the following function interactively prompts the user to input an expression to evaluate, using the prompt "Please input an expression to evaluate: ".  A line of input will be read from the terminal and parsed as an [expression] according to the program's grammar. 
+<pre>
+    function getExpnAndEvaluate 
+        replace [expression]
+            Expn [expression]
+
+        % ask the user for an expression
+        construct ExpnToEvaluate [expression]
+            _ [getp "Please input an expression to evaluate: "]
+
+        % evaluate and output the result
+        by
+            ExpnToEvaluate [evaluate]
+    end function
+</pre>
+There is no corresponding [fgetp] since prompts don't make sense for file input.
+</p><p>
+The [put] and [putp] functions are the corresponding output functions to [get] and [getp], providing output of the unparsed text of the scope to the terminal.  The [put] function takes no arguments, and simply outputs the unparsed text of the scope (which may be of any type) to the terminal console.  If the scope is a [stringlit] or [charlit], then the text is output in unquoted form.
+<pre>
+    construct Assignment [statement]
+        x := 27;
+    construct Output [statement]
+        Assignment [put]        % outputs "x := 27;" on a line
+</pre>
+Output is formatted according to the grammar in the same way it would be in the unparsed output of the program, and is not limited to a single line.
+</p><p>
+The [putp] function takes as a argument a [stringlit] pattern of the form "Here is some output % in the middle of the string", where the % symbol marks the position to embed the scope text in the output.  If there is no % in the argument string, then the end of the string is assumed.  As an example, consider the following function:
+<pre>
+    construct ResultOfExpn [expression]
+        Expn [evaluate] 
+             [putp "The result of the expression was:  %."]
+</pre>
+The output of this example would be a line on the terminal something like:
+<pre>
+    The result of the expression was: 42.
+</pre>
+While the [get]/[fget] and [put]/[fput] functions use the TXL parser to convert items of any type to and from text form, the [gets]/[fgets] and [puts]/[fputs] input/output uniterpreted text lines directly as [stringlit] or [charlit] values.  This can be useful when writing TXL programs that require character-level text processing of interactive input, for example when interpreting another language using a TXL transformation.
+</p><p>
+The [gets] built-in function reads one line of input from the terminal as text and replaces its scope, which must of of type [stringlit] or [charlit], with the raw text as a string.  [fgets] is the corresponding operation for reading raw text lines from files.  In both cases the input line is uninterpreted and all spacing and special characters, such as spaces and tab characters, are input intact.  An empty line is returned at end of file.
+</p><p>
+[puts] and [fputs] are the corresponding output operations, writing the raw text of their [stringlit] or [charlit] scope unchanged to the terminal or specified file respectively.  As an example, the following function copies the lines of a given file to another, stopping at the first empty line.
+<pre>
+    rule CopyLines InputFile [stringlit] OutputFile [stringlit]
+        % we ignore our scope, so just pass it through
+        replace [any]
+            Scope [any]
+
+        % get the next line from our input file
+        construct NextInputLine [stringlit] 
+            _ [fgets InputFile]
+
+        % if it's empty we're done
+        deconstruct not NextInputLine
+                ""
+        % output it to our output file
+        construct NextOutputLine [stringlit]    
+            NextInputLine [fputs OutputFile]
+        by 
+            Scope
+    end rule
+</pre>
+While in most cases the automatic opening and closing of files by the TXL programmed input/output functions is sufficient, at times it is necessary to have greater control.  For example, if a great many files are to be interactively read, because they are not automatically closed until the end of the run, the TXL program can run out of file descriptors in a Unix/Linux system.  To assist with this, the built-in functions [fopen] and [fclose] are provided to allow for explicit programmed opening and closing of files.
+</p><p>
+[fopen] takes two arguments, a [stringlit] file name and a [stringlit] file mode.  The file mode may be one of  "get" for input (Unix/Linux "r" mode), "put" for output (Unix/Linux "w" mode), and "append" for append-to-end output (Unix/Linux "a" mode).  In all cases the file is opened in text mode rather than binary.  "append" mode provides the ability to concatenate output to the end of an existing file, which can be useful in a multi-stage transformation or when logging TXL actions.
+</p><p>
+[flcose] takes a [stringlit] file name as argument and immediately closes the file, whatever its mode.  It is most useful in programs that must open many interactive files, where it can be used to free up file descriptors to allow for an unbounded number of files, and in programs that wish to reopen for input a line-oriented file it has previously written to.  
+</p><p>
+Note that the file input/output functions [read] and [write] do not require [fopen] or [fclose] since they automatically open and close their files for each operation.
+</p><p>
+A TXL program may not always be able to guarantee that a file it wants to input or output can be opened or created. For example, if we want to interpret include or import statements by inlining their source code, we may not know for sure that the imported source file exists or is accessible. If we try to [read] from such an imported file, the operation may fail and terminate the TXL program. 
+</p><p>
+In order to allow us to detect this situation and continue the transformation, the [faccess] built-in function can be used to test whether a file exists and is accessible in the required mode. [faccess] takes two arguments, a [stringlit] file name and a [stringlit] file mode.  The file mode may be one of  "get" for input (Unix/Linux "r" mode), "put" for output (Unix/Linux "w" mode), and "append" for append-to-end output (Unix/Linux "a" mode). [faccess] is a condition function, used in a where clause to guard a [read] or other input/output operation. For example:
+<pre>
+    % Test whether we can access the imported file
+    where
+        _ [faccess ImportedFileName "get"]
+    % Yes, so [read] will not fail
+    construct ImportedFileSource [repeat statement]
+        _ [read FileName]  
+</pre>
+Summary of interactive input/output operations:
+<pre>
+<u>Interactive Input/Output Operations</u>
+(S1 must be of type [stringlit], [charlit], [id] or any other identifier type,
+ F1 and M1 must be of type [stringlit] or [charlit], and X1 can be of any type)
+
+    All operations automatically open the input/output file if it is not already open.
+
+    X1 [get]            inputs one line of text from the standard input and replaces X1 of any 
+                        type [T] with a parse of the input text as a [T]
+
+    X1 [fget F1]        inputs one line of text from file F1 (which is opened if necessary) and 
+                        replaces X1 of any type [T] with a parse of the input text as a [T]
+
+    X1 [getp S1]        outputs the text of S1 as a prompt on the standard error stream, then 
+                        inputs one line of text  from the standard input and replaces X1 of any 
+                        type [T] with a parse of the input text as a [T]
+
+    X1 [put]            appends the text of X1 to the standard error stream
+
+    X1 [fput F1]        appends the text of X1 to file F1, which is opened or created if necessary
+
+    X1 [putp S1]        appends the text of S1 to the standard error stream, with the output text 
+                        of X1 inserted at the point of the first "%" character in S1
+
+    X1 [fputp F1 S1]    appends the text of S1 to file F1, with the output text of X1 inserted at the 
+                        point of the first "%" character in S1
+
+    S1 [gets]           replaces S1 with one line of raw input text from the standard input
+
+    S1 [fgets F1]       replaces S1 with one line of raw input text from file F1, which is opened 
+                        if necessary
+
+    S1 [puts]           outputs the raw text of S1 as a line to the standard error stream
+
+    S1 [fputs F1]       outputs the raw text of S1 as a line to file F1, which is opened or created 
+                        if necessary
+
+    X1 [fopen F1 M1]    opens file F1 in the indicated mode M1, which must be one of  "get", "put" or 
+                        "append" - only necessary if the mode is "append"
+
+    X1 [fclose F1]      closes file F1 - only necessary if short of file descriptors or the file is 
+                        to be reopened (e.g., for input) in the same run
+
+    X1 [faccess F1 M1]  (condition) tests whether file F1 can be opened in the indicated mode M1, 
+                        which must be one of  "get", "put" or "append"
+</pre>
+</p>
+<h3><a id="10.">10.</a>  Debugging Aids</h3>
+<p>
+While the TXL Debugger txldb can be used to help debug small programs, it is often too detailed or at too low a level for debugging complex TXL transformations.  The debugging built-in functions provide the ability to instrument and control run-time execution of TXL programs as the user wishes by inserting calls where they are needed.
+</p>
+<h3><a id="10.1">10.1</a>  Programmed Messages</h3>
+<p>
+The [message] function is one of several ways to output text to the console terminal.  The function prints the leaves of the tree given as argument to the debugging output.  The argument may be of any type, but [message] is most often used with a [stringlit].   The scope that the function is applied to is ignored and unchanged.
+</p><p>
+The following program, for example, uses [message] as a means of telling the user the current status of the transformation:
+<pre>
+    rule reduceExpression
+        replace [expression]
+            E [expression]
+        by
+            E [message "Reducing multiplications"]
+              [reduceMultiplications]
+              [message "Reducing additions"]
+              [reduceAdditions]
+    end rule
+</pre>
+The [message] function is also the usual way to output error messages from the transform itself, as in:
+<pre>
+    function checkCompatibleTypes T2 [primitive_type]
+        match [primitive_type]
+            T1 [primitive_type]
+        deconstruct not T1
+            T2
+        construct Message [id]
+            _ [message "Error, types do not match"]
+    end function
+</pre>
+The [print] function prints out the leaves of the scope tree to the console terminal.  The function can be applied to any scope, and the scope tree itself remains unchanged.  It is very similar to the [message] function described above except that it prints its scope rather than its argument.
+</p><p>
+In this example, we trace the progress of the transformation rule by showing the intermediate result after each subrule is applied:
+<pre>
+    rule reduceExpression
+        replace [expression]
+            E [expression]
+        by
+            E [reduceMultiplications]
+              [message "After [reduceMultiplications] we have:]
+              [print] 
+              [reduceAdditions] 
+              [message "After [reduceAdditions] we have:]
+              [print]    
+    end rule
+</pre>
+This function is also useful when two or more separate transform outputs from one TXL program are required, as shown below.  Under Unix, the two outputs can be separated using output redirection.
+<pre>
+    function main
+        replace [program]
+            P [program]
+        construct P1 [program]
+            P [transformSetOne] 
+              [print]               % to standard error stream
+        by
+            P [transformSetTwo]     % to standard output stream
+    end function
+</pre>
+[printattr] is identical to [print] except that attributes (e.g. [attr X]), which are normally not visible in TXL  output, are printed as well to aid debugging of transformations that require attributes.
+</p><p>
+See also the [put] and [putp] functions for standard error stream output.
+<pre>
+<u>Programmed Messages</u>  
+(X1, X2 can be any type at all)
+
+    X1 [message X2]     outputs the output text of X2 to the standard error stream;
+                        if X2 is of type [stringlit] or [charlit], it is unquoted
+
+    X1 [print]          outputs the output text of X1 to the standard error stream;
+                        if X1 is of type [stringlit] or [charlit], it is unquoted 
+
+    X1 [printattr]      outputs the output text of X1 to the standard error stream with attributes 
+                        visible; if X1 is of type [stringlit] or [charlit], it is unquoted
+</pre>
+</p>
+<h3><a id="10.2">10.2</a>  Interactive Debugging</h3>
+<p>
+The [debug] and [breakpoint] operations provide some of the functionality of the TXL Debugger txldb under programmed control.  The [debug] function prints out the internal tree representation of the scope tree that the function is applied to to the standard error output in XML form.  The scope remains unchanged.  It is similar to [print] except that it outputs the entire tree structure rather than just the leaves of the tree.  This function's primary use is in viewing intermediate trees when debugging, as seen below:
+<pre>
+    rule reduceExpression
+        replace [expression]
+            E [expression]
+        by
+            E [message "Reducing multiplications in:"] [debug]
+              [reduceMultiplications]
+              [message "Reducing additions in:"] [debug]
+              [reduceAdditions]
+    end rule
+</pre>
+The output produced by this program as it runs looks something like this:
+<pre>
+    Reducing multiplications in:
+
+    --- DEBUG expression ---
+    &lt;expression&gt;
+       &lt;expression&gt;&lt;term&gt;
+          &lt;term&gt;&lt;primary&gt;&lt;number&gt;2&lt;/number&gt;&lt;/primary&gt;&lt;/term&gt;
+             &lt;mulop&gt;*&lt;/mulop&gt;
+             &lt;primary&gt;&lt;number&gt;4&lt;/number&gt;&lt;/primary&gt;
+          &lt;/term&gt;
+       &lt;/expression&gt;
+       &lt;addop&gt;+&lt;/addop&gt;
+       &lt;term&gt;&lt;primary&gt;&lt;number&gt;3&lt;/number&gt;&lt;/primary&gt;&lt;/term&gt;
+    &lt;/expression&gt;
+
+    Reducing additions in:
+
+    --- DEBUG expression ---
+    &lt;expression&gt;
+       &lt;expression&gt;&lt;term&gt;&lt;primary&gt;&lt;number&gt;8&lt;/number&gt;
+          &lt;/primary&gt;&lt;/term&gt;&lt;/expression&gt;
+          &lt;addop&gt;+&lt;/addop&gt;
+       &lt;term&gt;&lt;primary&gt;&lt;number&gt;3&lt;/number&gt;&lt;/primary&gt;&lt;/term&gt;
+    &lt;/expression&gt;
+
+    Reducing multiplications in:
+
+    --- DEBUG expression ---
+    &lt;expression&gt;
+       &lt;term&gt;&lt;primary&gt;&lt;number&gt;11&lt;/number&gt;&lt;/primary&gt;&lt;/term&gt;
+    &lt;/expression&gt;
+
+    Reducing additions in:
+
+    --- DEBUG expression ---
+    &lt;expression&gt;
+       &lt;term&gt;&lt;primary&gt;&lt;number&gt;11&lt;/number&gt;&lt;/primary&gt;&lt;/term&gt;
+    &lt;/expression&gt;
+</pre>
+The [breakpoint] function provides the ability to temporarily stop the transformation at a given point.  It works by printing a message on the debugging output, and temporarily suspending the program until a carriage return is pressed on the keyboard.  The scope tree remains unchanged.
+</p><p>
+[breakpoint] is most useful in a program that being instrumented using [message], [print] and [debug] to allow the user to look at the debugging information at a given point before going on.  For example:
+<pre>
+    rule reduceExpression
+        replace [expression]
+            E [expression]
+        by
+            E [reduceMultiplications]
+              [message "so far, we have:"] [print] [breakpoint]
+              [reduceAdditions] 
+    end rule
+</pre>
+Summary of interactive debugging functions:
+<pre>
+<u>Interactive Debugging Aids</u>  
+(X1, X2 can be any type at all)
+
+    X1 [debug]          outputs the internal tree format of X1 to the standard error stream
+
+    X1 [breakpoint]     temporarily halts execution until RETURN is pressed on the standard input
+</pre>
+</p>
+<h3><a id="11.">11.</a>  Execution Control</h3>
+<p>
+These functions allow dynamic control over TXL options and results normally handled at the command line level.
+</p>
+<h3><a id="11.1">11.1</a>  Dynamic Run Options</h3>
+<p>
+The [pragma] built-in function allows run-time changes to command line options such as Ðchar, Ðcase and Ðraw, for example allowing the program to dynamically scan and parse items using the [read], [parse] and [quote] built-in functions using different options than for the main input, or to dynamically output items using [write], [put] or [print] using different output spacing options than the main output. 
+</p><p>
+[pragma] takes a [stringlit] command line options string as argument, and can be applied to a scope of any type, which is unchanged.
+<pre>
+    % Get actual carriage return and tab characters as strings
+    
+    construct CarriageReturn [stringlit]
+        _ [pragma "-char"] 
+          [quote "^M"]          % actual carriage return
+          [pragma "-nochar"]
+
+    construct Tab [stringlit]
+        _ [pragma "-char"] 
+          [quote "  "]          % actual tab character
+          [pragma "-nochar"]
+</pre>
+</p>
+<h3><a id="11.2">11.2</a>  Programmed Abort</h3>
+<p>
+The [quit] function allows the TXL program to abort with a given return code at any time.  It takes an integer return code as argument and can be applied to any scope, which is unchanged.  The return code can be used to indicate success or failure to the batch or shell script that invoked the TXL program.  TXL programs normally return with a 0 return code, indicating success.  To return another code, they can use [quit], for example:
+<pre>
+    function checkCompatibleTypes T2 [primitive_type]
+        match [primitive_type]
+            T1 [primitive_type]
+        deconstruct not T1
+            T2
+        construct Message [id]
+            _ [message "Error, types do not match"]
+              [quit 99]
+    end function
+</pre>
+Summary of execution control built-in functions:
+<pre>
+<u>Execution Control Operations</u>  
+(S1 must be of type [stringlit] or [charlit], N1 must be of type [number] or other numeric type, X1 can be any type)
+
+    X1 [pragma S1]      interpret the TXL command line options specified in S1 to dynamically change 
+                        TXL options during execution
+
+    X1 [quit N1]        immediately abort TXL execution with return code N1
+</pre>
+</p>
+<h3><a id="12.">12.</a>  System Interface</h3>
+<p>
+The system interface built-in functions [system] and [pipe] allow the TXL program to run other programs or commands as part of a TXL transformation, for example to manage files or use editor scripts to assist in the transformation.  The syntax and semantics of the commands are platform dependent, and the system interface functions are not supported on all platforms.  On Unix/Linux/MacOSX systems, the system commands invoke the standard system() library routine to run a shell command line, and on Windows systems, they invoke the Windows system() routine to run a DOS command line.
+</p>
+<h3><a id="12.1">12.1</a>  Execute System Command</h3>
+<p>
+The [system] command takes as argument a [stringlit] shell command line to execute and invokes the host system's system() library routine to execute it.  The scope, which can be of any type, is ignored and unchanged.   [system] is typically used in conjunction with [write] and [read], as for example here:
+<pre>
+    % Reformat expressions one per line
+    redefine expression
+        ... [NL]
+    end redefine
+
+    function AllUniqueExpressions Program [program]
+        % Finds and returns all unique expressions in the program
+
+        % First get all the expressions in the program
+        construct AllExpressions [repeat expression]
+            _ [^ Program]
+
+        % use "sort -u" to order and uniquify the set
+        construct UniqueExpressions [repeat expression]
+            AllExpressions [write "/tmp/expns"]
+                           [system "sort -u /tmp/expns > /tmp/uexpns"]
+                           [read "/tmp/uexpns"]
+                           [system "rm -f /tmp/expns /tmp/uexpns"]
+
+        replace [repeat expression]
+            % scope should be empty when called
+        by
+            UniqueExpressions
+    end function
+</pre>
+[system] succeeds or fails depending on the return code of the command, and can be used in a where clause to check for success.
+<pre>
+    % Are we on a Unix-style system?
+    where
+        _ [system "ls > /dev/null"]
+</pre>
+The [pipe] function takes as scope a [stringlit] or [charlit] string of text to be piped into the command specified by its [stringlit] or [charlit] argument.  The scope is replaced with the result of the command as a text string.  For example:
+<pre>
+    % Use the Unix sed command to expand tabs in a string literal 
+    construct ExpandedString [stringlit]
+        String [pipe "sed 's/\t/    /'"]
+</pre>
+Summary of system interface built-in functions:
+<pre>
+<u>System Interface</u>  
+(S1, S2 must both be of type [stringlit] or [charlit], X1 can be any type at all)
+
+    X1 [system S1]      invoke /bin/sh to run the text of S1 as a shell command line; 
+                        X1 is ignored and unchanged. (Most useful when used in conjunction with 
+                        [write] and [read] to manipulate data in files)
+
+    S1 [pipe S2]        invoke /bin/sh to run the shell command echo "text of S1" | text of S2
+                        and return the first line of the result
+</pre>
+</p>
+            </div>
+        </td>
+    </tr>
+</table>
+</body>
+</html>
