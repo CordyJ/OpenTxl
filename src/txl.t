@@ -52,7 +52,11 @@
 include "globals.i"
 
 % TXL version
+<<<<<<< Updated upstream
 const * version := "OpenTxl v11.3.2 (4.12.23) (c) 2023 James R. Cordy and others"
+=======
+const * version := "OpenTxl v11.3.1 (4.12.23) (c) 2023 James R. Cordy and others"
+>>>>>>> Stashed changes
 
 % Phase
 const * INITIALIZE := 0
