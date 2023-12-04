@@ -1,0 +1,130 @@
+% fb.Grammar: Txl syntax definition of a set of predicates
+
+% Rateb Abu-Hamdeh, July 1993
+% Written for TXL v. 7.4
+
+
+comments
+	/* */
+end comments
+
+keys
+	CHARACTER INTEGER FLOAT 
+	entity entityAttribute multivaluedAttribute
+        multivaluedAttrComponent  
+        key weakEntity partialKey relationship relationshipAttribute
+	entityInRelationship identifyingRelationship
+	COMPOSITE Binary n_ary n
+end keys
+
+define predicate 
+	[NL] [entityPred]			[NL]
+	| [entityAttributePred] 		[NL]
+	| [NL] [multivaluedAttributePred] 	[NL]
+	| [multivaluedAttrComponentPred] 	[NL]
+	| [keyPred]				[NL]
+	| [NL] [weakEntityPred] 		[NL]
+	| [partialKeyPred] 			[NL]
+	| [NL] [relationshipPred] 		[NL]
+	| [relationshipAttributePred]		[NL]
+	| [entityInRelationshipPred]   		[NL]
+	| [NL] [identifyingRelationshipPred]	[NL]
+end define
+
+define entityPred
+	entity([entityName])
+end define
+
+define entityAttributePred 
+	entityAttribute ([entityName],[attribute], [dataType])
+	| entityAttribute ([entityName],[attribute],
+	  COMPOSITE, [list attribute] )
+end define
+
+define multivaluedAttributePred 
+	multivaluedAttribute ([entityName], [attribute], [dataType])
+	| multivaluedAttribute ([entityName],[attribute],COMPOSITE)
+end define
+
+define multivaluedAttrComponentPred 
+	multivaluedAttrComponent ([entityName], [attribute],[attribute],
+          [dataType])
+end define
+
+define keyPred 
+	key ([entityName], [attribute])
+end define
+
+define weakEntityPred 
+	weakEntity ([entityName], [relationshipName] )
+end define
+
+define partialKeyPred 
+	partialKey ([entityName], [attribute])
+end define
+
+
+define relationshipPred 
+	relationship ([relationshipName], [arity])
+end define
+
+define relationshipAttributePred
+	relationshipAttribute([relationshipName], [attribute], [dataType])
+end define
+
+define entityInRelationshipPred
+	entityInRelationship([relationshipName], [entityName], 
+	  [constraint], [role])
+end define
+
+define identifyingRelationshipPred 
+	identifyingRelationship ([relationshipName], [arity])
+end define
+
+define entityName
+        [id] 
+end define
+
+define attribute
+        [id] 
+end define
+
+define relationshipName
+        [id] 
+end define
+
+define role
+        [id] 
+end define
+
+define arity
+	Binary
+	| n_ary
+end define
+
+define constraint
+	( [min] , [max] )
+end define
+
+
+define min
+	[integernumber]
+end define
+
+define max
+	[integernumber]
+	| n
+end define
+
+
+define int
+	'( [integernumber] ') 
+end define
+
+define dataType
+        CHARACTER [opt int]
+        | INTEGER
+        | FLOAT
+end define
+
+

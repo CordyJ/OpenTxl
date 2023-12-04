@@ -1,0 +1,8 @@
+    loop
+       x:=a+b
+       y := x
+       a:= y + 3
+       x:=b+c
+       y := x-2
+       z := x+a*y
+    end loop

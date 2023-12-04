@@ -1,0 +1,46 @@
+MODULE database;
+
+FROM InOut IMPORT WriteString, WriteLn, WriteInt;
+FROM XdrM2_database IMPORT TelNo, message, String20, String16;
+
+PROCEDURE Enter(VAR m: message; t:TelNo; fn,cn:String20 ; pr:String16);
+BEGIN
+  m.tag := 2;
+  WITH m.some DO
+    tel := t;
+    project := pr;
+    ChName := cn;
+    FaName := fn;
+  END;
+END Enter;
+
+CONST ListLength = 73;
+
+VAR	i : TelNo;
+	m : ARRAY[10..ListLength] OF message;
+	NoEntry : message;
+
+BEGIN
+
+  NoEntry.tag := 1;
+
+  FOR i:=10 TO ListLength DO
+    m[i].tag := 1;
+  END;
+
+  Enter(m[22], 22, "Markus", "Endler", "REX" );
+  Enter(m[32], 32, "Georg", "Etzkorn", "REX" );
+  Enter(m[44], 44, "Frank", "Bieler", "REX" );
+
+  i := 1;
+  WHILE i # 0 DO
+    ACCEPT(d,i);
+
+    IF ((i<10) OR (i>ListLength)) THEN
+      REPLY(d,NoEntry);
+    ELSE
+      REPLY(d,m[i]);
+    END;
+  END;
+
+END database.

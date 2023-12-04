@@ -29,6 +29,9 @@
 %       Removed unused external rule statement.
 %       Removed old COBOL specializations.
 
+% v11.3 Fixed lookahead source line number bug.
+%       Fixed multiple nl-comments source line number bug.
+
 module scanner
 
     import 
@@ -577,15 +580,27 @@ module scanner
         % if the input actually begins with a newline comment
 
         if options.option (multiline_p) and not txlSource then
-            if options.option (nlcomments_p) and options.option (newline_p) and (not options.option (charinput_p)) then
+            if options.option (nlcomments_p) and options.option (newline_p) and not options.option (charinput_p) then
                 % Do we have a leading newline comment?
-                if scanToken (tokenPatterns (patternNLCommentIndex).pattern, 1, 
-                        tokenPatterns (patternNLCommentIndex).length_, true) then
+                var nlpatindex := patternIndex ('\n')
+                assert nlpatindex not= 0
+                var leadingNLcomment := false
+                loop
+                    bind pp to tokenPatterns (patternLink (nlpatindex))
+                    if pp.kind = kindT.comment and scanToken (pp.pattern, 1, pp.length_, true) then
+                        leadingNLcomment := true
+                    end if
+                    nlpatindex += 1
+                    exit when leadingNLcomment or patternLink (nlpatindex) = 0
+                end loop
+                                
+                if leadingNLcomment then
                     % If so, keep the implicit newline, but it's on line 0 
                     linenum := 0
                     inputchar := 1
                 else
                     % Skip the implicit newline, and we begin on line 1
+                    linenum := 1
                     inputchar := 2
                 end if
             end if
@@ -1528,7 +1543,8 @@ module scanner
                     pos := endpos + 1   % skip lookahead pattern
 
                     var subfail := true
-                    const startinputchar := inputchar 
+                    const lookinputchar := inputchar 
+                    const looklinenum := linenum
 
                     % See if we can scan the lookahead
                     if scanToken (pattern, substartpos, subendpos, test) then
@@ -1536,7 +1552,8 @@ module scanner
                     end if
 
                     % Either way, we back up
-                    inputchar := startinputchar
+                    inputchar := lookinputchar
+                    linenum := looklinenum
 
                     if not subfail then
                         % The lookahead succeeded
@@ -1553,7 +1570,8 @@ module scanner
                     pos := endpos + 1   % skip lookahead pattern
 
                     var subfail := true
-                    const startinputchar := inputchar 
+                    const lookinputchar := inputchar 
+                    const looklinenum := linenum
 
                     % See if we can scan the lookahead
                     if scanToken (pattern, substartpos, subendpos, test) then
@@ -1561,7 +1579,8 @@ module scanner
                     end if
 
                     % Either way, we back up
-                    inputchar := startinputchar
+                    inputchar := lookinputchar
+                    linenum := looklinenum
 
                     if subfail then
                         % The inverted lookahead succeeded

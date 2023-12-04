@@ -14,7 +14,7 @@
 # the very least to slow it down severely, at higher levels of optimization.
 
 CC = gcc -w 
-CFLAGS = -m64 -c -O -fno-inline -I tpluslib 
+CFLAGS = -m64 -ansi -c -O -fno-inline -I tpluslib 
 LD = gcc
 LDFLAGS = -m64 
 LDLIBS = -lm

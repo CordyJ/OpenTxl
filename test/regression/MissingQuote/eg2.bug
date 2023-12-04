@@ -1,0 +1,10 @@
+
+SCHEMA representation_schema;
+
+ENTITY representation_context;
+WHERE
+--  WR1: SIZEOF(foo1) > 1; this works
+WR1: SIZEOF(foo1) + SIZEOF(foo2) > 0; --this hangs
+END_ENTITY;
+
+END_SCHEMA; -- representation_schema

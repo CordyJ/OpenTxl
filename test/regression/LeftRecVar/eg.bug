@@ -1,0 +1,42 @@
+\begin{zed}
+    [NAME,DATE]
+\end{zed}
+
+\begin{schema}{BirthdayBook}
+    known: @P NAME \\
+    birthday: NAME -+-> DATE
+\where
+    known = dom birthday
+\end{schema}
+
+\begin{schema}{AddBirthday}
+    /_\ BirthdayBook \\
+    name? : NAME \\
+    date? : DATE
+\where
+    name? @nel known \\
+    birthday' = birthday @u { name? |-> date? }
+\end{schema}
+
+\begin{schema}{FindBirthday}
+    @E= BirthdayBook \\
+    name? : NAME    \\
+    date! : DATE
+\where
+    name? @el known \\
+    date! = birthday(name?)
+\end{schema}
+
+\begin{schema}{Remind}
+    @E= BirthdayBook \\
+    today? : DATE   \\
+    cards! : @P NAME
+\where
+    cards! = { n : known | birthday(n) = today? }
+\end{schema}
+
+\begin{schema}{InitBirthdayBook}
+    BirthdayBook
+\where
+    known = emptyset
+\end{schema}

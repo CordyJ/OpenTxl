@@ -1,0 +1,139 @@
+% Prototype type inferencer for T'Nial inclusive polymorphism system.
+% T.C.N. Graham, Queen's University, May 1989.
+
+include "TNial.Grammar"
+
+function main
+    replace [program]
+	D [declarationsAndStatements]
+    by
+	D [enterDefaultAttributes]
+	   [attributeProgram]
+end function
+
+function enterDefaultAttributes
+    replace [declarationsAndStatements]
+        Scope [declarationsAndStatements]
+    by
+	Scope [enterDefaultVarAttributes]
+		  [enterDefaultExpressionAttributes]
+end function
+	   
+rule enterDefaultVarAttributes
+    replace [optionalVarRefAttrs]
+        N [nullVarRefAttrs]
+    by
+        ( )
+end rule
+	   
+rule enterDefaultExpressionAttributes
+    replace [optionalExpressionAttrs]
+        N [nullExpressionAttrs]
+    by
+        ( )
+end rule
+
+function attributeProgram
+    replace [declarationsAndStatements]
+	D [declarationsAndStatements]
+    by
+	D [propagateVarDeclarations]
+	   [enterConstantExpressionAttributes]
+	   [propogateVarExpressions]
+	   [propogateAssignedTypes]
+	   [flagConflicts]
+end function
+
+function propagateVarDeclarations
+    replace * [declarationsAndStatements]
+	var V [id] : T [typeSpec]
+	R [restOfScope]
+    by
+	var V : T
+	R [enterVarTypes V T] 
+	    [propagateVarDeclarations]
+end function
+
+function enterVarTypes V [id] T [typeSpec]
+    replace * [declarationsAndStatements]
+	dOrS [declarationOrStatement]
+	RestOfScope [opt restOfScope]
+    by
+	dOrS [enterVarType V T]
+	RestOfScope [enterVarTypes V T]
+end function
+
+rule enterVarType V [id] T [typeSpec]
+    replace [varRef]
+	V ( )
+    by
+	V ( T )
+end rule
+
+function enterConstantExpressionAttributes
+    replace [declarationsAndStatements]
+        Scope [declarationsAndStatements]
+    by
+	Scope [enterIntConstantExpressionAttributes]
+		  [enterBooleanConstantExpressionAttributes]
+end function
+
+rule enterIntConstantExpressionAttributes
+    replace [expression]
+        I [intConstant] ( )
+    by
+	I ( int )
+end rule
+
+rule enterBooleanConstantExpressionAttributes
+    replace [expression]
+        B [booleanConstant] ( )
+    by
+	B ( boolean )
+end rule
+
+rule propogateVarExpressions
+    replace [expression]
+        V [varRef] ( )
+    deconstruct V
+        Vid [id] ( Vtype [typeSpec] )
+    by
+	V ( Vtype )
+end rule
+
+rule propogateAssignedTypes
+    replace [declarationsAndStatements]
+        V [varRef] := E [expression]
+	RestOfScope [opt restOfScope]
+    deconstruct V
+        Vid [id] ( )
+    deconstruct E
+	Eval [expressionValue] ( Etype [typeSpec] )
+    construct Result [declarationsAndStatements]
+	Vid ( Etype )  := E
+	RestOfScope [enterVarTypes Vid Etype] 
+    by 
+	Result [propogateVarExpressions]
+end rule
+
+rule flagConflicts
+    replace [statement]
+        V [varRef] := E [expression]
+    deconstruct V
+	Vid [id] ( Vtype [typeSpec] )
+    deconstruct E
+	Eval [expressionValue] ( Etype [typeSpec] )
+    where not
+        Vtype [= Etype] 
+    construct TSany [typeSpec]
+        any
+    where not
+        Vtype [= TSany]
+    construct ErrorMessage [statement]
+    	V [message '"Type conflict"] [print] := E [print]
+    by
+	Vid ( ERROR ) := Eval ( ERROR )
+end rule
+
+% % external rule message S [stringlit]
+% % external rule print

@@ -1,0 +1,15 @@
+main ()
+
+{
+  var A ^3 <2 3 4> int;
+  var B ^3 <2 3 4> int;
+  var C ^3 <2 3 4> int;
+  var X int;
+  var R int;
+
+  R = <1 2 1> psi (A + B);
+  R = <1 2 1> psi (A + X);
+  R = <1 2 1> psi (A + 2.414);
+  R = <1 2 1> psi (X + B);
+  R = <1 2 1> psi (1 + B);
+}

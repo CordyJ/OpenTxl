@@ -1,0 +1,190 @@
+% TXL Basis Grammar for Lenore Mullins' MOA language
+% J.R. Cordy, Queen's University, September 1993
+
+% Derived from:
+    % From psi@cs.umr.edu Fri Jul  9 15:20:06 1993
+    % From: psi@cs.umr.edu
+    % To: cordy@qucis.queensu.ca
+    % 
+    % Moa Compiler 0.1 input grammar specification.
+    % 
+    % Uppercase words indicate a type of an object.
+
+% Extended to allow null formals lists -- JRC 10.9.93
+
+% Extended to allow scalar constants and declarations -- JRC 24.9.93
+
+% Rationalized and tuned for TXL transforms -- JRC 27.9.93
+%  - in particular, it is now possible to find the shape of an array
+%    simply by looking for the [declared_name_and_definition] for it
+
+% Renamed [XXX_name] and [XXX_number] productions to simplify grammar -- JRC 24.9.93
+
+% Removed typing of integer constants to simplify grammar -- JRC 28.9.93
+
+% Updated to correspond to MOA 0.2 language -- JRC 29.9.93
+%  - in particular, added unary operators
+
+keys
+	int	real	const	forall	
+	psi	take	drop	cat	pdrop 	ptake	omega
+    	iota  	dim  	shp  	red  	tau  	rav
+end keys
+
+define program
+	[repeat procedure_definition]
+end define
+
+define procedure_definition
+	[declared_name] ( [formal_parameter_list] ) [block_body]
+end define
+
+define formal_parameter_list
+	[list parameter_definition]					%% JRC 10.9.93
+end define
+
+define parameter_definition
+    	[variable_definition]
+end define
+
+define array_value
+	[array_shape] [vector_value]
+end define
+
+define array_shape
+	^ [SPOFF] [unsigned_number] [SPON] [vector_value]
+end define
+
+define block_body
+						[NL]
+	{ 					[IN][NL]
+	    [definitions_and_statements]	[EX]
+	}					[NL]
+end define
+
+define definitions_and_statements
+	[repeat definition_or_statement]
+end define
+
+define definition_or_statement
+  	[definition]
+    |	[statement]
+end define
+
+define definition
+	[constant_definition]
+    |	[variable_definition]
+end define
+
+define constant_definition
+	const [declared_name_and_definition] = [constant_value] ; 	[NL]
+end define
+
+define declared_name_and_definition
+	[declared_name] [opt array_shape] [scalar_type]
+end define
+
+define scalar_type
+	int 
+    |	real
+end define
+
+define scalar_value
+    	[signed_number]
+end define
+
+define constant_value
+    	[scalar_value]
+    |	[vector_value]
+    |	[array_value]
+end define
+
+define variable_definition
+	var [declared_name_and_definition] ;	[NL]
+end define
+
+define statement
+	[assignment_statement] ;	[NL]
+    |	[forall_statement] ;		[NL]
+end define
+
+define forall_statement
+	forall ( [term] <= [variable_access] < [term] ) { 
+	    [repeat statement] 
+	}
+end define
+
+define assignment_statement
+	[variable_access] = [expression]
+end define
+
+define variable_access
+	[referenced_name] 
+end define
+
+define expression
+	[factor] [repeat operator_factor] 
+end define
+
+define operator_factor
+	[operator] [factor]
+end define
+
+define operator
+	[arithmetic_operator]
+    |	[array_operator]
+    |	[omega_operator]
+end define
+
+define arithmetic_operator
+	+  |  -  |  *  |  /  
+end define
+
+define array_operator
+	psi  |  take  |  drop  |  cat  |  pdrop  |  ptake  
+end define
+
+define omega_operator
+    	[operator] omega [vector_value]
+end define
+
+define factor
+	[term]
+    |	( [expression] )
+    |	[unary_operator] [factor]	
+end define
+
+define unary_operator
+    	iota  |  dim  |  shp  |  + red  |  - red  |  * red  |  / red  |  tau  |  rav
+end define
+
+define term
+	[variable_access]
+    |	[constant_value]
+end define
+
+define vector_value
+	[SPOFF] [SP] < [repeat number_or_referenced_name] [SPOFF] > [SPON]
+end define
+
+define number_or_referenced_name
+	[signed_number] [SPON]
+    |	[referenced_name] [SPON]
+end define
+
+define signed_number
+   	[opt '-] [number]
+end define
+
+define unsigned_number
+   	[number]
+end define
+
+define declared_name
+	[id]
+end define
+
+define referenced_name
+	[id]
+end define
+

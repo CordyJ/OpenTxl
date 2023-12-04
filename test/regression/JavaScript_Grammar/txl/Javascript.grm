@@ -1,0 +1,295 @@
+% TXL Javascript Grammar
+% Mykyta Synytskyy
+% Source Transformation Project, Software Technology Laboratory
+% Queen's University
+% July 2002
+
+% This grammar is intended to be used as part of a whole web page
+% parser for HTML with embedded Javascript, but can be used alone 
+% to parse Javascript only.
+
+#pragma -w 600
+
+tokens
+    js_regexp "/#/*/[gi(gi)(ig)]?"  
+end tokens
+
+compounds
+    == += -= *= /= ++ -- '%= != && || <= >=
+end compounds
+
+comments
+    //
+    /* */
+end comments
+
+keys
+    abstract boolean break byte case catch char class const 
+    continue default do double else extends final finally 
+    float for function goto if implements import in instanceof 
+    int interface long native new package private protected public
+    return short static switch synchronized throw throws transient 
+    try var void while with
+end keys
+
+define program
+    [js_program]
+end define
+
+define js_program
+    [repeat js_declaration_or_statement]
+end define
+
+define js_subscope
+    [repeat js_declaration_or_statement]
+end define
+
+define js_declaration_or_statement
+    [list js_declaration]                     [NL]
+    | [list js_statement]                     [NL]
+end define
+
+define js_declaration
+    [js_variable_declaration][opt ;]
+    | [js_function_declaration] [opt ;]
+end define
+
+define js_variable_declaration
+    'var [list js_variable_description] 
+end define
+
+define js_variable_description
+    [id] [opt js_variable_initialization]
+end define
+
+define js_variable_initialization
+    '= [opt 'new] [js_expn]
+end define
+
+
+define js_function_declaration
+    [NL]
+    'function [id] ( [list id] )        [NL]
+    {                                   [NL] [IN]
+    [js_subscope]                       [EX]
+    }
+    [NL]
+end define
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%  Expressions start here (with heavy borrowing from Turing grammar)  %%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+define js_expn 
+    [js_primary] [opt js_operator_expn] 
+end define
+
+define js_operator_expn 
+        [js_op] [js_expn]
+end define
+
+define js_op 
+      +  | - | *  | / | '%  | == | != | < | <=  
+    | >= | > | && | & | '|| | '| | ?  | :
+    | ''  % this is logical concatenation.
+    | [js_assignment_operator]
+end define
+
+define js_assignment_operator
+    = | '+= | '-= | '*= | '/= | '%=
+end define
+
+define js_primary 
+        ( [js_expn] )
+    | [stringlit]
+    | [charlit]
+    | [js_regexp]
+    | [number]
+    | [js_reference]
+    | [js_prefix_op] [js_primary]
+    | [js_primary] [js_postfix_op] 
+end define
+
+define js_prefix_op 
+     +  | -  |  '! | '++ | '--
+end define
+
+define js_postfix_op
+      '--
+    | '++
+end define
+
+
+define js_reference 
+    [id] [SPOFF] [repeat js_component_selector] [SPON]
+end define
+
+define js_component_selector
+      '[ [js_expn] ']
+    | . [id]
+    | '( [list js_expn] ')
+end define
+
+
+define js_statement
+    [js_assignment_statement]  [opt ;]
+    | [js_new_statement][opt ;]
+    | [js_subroutine_call]    [opt ;]
+    | [js_if_statement][opt ;]
+    | [js_for_statement][opt ;]
+    | [js_while_statement][opt ;]
+    | [js_increment_statement][opt ;]
+    | [js_decrement_statement][opt ;]
+    | [js_break_statement][opt ;]
+    | [js_continue_statement][opt ;]
+    | [js_return_statement][opt ;]
+    | [js_with_statement][opt ;]
+    | [js_switch_statement][opt ;]
+    | [js_do_statement][opt ;]
+    | [js_for_in_statement][opt ;]
+    | [js_try_catch_statement][opt ;]
+    | [js_throw_statement][opt ;]
+    | [js_compound_statement]
+end define
+
+
+
+define js_compound_statement
+    '{                            [NL] [IN]
+        [js_subscope]             [EX]
+     '}    
+end define
+
+define js_assignment_statement
+    [js_reference] [js_assignment_operator] [js_expn] 
+end define
+
+define js_new_statement
+    [js_reference] '= 'new [js_expn] 
+end define
+
+define js_subroutine_call
+    [js_reference]  
+end define
+
+define js_if_statement
+    'if ( [js_expn] )             [NL]
+        [js_statement]           
+    [opt js_else_clause]
+end define
+
+define js_else_clause
+    [NL] 'else                    [NL]
+        [js_statement]            [NL]
+end define
+
+define js_for_statement
+    'for ( [js_declaration_or_statement_inside_for] ; [list js_expn]; [list js_expn] )     [NL]
+         [js_statement]    
+end define
+
+define js_declaration_or_statement_inside_for
+
+% exactly the same thing as a normal js_declaration_or_statement, but
+% withouth the unparsing [NL] things, which break up the for loops.
+    [ list js_declaration] 
+    | [list js_statement] 
+
+end define
+
+define js_while_statement
+    'while ( [js_expn] )          [NL]
+        [js_statement]
+end define
+
+define js_increment_statement
+      [js_primary] '++  
+    | '++ [js_primary] 
+end define
+
+define js_decrement_statement
+      [js_primary]--  
+    | -- [js_primary]
+end define
+
+define js_break_statement
+    'break 
+end define
+
+define js_continue_statement
+    'continue  
+end define
+
+define js_return_statement
+    'return [opt js_expn] 
+end define
+
+define js_with_statement
+    'with '( [js_expn] ')         [NL]
+        [js_statement]
+end define
+
+define js_switch_statement
+    'switch '( [js_expn] ') [NL]
+    { [NL]
+    [repeat js_case_clause]
+    [opt  js_default_clause]
+    }
+end define
+
+define js_case_clause
+    [repeat js_case_clause_value+]        [NL][IN] 
+    [js_subscope]                         [EX]
+end define
+
+define js_case_clause_value
+    'case [js_expn] ':
+end define
+
+define js_default_clause
+    'default:                    [NL][IN]
+    [js_subscope]                [EX]
+end define
+
+
+define js_do_statement
+    'do                          [NL]
+    {                            [NL][IN]
+    [js_subscope]                [EX]
+    } while ( [js_expn]  )  
+end define
+
+define js_for_in_statement
+    'for ( [js_for_in_var_spec] 'in [js_reference] )    [NL]
+    [js_statement]
+end define
+
+define js_for_in_var_spec
+    [js_variable_declaration]
+    | [js_reference]
+end define
+
+define js_try_catch_statement
+    'try                         [NL]
+    {                            [NL][IN]
+    [js_subscope]                [EX]
+    }                            [NL]
+    'catch ( [id] )              [NL]
+    {                            [NL][IN]
+    [js_subscope]                [EX]
+    }
+    [opt js_finally_clause]    
+end define
+
+define js_finally_clause
+    [NL]'finally                 [NL]
+    {                            [NL][IN]
+    [js_subscope]                [EX]
+    }
+end define
+
+define js_throw_statement
+    'throw [js_expn] 
+end define
+
