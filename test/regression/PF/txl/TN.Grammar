@@ -1,0 +1,171 @@
+% Basis grammar for tiny functional subset of T'Nial
+% T.C.N. Graham, GMD Karlsruhe, January 1990.
+
+comments
+    '%
+end comments
+
+keys
+    elseif else endif then 'function operation 'end
+end keys
+
+define program
+    [expression]
+end define
+
+define expression
+    [declarationAndExpression]
+  | [value]
+end define
+
+define declarationAndExpression
+    [declaration] ; [NL][NL]
+    [expression]
+end define
+
+
+%
+%	DECLARATIONS
+%
+define declaration
+    [functionDeclaration]
+end define
+
+define functionDeclaration
+    [fDeclaration]
+  | [operationDeclaration]
+end define
+
+define fDeclaration
+    'function [id] [parameterList] 	[NL][IN]
+	[expression]			[EX][NL]
+    'end [id]
+end define
+
+define operationDeclaration
+    operation [id] [parameterList]	[NL]
+    {					[NL][IN]
+	[expression]			[EX][NL]
+    }
+end define
+
+define parameterList
+    [nullParm]
+  | [multipleParm]
+end define
+
+define nullParm
+    ( )
+end define
+
+define multipleParm
+    ( [singleParm] [repeat followingParm] )
+end define
+
+define singleParm
+    [id]
+end define
+
+define followingParm
+    , [singleParm]
+end define
+
+%
+%	VALUES
+%
+define value
+    [number]
+  | [phrase]
+  | [stringlit]
+  | [constructedList]
+  | [ifValue]
+  | [functionApplication]
+  | [variableReference]
+end define
+
+define variableReference
+    [id]
+end define
+
+define phrase
+    ` [id]
+end define
+
+
+%
+%	Lists:
+%		'[' [<value> {, <value>}] ']'
+%
+define constructedList
+    [nullList]
+  | [multipleElementList]
+end define
+
+define nullList
+    '[ ']
+end define
+
+define multipleElementList
+    '[ [value] [followingListElements] ']
+end define
+
+define followingListElements
+    [repeat followingListElement]
+end define
+
+define followingListElement
+    , [value]
+end define
+
+%
+%	Stuff with lists
+%
+
+define ifValue
+				[IN][NL]
+    if [value] then		[NL][IN]
+	[expression]		[EX][NL]
+    [repeat elseifClause]
+    [opt elseClause]
+    endif			[EX]
+end define
+
+define elseifClause
+    elseif [value] then		[NL][IN]
+	[expression]		[EX][NL]
+end define
+
+define elseClause
+    else [expression]		[NL]
+end define
+
+
+%
+%	Application:
+%		<fn id> <value>
+%
+
+define functionApplication
+    [id] [actualTuple]
+end define
+
+define actualTuple
+    [nullActual]
+  | [multipleActuals]
+end define
+
+define nullActual
+    ( )
+end define
+
+define multipleActuals
+    ( [singleActual] [repeat followingActual] )
+end define
+
+define singleActual
+    [value]
+end define
+
+define followingActual
+    , [singleActual]
+end define

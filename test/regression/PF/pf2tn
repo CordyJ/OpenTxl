@@ -1,0 +1,14 @@
+#!/bin/csh
+# PFtoTN - run TXL transform to change PF file to T'Nial 
+# J.R. Cordy, GMD Karlsruhe, 15.10.90
+
+set Program="$1:r"
+set Dialect="$1:e"
+set Arch=`arch`
+
+if ( "$Dialect" != PF ) then
+	echo "Usage:  PFtoTN {PFfilename}.PF"
+	exit
+endif
+
+txl $1 > $Program.TN

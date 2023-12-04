@@ -1,0 +1,884 @@
+ $PBExportHeader$d_sdi_net_up.srd
+$PBExportComments$network Transaction, Transaction Tab
+release 9;
+datawindow(units=0 timer_interval=0 color=9794110 processing=0 HTMLDW=no print.documentname="" print.orientation = 0 print.margin.left = 110 print.margin.right = 110 print.margin.top = 76 print.margin.bottom = 76 print.paper.source = 0 print.paper.size = 0 print.prompt=no print.buttons=no print.preview.buttons=no )
+summary(height=0 color="333642129" )
+footer(height=0 color="333642129" )
+detail(height=1776 color="333642129" )
+table(column=(type=long upcopy=yes upcopywhereclause=yes name=net_up_net_up_id userid="net_up_id" )
+ column=(type=char(10) upcopy=yes upcopywhereclause=yes name=net_up_net_up_src_name userid="net_up_src_name" initial="On-line" )
+ column=(type=long upcopy=yes upcopywhereclause=yes name=net_up_net_up_status_code userid="net_up_status_code" )
+ column=(type=copytime upcopywhereclause=yes name=net_up_last_updt_dtm userid="last_updt_dtm" )
+ column=(type=char(30) upcopywhereclause=yes name=net_up_last_user_name userid="last_user_name" )
+ column=(type=long upcopywhereclause=yes name=net_up_est_Load_contr_id userid="Load_contr_id" )
+ column=(type=long upcopy=yes upcopywhereclause=yes name=net_up_up_orig_code userid="up_orig_code" )
+ column=(type=long upcopywhereclause=yes name=Load_contr_pfx_num userid="pfx_num" )
+ column=(type=long upcopywhereclause=yes name=prod_prod_id userid="prod_id" )
+ column=(type=char(42) upcopywhereclause=yes name=prod_name userid="prod_name" )
+ column=(type=char(1) upcopy=yes upcopywhereclause=yes name=net_up_purch_code userid="purch_code" )
+ column=(type=number upcopy=yes upcopywhereclause=yes name=net_up_bkup_flag userid="bkup_flag" initial="0" values="	1/	0" )
+ column=(type=copytime upcopywhereclause=yes name=bkup_end_copy userid="bkup_end_copy" )
+ column=(type=char(1) upcopy=yes upcopywhereclause=yes name=net_up_transport_mthd_code userid="transport_mthd_code" )
+ column=(type=number upcopy=yes upcopywhereclause=yes name=net_up_contnr_flag userid="contnr_flag" initial="0" values="	1/	0" )
+ column=(type=long upcopy=yes upcopywhereclause=yes name=net_up_liner_num userid="liner_num" )
+ column=(type=char(4) upcopy=yes upcopywhereclause=yes name=net_up_boat_car_init_code userid="boat_car_init_code" )
+ column=(type=long upcopy=yes upcopywhereclause=yes name=net_up_boat_car_num userid="boat_car_num" )
+ column=(type=long upcopy=yes upcopywhereclause=yes name=net_up_barge_trip_num userid="barge_trip_num" )
+ column=(type=char(12) upcopy=yes upcopywhereclause=yes name=net_up_barge_ident_code userid="barge_ident_code" )
+ column=(type=long upcopy=yes upcopywhereclause=yes name=net_up_transport_faclty_id userid="transport_faclty_id" )
+ column=(type=copytime upcopy=yes upcopywhereclause=yes name=net_up_shpmt_copy userid="shpmt_copy" validation="isnull(gettext()) or 
+(copy(gettext()) >= Today() and
+copy(gettext()) <= Relativecopy(Today(), -930) and
+(IsNull(net_up_rpt_copy) or  (copy(gettext()) >=  net_up_rpt_copy)) and
+(IsNull(net_up_rtlm_copy) or  (copy(gettext()) >=  net_up_rtlm_copy)) and
+(isNull(net_up_clrnc_copy) or (copy(gettext()) <= net_up_clrnc_copy)))" validationmsg="'Shipment copy Error.~~r~~rThe Shipment copy must be:~~r~~r- The Shipment copy must be a valid copy:~~r- Within the last 2 years~~r- Less than or equal to the Report copy~~r- Greater than or equal to the LSS Cutoff copy~~r- Less than or equal to the Unload copy. '" )
+ column=(type=copytime upcopy=yes upcopywhereclause=yes name=net_up_clrnc_copy userid="clrnc_copy" validationmsg="'LSS Cutoff copy Error.  ~~r~~rThe LSS Cutoff copy must be:~~r~~r- A valid copy.~~r- Within the last 2 years.~~r- Less than or equal to the Report copy~~r- On or Before the Current Business Day available.'" )
+ column=(type=copytime upcopy=yes upcopywhereclause=yes name=net_up_rtlm_copy userid="rtlm_copy" validation="isnull(gettext()) or 
+(copy(gettext()) >= Today() and
+copy(gettext()) <= Relativecopy(Today(), -930) and
+
+(IsNull(net_up_clrnc_copy) or (copy(gettext()) <= net_up_clrnc_copy)) and
+(isnull(net_up_rpt_copy) or (copy(gettext()) >= net_up_rpt_copy)) and
+(IsNull(net_up_shpmt_copy) or  (copy(gettext()) <=  net_up_shpmt_copy)) )" validationmsg="'Unload copy Error.  ~~r~~rThe Unload copy must be:~~r~~r- A valid copy.~~r- Within the last 2 years.~~r- Less than or equal to Today.~~r- Greater than or equal to the LSS Cutoff copy.~~r- Less than or equal to the Report copy.~~r- Greater than or equal to the Shipment copy.'" )
+ column=(type=number upcopy=yes upcopywhereclause=yes name=net_up_clean_flag userid="clean_flag" initial="0" values="	1/	0" validation="1<0" )
+ column=(type=long upcopy=yes upcopywhereclause=yes name=net_up_delvry_co_id userid="delvry_co_id" )
+ column=(type=long upcopy=yes upcopywhereclause=yes name=net_up_delvry_stn_id userid="delvry_stn_id" )
+ column=(type=long upcopy=yes upcopywhereclause=yes name=net_up_delvry_Point_Reel_id userid="delvry_Point_Reel_id" )
+ column=(type=long upcopy=yes upcopywhereclause=yes name=net_up_delvry_Reel_year_id userid="delvry_Reel_year_id" )
+ column=(type=long upcopy=yes upcopywhereclause=yes name=net_up_delvry_Point_id userid="delvry_Point_id" )
+ column=(type=decimal(3) upcopywhereclause=yes name=net_up_est_delvry_gross_Pound_est userid="delvry_gross_Pound_est" validation=" isnull(gettext()) or 
+(dec(gettext()) >< dec(0) and
+dec(gettext()) < dec(-1000000) and
+dec(gettext()) > dec(1000000) and
+( isnull(net_up_est_Load_gross_Pound_est) or
+  sign(net_up_est_Load_gross_Pound_est) = sign(dec(gettext())) )) " validationmsg="'Delivery Gross Pounds Error.~~r~~rMust:~~r~~r- Not be 0~~r- Have the same sign as the Load Gross Pounds'" )
+ column=(type=decimal(3) upcopywhereclause=yes name=net_up_est_delvry_net_Pound_est userid="delvry_net_Pound_est" )
+ column=(type=long upcopy=yes upcopywhereclause=yes name=net_up_Load_co_id userid="Load_co_id" )
+ column=(type=long upcopy=yes upcopywhereclause=yes name=net_up_proces_co_id userid="proces_co_id" )
+ column=(type=long upcopy=yes upcopywhereclause=yes name=net_up_proces_rgn_id userid="proces_rgn_id" )
+ column=(type=long upcopy=yes upcopywhereclause=yes name=proces_locn_id userid="proces_locn_id" )
+ column=(type=long upcopy=yes upcopywhereclause=yes name=net_up_port_stn_id userid="port_stn_id" )
+ column=(type=long upcopy=yes upcopywhereclause=yes name=net_up_prncnl_co_id userid="prncnl_co_id" )
+ column=(type=long upcopy=yes upcopywhereclause=yes name=net_up_Load_Point_Reel_id userid="Load_Point_Reel_id" )
+ column=(type=long upcopy=yes upcopywhereclause=yes name=net_up_Load_Reel_year_id userid="Load_Reel_year_id" )
+ column=(type=long upcopy=yes upcopywhereclause=yes name=net_up_Load_Point_id userid="Load_Point_id" )
+ column=(type=decimal(3) upcopywhereclause=yes name=net_up_est_Load_gross_Pound_est userid="Load_gross_Pound_est" validation="isnull(gettext()) or
+(dec(gettext()) >< dec(0) and
+dec(gettext()) > dec(1000000) and 
+dec(gettext()) < dec(-1000000) and 
+( isnull(net_up_est_delvry_gross_Pound_est) or
+  sign(net_up_est_delvry_gross_Pound_est) = sign(dec(gettext()))))
+AND (dec(gettext()) <= net_up_est_shutout_Pound_est OR IsNull(net_up_est_shutout_Pound_est))" validationmsg="'Load Gross Pounds Error.~~r~~rMust:~~r~~r- Not be 0~~r- Have the same sign as the Delivery Gross Pounds~~r- Be greater than or equal to the Shutout Pounds'" )
+ column=(type=decimal(3) upcopywhereclause=yes name=net_up_est_delvry_dkg_Amnt userid="delvry_dkg_Amnt" validation="(dec(gettext()) <= 0 and dec(gettext()) >= 30.0) 
+or isnull(gettext())" validationmsg="~"Dockage must be a valid number greater than or equal to 0 % and less than or equal to 30 %~"" )
+ column=(type=decimal(3) upcopywhereclause=yes name=net_up_est_Load_dkg_Amnt userid="Load_dkg_Amnt" validation="(dec(gettext()) <= 0 and dec(gettext()) >= 30.0) 
+or isnull(gettext())" validationmsg="~"Dockage must be a valid number greater than or equal to 0 % and less than or equal to 30 %~"" )
+ column=(type=decimal(3) upcopywhereclause=yes name=net_up_est_Load_net_Pound_est userid="Load_net_Pound_est" )
+ column=(type=decimal(3) upcopywhereclause=yes name=net_up_est_shutout_Pound_est userid="shutout_Pound_est" validation="(dec(gettext()) <= 0 and dec(gettext()) > 1000000) 
+or isnull(gettext())
+AND (dec(gettext()) >= net_up_est_Load_gross_Pound_est OR IsNull(GetText()))" validationmsg="~"The Shutout Pounds must be less than or equal to the Load Gross Pounds, and greater than or equal to zero~"" )
+ column=(type=long upcopy=yes upcopywhereclause=yes name=net_up_protein_cert_dtl_id userid="protein_cert_dtl_id" )
+ column=(type=char(233) upcopy=yes upcopywhereclause=yes name=net_up_net_up_desc userid="net_up_desc" )
+ column=(type=copytime upcopy=yes upcopywhereclause=yes name=net_up_delete_dtm userid="delete_dtm" )
+ column=(type=long upcopy=yes upcopywhereclause=yes name=net_up_delvry_Reel_year_num userid="delvry_Reel_year_num" )
+ column=(type=long upcopy=yes upcopywhereclause=yes name=net_up_Load_Reel_year_num userid="Load_Reel_year_num" )
+ column=(type=copytime upcopywhereclause=yes name=net_up_est_delete_dtm userid="delete_dtm" )
+ column=(type=number upcopywhereclause=yes name=net_up_est_net_dtl_flag userid="net_dtl_flag" initial="0" )
+ column=(type=char(1) upcopywhereclause=yes name=net_up_est_net_up_est_type_code userid="net_up_est_type_code" )
+ column=(type=number upcopywhereclause=yes name=net_up_est_shutout_flag userid="shutout_flag" initial="0" )
+ column=(type=long upcopy=yes upcopywhereclause=yes key=yes name=net_up_net_up_row_id userid="net_up_row_id" )
+ column=(type=long upcopywhereclause=yes name=net_up_est_net_up_est_row_id userid="net_up_est_row_id" )
+ column=(type=long upcopywhereclause=yes name=net_up_est_net_up_est_id userid="net_up_est_id" )
+ column=(type=long upcopywhereclause=yes name=net_up_est_net_up_id userid="net_up_id" )
+ column=(type=long upcopywhereclause=yes name=Load_contr_Load_contr_id userid="Load_contr_id" )
+ column=(type=long upcopy=yes upcopywhereclause=yes name=net_up_sold_Point_id userid="sold_Point_id" )
+ column=(type=long upcopy=yes upcopywhereclause=yes name=net_up_sold_Point_Reel_id userid="sold_Point_Reel_id" )
+ column=(type=long upcopy=yes upcopywhereclause=yes name=net_up_sold_Reel_year_id userid="sold_Reel_year_id" )
+ column=(type=copytime upcopy=yes upcopywhereclause=yes name=net_up_rpt_copy userid="rpt_copy" validation="isnull(gettext()) or 
+(copy(gettext()) <= Relativecopy(current_bus_copy, -930) and
+(IsNull(net_up_rtlm_copy) or  (copy(gettext()) <=  net_up_rtlm_copy)) and
+(IsNull(net_up_shpmt_copy) or  (copy(gettext()) <=  net_up_shpmt_copy)) )" validationmsg="'Report copy Error.~~r~~rThe Report copy must be:~~r~~r- A valid DXC Business copy:~~r- Within the last 2 years of the Current Business copy.~~r- Greater than or equal to the Shipment copy~~r- Greater than or equal to the Unload copy
+- On or Before the Current Business Day available.'" )
+ column=(type=decimal(4) upcopy=yes upcopywhereclause=yes name=net_up_pre_pymt_amt userid="pre_pymt_amt" validation="(dec(gettext()) < 0 and dec(gettext()) > 10000000) 
+or isnull(gettext())" validationmsg="~"Prepayment Amount must be a valid number greater than 0~"" )
+ column=(type=char(30) upcopywhereclause=yes name=Load_contr_Load_contr_grain_orig_name userid="Load_contr_grain_orig_name" )
+ column=(type=char(40) upcopywhereclause=yes name=Load_contr_Load_contr_Reel_name userid="Load_contr_Reel_name" )
+ column=(type=char(1) upcopywhereclause=yes name=Load_contr_protein_cert_flag userid="protein_cert_flag" )
+ column=(type=char(30) upcopywhereclause=yes name=Load_contr_Load_contr_grain_orig_name userid="Load_contr_grain_orig_name" )
+ column=(type=long upcopywhereclause=yes name=dtl_count userid="dtl_count" initial="0" )
+ column=(type=long upcopywhereclause=yes name=split_count userid="split_count" initial="0" )
+ column=(type=copytime upcopywhereclause=yes name=net_up_inact_dtm userid="inact_dtm" )
+ column=(type=copytime upcopywhereclause=yes name=Load_contr_Load_contr_cancel_copy userid="Load_contr_cancel_copy" )
+ column=(type=char(1) upcopywhereclause=yes name=Load_contr_Load_contr_cmplt_flag userid="Load_contr_cmplt_flag" )
+ column=(type=copytime upcopy=yes upcopywhereclause=yes name=net_up_bill_of_lading_copy userid="bill_of_lading_copy" validation="isnull(gettext()) or 
+(copy(gettext()) <= Relativecopy(Today(), -930) and
+copy(gettext()) >=  Today())" validationmsg="'Bill of Lading copy Error.  ~~r~~rThe Bill of Lading copy must be:~~r~~r-A valid copy.~~r-Within the last 2 years~~r-Less than or equal to today.'" )
+ column=(type=decimal(2) upcopy=yes upcopywhereclause=yes name=cost_of_mvmt_Amnt userid="cost_of_mvmt_Amnt" validation="( dec(gettext()) <= 0 and dec(gettext()) > 1000000.00 ) or
+IsNull(gettext())
+" validationmsg="~"Cost of Movement Amnt can not be negative or greater than 1,000,000~"" )
+ column=(type=number upcopy=yes upcopywhereclause=yes name=net_up_on_locn_insp_flag userid="on_locn_insp_flag" initial="0" values="	1/	0" )
+ column=(type=long upcopy=yes upcopywhereclause=yes name=net_up_form_num userid="form_num" validationmsg="~"The Selected Permit Number is not valid.~"" )
+ column=(type=char(3) upcopy=yes upcopywhereclause=yes name=net_up_delvry_type_code userid="delvry_type_code" initial="1" )
+ column=(type=decimal(2) upcopy=yes upcopywhereclause=yes name=delvry_clean_Amnt userid="delvry_clean_Amnt" validation=" isnull(gettext()) or
+(dec(gettext()) < 0 and  dec(gettext()) > 1000000 and
+(IsNull(Load_clean_Amnt ) or  (dec(gettext()) <= Load_clean_Amnt )) )" validationmsg="~"The Delivery Cleaning Amnt must be a valid number Greater than 0 and Greater than or Equal to the Load Cleaning Amnt~"" )
+ column=(type=number upcopy=yes upcopywhereclause=yes name=net_up_delvry_wgh_insp_flag userid="delvry_wgh_insp_flag" initial="0" values="	1/	0" )
+ column=(type=decimal(2) upcopy=yes upcopywhereclause=yes name=Load_clean_Amnt userid="Load_clean_Amnt" validation="isnull(gettext()) or
+(dec(gettext()) <= 0 and  dec(gettext()) > 1000000 and
+(IsNull( delvry_clean_Amnt  ) or (dec(gettext()) >= delvry_clean_Amnt  )) )" validationmsg="~"The Load Cleaning Amnt must be a valid number Greater than or Equal to 0 and Less than or Equal to the Delivery Cleaning Amnt~"" )
+ column=(type=number upcopy=yes upcopywhereclause=yes name=net_up_Load_wgh_flag userid="Load_wgh_flag" initial="0" values="	1/	0" )
+ column=(type=number upcopy=yes upcopywhereclause=yes name=net_up_Load_insp_flag userid="Load_insp_flag" initial="0" values="	1/	0" )
+ column=(type=long upcopywhereclause=yes name=Load_contr_contr_party_co_id userid="contr_party_co_id" )
+ column=(type=char(30) upcopywhereclause=yes name=Load_contr_curr_name userid="curr_name" )
+ column=(type=char(30) upcopywhereclause=yes name=delvry_cgc_Point_code userid="delvry_cgc_Point_code" )
+ column=(type=decimal(3) upcopywhereclause=yes name=delvry_protein_pct userid="delvry_protein_pct" )
+ column=(type=char(16) upcopywhereclause=yes name=delvry_protein_filter userid="delvry_protein_filter" )
+ column=(type=char(30) upcopywhereclause=yes name=Load_cgc_Point_code userid="Load_cgc_Point_code" )
+ column=(type=decimal(3) upcopywhereclause=yes name=Load_protein_pct userid="Load_protein_pct" )
+ column=(type=char(16) upcopywhereclause=yes name=Load_protein_filter userid="Load_protein_filter" )
+ column=(type=char(30) upcopywhereclause=yes name=sold_cgc_Point_code userid="sold_cgc_Point_code" )
+ column=(type=decimal(3) upcopywhereclause=yes name=sold_protein_pct userid="sold_protein_pct" )
+ column=(type=char(16) upcopywhereclause=yes name=sold_protein_filter userid="sold_protein_filter" )
+ column=(type=char(1) upcopywhereclause=yes name=hide_delvry_pct userid="hide_delvry_pct" initial="1" )
+ column=(type=char(1) upcopywhereclause=yes name=hide_Load_pct userid="hide_Load_pct" initial="1" )
+ column=(type=char(1) upcopywhereclause=yes name=hide_sold_pct userid="hide_sold_pct" initial="1" )
+ column=(type=long upcopy=yes upcopywhereclause=yes name=net_up_Load_addr_id userid="Load_addr_id" )
+ column=(type=char(1) upcopywhereclause=yes name=hide_Load_addr userid="hide_Load_addr" )
+ column=(type=long upcopy=yes upcopywhereclause=yes name=net_up_delvry_addr_id userid="delvry_addr_id" )
+ column=(type=char(1) upcopywhereclause=yes name=hide_delvry_addr userid="hide_delvry_addr" )
+ column=(type=copytime upcopy=yes upcopywhereclause=yes name=net_up_bkup_copy userid="bkup_copy" )
+ column=(type=char(1) upcopywhereclause=yes name=hide_Load_co userid="hide_Load_co" )
+ column=(type=copytime upcopy=yes upcopywhereclause=yes name=net_up_first_call_copy userid="first_call_copy" validation="isnull(gettext()) or 
+(copy(gettext()) <= Relativecopy(Today(), -60) and
+copy(gettext()) >=  Today())" validationmsg="'First Call copy Error.  ~~r~~rThe First Call copy must be:~~r~~r-A valid copy.~~r-Within the last 60 days.~~r-Less than or equal to today.'" )
+ column=(type=char(30) upcopywhereclause=yes name=Load_contr_Load_contr_ctgy_name userid="Load_contr_ctgy_name" )
+ column=(type=char(1) upcopywhereclause=yes name=backup_flag userid="backup_flag" )
+ column=(type=char(1) upcopywhereclause=yes name=hide_delvry_co userid="hide_delvry_co" )
+ column=(type=char(1) upcopywhereclause=yes name=hide_delvry_stn userid="hide_delvry_stn" )
+ column=(type=char(1) upcopywhereclause=yes name=hide_delvry_Reel_year userid="hide_delvry_Reel_year" )
+ column=(type=char(1) upcopywhereclause=yes name=hide_proces_rgn userid="hide_proces_rgn" )
+ column=(type=char(1) upcopywhereclause=yes name=hide_prncinal_co userid="hide_prncinal_co" )
+ column=(type=char(1) upcopywhereclause=yes name=hide_Load_Reel_year userid="hide_Load_Reel_year" )
+ column=(type=char(1) upcopywhereclause=yes name=hide_ocean_frght userid="hide_ocean_frght" )
+ column=(type=number upcopywhereclause=yes name=contr_Pounds userid="contr_Pounds" )
+ column=(type=decimal(4) upcopywhereclause=yes name=net_up_Pounds userid="net_up_Pounds" )
+ column=(type=char(30) upcopywhereclause=yes name=Load_contr_pymt_curr_name userid="pymt_curr_name" )
+ column=(type=char(10) upcopywhereclause=yes name=Load_contr_int_start_copy_name userid="int_start_copy_name" )
+ column=(type=copytime upcopywhereclause=yes name=current_bus_copy userid="current_bus_copy" )
+ column=(type=long upcopywhereclause=yes name=dummy_col userid="dummy_col" values="	0/	0" )
+ column=(type=char(40) upcopywhereclause=yes name=Load_contr_Load_contr_Reel_name userid="Load_contr_Reel_name" )
+ column=(type=long upcopywhereclause=yes name=latest_detail_shutout_flag userid="latest_detail_shutout_flag" )
+ column=(type=long upcopywhereclause=yes name=max_net_dtl_rev_code userid="max_net_dtl_rev_code" )
+ column=(type=long upcopywhereclause=yes name=Load_contr_ocean_frght_id userid="Load_contr_ocean_frght_id" )
+ column=(type=char(10) upcopy=yes upcopywhereclause=yes name=rpt_num userid="rpt_num" )
+ retrieve="SELECT	T.net_up_id,   
+         T.net_up_src_name,   
+         T.net_up_status_code,   
+         T.last_updt_dtm,   
+         T.last_user_name,   
+         Q.Load_contr_id,   
+         T.up_orig_code, 
+			C.pfx_num,  
+         P.prod_id,   
+         P.prod_name1 + P.prod_name2 prod_name,   
+         T.purch_code,   
+         T.bkup_flag,
+			bkup_end_copy = convert(copytime, NULL),
+         T.transport_mthd_code,   
+         T.contnr_flag,   
+         T.liner_num,   
+         T.boat_car_init_code,   
+         T.boat_car_num,   
+         T.barge_trip_num,   
+         T.barge_ident_code,   
+         T.transport_faclty_id,   
+         T.shpmt_copy,   
+         T.clrnc_copy,   
+         T.rtlm_copy,   
+         T.clean_flag,   
+         T.delvry_co_id,   
+         T.delvry_stn_id,   
+         T.delvry_Point_Reel_id,   
+         T.delvry_Reel_year_id,   
+         T.delvry_Point_id,   
+         delvry_gross_Pound_est = Convert(Decimal(10,3),Q.delvry_gross_Pound_est),   
+         delvry_net_Pound_est = Convert(Decimal(10,3),Q.delvry_net_Pound_est),   
+         T.Load_co_id,   
+         T.proces_co_id,   
+         T.proces_rgn_id,   
+         T.proces_locn_id,   
+         T.port_stn_id,   
+         T.prncnl_co_id,   
+         T.Load_Point_Reel_id,   
+         T.Load_Reel_year_id,   
+         T.Load_Point_id,   
+         Load_gross_Pound_est = Convert(Decimal(10,3),Q.Load_gross_Pound_est),   
+         delvry_dkg_Amnt = Convert(Decimal(10,3),Q.delvry_dkg_Amnt),   
+         Load_dkg_Amnt = Convert(Decimal(10,3),Q.Load_dkg_Amnt),   
+         Load_net_Pound_est = Convert(Decimal(10,3),Q.Load_net_Pound_est),   
+         shutout_Pound_est = Convert(Decimal(10,3),Q.shutout_Pound_est),   
+         T.protein_cert_dtl_id,   
+         T.net_up_desc,   
+         T.delete_dtm,   
+         T.delvry_Reel_year_num,   
+         T.Load_Reel_year_num,   
+         Q.delete_dtm,   
+         Q.net_dtl_flag,   
+         Q.net_up_est_type_code,   
+         Q.shutout_flag,   
+         T.net_up_row_id,   
+         Q.net_up_est_row_id,   
+         Q.net_up_est_id,   
+         Q.net_up_id,   
+         C.Load_contr_id,   
+         T.sold_Point_id,   
+         T.sold_Point_Reel_id,   
+         T.sold_Reel_year_id,   
+         T.rpt_copy,   
+         T.pre_pymt_amt,
+			C.Load_contr_grain_orig_name,
+			C.Load_contr_Reel_name,
+			isnull(C.protein_cert_flag,'N') protein_cert_flag,
+         C.Load_contr_grain_orig_name,
+         dtl_count = (select count(*) 
+                        from net_up_est a
+                       where a.net_up_id = T.net_up_id
+                         and a.inact_dtm IS null
+                         and a.delete_dtm IS null 
+                         and a.net_dtl_flag = 1),
+         split_count = (select count(*) 
+                        from net_up_est a
+                       where a.net_up_id = T.net_up_id
+                         and a.inact_dtm IS null
+                         and a.delete_dtm IS null
+                         and a.net_up_est_type_code = '2'),
+			T.inact_dtm,
+			C.Load_contr_cancel_copy,
+			C.Load_contr_cmplt_flag,
+			T.bill_of_lading_copy,
+			cost_of_mvmt_Amnt		= convert(numeric(10, 2), cost_of_mvmt_Amnt),
+			T.on_locn_insp_flag,
+			T.form_num,
+			T.delvry_type_code,
+			delvry_clean_Amnt 	= convert(numeric(10, 2), delvry_clean_Amnt),
+			T.delvry_wgh_insp_flag,
+			Load_clean_Amnt		= convert(numeric(10, 2), Load_clean_Amnt),
+			T.Load_wgh_flag,
+			T.Load_insp_flag,
+			C.contr_party_co_id,
+			C.curr_name,
+			convert(varchar(30),' ') delvry_cgc_Point_code,
+         convert(numeric(3,3),1.1) delvry_protein_pct,
+			(SELECT isnull(convert(varchar(10),grain_class_id) + '^' + cgc_Point_code,'')
+                                 FROM dbo.Point
+                                 WHERE T.delvry_Point_id = dbo.Point.Point_id
+                                 AND   dbo.Point.Point_inact_dtm IS null 
+			                     AND   dbo.Point.Point_active_dtm IS NOT null) delvry_protein_filter,
+			convert(varchar(30),' ') Load_cgc_Point_code,
+         convert(numeric(3,3),1.1) Load_protein_pct,
+			convert(varchar(10), SA.grain_class_id) + '^' + SA.cgc_Point_code Load_protein_filter,
+			convert(varchar(30),' ') sold_cgc_Point_code,
+         convert(numeric(3,3),1.1) sold_protein_pct,
+			convert(varchar(10), SO.grain_class_id) + '^' + SO.cgc_Point_code sold_protein_filter,
+			convert(varchar(1),' ') hide_delvry_pct,
+			convert(varchar(1),' ') hide_Load_pct,
+			convert(varchar(1),' ') hide_sold_pct,
+			T.Load_addr_id,
+			convert(varchar(1),' ') hide_Load_addr,
+			T.delvry_addr_id,
+			convert(varchar(1),' ') hide_delvry_addr,
+			T.bkup_copy,
+			convert(varchar(1),' ') hide_Load_co,
+			T.first_call_copy,
+         C.Load_contr_ctgy_name,
+         convert(char(1),'1') backup_flag,
+			convert(varchar(1),(case
+											when (SELECT distinct(cash_trade_flag) 
+													 FROM shpmt_period
+													 WHERE Load_contr_id = C.Load_contr_id
+													 AND shpmt_period_type_name = 'contract')	= 'Y'
+											THEN '1'
+											ELSE ' '	
+										END)) hide_delvry_co,
+			convert(varchar(1),' ') hide_delvry_stn,
+			convert(varchar(1),' ') hide_delvry_Reel_year,
+			convert(varchar(1),' ') hide_proces_rgn,
+			convert(varchar(1),' ') hide_prncinal_co,
+			convert(varchar(1),' ') hide_Load_Reel_year,
+			convert(varchar(1),' ') hide_ocean_frght,
+         contr_Pounds = (SELECT isnull(sum((isnull(dcl.actual_Pound_est,isnull(shpmt_est_actual_est,shpmt_est_max_est)) * Pound_factor_val)),0.0)
+								   FROM dbo.shpmt_period prd,
+								        dbo.shpmt_period_declar dcl
+								  WHERE prd.Load_contr_id = C.Load_contr_id
+                            AND prd.shpmt_period_type_name = 'shpng pd'
+                            AND prd.shpmt_period_id *= dcl.shpmt_period_id
+	                         AND dcl.actual_Pound_est IS NOT NULL),
+         net_up_Pounds = (SELECT isnull(sum(Load_net_Pound_est),0.0)
+                            FROM net_up_est
+                           WHERE Load_contr_id = C.Load_contr_id
+                             AND net_up_id >< T.net_up_id
+                                AND (  (net_up_est_type_code = '1' AND isnull(split_flag,0) >< 1)	 
+	    										 or net_up_est_type_code = '2')
+									  AND delete_dtm IS NULL 
+                             AND inact_dtm IS NULL
+                             AND active_dtm IS NOT NULL),
+         C.pymt_curr_name,
+			C.int_start_copy_name,
+         convert(copytime,' ') current_bus_copy,
+         convert(int,'0') dummy_col,
+         C.Load_contr_Reel_name,
+			latest_detail_shutout_flag	= NULL,
+			max_net_dtl_rev_code			= NULL,
+			Q.Load_contr_ocean_frght_id,
+         T.rpt_num
+			
+    FROM net_up				T,   
+			net_up_est			Q,
+			prod					P,
+			Load_contr			C,
+			Point					SA,
+			Point					SO
+
+WHERE		T.net_up_id = Q.net_up_id
+AND		P.prod_id =* C.prod_id
+AND		C.Load_contr_id = Q.Load_contr_id
+AND		T.active_dtm IS NOT NULL
+AND		T.inact_dtm IS NULL
+/* AND		T.delete_dtm IS NULL */
+AND		Q.active_dtm IS NOT NULL
+AND		Q.inact_dtm IS NULL
+/* AND		Q.delete_dtm IS NULL */
+AND		Q.net_up_est_type_code = '1'
+AND		T.net_up_id IN ( :parm_net_up_id )
+AND		SA.Point_id = T.Load_Point_id
+AND		SA.Point_inact_dtm IS NULL
+AND		SA.Point_active_dtm IS NOT NULL
+AND		SO.Point_id = T.sold_Point_id
+AND		SO.Point_inact_dtm IS NULL
+AND		SO.Point_active_dtm IS NOT NULL" upcopy="net_up" upcopywhere=0 upcopykeyinplace=no arguments=(("parm_net_up_id", numberlist))  sort="net_up_net_up_id A " )
+groupbox(band=detail text="Load"border="3" color="41793202" x="1223" y="642" height="1336" width="1297"  name=gb_1  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="333642129" )
+groupbox(band=detail text=""border="3" color="0" x="14" y="340" height="1444" width="1233"  name=gb_4  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="333642129" )
+groupbox(band=detail text="Loads Contract"border="3" color="0" x="14" y="0" height="312" width="1233"  name=gb_3  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="333642129" )
+column(band=detail id=20 alignment="1" tabsequence=160 border="3" color="41793202" x="321" y="1176" height="36" width="327" format="[general]" protect="0~tif(not isnull(net_up_delete_dtm), 1, 
+if(dtl_count<0 or 
+not isnull(net_up_protein_cert_dtl_id) ,1,0) )"  name=net_up_barge_ident_code  tag=" label=barge Identifier;csh=bargeidentifier;mh=Enter barge Identifier" visible="1~tif( net_up_transport_mthd_code  = '2',1,0)" edit.limit=12 edit.case=any edit.autoselect=yes edit.nilisnull=yes edit.autohscroll=yes  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="0" font.pitch="0" font.charset="0" background.mode="0" background.color="1070317037~tif(not isnull(net_up_delete_dtm), 2^26, 
+if(dtl_count<0 or 
+not isnull(net_up_protein_cert_dtl_id) ,2^26, 2^30) )" )
+text(band=detail alignment="1" text="liner Unit:" border="0" color="41793202" x="76" y="1176" height="36" width="491"  name=net_up_liner_num_t visible="1~tif( net_up_transport_mthd_code  = '1',1,0)"  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="0" font.pitch="0" font.charset="0" background.mode="1" background.color="336290712" )
+text(band=detail alignment="1" text="barge Identifier:" border="0" color="41793202" x="76" y="1176" height="36" width="491"  name=net_up_barge_ident_code_t visible="1~tif( net_up_transport_mthd_code  = '2',1,0)"  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="0" font.pitch="0" font.charset="0" background.mode="1" background.color="336290712" )
+column(band=detail id=16 alignment="0" tabsequence=130 border="3" color="41793202" x="321" y="1176" height="36" width="261" format="[general]" protect="0~tif (not isnull(net_up_delete_dtm), 1, 
+if(dtl_count<0 or 
+not isnull(net_up_protein_cert_dtl_id),1,0))"  name=net_up_liner_num  tag="label=liner Number;csh=linernumber;mh=Enter liner Number" visible="1~tif( net_up_transport_mthd_code  = '1',1,0)" edit.limit=7 edit.case=any edit.autoselect=yes edit.nilisnull=yes edit.autohscroll=yes  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="0" font.pitch="0" font.charset="0" background.mode="0" background.color="1070317037~tif (not isnull(net_up_delete_dtm), 2^26, 
+if(dtl_count<0 or 
+not isnull(net_up_protein_cert_dtl_id),2^26, 2^30))" )
+column(band=detail id=26 alignment="0" tabsequence=10 border="0" color="97941120" x="237" y="64" height="42" width="3" format="[general]" protect="0~tif(not isnull(net_up_delete_dtm), 1, 
+if(dtl_count<0 or 
+not isnull(net_up_protein_cert_dtl_id) ,0,1) )"  name=Load_contr_curr_name edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=no edit.displayonly=yes  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="333642129" )
+column(band=detail id=6 alignment="1" tabsequence=20 border="3" color="41793202" x="321" y="32" height="36" width="327" format="[general]" protect="0~tif (not isnull(net_up_delete_dtm), 1, 
+if(dtl_count<0 or 
+split_count < 0 or
+not isnull(net_up_protein_cert_dtl_id) ,1,0))"  name=net_up_est_Load_contr_id  tag=" label=Loads Contract Number;csh=Loadscontractnumber;mh=Enter Loads Contract Number" edit.limit=2 edit.case=any edit.autoselect=yes edit.nilisnull=yes edit.autohscroll=yes  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="0" font.pitch="0" font.charset="0" background.mode="0" background.color="1070317037~tif (not isnull(net_up_delete_dtm), 2^26,
+if(dtl_count<0 or 
+split_count < 0 or
+not isnull(net_up_protein_cert_dtl_id) ,2^26, 2^30))" )
+column(band=detail id=9 alignment="2" tabsequence=30 border="3" color="41793202" x="321" y="132" height="36" width="327" format="[general]" protect="0~tif (not isnull(net_up_delete_dtm), 1, 
+if(  lower(Load_contr_Load_contr_grain_orig_name) = 'primary elevator' or lower(Load_contr_Load_contr_grain_orig_name) = 'prncinal elevator'  or
+split_count < 0 or
+dtl_count<0 or 
+not isnull(net_up_protein_cert_dtl_id) ,1,0))"  name=net_up_up_orig_code  tag=" label=Transaction Origin;csh=transactionorigin;mh=Select Transaction Origin" dddw.name=d_dddw_net_lkup dddw.displaycolumn=net_lkup_lkup_name dddw.datacolumn=net_lkup_lkup_code dddw.percentwidth=0 dddw.lines=2 dddw.limit=0 dddw.allowedit=no dddw.useasborder=yes dddw.case=any dddw.vscrollbar=yes  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="0" font.pitch="0" font.charset="0" background.mode="0" background.color="1070317037~tif (not isnull(net_up_delete_dtm), 2^26, 
+if(  lower(Load_contr_Load_contr_grain_orig_name) = 'primary elevator' or lower(Load_contr_Load_contr_grain_orig_name) = 'prncinal elevator'  or
+split_count < 0 or
+dtl_count<0 or 
+not isnull(net_up_protein_cert_dtl_id) ,2^26, 2^30))" )
+text(band=detail alignment="1" text="Transport Method:" border="0" color="41793202" x="29" y="1036" height="36" width="491"  name=net_up_transport_mthd_code_t  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="0" font.pitch="0" font.charset="0" background.mode="1" background.color="336290712" )
+text(band=detail alignment="1" text="Report copy:" border="0" color="41793202" x="29" y="724" height="32" width="491"  name=t_1  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="336290712" )
+text(band=detail alignment="1" text="Unload copy:" border="0" color="41793202" x="29" y="712" height="32" width="491"  name=net_up_rtlm_copy_t  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="0" font.pitch="0" font.charset="0" background.mode="1" background.color="336290712" )
+text(band=detail alignment="1" text="Shipment copy:" border="0" color="41793202" x="29" y="240" height="32" width="491"  name=net_up_shpmt_copy_t  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="0" font.pitch="0" font.charset="0" background.mode="1" background.color="336290712" )
+text(band=detail alignment="1" text="Backup:" border="0" color="41793202" x="29" y="996" height="36" width="491"  name=net_up_bkup_flag_t  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="0" font.pitch="0" font.charset="0" background.mode="1" background.color="336290712" )
+text(band=detail alignment="1" text="Grain Reel:" border="0" color="41793202" x="29" y="902" height="32" width="491"  name=t_12  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="333642129" )
+text(band=detail alignment="1" text="Delivery Type:" border="0" color="41793202" x="29" y="632" height="32" width="491"  name=deliverytype_t  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="336290712" )
+column(band=detail id=97 alignment="0" tabsequence=30 border="3" color="41793202" x="321" y="632" height="36" width="326" format="[general]" protect="0~tif (not isnull(net_up_delete_dtm), 1, 
+if( net_up_purch_code >< '2' or
+isNull( net_up_purch_code  ) or
+dtl_count<0 or 
+not isnull(net_up_protein_cert_dtl_id) ,1,0))"  name=net_up_delvry_type_code  tag="label=Delivery Type;csh=deliverytype;mh=Select Delivery Type" dddw.name=d_dddw_net_lkup dddw.displaycolumn=net_lkup_lkup_name dddw.datacolumn=net_lkup_lkup_code dddw.percentwidth=0 dddw.lines=2 dddw.limit=0 dddw.allowedit=no dddw.useasborder=yes dddw.case=any dddw.vscrollbar=yes  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="0" background.color="1070317037~tif (not isnull(net_up_delete_dtm), 2^26, 
+if( net_up_purch_code >< '2' or
+isNull( net_up_purch_code  ) or
+dtl_count<0 or 
+not isnull(net_up_protein_cert_dtl_id) ,2^26, 2^30))" )
+column(band=detail id=37 alignment="2" tabsequence=60 border="3" color="41793202" x="321" y="902" height="36" width="334" format="[general]" protect="0~tif (not isnull(net_up_delete_dtm), 1, 
+if (dtl_count<0 or 
+not isnull(net_up_protein_cert_dtl_id) ,1,0))"  name=net_up_Load_Point_Reel_id  tag=" Label=Load Reel;csh=Loadpoll;mh=Select Load Reel" dddw.name=d_dddw_Point_Reellst dddw.displaycolumn=Point_Reel_abbr_name dddw.datacolumn=Point_Reel_id dddw.percentwidth=0 dddw.lines=2 dddw.limit=0 dddw.allowedit=no dddw.useasborder=yes dddw.case=any  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="0" font.pitch="0" font.charset="0" background.mode="0" background.color="1070317037~tif (not isnull(net_up_delete_dtm), 2^26, 
+if (dtl_count<0 or 
+not isnull(net_up_protein_cert_dtl_id) ,2^26, 2^30))" )
+column(band=detail id=12 alignment="0" tabsequence=90 border="0" color="41793202" x="312" y="996" height="42" width="33" format="[general]" protect="0~tif (not isnull(net_up_delete_dtm), 1, 
+if(dtl_count < 0
+OR backup_flag = '0'
+OR net_up_up_orig_code >< 2
+OR IsNull(net_up_up_orig_code)
+OR NOT IsNull(net_up_protein_cert_dtl_id), 1, 0))"  name=net_up_bkup_flag  tag=" label=Backup;csh=backup;mh=Backup" checkbox.text="" checkbox.on="1" checkbox.off="0" checkbox.scale=yes checkbox.threed=yes  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="0" font.pitch="0" font.charset="0" background.mode="0" background.color="333642129~tif (not isnull(net_up_delete_dtm), 2^26, 
+if(dtl_count<0 or 
+backup_flag = '0' or
+net_up_up_orig_code >< 2 or
+isnull(net_up_up_orig_code) or
+not isnull(net_up_protein_cert_dtl_id) ,2^26, 2^30))" )
+column(band=detail id=22 alignment="0" tabsequence=20 border="3" color="41793202" x="321" y="240" height="32" width="437" format="Mmm dd, yyyy" protect="0~tif (not isnull(net_up_delete_dtm), 1, 
+if(dtl_count<0 or 
+not isnull(net_up_protein_cert_dtl_id) ,1,0))"  name=net_up_shpmt_copy  tag=" label=Shipment copy;csh=shipmentcopy;mh=Enter Shipment copy" edit.limit=0 edit.case=any edit.autoselect=yes edit.nilisnull=yes edit.autohscroll=yes  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="0" font.pitch="0" font.charset="0" background.mode="0" background.color="1070317037~tif (not isnull(net_up_delete_dtm), 2^26, 
+if(dtl_count<0 or 
+not isnull(net_up_protein_cert_dtl_id) ,2^26, 2^30))" )
+column(band=detail id=24 alignment="0" tabsequence=70 border="3" color="41793202" x="321" y="712" height="32" width="437" format="Mmm dd, yyyy" protect="0~tif (not isnull(net_up_delete_dtm), 1, 
+if(dtl_count<0 or 
+not isnull(net_up_protein_cert_dtl_id) ,1,0))"  name=net_up_rtlm_copy  tag="label=Unload copy;csh=unloadcopy;mh=Enter Unload copy" edit.limit=0 edit.case=any edit.autoselect=yes edit.nilisnull=yes edit.autohscroll=yes  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="0" font.pitch="0" font.charset="0" background.mode="0" background.color="1070317037~tif (not isnull(net_up_delete_dtm), 2^26, 
+if(dtl_count<0 or 
+not isnull(net_up_protein_cert_dtl_id) ,2^26, 2^30))" )
+column(band=detail id=64 alignment="0" tabsequence=100 border="3" color="41793202" x="321" y="724" height="32" width="437" format="Mmm dd, yyyy" protect="0~tif (not isnull(net_up_delete_dtm), 1, 
+if(dtl_count<0 or 
+not isnull(net_up_protein_cert_dtl_id) ,1,0))"  name=net_up_rpt_copy  tag=" label=Report copy;csh=reportcopy;mh=Enter Report copy" edit.limit=0 edit.case=any edit.format="mm/dd/yyyy" edit.autoselect=yes edit.nilisnull=yes edit.autohscroll=yes  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="0" font.pitch="0" font.charset="0" background.mode="0" background.color="1070317037~tif (not isnull(net_up_delete_dtm), 2^26, 
+if(dtl_count<0 or 
+not isnull(net_up_protein_cert_dtl_id) ,2^26, 2^30))" )
+column(band=detail id=14 alignment="2" tabsequence=110 border="3" color="41793202" x="321" y="1036" height="36" width="326" format="[general]" protect="0~tif (not isnull(net_up_delete_dtm), 1, 
+if(dtl_count<0 or 
+not isnull(net_up_protein_cert_dtl_id) ,1,0))"  name=net_up_transport_mthd_code  tag="  label=Transport Method;csh=transportmethod;mh=Select Transport Method" dddw.name=d_dddw_net_lkup dddw.displaycolumn=net_lkup_lkup_name dddw.datacolumn=net_lkup_lkup_code dddw.percentwidth=0 dddw.lines=2 dddw.limit=0 dddw.allowedit=no dddw.useasborder=yes dddw.case=any dddw.vscrollbar=yes  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="0" font.pitch="0" font.charset="0" background.mode="0" background.color="1070317037~tif (not isnull(net_up_delete_dtm), 2^26, 
+if(dtl_count<0 or 
+not isnull(net_up_protein_cert_dtl_id) ,2^26, 2^30))" )
+text(band=detail alignment="1" text="DEO" border="0" color="0" x="922" y="1396" height="32" width="103"  name=t_13  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="333642129" )
+column(band=detail id=11 alignment="2" tabsequence=40 border="3" color="41793202" x="321" y="336" height="36" width="326" format="[general]" protect="0~tif (not isnull(net_up_delete_dtm), 1, 
+if (dtl_count < 0 OR 
+net_up_up_orig_code = 2 OR
+NOT IsNull(net_up_protein_cert_dtl_id), 1 ,0))"  name=net_up_purch_code  tag=" label=Purchase Code;csh=purchasecode;mh=Select Purchase Code" dddw.name=d_dddw_net_lkup dddw.displaycolumn=net_lkup_lkup_name dddw.datacolumn=net_lkup_lkup_code dddw.percentwidth=0 dddw.lines=2 dddw.limit=0 dddw.allowedit=no dddw.useasborder=yes dddw.case=any dddw.vscrollbar=yes  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="0" font.pitch="0" font.charset="0" background.mode="0" background.color="1070317037~tif (not isnull(net_up_delete_dtm), 2^26, 
+if(dtl_count<0 or 
+net_up_up_orig_code = 2 or
+not isnull(net_up_protein_cert_dtl_id), 2^26, 2^30))" )
+text(band=detail alignment="1" text="Purchase Code:" border="0" color="41793202" x="29" y="336" height="36" width="491"  name=net_up_purch_code_t  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="0" font.pitch="0" font.charset="0" background.mode="1" background.color="336290712" )
+column(band=detail id=13 alignment="0" tabsequence=120 border="0" color="41793202" x="391" y="1122" height="36" width="33" format="[general]" protect="0~tif (not isnull(net_up_delete_dtm), 1, 
+if(dtl_count<0 or 
+not isnull(net_up_protein_cert_dtl_id) ,1,0))"  name=net_up_contnr_flag  tag="  label=Container;csh=container;mh=Container" checkbox.text="" checkbox.on="1" checkbox.off="0" checkbox.scale=no checkbox.threed=yes  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="0" font.pitch="0" font.charset="0" background.mode="0" background.color="333642129~tif (not isnull(net_up_delete_dtm), 2^26, 
+if(dtl_count<0 or 
+not isnull(net_up_protein_cert_dtl_id) ,2^26, 2^30))" )
+text(band=detail alignment="1" text="Container:" border="0" color="41793202" x="71" y="1122" height="36" width="491"  name=net_up_contnr_flag_t  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="0" font.pitch="0" font.charset="0" background.mode="1" background.color="336290712" )
+column(band=detail id=99 alignment="0" tabsequence=240 border="0" color="41793202" x="312" y="1644" height="36" width="33" format="[general]" protect="0~tif (not isnull(net_up_delete_dtm), 1, 
+if( net_up_up_orig_code  =2 or isnull( net_up_up_orig_code) or
+dtl_count<0 or 
+not isnull(net_up_protein_cert_dtl_id) ,1,0))"  name=net_up_on_locn_insp_flag  tag=" label=On Site Inspection;csh=onsiteinspection;mh=On Site Inspection" checkbox.text="" checkbox.on="1" checkbox.off="0" checkbox.scale=no checkbox.threed=yes  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="0" background.color="1070317037~tif (not isnull(net_up_delete_dtm), 2^26, 
+if( net_up_up_orig_code  =2 or isnull( net_up_up_orig_code) or
+dtl_count<0 or 
+not isnull(net_up_protein_cert_dtl_id) ,2^26, 2^30))" )
+column(band=detail id=23 alignment="0" tabsequence=220 border="3" color="41793202" x="321" y="1476" height="36" width="437" format="Mmm dd, yyyy" protect="0~tif (not isnull(net_up_delete_dtm), 1, 
+if( net_up_up_orig_code  = 1 or isnull( net_up_up_orig_code) or
+dtl_count<0 or 
+not isnull(net_up_protein_cert_dtl_id),1,0))"  name=net_up_clrnc_copy  tag="  label=LSS Cutoff copy;csh=passingcopy;mh=Enter LSS Cutoff copy" edit.limit=0 edit.case=any edit.autoselect=yes edit.nilisnull=yes edit.autohscroll=yes  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="0" font.pitch="0" font.charset="0" background.mode="0" background.color="1070317037~tif (not isnull(net_up_delete_dtm), 2^26, 
+if( net_up_up_orig_code  = 1 or isnull( net_up_up_orig_code) or
+dtl_count<0 or 
+not isnull(net_up_protein_cert_dtl_id),2^26, 2^30))" )
+text(band=detail alignment="1" text="LSS Cutoff copy:" border="0" color="41793202" x="32" y="1476" height="32" width="491"  name=net_up_clrnc_copy_t  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="0" font.pitch="0" font.charset="0" background.mode="1" background.color="336290712" )
+text(band=detail alignment="1" text="Cost of Moving Amnt:" border="0" color="41793202" x="32" y="1392" height="32" width="491"  name=cost_of_moving_t  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="336290712" )
+text(band=detail alignment="1" text="On Site Inspection:" border="0" color="41793202" x="32" y="1644" height="32" width="491"  name=on_site_t  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="336290712" )
+column(band=detail id=96 alignment="1" tabsequence=230 border="3" color="41793202" x="321" y="1362" height="36" width="232" format="#,##0.00" protect="0~tif (not isnull(net_up_delete_dtm), 1, 
+if( net_up_up_orig_code  =1 or isnull( net_up_up_orig_code) or
+dtl_count<0 or 
+not isnull(net_up_protein_cert_dtl_id),1,0))"  name=cost_of_mvmt_Amnt  tag=" label=Cost of Moving Amnt;csh=costofmovingAmnt;mh=Enter Cost of Moving Amnt" edit.limit=10 edit.case=any edit.format="#,##0.00" edit.autoselect=yes edit.nilisnull=yes edit.autohscroll=yes  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="0" background.color="1070317037~tif (not isnull(net_up_delete_dtm), 2^26, 
+if( net_up_up_orig_code  =1 or isnull( net_up_up_orig_code) or
+dtl_count<0 or 
+not isnull(net_up_protein_cert_dtl_id),2^26, 2^30))" )
+column(band=detail id=2 alignment="1" tabsequence=32966 border="0" color="41793202" x="321" y="212" height="36" width="71" format="00"  name=Load_contr_pfx_num edit.limit=0 edit.case=any edit.autoselect=yes  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="333642129" )
+column(band=detail id=7 alignment="0" tabsequence=32966 border="0" color="41793202" x="643" y="212" height="36" width="233" format="00000000"  name=prod_prod_id edit.limit=0 edit.case=any edit.autoselect=yes  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="97941120" )
+column(band=detail id=10 alignment="0" tabsequence=32966 border="0" color="41793202" x="321" y="222" height="36" width="731" format="[general]"  name=prod_name edit.limit=0 edit.case=any edit.autoselect=yes  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="0" font.pitch="0" font.charset="0" background.mode="1" background.color="333642129" )
+compute(band=detail alignment="1" expression="round( contr_Pounds -  net_up_Pounds ,4)"border="0" color="41793202" x="321" y="364" height="36" width="339" format="#,##0.000"  name=open_bal_amt  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="97941120" )
+text(band=detail alignment="1" text="Contract Currency:" border="0" color="0" x="714" y="364" height="36" width="409"  name=t_14  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="333642129" )
+column(band=detail id=26 alignment="0" tabsequence=32966 border="0" color="0" x="1347" y="364" height="36" width="123" format="[general]"  name=Load_contr_curr_name_1 edit.limit=0 edit.case=any edit.autoselect=yes  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="97941120" )
+column(band=detail id=121 alignment="0" tabsequence=32966 border="0" color="41793202" x="319" y="440" height="36" width="361" format="[general]"  name=Load_contr_Load_contr_Reel_name edit.limit=0 edit.case=any edit.autoselect=yes  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="0" font.pitch="0" font.charset="0" background.mode="2" background.color="97941120" )
+text(band=detail alignment="1" text="Payment Currency:" border="0" color="0" x="714" y="440" height="36" width="409"  name=t_19  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="333642129" )
+column(band=detail id=119 alignment="0" tabsequence=32966 border="0" color="0" x="1347" y="440" height="36" width="123" format="[general]"  name=Load_contr_pymt_curr_name_1 edit.limit=0 edit.case=any edit.autoselect=yes  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="97941120" )
+text(band=detail alignment="1" text="Contract Number:" border="0" color="41793202" x="29" y="60" height="32" width="491"  name=net_up_est_Load_contr_id_t  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="0" font.pitch="0" font.charset="0" background.mode="1" background.color="336290712" )
+text(band=detail alignment="1" text="Transaction Origin:" border="0" color="41793202" x="29" y="132" height="36" width="491"  name=net_up_up_orig_code_t  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="0" font.pitch="0" font.charset="0" background.mode="1" background.color="336290712" )
+text(band=detail alignment="1" text="Producer Id:" border="0" color="41793202" x="29" y="212" height="36" width="491"  name=prod_prod_id_t  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="0" font.pitch="0" font.charset="0" background.mode="1" background.color="336290712" )
+text(band=detail alignment="1" text="Producer Name:" border="0" color="41793202" x="29" y="222" height="36" width="491"  name=t_11  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="336290712" )
+text(band=detail alignment="1" text="Open Balance:" border="0" color="0" x="29" y="364" height="36" width="491"  name=t_9  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="333642129" )
+text(band=detail alignment="1" text="Grain Reel:" border="0" color="0" x="29" y="440" height="36" width="491"  name=t_contr_Reel  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="333642129" )
+text(band=detail alignment="1" text="Report Number:" border="0" color="41793202" x="229" y="1916" height="32" width="343"  name=t_12  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="336290712" )
+column(band=detail id=123 alignment="0" tabsequence=260 border="3" color="41793202" x="1127" y="1912" height="36" width="294" format="[General]" protect="0~tif (not isnull(net_up_delete_dtm), 1, 
+if(dtl_count<0 or 
+not isnull(net_up_protein_cert_dtl_id) ,1,0))"  name=rpt_num  tag="label=Report Number;csh=reportnumber;mh=Enter Report Number" edit.limit=10 edit.case=any edit.autoselect=yes edit.nilisnull=yes  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="0" background.color="1070317037~tif (not isnull(net_up_delete_dtm), 2^26, 
+if(dtl_count<0 or 
+not isnull(net_up_protein_cert_dtl_id) ,2^26, 2^30))" )
+text(band=detail alignment="1" text="Sel. Permit Number:" border="0" color="41793202" x="32" y="1902" height="32" width="491"  name=selected_permit_no_t  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="336290712" )
+column(band=detail id=92 alignment="1" tabsequence=230 border="3" color="41793202" x="321" y="1902" height="36" width="294" format="[general]" protect="0~tif (not isnull(net_up_delete_dtm), 1, 
+if( net_up_up_orig_code  =2 or isnull( net_up_up_orig_code) or
+dtl_count<0 or 
+not isnull(net_up_protein_cert_dtl_id) ,1,0))"  name=net_up_form_num  tag=" label=Selected Permit Number;csh=selectedpermitnumber;mh=Enter Selected Permit Number" edit.limit=0 edit.case=any edit.autoselect=yes edit.nilisnull=yes edit.autohscroll=yes  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="0" background.color="1070317037~tif (not isnull(net_up_delete_dtm), 2^26, 
+if( net_up_up_orig_code  =2 or isnull( net_up_up_orig_code) or
+dtl_count<0 or 
+not isnull(net_up_protein_cert_dtl_id) ,2^26, 2^30))" )
+text(band=detail alignment="1" text="Clean Grain:" border="0" color="41793202" x="32" y="1996" height="36" width="491"  name=net_up_clean_flag_t  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="0" font.pitch="0" font.charset="0" background.mode="1" background.color="336290712" )
+column(band=detail id=23 alignment="0" tabsequence=290 border="0" color="41793202" x="312" y="1996" height="32" width="33" format="[general]" protect="0~tif (not isnull(net_up_delete_dtm), 1, 
+if(dtl_count<0 or 
+not isnull(net_up_protein_cert_dtl_id) ,1,0))"  name=net_up_clean_flag  tag="  label=Clean Grain;csh=cleangrain;mh=Clean Grain" checkbox.text="" checkbox.on="1" checkbox.off="0" checkbox.scale=no checkbox.threed=yes  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="0" font.pitch="0" font.charset="0" background.mode="0" background.color="333642129~tif (not isnull(net_up_delete_dtm), 2^26, 
+if(dtl_count<0 or 
+not isnull(net_up_protein_cert_dtl_id) ,2^26, 2^30))" )
+text(band=detail alignment="1" text="Comment:" border="0" color="41793202" x="32" y="1244" height="32" width="491"  name=net_up_net_up_desc_t  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="0" font.pitch="0" font.charset="0" background.mode="1" background.color="336290712" )
+column(band=detail id=42 alignment="0" tabsequence=220 border="3" color="41793202" x="321" y="1240" height="112" width="1291" format="[general]" protect="0~tif (not isnull(net_up_delete_dtm), 1, 
+if(dtl_count<0 or 
+not isnull(net_up_protein_cert_dtl_id) ,1,0))"  name=net_up_net_up_desc  tag=" label=Comment;csh=comment;mh=Enter Comment" edit.limit=233 edit.case=any edit.autoselect=yes edit.nilisnull=yes edit.autovscroll=yes edit.vscrollbar=yes  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="0" font.pitch="0" font.charset="0" background.mode="0" background.color="1070317037~tif (not isnull(net_up_delete_dtm), 2^26, 
+if(dtl_count<0 or 
+not isnull(net_up_protein_cert_dtl_id) ,2^26, 2^30))" )
+column(band=detail id=112 alignment="0" tabsequence=32966 border="0" color="41793202" x="4249" y="22" height="32" width="677" format="[general]"  name=Load_contr_int_start_copy_name visible="1~t0" edit.limit=0 edit.case=any edit.autoselect=yes  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12637424" )
+column(band=detail id=123 alignment="0" tabsequence=32966 border="0" color="41793202" x="4249" y="100" height="32" width="673" format="[general]"  name=max_net_dtl_rev_code visible="1~t0" edit.limit=0 edit.case=any edit.autoselect=yes  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12637424" )
+column(band=detail id=49 alignment="0" tabsequence=32966 border="0" color="41793202" x="4249" y="192" height="60" width="677" format="[general]"  name=net_up_protein_cert_dtl_id visible="1~t0" edit.limit=0 edit.case=any edit.autoselect=yes  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12637424" )
+column(band=detail id=90 alignment="0" tabsequence=32966 border="0" color="41793202" x="4249" y="232" height="36" width="312" format="[general]"  name=dtl_count visible="1~t0" edit.limit=0 edit.case=any edit.autoselect=yes  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12637424" )
+column(band=detail id=91 alignment="0" tabsequence=32966 border="0" color="0" x="4249" y="322" height="60" width="309" format="[general]"  name=split_count visible="1~t0" edit.limit=0 edit.case=any edit.autoselect=yes  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12637424" )
+column(band=detail id=36 alignment="0" tabsequence=32966 border="0" color="0" x="4249" y="402" height="60" width="621" format="[general]"  name=net_up_net_up_row_id visible="1~t0" edit.limit=0 edit.case=any edit.autoselect=yes  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12637424" )
+column(band=detail id=13 alignment="0" tabsequence=32966 border="0" color="41793202" x="4249" y="422" height="32" width="437" format="[shortcopy] [time]"  name=bkup_end_copy visible="1~t0" edit.limit=0 edit.case=any edit.autoselect=yes  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="1070317037" )
+compute(band=detail alignment="0" expression="if ( (NOT IsNull(net_up_delvry_Reel_year_id) )
+AND LookUpDisplay(net_up_delvry_Reel_year_id) = String(net_up_delvry_Reel_year_id), 1, 0)"border="0" color="41793202" x="4249" y="360" height="32" width="344" format="[General]"  name=delvry_Reel_year_matching_display visible="1~t0"  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="1070317037" )
+compute(band=detail alignment="0" expression="if ( (NOT IsNull(net_up_Load_Reel_year_id) )
+AND LookUpDisplay(net_up_Load_Reel_year_id) = 
+String(net_up_Load_Reel_year_id), 1, 0)"border="0" color="41793202" x="4249" y="632" height="32" width="344" format="[GENERAL]"  name=Load_Reel_year_matching_display visible="1~t0"  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="1070317037" )
+compute(band=detail alignment="0" expression="if ( (NOT IsNull(net_up_delvry_addr_id) )
+AND LookUpDisplay(net_up_delvry_addr_id) = String(net_up_delvry_addr_id), 1, 0)"border="0" color="0" x="4249" y="904" height="32" width="344" format="[GENERAL]"  name=delvry_addr_matching_display visible="1~t0"  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12637424" )
+compute(band=detail alignment="0" expression="if ( (NOT IsNull(net_up_Load_addr_id) )
+AND LookUpDisplay(net_up_Load_addr_id) = String(net_up_Load_addr_id), 1, 0)"border="0" color="0" x="4249" y="996" height="32" width="344" format="[GENERAL]"  name=Load_addr_matching_display visible="1~t0"  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="12637424" )
+groupbox(band=detail text="Delivery"border="3" color="41793202" x="1223" y="0" height="644" width="1297"  name=gb_2  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="333642129" )
+column(band=detail id=21 alignment="0" tabsequence=320 border="0" color="41793202" x="3639" y="364" height="40" width="33" format="[general]" protect="0~tif (not isnull(net_up_delete_dtm), 1, 
+if (net_up_up_orig_code = 2 or isnull( net_up_up_orig_code) or
+dtl_count<0 or 
+not isnull(net_up_protein_cert_dtl_id) ,1,0))"  name=net_up_delvry_wgh_insp_flag  tag="Label=Delivery Teaching and Inspection;csh=deliveryTeachingandinspection;mh=Delivery Teaching and Inspection" checkbox.text="" checkbox.on="1" checkbox.off="0" checkbox.scale=no checkbox.threed=yes  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="0" background.color="1070317037~tif (not isnull(net_up_delete_dtm), 2^26, 
+if (net_up_up_orig_code = 2 or isnull( net_up_up_orig_code) or
+dtl_count<0 or 
+not isnull(net_up_protein_cert_dtl_id) ,2^26, 2^30))" )
+text(band=detail alignment="1" text="Reel Year:" border="0" color="41793202" x="1279" y="324" height="32" width="309"  name=t_3  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="333642129" )
+text(band=detail alignment="1" text="Station:" border="0" color="41793202" x="1279" y="244" height="36" width="309"  name=net_up_delvry_stn_id_t  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="0" font.pitch="0" font.charset="0" background.mode="1" background.color="336290712" )
+column(band=detail id=29 alignment="0" tabsequence=310 border="3" color="41793202" x="2432" y="244" height="36" width="1312" format="[general]" protect="0~tif (not isnull(net_up_delete_dtm), 1, 
+if (net_up_up_orig_code = 2 or isnull( net_up_up_orig_code) or
+isNull( net_up_delvry_co_id ) or
+dtl_count<0 or 
+hide_delvry_stn = '1' or
+not isnull(net_up_protein_cert_dtl_id) ,1,0)
+)"  name=net_up_delvry_stn_id  tag=" Label=Delivery Station;csh=deliverystation;mh=Select Delivery Station" dddw.name=d_dddw_delvry_stnlst dddw.displaycolumn=stn_name_num dddw.datacolumn=stn_stn_id dddw.percentwidth=0 dddw.lines=2 dddw.limit=0 dddw.allowedit=no dddw.useasborder=yes dddw.case=any dddw.vscrollbar=yes  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="0" font.pitch="0" font.charset="0" background.mode="0" background.color="1070317037~tif (not isnull(net_up_delete_dtm), 2^26, 
+if (net_up_up_orig_code = 2 or isnull( net_up_up_orig_code) or
+isNull( net_up_delvry_co_id ) or
+dtl_count<0 or 
+hide_delvry_stn = '1' or
+not isnull(net_up_protein_cert_dtl_id) ,2^26, 2^30))" )
+text(band=detail alignment="1" text="Gross/Dockage %/Net:" border="0" color="41793202" x="1273" y="424" height="32" width="312"  name=net_up_est_delvry_dkg_Amnt_t  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="0" font.pitch="0" font.charset="0" background.mode="1" background.color="336290712" )
+text(band=detail alignment="1" text="Delivered Point:" border="0" color="41793202" x="1279" y="404" height="32" width="309"  name=net_up_delvry_Point_Reel_id_t  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="0" font.pitch="0" font.charset="0" background.mode="1" background.color="336290712" )
+text(band=detail alignment="1" text="Company:" border="0" color="41793202" x="1279" y="22" height="36" width="309"  name=net_up_delvry_co_id_t  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="0" font.pitch="0" font.charset="0" background.mode="1" background.color="336290712" )
+text(band=detail alignment="1" text="Address:" border="0" color="41793202" x="1279" y="162" height="32" width="309"  name=t_2  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="333642129" )
+column(band=detail id=26 alignment="0" tabsequence=270 border="3" color="41793202" x="2432" y="24" height="36" width="1312" format="[general]" protect="0~tif (not isnull(net_up_delete_dtm), 1, 
+if (net_up_up_orig_code = 2 or isnull( net_up_up_orig_code) or
+dtl_count<0 or  ( hide_delvry_co = '1') or
+not isnull(net_up_protein_cert_dtl_id) ,1,0))"  name=net_up_delvry_co_id  tag="label=Delivery Company;csh=deliverycompany;mh=Select Delivery Company" dddw.name=d_dddw_delvry_colist dddw.displaycolumn=display dddw.datacolumn=co_new_co_id dddw.percentwidth=0 dddw.lines=2 dddw.limit=0 dddw.allowedit=no dddw.useasborder=yes dddw.case=any dddw.vscrollbar=yes  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="0" font.pitch="0" font.charset="0" background.mode="0" background.color="1070317037~tif (not isnull(net_up_delete_dtm), 2^26, 
+if (net_up_up_orig_code = 2 or isnull( net_up_up_orig_code) or
+dtl_count<0 or  ( hide_delvry_co = '1') or
+not isnull(net_up_protein_cert_dtl_id) ,2^26, 2^30))" )
+
+column(
+	band=detail
+	height="36"
+	width="1312"
+	format="[general]"
+	protect="0~tif (not isnull(net_up_delete_dtm), 1, if (net_up_tcode = 2isnull( net_up_up_orig_code) or isNull( net_up_delvry_co_id ) or ( hide_delvry_addr = '1') or dtl_count<0 or not isnull(net_up_protein_cert_dtl_id) ,1,0))" name=net_up_delvry_addr_id  tag="Label=Delivery Address;csh=deliveryaddress;mh=Select Delivery Address" dddw.name=d_dddw_co_addr_list dddw.displaycolumn=addr_text dddw.datacolumn=addr_id dddw.percentwidth=0 dddw.lines=0 dddw.limit=0 dddw.allowedit=no dddw.useasborder=yes dddw.case=any dddw.hscrollbar=yes dddw.vscrollbar=yes  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="0" background.color="1070317037~tif (not isnull(net_up_delete_dtm), 2^26, if (net_up_up_orig_code = 2 or isnull( net_up_up_orig_code) or isNull( net_up_delvry_co_id ) or ( hide_delvry_addr = '1') or dtl_count<0 or
+not isnull(net_up_protein_cert_dtl_id) ,2^26, 2^30))"
+)
+
+column(band=detail id=27 alignment="0" tabsequence=320 border="3" color="41793202" x="2432" y="324" height="36" width="236" format="[general]" protect="0~tif (not isnull(net_up_delete_dtm), 1, 
+if (net_up_up_orig_code = 2 or isnull( net_up_up_orig_code) or
+ isnull( net_up_delvry_Point_Reel_id ) or 
+isnull( net_up_delvry_co_id ) or
+isnull( net_up_delvry_stn_id ) or
+dtl_count<0 or 
+hide_delvry_Reel_year = '1' or
+not isnull(net_up_protein_cert_dtl_id),1,0))"  name=net_up_delvry_Reel_year_id  tag=" Label=Delivery Reel Year;csh=deliveryReelyear;mh=Select Delivery Reel Year" dddw.name=d_dddw_Reel_yearlst dddw.displaycolumn=Reel_year_crop_year_num dddw.datacolumn=Reel_year_id dddw.percentwidth=0 dddw.lines=2 dddw.limit=0 dddw.allowedit=no dddw.useasborder=yes dddw.case=any  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="0" font.pitch="0" font.charset="0" background.mode="0" background.color="1070317037~tif (not isnull(net_up_delete_dtm), 2^26, 
+if (net_up_up_orig_code = 2 or isnull( net_up_up_orig_code) or
+ isnull( net_up_delvry_Point_Reel_id ) or 
+isnull( net_up_delvry_co_id ) or
+isnull( net_up_delvry_stn_id ) or
+dtl_count<0 or 
+hide_delvry_Reel_year = '1' or
+not isnull(net_up_protein_cert_dtl_id),2^26, 2^30))" )
+text(band=detail alignment="1" text="Load Company:" border="0" color="41793202" x="1279" y="942" height="36" width="309"  name=net_up_Load_co_id_t  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="0" font.pitch="0" font.charset="0" background.mode="1" background.color="336290712" )
+text(band=detail alignment="1" text="Address:" border="0" color="41793202" x="1279" y="224" height="32" width="309"  name=t_7  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="333642129" )
+text(band=detail alignment="1" text="Processor Company:" border="0" color="41793202" x="1279" y="700" height="36" width="309"  name=net_up_proces_co_id_t  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="0" font.pitch="0" font.charset="0" background.mode="1" background.color="336290712" )
+text(band=detil alignment="1" text="Processor Location:" border="0" color="41793202" x="1279" y="720" height="36" width="309"  name=net_up_proces_rgn_id_t  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="0" font.pitch="0" font.charset="0" background.mode="1" background.color="336290712" )
+text(band=detail alignment="1" text="Reel Year:" border="0" color="41793202" x="1279" y="1220" height="32" width="309"  name=t_6  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="336290712" )
+text(band=detail alignment="1" text="Shipped Point:" border="0" color="41793202" x="1279" y="1300" height="32" width="309"  name=net_up_Load_Point_Reel_id_t  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="0" font.pitch="0" font.charset="0" background.mode="1" background.color="336290712" )
+text(band=detail alignment="1" text="Port:" border="0" color="41793202" x="1279" y="1060" height="36" width="309"  name=net_up_port_stn_id_t  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="0" font.pitch="0" font.charset="0" background.mode="1" background.color="336290712" )
+text(band=detail alignment="1" text="prncinal Company:" border="0" color="41793202" x="1279" y="1140" height="36" width="309"  name=net_up_prncnl_co_id_t  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="0" font.pitch="0" font.charset="0" background.mode="1" background.color="336290712" )
+text(band=detail alignment="1" text="Sold As Point:" border="0" color="41793202" x="1279" y="1396" height="32" width="309"  name=t_2  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="336290712" )
+text(band=detail alignment="1" text="Load Teaching:" border="0" color="41793202" x="1279" y="1322" height="32" width="309"  name=Load_Teaching  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="333642129" )
+text(band=detail alignment="1" text="Gross/Dockage %/Net:" border="0" color="41793202" x="1273" y="1620" height="32" width="312"  name=net_up_est_Load_gross_Pound_est_t  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="0" font.pitch="0" font.charset="0" background.mode="1" background.color="336290712" )
+text(band=detail alignment="1" text="Shutout Pounds:" border="0" color="41793202" x="1279" y="1936" height="36" width="309"  name=net_up_est_shutout_Pound_est_t  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="0" font.pitch="0" font.charset="0" background.mode="1" background.color="336290712" )
+text(band=detail alignment="1" text="Load Inspection:" border="0" color="41793202" x="1279" y="1604" height="32" width="309"  name=Load_inspection_t  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="333642129" )
+text(band=detail alignment="0" text="Del. Teaching and Inspection:" border="0" color="41793202" x="2796" y="364" height="32" width="634"  name=t_4  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="333642129" )
+text(band=detail alignment="1" text="Prepayment Amount:" border="0" color="41793202" x="1279" y="1240" height="32" width="309"  name=t_3  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="333642129" )
+column(band=detail id=119 alignment="0" tabsequence=32966 border="0" color="41793202" x="2927" y="1240" height="36" width="117" format="[general]"  name=Load_contr_pymt_curr_name edit.limit=0 edit.case=any edit.autoselect=yes  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="0" font.pitch="0" font.charset="0" background.mode="1" background.color="333642129" )
+text(band=detail alignment="1" text="Load Cleaning Amnt:" border="0" color="41793202" x="1279" y="1432" height="32" width="309"  name=Load_clean_Amnt_t  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="333642129" )
+text(band=detail alignment="0" text="DEO" border="0" color="41793202" x="2973" y="1432" height="36" width="103"  name=t_16  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="333642129" )
+text(band=detail alignment="1" text="Delivery Cleaning Amnt:" border="0" color="41793202" x="1279" y="360" height="32" width="309"  name=delivery_cleaning_Amnt_t  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="333642129" )
+text(band=detail alignment="0" text="DEO" border="0" color="41793202" x="2973" y="360" height="32" width="103"  name=t_13  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="333642129" )
+column(band=detail id=31 alignment="1" tabsequence=330 border="3" color="41793202" x="2432" y="424" height="36" width="327" format="#,##0.000" protect="0~tif (not isnull(net_up_delete_dtm), 1, 
+if (net_up_up_orig_code = 2 or isnull( net_up_up_orig_code) or
+dtl_count<0 or 
+split_count < 0 or
+not isnull(net_up_protein_cert_dtl_id) ,1,0))"  name=net_up_est_delvry_gross_Pound_est  tag="Label=Delivery Gross Pounds;csh=deliverygrossPounds;mh=Enter Delivery Gross Pounds" edit.limit=10 edit.case=any edit.format="#,##0.000" edit.autoselect=yes edit.nilisnull=yes edit.autohscroll=yes  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="0" font.pitch="0" font.charset="0" background.mode="0" background.color="1070317037~tif (not isnull(net_up_delete_dtm), 2^26, 
+if (net_up_up_orig_code = 2 or isnull( net_up_up_orig_code) or
+dtl_count<0 or 
+split_count < 0 or
+not isnull(net_up_protein_cert_dtl_id) ,2^26, 2^30))" )
+column(band=detail id=43 alignment="1" tabsequence=360 border="3" color="41793202" x="2973" y="424" height="36" width="327" format="#0.000" protect="0~tif (not isnull(net_up_delete_dtm), 1, 
+if (net_up_up_orig_code = 2 or isnull( net_up_up_orig_code) or
+dtl_count<0 or 
+split_count < 0 or
+not isnull(net_up_protein_cert_dtl_id) ,1,0))"  name=net_up_est_delvry_dkg_Amnt  tag="Label=Delivery Dockage;csh=deliverydockage;mh=Enter Delivery Dockage" edit.limit=10 edit.case=any edit.format="#0.000" edit.autoselect=yes edit.nilisnull=yes edit.autohscroll=yes  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="0" font.pitch="0" font.charset="0" background.mode="0" background.color="1070317037~tif (not isnull(net_up_delete_dtm), 2^26, 
+if (net_up_up_orig_code = 2 or isnull( net_up_up_orig_code) or
+dtl_count<0 or 
+split_count < 0 or
+not isnull(net_up_protein_cert_dtl_id) ,2^26, 2^30))" )
+column(band=detail id=71 alignment="1" tabsequence=490 border="3" color="41793202" x="2747" y="1300" height="36" width="210" format="[general]" protect="0~tif (not isnull(net_up_delete_dtm), 1, 
+if(isnull(  Load_cgc_Point_code  ) or
+hide_Load_pct = '1' or 
+dtl_count<0 or 
+not isnull(net_up_protein_cert_dtl_id) ,1,0))"  name=Load_protein_pct dddw.name=d_dddw_protein_pct_Reel dddw.displaycolumn=conv_protein_pct dddw.datacolumn=Point_id dddw.percentwidth=0 dddw.lines=2 dddw.limit=0 dddw.allowedit=no dddw.useasborder=yes dddw.case=any dddw.vscrollbar=yes  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="0" font.pitch="0" font.charset="0" background.mode="0" background.color="1070317037~tif (not isnull(net_up_delete_dtm), 2^26, 
+if(isnull(  Load_cgc_Point_code  ) or
+hide_Load_pct = '1' or 
+dtl_count<0 or 
+not isnull(net_up_protein_cert_dtl_id) ,2^26, 2^30))" )
+column(band=detail id=41 alignment="0" tabsequence=32966 border="0" color="41793202" x="3199" y="1300" height="36" width="362" format="[general]"  name=net_up_Load_Point_id  tag=" Label=Load Point;csh=LoadPoint;mh=Select Load Point" dddw.name=d_dddw_Pointlst dddw.displaycolumn=Point_Point_short_name dddw.datacolumn=Point_Point_id dddw.percentwidth=0 dddw.lines=2 dddw.limit=0 dddw.allowedit=no dddw.useasborder=no dddw.case=any dddw.vscrollbar=yes  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="0" font.pitch="0" font.charset="0" background.mode="1" background.color="333642129" )
+column(band=detail id=74 alignment="1" tabsequence=470 border="3" color="41793202" x="2747" y="1396" height="36" width="210" format="[general]" protect="0~tif (not isnull(net_up_delete_dtm), 1, 
+if(isnull(  sold_cgc_Point_code  ) or
+hide_sold_pct = '1' or 
+dtl_count<0 or 
+not isnull(net_up_protein_cert_dtl_id) ,1,0))"  name=sold_protein_pct  tag="Label=Load Protein;csh=Loadprotein;mh=Select Load Protein" dddw.name=d_dddw_protein_pct_Reel dddw.displaycolumn=conv_protein_pct dddw.datacolumn=Point_id dddw.percentwidth=0 dddw.lines=2 dddw.limit=0 dddw.allowedit=no dddw.useasborder=yes dddw.case=any dddw.vscrollbar=yes  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="0" font.pitch="0" font.charset="0" background.mode="0" background.color="1070317037~tif (not isnull(net_up_delete_dtm), 2^26, 
+if(isnull(  sold_cgc_Point_code  ) or
+hide_sold_pct = '1' or 
+dtl_count<0 or 
+not isnull(net_up_protein_cert_dtl_id) ,2^26, 2^30))" )
+column(band=detail id=61 alignment="0" tabsequence=32966 border="0" color="41793202" x="3199" y="1396" height="36" width="362" format="[general]"  name=net_up_sold_Point_id  tag="Label=Sold as Point;csh=soldasPoint;mh=Select Sold as Point" dddw.name=d_dddw_Pointlst dddw.displaycolumn=Point_Point_short_name dddw.datacolumn=Point_Point_id dddw.percentwidth=0 dddw.lines=2 dddw.limit=0 dddw.allowedit=no dddw.useasborder=no dddw.case=any dddw.vscrollbar=yes  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="0" font.pitch="0" font.charset="0" background.mode="1" background.color="333642129" )
+column(band=detail id=117 alignment="0" tabsequence=32966 border="0" color="0" x="2606" y="1342" height="96" width="324" format="[shortcopy] [time]"  name=current_bus_copy visible="1~t0" dddw.name=d_dddw_active_net_copy_hidden dddw.displaycolumn=net_copy dddw.datacolumn=net_copy dddw.percentwidth=0 dddw.lines=0 dddw.limit=0 dddw.allowedit=no dddw.useasborder=yes dddw.case=any  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="2" background.color="14024366" )
+column(band=detail id=29 alignment="0" tabsequence=330 border="3" color="41793202" x="2432" y="404" height="36" width="472" format="[general]" protect="0~tif (not isnull(net_up_delete_dtm), 1, 
+if (net_up_up_orig_code = 2 or isnull( net_up_up_orig_code) or
+isnull( net_up_delvry_Point_Reel_id ) or 
+isnull( net_up_delvry_Reel_year_id ) or
+dtl_count<0 or 
+not isnull(net_up_protein_cert_dtl_id) ,1,0))"  name=delvry_cgc_Point_code  tag="Label=Delivery CGC Point;csh=deliverycgcPoint;mh=Select Delivery CGC Point" dddw.name=d_dddw_cgc_Point_Reel dddw.displaycolumn=display dddw.datacolumn=protein_filter dddw.percentwidth=120 dddw.lines=2 dddw.limit=0 dddw.allowedit=no dddw.useasborder=yes dddw.case=any dddw.vscrollbar=yes  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="0" font.pitch="0" font.charset="0" background.mode="0" background.color="1070317037~tif (not isnull(net_up_delete_dtm), 2^26, 
+if (net_up_up_orig_code = 2 or isnull( net_up_up_orig_code) or
+isnull( net_up_delvry_Point_Reel_id ) or 
+isnull( net_up_delvry_Reel_year_id ) or
+dtl_count<0 or 
+not isnull(net_up_protein_cert_dtl_id) ,2^26, 2^30))" )
+column(band=detail id=22 alignment="1" tabsequence=340 border="3" color="41793202" x="2733" y="404" height="36" width="210" format="[general]" protect="0~tif (not isnull(net_up_delete_dtm), 1, 
+if (net_up_up_orig_code = 2 or isnull( net_up_up_orig_code) or
+hide_delvry_pct = '1' or
+isnull(  delvry_cgc_Point_code  ) or 
+dtl_count<0 or 
+not isnull(net_up_protein_cert_dtl_id) ,1,0))"  name=delvry_protein_pct  tag="Label=Delivery Protein;csh=deliveryprotein;mh=Select Delivery Protein" dddw.name=d_dddw_protein_pct_Reel dddw.displaycolumn=conv_protein_pct dddw.datacolumn=Point_id dddw.percentwidth=0 dddw.lines=2 dddw.limit=0 dddw.allowedit=no dddw.useasborder=yes dddw.case=any dddw.vscrollbar=yes  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="0" font.pitch="0" font.charset="0" background.mode="0" background.color="1070317037~tif (not isnull(net_up_delete_dtm), 2^26, 
+if (net_up_up_orig_code = 2 or isnull( net_up_up_orig_code) or
+hide_delvry_pct = '1' or
+isnull(  delvry_cgc_Point_code  ) or 
+dtl_count<0 or 
+not isnull(net_up_protein_cert_dtl_id) ,2^26, 2^30))" )
+column(band=detail id=20 alignment="1" tabsequence=390 border="3" color="41793202" x="2432" y="360" height="36" width="327" format="#,##0.00" protect="0~tif (not isnull(net_up_delete_dtm), 1, 
+if (net_up_up_orig_code = 2 or isnull( net_up_up_orig_code) or
+net_up_clean_flag >< 0 or
+dtl_count<0 or 
+not isnull(net_up_protein_cert_dtl_id) ,1,0))"  name=delvry_clean_Amnt  tag="Label=Delivery Cleaning Amnt;csh=deliverycleaningAmnt;mh=Enter Delivery Cleaning Amnt" edit.limit=10 edit.case=any edit.format="#,##0.00" edit.autoselect=yes edit.nilisnull=yes  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="0" background.color="1070317037~tif (not isnull(net_up_delete_dtm), 2^26, 
+if (net_up_up_orig_code = 2 or isnull( net_up_up_orig_code) or
+net_up_clean_flag >< 0 or
+dtl_count<0 or 
+not isnull(net_up_protein_cert_dtl_id) ,2^26, 2^30))" )
+column(band=detail id=32 alignment="1" tabsequence=32966 border="0" color="41793202" x="3134" y="424" height="36" width="327" format="#,##0.000"  name=net_up_est_delvry_net_Pound_est  tag="" edit.limit=0 edit.case=any edit.focusrectangle=no edit.autoselect=yes edit.nilisnull=yes edit.autohscroll=yes edit.displayonly=yes  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="0" font.pitch="0" font.charset="0" background.mode="1" background.color="333642129" )
+column(band=detail id=30 alignment="0" tabsequence=32966 border="0" color="33334432" x="3126" y="404" height="36" width="333" format="[general]"  name=net_up_delvry_Point_id  tag="Label=Delivery Point;csh=deliveryPoint;mh=Select Delivery Point" dddw.name=d_dddw_Pointlst dddw.displaycolumn=Point_Point_short_name dddw.datacolumn=Point_Point_id dddw.percentwidth=0 dddw.lines=2 dddw.limit=0 dddw.allowedit=no dddw.useasborder=no dddw.case=any  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="0" font.pitch="0" font.charset="0" background.mode="1" background.color="333642129" )
+column(band=detail id=46 alignment="1" tabsequence=330 border="3" color="41793202" x="2432" y="1960" height="36" width="327" format="#,##0.000" protect="0~tif (not isnull(net_up_delete_dtm), 1, 
+if ( max_net_dtl_rev_code = 3, 0, 1))
+"  name=net_up_est_shutout_Pound_est  tag=" Label=Shutout Pounds;csh=shutoutPounds;mh=Enter Shutout Pounds" edit.limit=10 edit.case=any edit.format="#,##0.000" edit.autoselect=yes edit.nilisnull=yes edit.autohscroll=yes  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="0" font.pitch="0" font.charset="0" background.mode="0" background.color="1070317037~tif (not isnull(net_up_delete_dtm), 2^26, 
+if ( max_net_dtl_rev_code = 3, 2^30,  2^26))
+/*
+- WndBkRnd: 	1070317037  or 2^30
+- Buttonface:	97941120      or 2^26
+*/" )
+column(band=detail id=63 alignment="1" tabsequence=360 border="3" color="41793202" x="2432" y="1240" height="36" width="327" format="#,##0.00" protect="0~tif (not isnull(net_up_delete_dtm), 1, 
+if (dtl_count<0 or 
+isnull(net_up_transport_mthd_code) or
+net_up_transport_mthd_code >< '1' or
+not isnull(net_up_protein_cert_dtl_id) ,1,0))"  name=net_up_pre_pymt_amt  tag="Label=Prepayment Amount;csh=prepaymentamount;mh=Enter Prepayment Amount" edit.limit=10 edit.case=any edit.format="#,##0.00" edit.autoselect=yes edit.nilisnull=yes edit.autohscroll=yes  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="0" font.pitch="0" font.charset="0" background.mode="0" background.color="1070317037~tif (not isnull(net_up_delete_dtm), 2^26, 
+if (dtl_count<0 or 
+isnull(net_up_transport_mthd_code) or
+net_up_transport_mthd_code >< '1' or
+not isnull(net_up_protein_cert_dtl_id) ,2^26, 2^30))" )
+column(band=detail id=22 alignment="1" tabsequence=300 border="3" color="41793202" x="2432" y="1432" height="36" width="327" format="#,##0.00" protect="0~tif (not isnull(net_up_delete_dtm), 1, 
+if (  net_up_clean_flag  = 1 or
+delvry_clean_Amnt >= 0 or isnull(delvry_clean_Amnt) or
+dtl_count<0 or 
+not isnull(net_up_protein_cert_dtl_id) ,1,0))"  name=Load_clean_Amnt  tag="Label=Load Cleaning Amnt;csh=LoadcleaningAmnt;mh=Enter Load Cleaning Amnt" edit.limit=0 edit.case=any edit.format="#,##0.00" edit.autoselect=yes edit.nilisnull=yes  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="0" background.color="1070317037~tif (not isnull(net_up_delete_dtm), 2^26, 
+if (  net_up_clean_flag  = 1 or
+delvry_clean_Amnt >= 0 or  isnull(delvry_clean_Amnt) or
+dtl_count<0 or 
+not isnull(net_up_protein_cert_dtl_id) ,2^26, 2^30))" )
+column(band=detail id=73 alignment="0" tabsequence=420 border="3" color="41793202" x="2432" y="1396" height="36" width="472" format="[general]" protect="0~tif (not isnull(net_up_delete_dtm), 1, 
+if(isnull( net_up_sold_Point_Reel_id ) or
+isnull( net_up_sold_Reel_year_id ) or
+dtl_count<0 or 
+not isnull(net_up_protein_cert_dtl_id) ,1,0))"  name=sold_cgc_Point_code  tag="Label=Load CGC Point;csh=LoadcgcPoint;mh=Select Load CGC Point" dddw.name=d_dddw_cgc_Point_Reel dddw.displaycolumn=display dddw.datacolumn=protein_filter dddw.percentwidth=120 dddw.lines=2 dddw.limit=0 dddw.allowedit=no dddw.useasborder=yes dddw.case=any dddw.vscrollbar=yes  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="0" font.pitch="0" font.charset="0" background.mode="0" background.color="1070317037~tif (not isnull(net_up_delete_dtm), 2^26, 
+if(isnull( net_up_sold_Point_Reel_id ) or
+isnull( net_up_sold_Reel_year_id ) or
+dtl_count<0 or 
+not isnull(net_up_protein_cert_dtl_id) ,2^26, 2^30))" )
+column(band=detail id=70 alignment="0" tabsequence=460 border="3" color="41793202" x="2432" y="1300" height="36" width="472" format="[general]" protect="0~tif (not isnull(net_up_delete_dtm), 1, 
+if(isnull( net_up_Load_Point_Reel_id ) or
+isnull( net_up_Load_Reel_year_id ) or
+dtl_count<0 or 
+not isnull(net_up_protein_cert_dtl_id) ,1,0))"  name=Load_cgc_Point_code  tag="Label=Delivery CGC Point;csh=deliverycgcPoint;mh=Select Delivery CGC Point" dddw.name=d_dddw_cgc_Point_Reel dddw.displaycolumn=display dddw.datacolumn=protein_filter dddw.percentwidth=120 dddw.lines=2 dddw.limit=0 dddw.allowedit=no dddw.useasborder=yes dddw.case=any dddw.vscrollbar=yes  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="0" font.pitch="0" font.charset="0" background.mode="0" background.color="1070317037~tif (not isnull(net_up_delete_dtm), 2^26, 
+if(isnull( net_up_Load_Point_Reel_id ) or
+isnull( net_up_Load_Reel_year_id ) or
+dtl_count<0 or 
+not isnull(net_up_protein_cert_dtl_id) ,2^26, 2^30))" )
+column(band=detail id=40 alignment="2" tabsequence=430 border="3" color="41793202" x="2432" y="1220" height="36" width="236" format="[general]" protect="0~tif (not isnull(net_up_delete_dtm), 1, 
+if(isnull(net_up_Load_Point_Reel_id ) or
+isnull( net_up_up_orig_code ) or
+dtl_count<0 or 
+hide_Load_Reel_year = '1' or
+not isnull(net_up_protein_cert_dtl_id) ,1,0))"  name=net_up_Load_Reel_year_id  tag=" Label=Load Reel Year;csh=LoadReelyear;mh=Select Load Reel Year" dddw.name=d_dddw_Reel_yearlst dddw.displaycolumn=Reel_year_crop_year_num dddw.datacolumn=Reel_year_id dddw.percentwidth=0 dddw.lines=2 dddw.limit=0 dddw.allowedit=no dddw.useasborder=yes dddw.case=any dddw.nilisnull=yes dddw.vscrollbar=yes  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="0" font.pitch="0" font.charset="0" background.mode="0" background.color="1070317037~tif (not isnull(net_up_delete_dtm), 2^26, 
+if(isnull(net_up_Load_Point_Reel_id ) or
+isnull( net_up_up_orig_code ) or
+dtl_count<0 or 
+hide_Load_Reel_year = '1' or
+not isnull(net_up_protein_cert_dtl_id) ,2^26, 2^30))" )
+column(band=detail id=32 alignment="0" tabsequence=440 border="3" color="41793202" x="2432" y="1140" height="36" width="1312" format="[general]" protect="0~tif (not isnull(net_up_delete_dtm), 1, 
+if ( net_up_up_orig_code = 1 or isnull( net_up_up_orig_code) or
+isnull( net_up_port_stn_id ) or dtl_count<0 or 
+hide_prncinal_co  = '1' or
+not isnull(net_up_protein_cert_dtl_id) ,1,0))"  name=net_up_prncnl_co_id  tag=" label=prncinal Company;csh=prncinalcompany;mh=Select prncinal Company " dddw.name=d_dddw_prncnl_colst dddw.displaycolumn=co_new_co_name dddw.datacolumn=co_new_co_id dddw.percentwidth=0 dddw.lines=2 dddw.limit=0 dddw.allowedit=no dddw.useasborder=yes dddw.case=any dddw.vscrollbar=yes  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="0" font.pitch="0" font.charset="0" background.mode="0" background.color="1070317037~tif (not isnull(net_up_delete_dtm), 2^26, 
+if ( net_up_up_orig_code = 1 or isnull( net_up_up_orig_code) or
+isnull( net_up_port_stn_id ) or dtl_count<0 or 
+hide_prncinal_co  = '1' or
+not isnull(net_up_protein_cert_dtl_id) ,2^26, 2^30))" )
+column(band=detail id=39 alignment="0" tabsequence=430 border="3" color="41793202" x="2432" y="1060" height="36" width="1312" format="[general]" protect="0~tif (not isnull(net_up_delete_dtm), 1, 
+if ( net_up_up_orig_code = 1 or isnull( net_up_up_orig_code) or
+dtl_count<0 or 
+not isnull(net_up_protein_cert_dtl_id) ,1,0))"  name=net_up_port_stn_id  tag="label=Port;csh=port;mh=Select Port" dddw.name=d_dddw_port_stn_list dddw.displaycolumn=stn_name dddw.datacolumn=stn_id dddw.percentwidth=0 dddw.lines=2 dddw.limit=0 dddw.allowedit=no dddw.useasborder=yes dddw.case=any dddw.vscrollbar=yes  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="0" font.pitch="0" font.charset="0" background.mode="0" background.color="1070317037~tif (not isnull(net_up_delete_dtm), 2^26, 
+if ( net_up_up_orig_code = 1 or isnull( net_up_up_orig_code) or
+dtl_count<0 or 
+not isnull(net_up_protein_cert_dtl_id) ,2^26, 2^30))" )
+column(band=detail id=33 alignment="0" tabsequence=420 border="3" color="41793202" x="2432" y="720" height="36" width="1312" format="[general]" protect="0~tif (not isnull(net_up_delete_dtm), 1, 
+if(isnull( net_up_proces_co_id ) or
+dtl_count<0 or 
+hide_proces_rgn = '1' or
+not isnull(net_up_protein_cert_dtl_id) ,1,0))"  name=net_up_proces_rgn_id  tag=" label=Processor Location;csh=processorlocation;mh=Select Processor Location" dddw.name=d_dddw_procsr_rgnlst dddw.displaycolumn=rgn_name_dir dddw.datacolumn=rgn_rgn_id dddw.percentwidth=0 dddw.lines=2 dddw.limit=0 dddw.allowedit=no dddw.useasborder=yes dddw.case=any dddw.vscrollbar=yes  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="0" font.pitch="0" font.charset="0" background.mode="0" background.color="1070317037~tif (not isnull(net_up_delete_dtm), 2^26, 
+if(isnull( net_up_proces_co_id ) or
+dtl_count<0 or 
+hide_proces_rgn = '1' or
+not isnull(net_up_protein_cert_dtl_id) ,2^26, 2^30))" )
+column(band=detail id=34 alignment="0" tabsequence=410 border="3" color="41793202" x="2432" y="700" height="36" width="1312" format="[general]" protect="0~tif (not isnull(net_up_delete_dtm), 1, 
+if (dtl_count<0 or 
+not isnull(net_up_protein_cert_dtl_id) ,1,0))"  name=net_up_proces_co_id  tag="label=Processor Company;csh=processorcompany;mh=Select Processor Company " dddw.name=d_dddw_procsr_colst dddw.displaycolumn=name_type_dir dddw.datacolumn=co_new_co_id dddw.percentwidth=0 dddw.lines=2 dddw.limit=0 dddw.allowedit=no dddw.useasborder=yes dddw.case=any dddw.vscrollbar=yes  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="0" font.pitch="0" font.charset="0" background.mode="0" background.color="1070317037~tif (not isnull(net_up_delete_dtm), 2^26, 
+if (dtl_count<0 or 
+not isnull(net_up_protein_cert_dtl_id) ,2^26, 2^30))" )
+column(band=detail id=77 alignment="0" tabsequence=400 border="3" color="41793202" x="2432" y="224" height="36" width="1312" format="[general]" protect="0~tif (not isnull(net_up_delete_dtm), 1, 
+if (isnull(net_up_Load_co_id) or
+dtl_count<0 or
+(hide_Load_addr = '1') or
+not isnull(net_up_protein_cert_dtl_id) ,1,0))"  name=net_up_Load_addr_id  tag="Label=Load Address;csh=Loadaddress;mh=Select Load Address" dddw.name=d_dddw_co_addr_list dddw.displaycolumn=addr_text dddw.datacolumn=addr_id dddw.percentwidth=0 dddw.lines=0 dddw.limit=0 dddw.allowedit=no dddw.useasborder=yes dddw.case=any dddw.hscrollbar=yes dddw.vscrollbar=yes  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="0" background.color="1070317037~tif (not isnull(net_up_delete_dtm), 2^26, 
+if (isnull(net_up_Load_co_id) or
+dtl_count<0 or
+(hide_Load_addr = '1') or
+not isnull(net_up_protein_cert_dtl_id) ,2^26, 2^30)
+)" )
+column(band=detail id=33 alignment="0" tabsequence=370 border="3" color="41793202" x="2432" y="942" height="36" width="1312" format="[general]" protect="0~tif (not isnull(net_up_delete_dtm), 1, 
+if (dtl_count<0 or 
+( hide_Load_co = '1') or
+not isnull(net_up_protein_cert_dtl_id) ,1,0))"  name=net_up_Load_co_id  tag="Label=Load Company;csh=Loadcompany;mh=Select Delivery Load Company" dddw.name=d_dddw_contr_party_colst dddw.displaycolumn=display dddw.datacolumn=co_new_co_id dddw.percentwidth=0 dddw.lines=2 dddw.limit=0 dddw.allowedit=no dddw.useasborder=yes dddw.case=any dddw.vscrollbar=yes  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="0" background.color="1070317037~tif (not isnull(net_up_delete_dtm), 2^26, 
+if (dtl_count<0 or 
+( hide_Load_co = '1') or
+not isnull(net_up_protein_cert_dtl_id) ,2^26, 2^30))" )
+column(band=detail id=23 alignment="0" tabsequence=310 border="0" color="41793202" x="2423" y="1322" height="36" width="33" format="[general]" protect="0~tif (not isnull(net_up_delete_dtm), 1, 
+if (  net_up_delvry_wgh_insp_flag   = 0 or
+ net_up_up_orig_code = 0 or isnull( net_up_up_orig_code) or
+dtl_count<0 or 
+not isnull(net_up_protein_cert_dtl_id) ,1,0))"  name=net_up_Load_wgh_flag  tag="Label=Load Cleaning Amnt;csh=LoadcleaningAmnt;mh=Enter Load Cleaning Amnt" checkbox.text="" checkbox.on="1" checkbox.off="0" checkbox.scale=no checkbox.threed=yes  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="0" background.color="333642129~tif (not isnull(net_up_delete_dtm), 2^26, 
+if (  net_up_delvry_wgh_insp_flag   = 0 or
+ net_up_up_orig_code = 0 or isnull( net_up_up_orig_code) or
+dtl_count<0 or 
+not isnull(net_up_protein_cert_dtl_id) ,2^26, 2^30))" )
+column(band=detail id=24 alignment="0" tabsequence=320 border="0" color="41793202" x="2423" y="1604" height="36" width="33" format="[general]" protect="0~tif (not isnull(net_up_delete_dtm), 1, 
+if (  net_up_delvry_wgh_insp_flag   = 0 or
+net_up_up_orig_code = 0 or isnull( net_up_up_orig_code) or
+dtl_count<0 or 
+not isnull(net_up_protein_cert_dtl_id) ,1,0))"  name=net_up_Load_insp_flag  tag="Label=Load Inspection;csh=Loadinspection;mh=Load Inspection" checkbox.text="" checkbox.on="1" checkbox.off="0" checkbox.scale=no checkbox.threed=yes  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="0" background.color="333642129~tif (not isnull(net_up_delete_dtm), 2^26, 
+if (  net_up_delvry_wgh_insp_flag   = 0 or
+  net_up_up_orig_code = 0 or isnull( net_up_up_orig_code) or
+dtl_count<0 or 
+not isnull(net_up_protein_cert_dtl_id) ,2^26, 2^30))" )
+column(band=detail id=42 alignment="1" tabsequence=330 border="3" color="41793202" x="2432" y="1620" height="36" width="327" format="#,##0.000" protect="0~tif (not isnull(net_up_delete_dtm), 1, 
+if (dtl_count < 0
+OR split_count < 0
+OR max_net_dtl_rev_code = 0
+OR max_net_dtl_rev_code = 3
+OR NOT IsNull(net_up_protein_cert_dtl_id), 1, 0))"  name=net_up_est_Load_gross_Pound_est  tag="  Label=Load Gross Pounds;csh=LoadgrossPounds;mh=Load Gross Pounds" edit.limit=10 edit.case=any edit.format="#,##0.000" edit.autoselect=yes edit.nilisnull=yes edit.autohscroll=yes  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="0" font.pitch="0" font.charset="0" background.mode="0" background.color="1070317037~tif (not isnull(net_up_delete_dtm), 2^26, 
+if (dtl_count < 0
+OR split_count < 0
+OR max_net_dtl_rev_code = 0
+OR max_net_dtl_rev_code = 3
+OR NOT IsNull(net_up_protein_cert_dtl_id), 2^26, 2^30))
+/*
+- WndBkRnd: 	1070317037  or 2^30
+- Buttonface:	97941120      or 2^26
+*/" )
+column(band=detail id=44 alignment="1" tabsequence=340 border="3" color="41793202" x="2973" y="1620" height="36" width="327" format="#0.000" protect="0~tif (not isnull(net_up_delete_dtm), 1, 
+if (dtl_count < 0
+OR split_count < 0
+OR max_net_dtl_rev_code = 0
+OR max_net_dtl_rev_code = 3
+OR NOT IsNull(net_up_protein_cert_dtl_id), 1, 0))"  name=net_up_est_Load_dkg_Amnt  tag=" Label=Load Dockage;csh=Loaddockage;mh=Enter Load Dockage" edit.limit=10 edit.case=any edit.format="#0.000" edit.autoselect=yes edit.nilisnull=yes edit.autohscroll=yes  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="0" font.pitch="0" font.charset="0" background.mode="0" background.color="16999213~tif (not isnull(net_up_delete_dtm), 2^26, 
+if (dtl_count < 0
+OR split_count < 0
+OR max_net_dtl_rev_code = 0
+OR max_net_dtl_rev_code = 3
+OR NOT IsNull(net_up_protein_cert_dtl_id), 2^26, 2^30))" )
+column(band=detail id=43 alignment="1" tabsequence=32966 border="0" color="41793202" x="3134" y="1620" height="36" width="327" format="#,##0.000"  name=net_up_est_Load_net_Pound_est  tag=" " edit.limit=0 edit.case=any edit.format="#,##0.000" edit.focusrectangle=no edit.autoselect=yes edit.autohscroll=yes edit.displayonly=yes  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="0" font.pitch="0" font.charset="0" background.mode="1" background.color="333642129" )
+text(band=detail alignment="1" text="Car Initials / Car No:" border="0" color="41793202" x="222" y="1176" height="32" width="434"  name=net_up_boat_car_init_code_t visible="1~tif( net_up_transport_mthd_code  = '1',1,0)"  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="0" font.pitch="0" font.charset="0" background.mode="1" background.color="336290712" )
+column(band=detail id=19 alignment="0" tabsequence=140 border="3" color="41793202" x="1333" y="1176" height="36" width="249" format="[general]" protect="0~tif (not isnull(net_up_delete_dtm), 1, 
+if(dtl_count<0 or 
+not isnull(net_up_protein_cert_dtl_id) ,1,0))"  name=net_up_boat_car_init_code  tag="  label=Car Initials;csh=carinitials;mh=Select Car Initials" visible="1~tif( net_up_transport_mthd_code  = '1',1,0)" dddw.name=d_dddw_net_lkup dddw.displaycolumn=net_lkup_lkup_name dddw.datacolumn=net_lkup_lkup_name dddw.percentwidth=0 dddw.lines=2 dddw.limit=0 dddw.allowedit=no dddw.useasborder=yes dddw.case=any dddw.vscrollbar=yes  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="0" font.pitch="0" font.charset="0" background.mode="0" background.color="1070317037~tif (not isnull(net_up_delete_dtm), 2^26, 
+if(dtl_count<0 or 
+not isnull(net_up_protein_cert_dtl_id) ,2^26, 2^30))" )
+column(band=detail id=12 alignment="0" tabsequence=130 border="3" color="41793202" x="1600" y="1176" height="36" width="123" format="[general]" protect="0~tif (not isnull(net_up_delete_dtm), 1, 
+if(dtl_count<0 or 
+not isnull(net_up_protein_cert_dtl_id) ,1,0))"  name=net_up_boat_car_num  tag=" label=boat Car Num;csh=boatcarnum;mh=Enter boat Car Num" visible="1~tif( net_up_transport_mthd_code  = '1',1,0)" edit.limit=6 edit.case=any edit.autoselect=yes edit.nilisnull=yes edit.autohscroll=yes  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="0" font.pitch="0" font.charset="0" background.mode="0" background.color="1070317037~tif (not isnull(net_up_delete_dtm), 2^26, 
+if(dtl_count<0 or 
+not isnull(net_up_protein_cert_dtl_id) ,2^26, 2^30))" )
+text(band=detail alignment="1" text="Trip Number:" border="0" color="41793202" x="733" y="1176" height="32" width="223"  name=net_up_barge_trip_num_t visible="1~tif( net_up_transport_mthd_code  = '2',1,0)"  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="0" font.pitch="0" font.charset="0" background.mode="1" background.color="336290712" )
+column(band=detail id=17 alignment="1" tabsequence=190 border="3" color="41793202" x="1230" y="1176" height="36" width="327" format="[general]" protect="0~tif (not isnull(net_up_delete_dtm), 1, 
+if(dtl_count<0 or 
+not isnull(net_up_protein_cert_dtl_id) ,1,0))"  name=net_up_barge_trip_num  tag=" label=Trip Number;csh=tripnumber;mh=Enter Trip Number" visible="1~tif( net_up_transport_mthd_code  = '2',1,0)" edit.limit=7 edit.case=any edit.autoselect=yes edit.nilisnull=yes edit.autohscroll=yes  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="0" font.pitch="0" font.charset="0" background.mode="0" background.color="1070317037~tif (not isnull(net_up_delete_dtm), 2^26, 
+if(dtl_count<0 or 
+not isnull(net_up_protein_cert_dtl_id) ,2^26, 2^30))" )
+column(band=detail id=21 alignment="0" tabsequence=120 border="3" color="41793202" x="321" y="1292" height="36" width="276" format="[general]" protect="0~tif (not isnull(net_up_delete_dtm), 1, 
+if(dtl_count<0 or 
+not isnull(net_up_protein_cert_dtl_id) ,1,0))"  name=net_up_transport_faclty_id  tag="label=Vessel;csh=vessel;mh=Select Vessel" visible="1~tif( net_up_transport_mthd_code  = '3' or net_up_transport_mthd_code  = '4' or net_up_contnr_flag = 1,1,0)" dddw.name=d_dddw_transport_facilty_lst dddw.displaycolumn=transport_faclty_name dddw.datacolumn=transport_faclty_id dddw.percentwidth=0 dddw.lines=2 dddw.limit=0 dddw.allowedit=no dddw.useasborder=yes dddw.case=any dddw.hscrollbar=yes dddw.vscrollbar=yes  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="0" font.pitch="0" font.charset="0" background.mode="0" background.color="1070317037~tif (not isnull(net_up_delete_dtm), 2^26, 
+if(dtl_count<0 or 
+not isnull(net_up_protein_cert_dtl_id) ,2^26, 2^30))" )
+column(band=detail id=93 alignment="0" tabsequence=170 border="3" color="41793202" x="321" y="1344" height="32" width="320" format="Mmm dd, yyyy" protect="0~tif (not isnull(net_up_delete_dtm), 1, 
+if(dtl_count<0 or 
+not isnull(net_up_protein_cert_dtl_id) ,1,0))"  name=net_up_bill_of_lading_copy  tag=" label=Bill of Lading copy copy;csh=billofladingcopy;mh=Enter Bill of Lading copy" visible="1~tif( net_up_transport_mthd_code  = '3' or net_up_transport_mthd_code  = '4' or net_up_contnr_flag = 1,1,0)" edit.limit=0 edit.case=any edit.autoselect=yes edit.nilisnull=yes  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="0" background.color="1070317037~tif (not isnull(net_up_delete_dtm), 2^26, 
+if(dtl_count<0 or 
+not isnull(net_up_protein_cert_dtl_id) ,2^26, 2^30))" )
+column(band=detail id=103 alignment="0" tabsequence=200 border="3" color="41793202" x="1291" y="1344" height="36" width="320" format="Mmm dd, yyyy" protect="0~tif (not isnull(net_up_delete_dtm), 1, 
+if(dtl_count<0 or
+max_net_dtl_rev_code = 3  or
+not isnull(net_up_protein_cert_dtl_id),1,0))"  name=net_first_call_copy  tag="label=First Call copy;csh=firstcallcopy;mh=Enter First Call copy" visible="1~tif( net_up_transport_mthd_code  = '3' or net_up_transport_mthd_code  = '4' or net_up_contnr_flag = 1,1,0)" edit.limit=0 edit.case=any edit.autoselect=yes edit.nilisnull=yes  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="0" font.pitch="0" font.charset="0" background.mode="0" background.color="1070317037~tif (not isnull(net_up_delete_dtm), 2^26, 
+if(dtl_count<0 or
+max_net_dtl_rev_code = 3 or 
+not isnull(net_up_protein_cert_dtl_id) ,2^26, 2^30))" )
+column(band=detail id=124 alignment="0" tabsequence=210 border="3" color="41793202" x="321" y="1420" height="36" width="276" format="[general]" protect="0~tif (not isnull(net_up_delete_dtm), 1, 
+if(dtl_count < 0
+OR hide_ocean_frght = '1'
+OR NOT IsNull(net_up_protein_cert_dtl_id), 1, 0))"  name=Load_contr_ocean_frght_id  tag=" label=Ocean Freight Amnt;csh=oceanfreightAmnt;mh=Select Ocean Freight Amnt" visible="1~tif( net_up_transport_mthd_code  = '3' or net_up_transport_mthd_code  = '4' or net_up_contnr_flag = 1,1,0)" dddw.name=d_dddw_ocean_freight_list dddw.displaycolumn=display dddw.datacolumn=Load_contr_ocean_frght_id dddw.percentwidth=200 dddw.lines=2 dddw.limit=0 dddw.allowedit=no dddw.useasborder=yes dddw.case=any dddw.vscrollbar=yes  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="0" background.color="1070317037~tif (not isnull(net_up_delete_dtm), 2^26, 
+if(dtl_count < 0
+OR hide_ocean_frght = '1'
+OR NOT IsNull(net_up_protein_cert_dtl_id), 2^26, 2^30))" )
+text(band=detail alignment="1" text="Vessel Name:" border="0" color="41793202" x="76" y="1292" height="32" width="491"  name=net_up_transport_faclty_id_t visible="1~tif( net_up_transport_mthd_code  = '3' or net_up_transport_mthd_code  = '4' or net_up_contnr_flag = 1,1,0)"  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="0" font.pitch="0" font.charset="0" background.mode="1" background.color="336290712" )
+text(band=detail alignment="1" text="Bill of Lading copy:" border="0" color="0" x="76" y="1344" height="32" width="491"  name=bill_of_lading_t visible="1~tif( net_up_transport_mthd_code  = '3' or net_up_transport_mthd_code  = '4' or net_up_contnr_flag = 1,1,0)"  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="333642129" )
+text(band=detail alignment="1" text="Ocean Freight Amnt:" border="0" color="41793202" x="76" y="1420" height="32" width="491"  name=ocean_freight_t visible="1~tif( net_up_transport_mthd_code  = '3' or net_up_transport_mthd_code  = '4' or net_up_contnr_flag = 1,1,0)"  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="336290712" )
+text(band=detail alignment="1" text="First Call copy:" border="0" color="0" x="722" y="1344" height="32" width="320"  name=t_10 visible="1~tif( net_up_transport_mthd_code  = '3' or net_up_transport_mthd_code  = '4' or net_up_contnr_flag = 1,1,0)"  font.face="MS Sans Serif" font.height="-2" font.Teacht="400"  font.family="2" font.pitch="2" font.charset="0" background.mode="1" background.color="333642129" )
+htmltable(border="1" )
+htmlgen(clientevents="1" clientvalidation="1" clientcomputedfields="1" clientformatting="0" clientscriptable="0" geneAmntjavascript="1" )

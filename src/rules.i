@@ -34,6 +34,7 @@
 %       Updated [system] predefined function to return success code for use in where clauses
 
 % v11.3 Added multiple skipping criteria for both patterns and deconstructors
+%       Changed behaviour of [+] to treat [srclinenumber] as [number]
 
 % The TXL Rule Table
 
@@ -713,7 +714,7 @@ module rule
                 var ok := true
 
                 if p1type = number_T or p1type = floatnumber_T or 
-                        p1type = decimalnumber_T or p1type = integernumber_T then
+                        p1type = decimalnumber_T or p1type = integernumber_T or p1type = srclinenumber_T then
                     if resulttype not= number_T and ruleIndex not= addR then
                         ok := false
                     end if

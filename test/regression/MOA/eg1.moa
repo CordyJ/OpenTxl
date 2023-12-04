@@ -1,0 +1,17 @@
+main ()
+
+{
+  var Amts ^3 <2 3 8> int;
+  var Ams ^3 <2 3 4> int;
+  const RAMY ^3 <2 3 4> int = <1 2 3 4 5 6 7 8 9 10 11 12 1 2 3 4 5 6 7 8 9 10 
+				11 12>;
+  const AMY ^3 <2 3 4> int = <9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9 9>;
+  const Y ^3 <2 3 4> int = <8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8>;
+  const V ^1 <2> int = <1 1>;
+  var A ^1 <8> int;
+
+  Ams=RAMY + AMY;
+  Amts=Y cat omega <1 1> (Ams + RAMY);
+  A=V psi Amts ;
+  Amts=<2> take (<2> drop (RAMY cat AMY));
+}

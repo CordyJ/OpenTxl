@@ -1,0 +1,26 @@
+MODULE Table;
+
+FROM XdrM2_Table IMPORT tAck, tReq;
+IMPORT InOut;
+
+CONST
+    Size = 5;
+
+VAR
+    sitting: INTEGER;
+    ok: tAck;
+    req: tReq;
+
+BEGIN
+    sitting := 0;
+    LOOP
+        SELECT
+            sitting > 0 && ACCEPT(leave,req) :
+		REPLY(leave,ok);
+	        DEC(sitting);
+          | sitting < ( Size - 1 ) && ACCEPT(sit,req) :
+		REPLY(sit,ok);
+	        INC(sitting);
+	END;
+    END;
+END Table.

@@ -43,13 +43,16 @@
 
 % v11.3 Fixed bug in output of zero-length tokens
 %       Added multiple skipping criteria
+%       Fixed lookahead source line number bug
+%       Fixed multiple nl-comments source line number bug
+%       Fixed compatibility of [srclinenumber] with [number]
 
 
 % Global symbols granted to child modules
 include "globals.i"
 
 % TXL version
-const * version := "OpenTxl v11.3 (3.11.23) (c) 2023 James R. Cordy and others"
+const * version := "OpenTxl v11.3.2 (4.12.23) (c) 2023 James R. Cordy and others"
 
 % Phase
 const * INITIALIZE := 0
