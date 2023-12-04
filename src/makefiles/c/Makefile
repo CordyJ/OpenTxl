@@ -14,7 +14,7 @@
 # the very least to slow it down severely, at higher levels of optimization.
 
 CC = gcc -w 
-CFLAGS = -m64 -ansi -c -O -fno-inline -I tpluslib 
+CFLAGS = -m64 -c -O -fno-inline -I tpluslib 
 LD = gcc
 LDFLAGS = -m64 
 LDLIBS = -lm
@@ -36,7 +36,7 @@ MESSAGE = "Unrecognized platform - making TXL using gcc and no signal handling"
 
 ifeq ($(OS), Darwin)
     MESSAGE = "Making TXL on MacOS using gcc and BSD signal handling"
-    CFLAGS := $(CFLAGS) -mmacosx-version-min=10.12
+    CFLAGS := $(CFLAGS) -ansi -mmacosx-version-min=10.12
     LDFLAGS := $(LDFLAGS) -mmacosx-version-min=10.12
     SIGTYPE = BSD
 
