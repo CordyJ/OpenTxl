@@ -15,10 +15,7 @@ GENERALOBJS = objs/locale.o
 
 OBJS = ${COMPILEOBJS} ${GENERALOBJS}
 
-TPCFLAGS = -DCHECKED
-
-CC = cc -c
-COPTS = -w
+TPCFLAGS = -DCHECKED -x5 -Wno-error=int-conversion
 
 # Main
 
@@ -138,11 +135,11 @@ objs/txlapr.o : src/txlapr.t
 
 objs/locale.o : src/locale.c
 	/bin/rm -f objs/locale.o
-	${CC} ${COPTS} src/locale.c  
+	tpc -c src/locale.c  
 	mv locale.o objs/locale.o
 
 objs/main.o : src/tpluslib/TL.h src/main.c
-	${CC} $(COPTS) -DBSD src/main.c; mv main.o objs/main.o
+	tpc -c -DBSD src/main.c; mv main.o objs/main.o
 
 # Directories
 
