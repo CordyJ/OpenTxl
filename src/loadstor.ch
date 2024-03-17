@@ -340,7 +340,7 @@ body module LoadStore
             if ident.idents (i) not= ident.nilIdent then
                 var ii := i
                 var idtai : addressint := ident.idents (i) - addr (ident.identText (1))
-                var idti := idtai
+                var idti  : nat := idtai    % intentional; assert value of idtai fits
                 write : tf, ii, idti, ident.identKind (i)
                 nbytes += 9
             end if

@@ -52,7 +52,7 @@
 include "globals.i"
 
 % TXL version
-const * version := "OpenTxl v11.3.1 (4.12.23) (c) 2023 James R. Cordy and others"
+const * version := "OpenTxl v11.3.2 (17.3.24) (c) 2024 James R. Cordy and others"
 
 % Phase
 const * INITIALIZE := 0

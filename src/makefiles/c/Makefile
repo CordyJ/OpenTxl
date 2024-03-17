@@ -13,7 +13,7 @@
 # most optimizing C compilers to generate incorrect code for it, or at 
 # the very least to slow it down severely, at higher levels of optimization.
 
-CC = gcc -w 
+CC = gcc -w -Wno-error=int-conversion 
 CFLAGS = -m64 -c -O -fno-inline -I tpluslib 
 LD = gcc
 LDFLAGS = -m64 
