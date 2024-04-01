@@ -46,13 +46,15 @@
 %       Fixed lookahead source line number bug
 %       Fixed multiple nl-comments source line number bug
 %       Fixed compatibility of [srclinenumber] with [number]
+%       Retired MacOS 9 CR line endings
+%       Updated default size to 128
 
 
 % Global symbols granted to child modules
 include "globals.i"
 
 % TXL version
-const * version := "OpenTxl v11.3.2 (17.3.24) (c) 2024 James R. Cordy and others"
+const * version := "OpenTxl v11.3.2 (1.4.24) (c) 2024 James R. Cordy and others"
 
 % Phase
 const * INITIALIZE := 0

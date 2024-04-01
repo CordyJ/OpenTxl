@@ -31,6 +31,7 @@
 
 % v11.3 Fixed lookahead source line number bug.
 %       Fixed multiple nl-comments source line number bug.
+%       Retired MacOS 9 CR line endings (about time!)
 
 module scanner
 
@@ -1170,7 +1171,7 @@ module scanner
                     loop
                         exit when inputline (inputchar) not= '\r'
                         inputchar += 1
-                        linenum += 1
+                        % linenum += 1      % retire MacOS 9 support (about time!)
                         fail := false
                         exit when not repeated
                     end loop
