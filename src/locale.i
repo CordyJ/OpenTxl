@@ -41,7 +41,7 @@
 const * defaultOutputLineLength := 256
 
 % Default size limit (approximate, in Mb)
-const * defaultTxlSize := 64
+const * defaultTxlSize := 128
 
 % The following depend on OS details not visible in Turing+,
 % so are passed to us from locale.c
