@@ -9,6 +9,9 @@
  *
  */
 
+/* Named limits - JRC 9.4.24 */
+/* Fixed memory leak in filenames - DAD 6.4.24 */
+
 /* Updated library naming conventions to T+ 6.0 standard - JRC 11.7.18 */
 /* Revised exception handling to be consistent with T+ 6.0 standard - JRC 11.7.18 */
 
@@ -23,6 +26,11 @@
 /* Added TL_RevertSignalHandlers to assist in converting to re-entrant subroutine -- JRC 20.5.97 */
 /* Fixed another bug in file table overflow on too many arguments -- JRC 27.3.08 */
 
+/* Limits - must match cinterface.h */
+#define STRINGSIZE 4096
+#define MAXALLOCS 100
+#define MAXFILES 25
+
 /* TLE - Signal handling routines */
 #include <setjmp.h>
 struct TLHAREA {
@@ -35,18 +43,18 @@ struct TLHAREA defaultHandlerArea;
 
 /* TLB - memory management routines */
 #include <stdlib.h>
-void *TL_mallocs[100];
+void *TL_mallocs[MAXALLOCS];
 int TL_nextmalloc;
 
 /* TLI - I/O routines */
 #include <stdio.h>
 #define READ_MODE 0
 #define WRITE_MODE 1
-FILE *TL_files[25];
-char *TL_filenames[25];
-char TL_filemode[25];
+FILE *TL_files[MAXFILES];
+char *TL_filenames[MAXFILES];
+char TL_filemode[MAXFILES];
 int TL_nextfile;
-char TL_pattern[25];
+char TL_pattern[MAXFILES];
 int TL_TLI_lookahead;
 
 /* Program parameters */
@@ -167,9 +175,9 @@ char **argv;
     TL_files[TL_nextfile] = stderr;
     TL_filenames[TL_nextfile] = "stderr";
     TL_filemode[TL_nextfile] = WRITE_MODE;
-    for (i=TL_nextfile+1; i<25; i++) {
+    for (i=TL_nextfile+1; i < MAXFILES; i++) {
         TL_files[i] = NULL;
-        TL_filenames[i] = "";
+        TL_filenames[i] = NULL;
     }
 
     /* initialize handlers */
@@ -180,14 +188,14 @@ char **argv;
 
     /* initalize heap memory map */
     TL_nextmalloc = 0;
-    for (i=0; i<25; i++) {
+    for (i=0; i < MAXALLOCS; i++) {
         TL_mallocs[i] = NULL;
     }
 
     /* initialize global argv and argc */
     TL_TLI_TLIARC = argc-1;
     TL_TLI_TLIARV = argv;
-    for (i=1; i<argc && TL_nextfile<25; i++) {
+    for (i=1; i<argc && TL_nextfile < MAXFILES; i++) {
         if (argv[i][0] != '-') {
             TL_nextfile++;
             TL_filenames[TL_nextfile] = argv[i];
@@ -200,12 +208,12 @@ void TL_finalize ()
 {
     /* Close all output streams, except stdin, stdout and stderr */
     int i;
-    for (i=3; i<25; i++) {
+    for (i=3; i < MAXFILES; i++) {
         if (TL_files[i] != NULL) fclose (TL_files[i]);
     }
 
     /* Release all heap memory */
-    for (i=0; i<25; i++) {
+    for (i=0; i < MAXALLOCS; i++) {
         if (TL_mallocs[i] != NULL) free (TL_mallocs[i]);
     }
     

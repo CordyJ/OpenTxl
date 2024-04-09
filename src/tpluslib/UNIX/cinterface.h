@@ -9,6 +9,9 @@
  *
  */
  
+/* Named limits - JRC 9.4.24 */
+/* Fixed memory leak in filenames - DAD 6.4.24 */
+
 /* Updated library naming conventions to T+ 6.0 standard - JRC 11.7.18 */
 /* Revised exception handling to be consistent with T+ 6.0 standard - JRC 11.7.18 */
 
@@ -29,6 +32,11 @@
 /* Added required includes for Windows 7/8 64 bit -- JRC 20.12.14 */
 /* Added TL_TLA_TLA8FL -- JRC 2.2.15 */
 
+/* Limits */
+#define STRINGSIZE 4096
+#define MAXALLOCS 100
+#define MAXFILES 25
+
 /* Predefined Types */
 typedef char            TLboolean;
 typedef unsigned char   TLchar;
@@ -40,11 +48,11 @@ typedef unsigned short  TLnat2;
 typedef unsigned int    TLnat4;
 typedef float           TLreal4;
 typedef double          TLreal8;
-typedef char            TLstring[4096];
+typedef char            TLstring[STRINGSIZE];
 typedef char            *TLaddressint;
 
 /* Old style, in case our T+ compiler is on Sun OS 4.x */
-typedef char            TLSTRING[4096];
+typedef char            TLSTRING[STRINGSIZE];
 typedef char            *TLADDRESSINT;
 
 /* Non-scalar assignment macros */
@@ -128,7 +136,8 @@ extern int TL_TLI_lookahead;
 #define TL_TLI_TLICL(streamNo)  \
         fclose (TL_files [streamNo+2]), \
         TL_files [streamNo+2] = NULL, \
-        TL_filenames [streamNo+2] = ""
+        free(TL_filenames [streamNo+2]), \
+        TL_filenames [streamNo+2] = NULL
 #define TL_TLI_TLIGC(getWidth, getItem, getItemSize, streamNo) \
         *getItem = fgetc (TL_files[streamNo+2]); \
         if (*getItem == (unsigned char) EOF) *getItem = '\0'
