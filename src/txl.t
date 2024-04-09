@@ -48,13 +48,14 @@
 %       Fixed compatibility of [srclinenumber] with [number]
 %       Retired MacOS 9 CR line endings
 %       Updated default size to 128
+%       Fixed minor memory leaks
 
 
 % Global symbols granted to child modules
 include "globals.i"
 
 % TXL version
-const * version := "OpenTxl v11.3.2 (1.4.24) (c) 2024 James R. Cordy and others"
+const * version := "OpenTxl v11.3.2 (9.4.24) (c) 2024 James R. Cordy and others"
 
 % Phase
 const * INITIALIZE := 0

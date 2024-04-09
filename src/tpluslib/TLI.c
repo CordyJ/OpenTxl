@@ -34,15 +34,15 @@ void TL_TLI_TLIOF (openMode, fileName, streamNo)
     {
         char * duplicate;
         int sn;
-        for (sn = TL_nextfile; sn < 25 - 3; sn++) {
+        for (sn = TL_nextfile; sn < MAXFILES - 3; sn++) {
             if (TL_files [sn + 2] == NULL) break;
         }
-        if (sn == 25 - 3) {
+        if (sn == MAXFILES - 3) {
             *streamNo = 0;
             return;
         }
         *streamNo = sn;
-        duplicate = (char *) (malloc (4096));
+        duplicate = (char *) (malloc (STRINGSIZE));
         strcpy (duplicate, fileName);
         TL_filenames [*streamNo+2] = duplicate;
 
@@ -109,7 +109,7 @@ void TL_TLI_TLIFS ()
     {
         /* Flush all output streams, including stdout and stderr */
         int i;
-        for (i=1; i<25; i++) {
+        for (i=1; i < MAXFILES; i++) {
             if (TL_files[i] != NULL && TL_filemode[i] == WRITE_MODE) fflush (TL_files[i]);
         }
     }
