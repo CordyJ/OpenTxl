@@ -53,7 +53,7 @@ lib/txlapr.x : objs/txlapr.o
 # Bootstrap
 
 src/bootgrm.i : src/bootstrap/bootgrm.i
-	pushd src/bootstrap; make; popd 
+	(cd src/bootstrap; make)
 	cp src/bootstrap/bootgrm.i src/bootgrm.i
 
 # Modules
