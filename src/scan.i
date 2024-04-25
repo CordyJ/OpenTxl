@@ -31,7 +31,7 @@
 
 % v11.3 Fixed lookahead source line number bug.
 %       Fixed multiple nl-comments source line number bug.
-%       Retired MacOS 9 CR line endings (about time!)
+%       Added support for all standard line endings LF, CR, CR-LF
 
 module scanner
 
@@ -958,6 +958,12 @@ module scanner
                         if inputline (inputchar) = '\n' then
                             linenum += 1
                         end if
+                        if inputline (inputchar) = '\r' then
+                            if inputline (inputchar + 1) = '\n' then
+                                inputchar += 1
+                            end if
+                            linenum += 1
+                        end if
                         inputchar += 1
                     end loop
                 end if
@@ -1007,6 +1013,12 @@ module scanner
                     loop
                         exit when not charset.spaceP (inputline (inputchar))
                         if inputline (inputchar) = '\n' then
+                            linenum += 1
+                        end if
+                        if inputline (inputchar) = '\r' then
+                            if inputline (inputchar + 1) = '\n' then
+                                inputchar += 1
+                            end if
                             linenum += 1
                         end if
                         inputchar += 1
@@ -1149,6 +1161,12 @@ module scanner
                         if inputline (inputchar) = '\n' then
                             linenum += 1
                         end if
+                        if inputline (inputchar) = '\r' then
+                            if inputline (inputchar + 1) = '\n' then
+                                inputchar += 1
+                            end if
+                            linenum += 1
+                        end if
                         inputchar += 1
                         fail := false
                         exit when not repeated
@@ -1171,7 +1189,9 @@ module scanner
                     loop
                         exit when inputline (inputchar) not= '\r'
                         inputchar += 1
-                        % linenum += 1      % retire MacOS 9 support (about time!)
+                        if inputline (inputchar) not= '\n' and inputline (inputchar) not= EOS then
+                            linenum += 1
+                        end if
                         fail := false
                         exit when not repeated
                     end loop
@@ -1197,6 +1217,12 @@ module scanner
                         if inputline (inputchar) = '\n' then
                             linenum += 1
                         end if
+                        if inputline (inputchar) = '\r' then
+                            if inputline (inputchar + 1) = '\n' then
+                                inputchar += 1
+                            end if
+                            linenum += 1
+                        end if
                         inputchar += 1
                         fail := false
                         exit when not repeated
@@ -1208,6 +1234,12 @@ module scanner
                     loop
                         exit when charset.alphaP (inputline (inputchar)) or inputline (inputchar) = EOS
                         if inputline (inputchar) = '\n' then
+                            linenum += 1
+                        end if
+                        if inputline (inputchar) = '\r' then
+                            if inputline (inputchar + 1) = '\n' then
+                                inputchar += 1
+                            end if
                             linenum += 1
                         end if
                         inputchar += 1
@@ -1223,6 +1255,12 @@ module scanner
                         if inputline (inputchar) = '\n' then
                             linenum += 1
                         end if
+                        if inputline (inputchar) = '\r' then
+                            if inputline (inputchar + 1) = '\n' then
+                                inputchar += 1
+                            end if
+                            linenum += 1
+                        end if
                         inputchar += 1
                         fail := false
                         exit when not repeated
@@ -1234,6 +1272,12 @@ module scanner
                     loop
                         exit when charset.idP (inputline (inputchar)) or inputline (inputchar) = EOS
                         if inputline (inputchar) = '\n' then
+                            linenum += 1
+                        end if
+                        if inputline (inputchar) = '\r' then
+                            if inputline (inputchar + 1) = '\n' then
+                                inputchar += 1
+                            end if
                             linenum += 1
                         end if
                         inputchar += 1
@@ -1249,6 +1293,12 @@ module scanner
                         if inputline (inputchar) = '\n' then
                             linenum += 1
                         end if
+                        if inputline (inputchar) = '\r' then
+                            if inputline (inputchar + 1) = '\n' then
+                                inputchar += 1
+                            end if
+                            linenum += 1
+                        end if
                         inputchar += 1
                         fail := false
                         exit when not repeated
@@ -1260,6 +1310,12 @@ module scanner
                     loop
                         exit when charset.upperidP (inputline (inputchar)) or inputline (inputchar) = EOS
                         if inputline (inputchar) = '\n' then
+                            linenum += 1
+                        end if
+                        if inputline (inputchar) = '\r' then
+                            if inputline (inputchar + 1) = '\n' then
+                                inputchar += 1
+                            end if
                             linenum += 1
                         end if
                         inputchar += 1
@@ -1275,6 +1331,12 @@ module scanner
                         if inputline (inputchar) = '\n' then
                             linenum += 1
                         end if
+                        if inputline (inputchar) = '\r' then
+                            if inputline (inputchar + 1) = '\n' then
+                                inputchar += 1
+                            end if
+                            linenum += 1
+                        end if
                         inputchar += 1
                         fail := false
                         exit when not repeated
@@ -1288,6 +1350,12 @@ module scanner
                         if inputline (inputchar) = '\n' then
                             linenum += 1
                         end if
+                        if inputline (inputchar) = '\r' then
+                            if inputline (inputchar + 1) = '\n' then
+                                inputchar += 1
+                            end if
+                            linenum += 1
+                        end if
                         inputchar += 1
                         fail := false
                         exit when not repeated
@@ -1299,6 +1367,12 @@ module scanner
                     loop
                         exit when charset.specialP (inputline (inputchar)) or inputline (inputchar) = EOS
                         if inputline (inputchar) = '\n' then
+                            linenum += 1
+                        end if
+                        if inputline (inputchar) = '\r' then
+                            if inputline (inputchar + 1) = '\n' then
+                                inputchar += 1
+                            end if
                             linenum += 1
                         end if
                         inputchar += 1
@@ -1332,6 +1406,12 @@ module scanner
                     loop
                         exit when inputline (inputchar) = '\t' or inputline (inputchar) = EOS
                         if inputline (inputchar) = '\n' then
+                            linenum += 1
+                        end if
+                        if inputline (inputchar) = '\r' then
+                            if inputline (inputchar + 1) = '\n' then
+                                inputchar += 1
+                            end if
                             linenum += 1
                         end if
                         inputchar += 1
@@ -1466,6 +1546,12 @@ module scanner
                         if inputline (inputchar) = '\n' then
                             linenum += 1
                         end if
+                        if inputline (inputchar) = '\r' then
+                            if inputline (inputchar + 1) = '\n' then
+                                inputchar += 1
+                            end if
+                            linenum += 1
+                        end if
                         inputchar += 1
 
                         fail := false
@@ -1528,6 +1614,12 @@ module scanner
                         % Otherwise we found at least one - remember and accept it
                         exit when inputline (inputchar) = EOS
                         if inputline (inputchar) = '\n' then
+                            linenum += 1
+                        end if
+                        if inputline (inputchar) = '\r' then
+                            if inputline (inputchar + 1) = '\n' then
+                                inputchar += 1
+                            end if
                             linenum += 1
                         end if
                         inputchar += 1
@@ -1613,6 +1705,12 @@ module scanner
                         if inputline (inputchar) = '\n' then
                             linenum += 1
                         end if
+                        if inputline (inputchar) = '\r' then
+                            if inputline (inputchar + 1) = '\n' then
+                                inputchar += 1
+                            end if
+                            linenum += 1
+                        end if
                         inputchar += 1
                         fail := false
                         exit when not repeated
@@ -1626,6 +1724,12 @@ module scanner
                     loop
                         exit when ord (inputline (inputchar)) not= pat
                         if inputline (inputchar) = '\n' then
+                            linenum += 1
+                        end if
+                        if inputline (inputchar) = '\r' then
+                            if inputline (inputchar + 1) = '\n' then
+                                inputchar += 1
+                            end if
                             linenum += 1
                         end if
                         inputchar += 1
@@ -1779,6 +1883,7 @@ module scanner
                             and not options.option (charinput_p) then   % don't trim or indent raw comments - JRC 11.6.99
                         loop
                             exit when (not charset.spaceP (inputline (inputchar))) or inputline (inputchar) = '\n'
+                                or inputline (inputchar) = '\r'
                             inputchar += 1
                         end loop
                         indent :=  "   "
@@ -2833,6 +2938,12 @@ module scanner
                 token := ident.install (type (string, inputline) (inputchar), kindT.literal)
                 rawtoken := token
                 if inputline (inputchar) = '\n' then
+                    linenum += 1
+                end if
+                if inputline (inputchar) = '\r' then
+                    if inputline (inputchar + 1) = '\n' then
+                        inputchar += 1
+                    end if
                     linenum += 1
                 end if
                 inputchar += 1
