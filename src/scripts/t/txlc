@@ -86,7 +86,7 @@ fi
 $TXLLIB/txlcvt.x $TXLNAME.ctxl
 
 # Compile and link with TXLVM
-$CC -O -o $TXLNAME.x $TXLLIB/txlvm.o ${TXLNAME}_TXL.c 
+$CC -O -w -o $TXLNAME.x $TXLLIB/txlvm.o ${TXLNAME}_TXL.c 
 
 # Clean up
 /bin/rm -f $TXLNAME.ctxl Txl/$TXLNAME.ctxl txl/$TXLNAME.ctxl ${TXLNAME}_TXL.* 2> /dev/null
@@ -94,4 +94,4 @@ $CC -O -o $TXLNAME.x $TXLLIB/txlvm.o ${TXLNAME}_TXL.c
 # Finish clean
 exit 0
 
-# Revised 22.7.22
+# Revised 25.4.24
