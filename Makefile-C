@@ -11,7 +11,7 @@
 
 # Rev v11.1, Jan 2023
 
-TPCFLAGS = -O 
+TPCFLAGS = -O
 
 TXLSRCS = src/boot.i src/bootgrm.i src/charset.i src/errormsg.i src/errors.i src/globals.i src/ident.i \
 	  src/limits.i src/locale.i src/options.i src/rules.i src/scan.i src/shared.i src/symbols.i \
