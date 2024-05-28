@@ -59,7 +59,7 @@ if [ "$DEFAULT" != "true" ]
 then
     for i in $TXLBIN/txlc $TXLBIN/txlp
     do
-        $SED "s;/usr/local/lib/txl;$TXLLIB;" < $i > $i.temp
+        $SED -e "s;/usr/local/lib/txl;$TXLLIB;" -e "s;/usr/local/bin;$TXLBIN;" < $i > $i.temp
         /bin/mv $i.temp $i
         chmod 0755 $i
     done

@@ -1717,7 +1717,7 @@ body module ruleCompiler
                 symbolIndex := symbol.findSymbol (r.skipName)
         
                 % How about a third one?
-                skippingNameT := txltree.optSkippingNameT (optSkippingTP, 2)
+                skippingNameT := txltree.optSkippingNameT (optSkippingTP, 3)
                 if skippingNameT not= NOT_FOUND then
                     rule.setSkipName (ruleIndex, skippingNameT)
                     % Check that the skipped production has been defined
