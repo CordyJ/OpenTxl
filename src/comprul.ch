@@ -1012,14 +1012,14 @@ body module ruleCompiler
             if skippingNameT not= NOT_FOUND then
                 rule.setPartSkipName (partIndex, skippingNameT)
                 % Check that the skipped production has been defined
-                symbolIndex := symbol.findSymbol (rule.ruleParts (partIndex).skipName)
+                symbolIndex := symbol.findSymbol (rule.ruleParts (partIndex).skipName2)
 
                 % How about a third one?
                 skippingNameT := txltree.optSkippingNameT (optSkippingTP, 3)
                 if skippingNameT not= NOT_FOUND then
                     rule.setPartSkipName (partIndex, skippingNameT)
                     % Check that the skipped production has been defined
-                    symbolIndex := symbol.findSymbol (rule.ruleParts (partIndex).skipName)
+                    symbolIndex := symbol.findSymbol (rule.ruleParts (partIndex).skipName3)
                 end if
 
             else
