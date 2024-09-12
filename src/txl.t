@@ -50,12 +50,13 @@
 %       Fixed minor memory leaks
 %       Fixed serious bug in skipping rules
 %       Fixed problems with single user installation
+%       Increased parse cycle and left recursion depth limits
 
 % Global symbols granted to child modules
 include "globals.i"
 
 % TXL version
-const * version := "OpenTxl v11.3.5 (29.5.24) (c) 2024 James R. Cordy and others"
+const * version := "OpenTxl v11.3.6 (12.9.24) (c) 2024 James R. Cordy and others"
 
 % Phase
 const * INITIALIZE := 0
