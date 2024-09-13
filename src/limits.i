@@ -29,8 +29,6 @@
 
 % v11.2 Changed stack limit message to only when verbose_p
 
-% v11.3 Increased parse cycle and recursion depth limits
-
 
 % Turing+ Limits
 
@@ -121,14 +119,14 @@ const * maxParseDepth := maxLines
 
 % Maximum parsing depth without an accept before infinite recursion checking
 % takes effect
-const * maxBlindParseDepth := 32
+const * maxBlindParseDepth := 10
 
 % Maximum recursion levels before we assume it is infinite
-const * maxLeftRecursion := 32
+const * maxLeftRecursion := 10
 
 % Maximum parsing cycles in any parse
 % Normally should allow for the length of the whole input file
-const * maxParseCycles := min (20000000 + 100 * maxTokens, 2000000000)
+const * maxParseCycles := min (1000000 + 100 * maxTokens, 500000000)
 
 % Maximum number of alternatives in a choice or elements in a sequence
 const * maxDefineKids := 65535  % nat2
