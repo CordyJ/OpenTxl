@@ -365,7 +365,7 @@ module options
 
         elsif optionchar = 't' and optionchar2 = ' ' then
             % -t
-            option (nolimit_p) := true
+            option (nolimit_p) := setting
 
         elsif optionchar = 'c' and optionchar2 = 'h' then
             % -ch[ar]
