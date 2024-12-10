@@ -29,7 +29,6 @@
 %       Retired old ".Txl" and ".Grm" source file conventions 
 
 % v11.3 Add -p[rogress] virtual option (information messages), default to -q[uiet]
-%       Add -t option, umlimit parse and transform time
 
 
 % TXL option flags
@@ -68,8 +67,7 @@ const * newline_p := 34
 const * case_p := 35
 const * multiline_p := 36
 const * nlcomments_p := 37
-const * nolimit_p := 38
-const * lastOption := 38
+const * lastOption := 37
 
 % TXL program exit code
 var exitcode := 0
@@ -240,7 +238,6 @@ module options
             put : 0, "  -tabnl           [TAB_nn] may force line wrap (default no)"
             put : 0, "  -xml             Output as XML parse tree"
             put : 0, "  -s <size>        Expand TXL tree space memory to <size> Mb (default 32)"
-            put : 0, "  -t               Unlimit parse time"
             put : 0, "  -analyze         Analyze grammar and rule set for ambiguities (slow)"
             put : 0, "  -u               Show TXL tree space memory usage statistics"
             put : 0, "  -o <file>        Write output to <file> (default standard output)"
@@ -363,10 +360,6 @@ module options
             option (charinput_p) := not setting
             option (raw_p) := option (charinput_p)
 
-        elsif optionchar = 't' and optionchar2 = ' ' then
-            % -t
-            option (nolimit_p) := true
-
         elsif optionchar = 'c' and optionchar2 = 'h' then
             % -ch[ar]
             option (charinput_p) := setting
@@ -425,10 +418,6 @@ module options
             % -tx[l]
             option (txl_p) := setting
 
-        elsif optionchar = 't' and optionchar2 = ' ' then
-            % -t
-            option (nolimit_p) := setting
-
         elsif optionchar = 'i' and optionchar2 = 'n' then
             % -in[dent] <indentwidth>
             argnum += 1
@@ -445,7 +434,7 @@ module options
                 option (indent_p) := setting
             end if
 
-        elsif optionchar = 'u' and optionchar2 = 'p' then
+        elsif optionchar = 'u' and optionchar2 = 'u' then
             % -up[percase]
             option (upper_p) := setting
 

@@ -25,9 +25,10 @@
 % Modification Log
 
 % v11.0 Initial revision, revised from FreeTXL 10.8b (c) 1988-2022 Queen's University at Kingston
+
 % v11.1 Added new predifined function [faccess]
+
 % v11.2 Added new shallow extract [^/]
-% v11.3 Fixed handling of escape chars in longstrings
 
 module predefs
     import 
@@ -149,8 +150,7 @@ module predefs
                 var len := length (text)
                 loop
                     exit when ix > len
-                    if type (longstring, text) (ix) = escapeChar and ix < len 
-                            and (type (longstring, text) (ix+1) = quoteChar or type (longstring, text) (ix+1) = escapeChar) then
+                    if type (longstring, text) (ix) = escapeChar and ix < len and type (longstring, text) (ix+1) = quoteChar then
                         for i : ix + 1 .. len + 1       % (sic!)
                             type (longstring, text) (i-1) := type (longstring, text) (i)
                         end for
@@ -183,7 +183,7 @@ module predefs
                 loop
                     exit when len = maxLineLength - 2
                     exit when ix > len
-                    if type (longstring, text) (ix) = quoteChar or type (longstring, text) (ix) = escapeChar then
+                    if type (longstring, text) (ix) = quoteChar then
                         for decreasing i : len + 1 .. ix        % (sic!)
                             type (longstring, text) (i+1) := type (longstring, text) (i)
                         end for
