@@ -26,8 +26,8 @@
 % Modification Log
 
 % v11.0 Initial revision, revised from FreeTXL 10.8b (c) 1988-2022 Queen's University at Kingston
-
 % v11.2 Changed stack limit message to only when verbose_p
+% v11.3 Added handling of nolimit parse time option
 
 
 % Turing+ Limits
@@ -126,7 +126,11 @@ const * maxLeftRecursion := 10
 
 % Maximum parsing cycles in any parse
 % Normally should allow for the length of the whole input file
-const * maxParseCycles := min (1000000 + 100 * maxTokens, 500000000)
+var vmaxParseCycles :=  min (1000000 + 100 * maxTokens, 500000000)
+if options.option (nolimit_p) then
+    vmaxParseCycles := 2000000000   % almost 2**31 - 1
+end if
+const * maxParseCycles := vmaxParseCycles
 
 % Maximum number of alternatives in a choice or elements in a sequence
 const * maxDefineKids := 65535  % nat2
