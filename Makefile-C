@@ -32,12 +32,13 @@ all :
 	$(MAKE) -f Makefile-C clean
 	$(MAKE) -f Makefile-C C TPCFLAGS="-w -O -DLATIN1 -DUNICODE -mUNIX64" 
 	cp src/makefiles/c/Makefile csrc/Makefile
+	cp src/makefiles/c/Makefile-WIN csrc/Makefile-WIN
 	cp src/readmes/c/README.txt csrc/README.txt
 	cp LICENSE.txt csrc/LICENSE.txt
-	mkdir csrc/bin
-	cp src/scripts/c/* csrc/bin
-	mkdir csrc/distrib
-	cp -r src/distrib/c/* csrc/distrib
+	mkdir csrc/scripts
+	cp -r src/scripts/c/* csrc/scripts
+	mkdir csrc/installers
+	cp -r src/installers/c/* csrc/installers
 	cp -r -P test csrc/test
 
 C : csrc csrc/txl.c csrc/parse.c csrc/xform.c ${OBJS} csrc/xformdb.c csrc/txlsa.c csrc/loadsa.c csrc/parsa.c \

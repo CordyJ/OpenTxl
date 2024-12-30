@@ -1,0 +1,216 @@
+# OpenTXL Version 11 production build process for Windows 10\11
+# J.R. Cordy, December 2024
+
+# Copyright 2024, James R. Cordy and others
+
+# Rev v11.3, Dec 2024
+
+# This process builds the production unchecked auto-translated C version 
+# of the Txl-11 compiler\interpreter and command line tools
+
+# WARNING: DO NOT RAISE THE C COMPILER OPTIMIZATION LEVEL ABOVE THE DEFAULT (-O) 
+# when compiling TXL. TXL is a sufficiently strange program as to cause 
+# most optimizing C compilers to generate incorrect code for it, or at 
+# the very least to slow it down severely, at higher levels of optimization.
+
+# Kind of signals (interrupt handlers) supported by your operating system.
+# SIGTYPE=BSD  means Berkeley (BSD) signals, e.g. Linux, MacOS, Cygwin, MinGW, etc.
+# SIGTYPE=SYS5 means System V (POSIX) signals, e.g. Solaris, IRIX, etc.
+# SIGTYPE=NONE means no signal handling available at all.
+
+SIGTYPE = NONE
+
+# Windows localization
+OS = Windows
+MESSAGE = Making TXL on Windows using MSVC and BSD signal handling
+CC = cl
+LD = lib
+CFLAGS = /nologo /w /c /I . /O1 /Ob0 /J /F 8388608 /DWIN # /DCHECKED  
+LDFLAGS = /F 8388608 
+RLFLAGS = 
+LDLIBS = 
+EXE = .exe
+
+# Object groups
+
+COMPILEOBJS = objs\comprul.obj objs\compdef.obj 
+
+COMMONOBJS = objs\locale.obj
+
+OBJS = $(COMPILEOBJS) $(COMMONOBJS) 
+
+TLOBJS = objs\TLS.obj objs\TLI.obj
+
+# Main 
+
+all : message alltxls distrib
+
+message:
+	@echo ""
+	@echo $(MESSAGE)
+	@echo ""
+
+alltxls : thetxl thetxldb thetxlpf thetxlvm thetxlcvt thetxlapr 
+
+# Regular versions
+
+thetxl : bin objs objs\main.obj objs\txl.obj objs\xform.obj objs\parse.obj objs\loadstor.obj $(OBJS) $(TLOBJS) 
+	$(CC) $(LDFLAGS) objs\main.obj objs\txl.obj objs\xform.obj objs\parse.obj objs\loadstor.obj \
+	    $(OBJS) $(TLOBJS) $(LDLIBS)
+	move main.exe bin\txl.exe 
+	copy scripts\windows\*.bat bin
+
+thetxldb : bin objs objs\main.obj objs\txl.obj objs\xformdb.obj objs\parse.obj objs\loadstor.obj $(OBJS) $(TLOBJS) 
+	$(CC) $(LDFLAGS) objs\main.obj objs\txl.obj objs\xformdb.obj objs\parse.obj objs\loadstor.obj \
+	    $(OBJS) $(TLOBJS) $(LDLIBS)
+	move main.exe bin\txldb.exe 
+
+thetxlpf : lib objs objs\main.obj objs\txl.obj objs\xformpf.obj objs\parsepf.obj objs\loadstor.obj $(OBJS) $(TLOBJS)
+	$(CC) $(LDFLAGS) objs\main.obj objs\txl.obj objs\xformpf.obj objs\parsepf.obj objs\loadstor.obj \
+	    $(OBJS) $(TLOBJS) $(LDLIBS)
+	move main.exe lib\txlpf.exe
+
+thetxlvm : lib objs objs\main.obj objs\txlsa.obj objs\xform.obj objs\loadsa.obj objs\parsa.obj $(COMMONOBJS) $(TLOBJS) 
+	$(LD) $(RLFLAGS) /out:txlvm.obj objs\txlsa.obj objs\xform.obj objs\loadsa.obj objs\parsa.obj \
+	    $(COMMONOBJS) $(TLOBJS)
+	move txlvm.obj lib\txlvm.obj
+	copy objs\main.obj lib\txlmain.obj
+
+thetxlcvt : lib objs objs\main.obj objs\txlcvt.obj
+	$(CC) $(LDFLAGS) objs\main.obj objs\txlcvt.obj $(TLOBJS) $(LDLIBS)
+	move main.exe lib\txlcvt.exe
+
+thetxlapr : lib objs objs\main.obj objs\txlapr.obj
+	$(CC) $(LDFLAGS) objs\main.obj objs\txlapr.obj $(TLOBJS) $(LDLIBS)
+	move main.exe lib\txlapr.exe
+
+objs\main.obj : tpluslib\TL.h UNIX main.c 
+	$(CC) $(CFLAGS) -D$(SIGTYPE) main.c
+	move main.obj objs\main.obj
+
+objs\comprul.obj : UNIX comprul.c 
+	$(CC) $(CFLAGS) comprul.c
+	move comprul.obj objs\comprul.obj
+
+objs\compdef.obj : UNIX compdef.c 
+	$(CC) $(CFLAGS) compdef.c
+	move compdef.obj objs\compdef.obj
+
+objs\loadstor.obj : UNIX loadstor.c 
+	$(CC) $(CFLAGS) loadstor.c
+	move loadstor.obj objs\loadstor.obj
+
+objs\ident.obj : UNIX ident.c 
+	$(CC) $(CFLAGS) ident.c
+	move ident.obj objs\ident.obj
+
+objs\scan.obj : UNIX scan.c 
+	$(CC) $(CFLAGS) scan.c
+	move scan.obj objs\scan.obj
+
+objs\parse.obj : UNIX parse.c 
+	$(CC) $(CFLAGS) parse.c
+	move parse.obj objs\parse.obj
+
+objs\parsepf.obj : UNIX parsepf.c 
+	$(CC) $(CFLAGS) parsepf.c
+	move parsepf.obj objs\parsepf.obj
+
+objs\txl.obj : UNIX txl.c 
+	$(CC) $(CFLAGS) txl.c
+	move txl.obj objs\txl.obj
+
+objs\xform.obj : UNIX xform.c 
+	$(CC) $(CFLAGS) xform.c
+	move xform.obj objs\xform.obj
+
+objs\xformpf.obj : UNIX xformpf.c 
+	$(CC) $(CFLAGS) xformpf.c
+	move xformpf.obj objs\xformpf.obj
+
+objs\xformdb.obj : UNIX xformdb.c 
+	$(CC) $(CFLAGS) xformdb.c
+	move xformdb.obj objs\xformdb.obj
+
+objs\TLS.obj : UNIX tpluslib\TLS.c
+	$(CC) $(CFLAGS) tpluslib\TLS.c
+	move TLS.obj objs\TLS.obj
+
+objs\TLI.obj : UNIX tpluslib\TLI.c 
+	$(CC) $(CFLAGS) tpluslib\TLI.c
+	move TLI.obj objs\TLI.obj
+
+objs\locale.obj : UNIX locale.c
+	$(CC) $(CFLAGS) locale.c
+	move locale.obj objs\locale.obj
+
+objs\txlsa.obj : UNIX txlsa.c
+	$(CC) $(CFLAGS) txlsa.c
+	move txlsa.obj objs\txlsa.obj
+	
+objs\loadsa.obj : UNIX loadsa.c
+	$(CC) $(CFLAGS) loadsa.c
+	move loadsa.obj objs\loadsa.obj
+
+objs\parsa.obj : UNIX parsa.c 
+	$(CC) $(CFLAGS) parsa.c
+	move parsa.obj objs\parsa.obj
+
+objs\txlcvt.obj : UNIX txlcvt.c
+	$(CC) $(CFLAGS) txlcvt.c
+	move txlcvt.obj objs\txlcvt.obj
+
+objs\txlapr.obj : UNIX txlapr.c
+	$(CC) $(CFLAGS) txlapr.c
+	move txlapr.obj objs\txlapr.obj
+
+UNIX : 
+	if not exist UNIX xcopy tpluslib\UNIX UNIX /E /I 
+	if not exist UNIX32 xcopy tpluslib\UNIX UNIX32 /E /I 
+	if not exist UNIX64 xcopy tpluslib\UNIX UNIX64 /E /I 
+
+# Configure for distribution
+
+distrib : bin lib opentxl
+	@echo.
+	@echo Configuring for distribution
+	@echo.
+	if exist opentxl-$(OS) rmdir /q /s opentxl-$(OS)
+	mkdir opentxl\bin
+	copy bin\* opentxl\bin
+	copy scripts\windows\* opentxl\bin
+	mkdir opentxl\lib
+	copy lib\* opentxl\lib
+	xcopy /E installers\windows\* opentxl
+	copy LICENSE.txt opentxl
+	move opentxl opentxl-$(OS)
+	tar cfz opentxl-$(OS).tar.gz opentxl-$(OS)
+	@echo.
+	@echo Distributable binary in opentxl-$(OS).tar.gz
+	@echo.
+
+# Directories
+
+objs :
+	mkdir objs
+
+bin :
+	mkdir bin
+
+lib :
+	mkdir lib
+
+opentxl :
+	mkdir opentxl
+
+clean :
+	del /f bin\*.exe  > nul 2>&1
+	del /f bin\*.bat  > nul 2>&1
+	del /f lib\*.exe  > nul 2>&1
+	del /f lib\*.obj  > nul 2>&1
+	del /f objs\*.obj > nul 2>&1
+	del /f *.pdb	  > nul 2>&1
+	if exist opentxl rmdir /q /s opentxl
+	if exist opentxl-$(OS) rmdir /q /s opentxl-$(OS)
+	if exist opentxl del /f opentxl-$(OS).tar.gz > nul 2>&1
+
