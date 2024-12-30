@@ -90,6 +90,7 @@ thetxl : bin objs objs/main.o objs/txl.o objs/xform.o objs/parse.o objs/loadstor
 	${CC} ${LDFLAGS} -o bin/txl objs/main.o objs/txl.o objs/xform.o objs/parse.o objs/loadstor.o \
 	    ${OBJS} ${TLOBJS} ${LDLIBS}
 	strip bin/txl${EXE}
+	cp scripts/unix/* bin/
 
 thetxldb : bin objs objs/main.o objs/txl.o objs/xformdb.o objs/parse.o objs/loadstor.o ${OBJS} ${TLOBJS} 
 	${CC} ${LDFLAGS} -o bin/txldb objs/main.o objs/txl.o objs/xformdb.o objs/parse.o objs/loadstor.o \
@@ -187,7 +188,8 @@ distrib : bin lib opentxl
 	@echo ""
 	cp bin/* opentxl/bin/
 	cp lib/* opentxl/lib/
-	cp -r distrib/* opentxl/
+	cp scripts/unix/* opentxl/bin/
+	cp -r installers/unix/* opentxl/
 	cp LICENSE.txt opentxl/
 	mv opentxl opentxl-$(OS)
 	tar cfz opentxl-$(OS).tar.gz opentxl-$(OS)
@@ -210,7 +212,8 @@ opentxl :
 	mkdir opentxl opentxl/bin opentxl/lib
 
 clean :
-	rm -f bin/txl${EXE} bin/txldb${EXE} lib/* objs/*.o 
+	rm -f UNIX*
+	rm -f bin/txl* objs/*.o 
 	rm -rf opentxl opentxl-* opentxl*.tar.gz 
 	cd test; make clean; cd ..
 

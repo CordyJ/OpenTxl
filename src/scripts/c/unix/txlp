@@ -26,16 +26,16 @@ PROFOPTIONS=""
 while [ "$1" != "" ]
 do
     case "$1" in
-        -help)
-                echo "Usage:  txlp [-parse] [-time] [-space] [-calls] [-cycles] [-eff] [-percall] [txloptions] inputfile [txlfile]" 1>&2
-                exit 99
-                ;;
-        -parse|-time|-space|-calls|-cycles|-eff|-percall)
-                PROFOPTIONS="$PROFOPTIONS $1"
-                ;;
-        *) 
-                break
-                ;;
+	-help)
+		echo "Usage:  txlp [-parse] [-time] [-space] [-calls] [-cycles] [-eff] [-percall] [txloptions] inputfile [txlfile]" 1>&2
+		exit 99
+		;;
+	-parse|-time|-space|-calls|-cycles|-eff|-percall)
+		PROFOPTIONS="$PROFOPTIONS $1"
+		;;
+	*) 
+		break
+		;;
     esac
     shift
 done
@@ -45,9 +45,9 @@ if [ "$1" != "" ]
 then
 if  ! $TXLLIB/txlpf.x $* > /dev/null 2> /tmp/txlp$$ 
 then
-        echo "txlp:  TXL program failed" 2>&1
-        cat /tmp/txlp$$ 2>&1
-        exit 91
+	echo "txlp:  TXL program failed" 2>&1
+	cat /tmp/txlp$$ 2>&1
+	exit 91
     fi
 #else
     # We're reanalyzing a previous profile
