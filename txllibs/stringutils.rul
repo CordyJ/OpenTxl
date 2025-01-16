@@ -1,0 +1,157 @@
+% TXL String Utilities
+% J.R. Cordy, July 2022 (Rev Jan 2025)
+
+% This library extends the [stringlit] built-in functions with the following additional functions,
+% where String, Pattern and Replacement are [stringlit]s and Number is a [number].
+%
+%   String [subst Pattern Replacement]
+%       returns a copy of String with Replacement subsituted for the first instance of Pattern in String, if any
+%
+%   String [substglobal Pattern Replacement]
+%       returns a copy of String with Replacement subsituted for every instance of Pattern in String, if any
+%
+%   String [substleft Pattern Replacement]
+%       returns a copy of String with Replacement subsituted for the instance of Pattern at the beginning of String, if any
+%
+%   String [substright Pattern Replacement]
+%       returns a copy of String with Replacement subsituted for the instance of Pattern at the end of String, if any
+%
+%   Number [count String Pattern]
+%       returns the number of instances of Pattern in String
+%
+%   Number [lastindex String Pattern]
+%       returns the index of the last instance of Pattern in String
+
+#ifndef STRINGUTILS
+
+#define STRINGUTILS
+
+% Utility string function - s/Pattern/Replacement/
+function subst Pattern [stringlit] Replacement [stringlit]
+    replace [stringlit]
+        String [stringlit]
+    construct PatternIndex [number]
+        _ [index String Pattern]
+    deconstruct not PatternIndex
+        0
+    construct PatternIndexMinus1 [number]
+        PatternIndex [- 1]
+    construct PrePattern [stringlit]
+        String [: 1 PatternIndexMinus1]
+    construct PatternIndexPlusLength [number]
+        _ [# Pattern] [+ PatternIndex]
+    construct PostPattern [stringlit]
+        String [: PatternIndexPlusLength 99999]
+    by
+        PrePattern [+ Replacement] [+ PostPattern]
+end function
+
+% Utility string function - s/Pattern/Replacement/g
+function substglobal Pattern [stringlit] Replacement [stringlit]
+    replace [stringlit]
+        String [stringlit]
+    deconstruct not Pattern
+        ""
+    construct PatternIndex [number]
+        _ [index String Pattern]
+    deconstruct not PatternIndex
+        0
+    construct PatternIndexMinus1 [number]
+        PatternIndex [- 1]
+    construct PrePattern [stringlit]
+        String [: 1 PatternIndexMinus1]
+    construct PatternIndexPlusLength [number]
+        _ [# Pattern] [+ PatternIndex]
+    construct PostPattern [stringlit]
+        String [: PatternIndexPlusLength 99999]
+          [substglobal Pattern Replacement]
+    by
+        PrePattern [+ Replacement] [+ PostPattern]
+end function
+
+% Utility string function - s/^Pattern/Replacement/
+function substleft Pattern [stringlit] Replacement [stringlit]
+    replace [stringlit]
+        String [stringlit]
+    construct PatternIndex [number]
+        _ [index String Pattern]
+    deconstruct PatternIndex
+        1
+    construct PatternLengthPlusOne [number]
+        _ [# Pattern] [+ 1]
+    construct PostPattern [stringlit]
+        String [: PatternLengthPlusOne 99999]
+    by
+        Replacement [+ PostPattern]
+end function
+
+% Utility string function - s/Pattern$/Replacement/
+function substright Pattern [stringlit] Replacement [stringlit]
+    replace [stringlit]
+        String [stringlit]
+    construct SLength [number]
+        _ [# String]
+    construct PatternLength [number]
+        _ [# Pattern]
+    construct PatternIndex [number]
+        SLength [- PatternLength] [+ 1]
+    construct STail [stringlit]
+        String [: PatternIndex 99999]
+    deconstruct STail
+        Pattern
+    construct PatternIndexMinus1 [number]
+        PatternIndex [- 1]
+    construct PrePattern [stringlit]
+        String [: 1 PatternIndexMinus1]
+    by
+        PrePattern [+ Replacement]
+end function
+
+% Utility string function - how many instances of Pattern in String?
+function count String [stringlit] Pattern [stringlit]
+    deconstruct not Pattern
+        ""
+    construct PatternIndex [number]
+        _ [index String Pattern]
+    deconstruct not PatternIndex
+        0
+    construct PatternIndexPlusOne [number]
+        PatternIndex [+ 1]
+    construct RestString [stringlit]
+        String [: PatternIndexPlusOne 99999]
+    replace [number]
+        N [number]
+    by
+        N [+ 1]
+          [count RestString Pattern]
+end function
+
+% Utility string function - index of last instance of Pattern in String
+function lastindex String [stringlit] Pattern [stringlit]
+    deconstruct not Pattern
+        ""
+    construct PatternIndex [number]
+        _ [index String Pattern]
+    deconstruct not PatternIndex
+        0
+    construct PatternIndexPlusOne [number]
+        PatternIndex [+ 1]
+    construct RestString [stringlit]
+        String [: PatternIndexPlusOne 99999]
+    replace [number]
+        N [number]
+    by
+        N [+ PatternIndex] [lastindex RestString Pattern]
+end function
+
+% Utility string function - [grep] with ^ and $ detection
+function egrep Pattern [stringlit]
+    match [stringlit]
+        String [stringlit]
+    construct EString [stringlit]
+        _ [+ "^"] [+ String] [+ "$"]
+    where
+        EString [grep Pattern]
+end function
+
+#endif STRINGUTILS
