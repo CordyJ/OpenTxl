@@ -1,0 +1,141 @@
+% TXL File Name Utilities
+% J.R. Cordy, November 2024 (Rev Jan 2025)
+
+% This library extends the [stringlit] built-in functions with the following additional functions 
+% for manipulating Unix and Windows file paths, where FilePath is a [stringlit].
+% 
+%   FilePath [filename]
+%       returns the last element of the file path, e.g., "z.w" of "/x/y/z.w"
+%   
+%   FilePath [filedir]
+%       returns the directory containing the last element of the file path, e.g., "/x/y" of "/x/y/z.w"
+%   
+%   FilePath [filerootname]
+%       returns the root name of the last element of the file path, e.g., "z" of "/x/y/z.w"
+%   
+%   FilePath [filetype]
+%       returns the file type extension of the last element of the file path, e.g., "w" of "/x/y/z.w"
+%   
+%   FilePath [filereverse]
+%       returns the file path in reverse order, e.g., "z.w/y/x/" for "/x/y/z.w"
+
+#ifndef FILENAMEUTILS
+
+include "stringutils.rul"
+
+#define FILENAMEUTILS
+
+% Utility file name function - /x/y/z.w => z.w
+function filename
+    replace [stringlit]
+        FilePath [stringlit]
+    by
+        FilePath [_removePath]
+end function
+
+function _removePath
+    replace [stringlit]
+        FilePath [stringlit]
+    construct Backslash [stringlit]
+        _ [+ "\\"] [: 1 1]
+    construct LastSlashIndex [number]
+        _ [lastindex FilePath "/"] [lastindex FilePath Backslash]
+    deconstruct not LastSlashIndex
+        0
+    construct LastSlashIndexPlus1 [number]
+        LastSlashIndex [+ 1]
+    by
+        FilePath [: LastSlashIndexPlus1 999]
+end function
+
+% Utility file name function - /x/y/z.w => /x/y
+function filedir
+    replace [stringlit]
+        FilePath [stringlit]
+    construct FilePathDirSlash [stringlit]
+        FilePath [_defaultDir] [_removeName]
+    construct Length [number]
+        _ [# FilePathDirSlash]
+    construct LengthMinus1 [number]
+        Length [- 1]
+    by
+        FilePathDirSlash [: 1 LengthMinus1]
+end function
+
+function _defaultDir
+    replace [stringlit]
+        FilePath [stringlit]
+    construct Backslash [stringlit]
+        _ [+ "\\"] [: 1 1]
+    where not
+        FilePath [grep "/"] [grep Backslash]
+    by
+        _ [+ "./"] [+ FilePath]
+end function
+
+function _removeName
+    replace [stringlit]
+        FilePath [stringlit]
+    construct Backslash [stringlit]
+        _ [+ "\\"] [: 1 1]
+    construct LastSlashIndex [number]
+        _ [lastindex FilePath "/"] [lastindex FilePath Backslash]
+    deconstruct not LastSlashIndex
+        0
+    construct Length [number]
+        _ [# FilePath]
+    deconstruct not LastSlashIndex
+        Length
+    by
+        FilePath [: 1 LastSlashIndex]
+end function
+
+% Utility filename function - /x/y/z.w => z
+function filerootname
+    replace [stringlit]
+        FilePath [stringlit]
+    construct FileName [stringlit]
+        FilePath [filename]
+    construct DotIndex [number]
+        _ [lastindex FileName "."] 
+    deconstruct not DotIndex
+        0
+    construct DotIndexMinus1 [number]
+        DotIndex [- 1]
+    by
+        FileName [: 1 DotIndexMinus1]
+end function
+
+% Utility filename function - /x/y/z.w => w
+function filetype
+    replace [stringlit]
+        FilePath [stringlit]
+    construct FileName [stringlit]
+        FilePath [filename]
+    construct DotIndex [number]
+        _ [lastindex FileName "."]
+    construct DotIndexPlus1 [number]
+        DotIndex [+ 1]
+    by
+        FileName [: DotIndexPlus1 999]
+end function
+
+% Utility filename function - /x/y/z.w => z.w/y/x/
+function filereverse
+    replace [stringlit]
+        FilePath [stringlit]
+    construct Backslash [stringlit]
+        _ [+ "\\"] [: 1 1]
+    where
+        FilePath [grep "/"] [grep Backslash]
+    construct FileName [stringlit]
+        FilePath [filename]         % z.w
+    construct FileDir [stringlit]
+        FilePath [filedir]          % /x/y
+    construct FileReverse [stringlit]
+        FileDir [filereverse]
+    by
+        FileName [+ "/"] [+ FileReverse] 
+end function
+
+#endif
