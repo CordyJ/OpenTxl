@@ -359,7 +359,9 @@ module debugger
 
         case kind of
             label DBkind.startup :
-                dbhelp
+                if not options.option (quiet_p) then
+                    dbhelp
+                end if
 
             label DBkind.shutdown :
                 put : 0, "  Exiting TXL program"
