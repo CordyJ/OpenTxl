@@ -381,11 +381,8 @@ body module LoadStore
         nbytes := 0
         for i : 1 .. rule.nRules
             bind var r to ruleT@(addr(rule.rules (i)))
-            write : tf, r.name, r.target, r.patternTP, r.replacementTP, r.kind, 
+            write : tf, r.name, r.target, r.skipName, r.skipName2, r.skipName3, r.patternTP, r.replacementTP, r.kind, 
                 r.starred, r.isCondition, r.defined, r.called, r.skipRepeat
-            for sn : 1 .. maxSkipNames
-                write : tf, r.skipName (sn)
-            end for
             write : tf, r.prePattern.nparts
             for pp : 1 .. r.prePattern.nparts
                 write : tf, rule.ruleParts (r.prePattern.partsBase + pp) : size (partDescriptor)
@@ -633,11 +630,9 @@ body module LoadStore
         read : tf, int@(addr(rule.nRules))
         for i : 1 .. rule.nRules
             bind var r to ruleT@(addr(rule.rules (i)))
-            read : tf, r.name, r.target, r.patternTP, r.replacementTP, r.kind, 
+            read : tf, r.name, r.target, r.skipName, r.skipName2, r.skipName3, 
+                r.patternTP, r.replacementTP, r.kind, 
                 r.starred, r.isCondition, r.defined, r.called, r.skipRepeat
-            for sn : 1 .. maxSkipNames
-                read : tf, r.skipName (sn)
-            end for
             r.prePattern.partsBase := rule.rulePartCount
             read : tf, r.prePattern.nparts
             for pp : 1 .. r.prePattern.nparts
@@ -912,6 +907,9 @@ body module LoadStore
             bind var r to ruleT@(addr(rule.rules (i)))
             ctxlgetbytes (addr (r.name), size (tokenT))
             ctxlgetbytes (addr (r.target), size (tokenT))
+            ctxlgetbytes (addr (r.skipName), size (tokenT))
+            ctxlgetbytes (addr (r.skipName2), size (tokenT))
+            ctxlgetbytes (addr (r.skipName3), size (tokenT))
             ctxlgetint (addr (r.patternTP))
             ctxlgetint (addr (r.replacementTP))
             ctxlgetbytes (addr (r.kind), size (ruleKind))
@@ -921,9 +919,6 @@ body module LoadStore
             ctxlgetboolean (addr (r.called))
             ctxlgetboolean (addr (r.skipRepeat))
             r.prePattern.partsBase := rule.rulePartCount
-            for sn : 1 .. maxSkipNames
-                ctxlgetbytes (addr (r.skipName (sn)), size (tokenT))
-            end for
             ctxlgetnat2 (addr (r.prePattern.nparts))
             for pp : 1 .. r.prePattern.nparts
                 ctxlgetbytes (addr (rule.ruleParts (r.prePattern.partsBase + pp)), size (partDescriptor))

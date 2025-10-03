@@ -996,31 +996,35 @@ body module ruleCompiler
         % process skipping
         const optSkippingTP := txltree.deconstruct_optSkippingTP (deconstructTP)
 
-        % Now up to six of them allowed
-        for s : 1 .. maxSkipNames
-            rule.setPartSkipName (partIndex, NOT_FOUND)
-        end for
+        % Now up to three of them allowed
+        rule.setPartSkipName (partIndex, NOT_FOUND)
+        rule.setPartSkipName (partIndex, NOT_FOUND)
+        rule.setPartSkipName (partIndex, NOT_FOUND)
 
         if not tree.plural_emptyP (optSkippingTP) then
             var skippingNameT := txltree.optSkippingNameT (optSkippingTP, 1)
             rule.setPartSkipName (partIndex, skippingNameT)
             % Check that the skipped production has been defined
-            var symbolIndex := symbol.findSymbol (rule.ruleParts (partIndex).skipName (1))
+            var symbolIndex := symbol.findSymbol (rule.ruleParts (partIndex).skipName)
 
-            % Are there more?
+            % Is there a second one?
             skippingNameT := txltree.optSkippingNameT (optSkippingTP, 2)
             if skippingNameT not= NOT_FOUND then
-                for s : 2 .. maxSkipNames
-                    skippingNameT := txltree.optSkippingNameT (optSkippingTP, s)
-                    exit when skippingNameT = NOT_FOUND
+                rule.setPartSkipName (partIndex, skippingNameT)
+                % Check that the skipped production has been defined
+                symbolIndex := symbol.findSymbol (rule.ruleParts (partIndex).skipName2)
+
+                % How about a third one?
+                skippingNameT := txltree.optSkippingNameT (optSkippingTP, 3)
+                if skippingNameT not= NOT_FOUND then
                     rule.setPartSkipName (partIndex, skippingNameT)
                     % Check that the skipped production has been defined
-                    symbolIndex := symbol.findSymbol (rule.ruleParts (partIndex).skipName (s))
-                end for
+                    symbolIndex := symbol.findSymbol (rule.ruleParts (partIndex).skipName3)
+                end if
 
             else
                 % Only one - check for optimizable case
-                if rule.ruleParts (partIndex).skipName (1) = targetT
+                if rule.ruleParts (partIndex).skipName = targetT
                         and tree_ops.isListOrRepeatType (rule.ruleLocals (localVars.localBase + localIndex).typename)
                         and targetT = tree_ops.listOrRepeatBaseType (rule.ruleLocals (localVars.localBase + localIndex).typename) then
                     % skipping [X] deconstruct * [X] V [repeat/list X]
@@ -1694,31 +1698,35 @@ body module ruleCompiler
         % process skipping
         var optSkippingTP := txltree.rule_optSkippingTP (ruleTP)
 
-        % Now up to six of them allowed
-        for s : 1 .. maxSkipNames
-            rule.setSkipName (ruleIndex, NOT_FOUND)
-        end for
+        % Now up to three of them allowed
+        rule.setSkipName (ruleIndex, NOT_FOUND)
+        rule.setSkipName (ruleIndex, NOT_FOUND)
+        rule.setSkipName (ruleIndex, NOT_FOUND)
         
         if not tree.plural_emptyP (optSkippingTP) then
             var skippingNameT := txltree.optSkippingNameT (optSkippingTP, 1)
             rule.setSkipName (ruleIndex, skippingNameT)
             % Check that the skipped production has been defined
-            symbolIndex := symbol.findSymbol (r.skipName (1))
+            symbolIndex := symbol.findSymbol (r.skipName)
         
-            % Are there more?
+            % Is there a second one? 
             skippingNameT := txltree.optSkippingNameT (optSkippingTP, 2)
             if skippingNameT not= NOT_FOUND then
-                for s : 2 .. maxSkipNames
-                    skippingNameT := txltree.optSkippingNameT (optSkippingTP, s)
-                    exit when skippingNameT = NOT_FOUND
+                rule.setSkipName (ruleIndex, skippingNameT)
+                % Check that the skipped production has been defined
+                symbolIndex := symbol.findSymbol (r.skipName)
+        
+                % How about a third one?
+                skippingNameT := txltree.optSkippingNameT (optSkippingTP, 3)
+                if skippingNameT not= NOT_FOUND then
                     rule.setSkipName (ruleIndex, skippingNameT)
                     % Check that the skipped production has been defined
-                    symbolIndex := symbol.findSymbol (r.skipName (s))
-                end for
+                    symbolIndex := symbol.findSymbol (r.skipName)
+                end if
 
             else
                 % Check for optimizable case
-                if r.skipName (1) = r.target then
+                if r.skipName = r.target then
                     % skipping [X] match/replace * [X]
                     % potentially optimizable if all scopes are [repeat/list X]
                     rule.setSkipRepeat (ruleIndex, true)
