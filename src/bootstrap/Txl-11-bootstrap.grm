@@ -1,5 +1,5 @@
 % OpenTxl Version 11 bootstrap grammar
-% J.R. Cordy, July 2022
+% J.R. Cordy, July 2022 (Rev. Oct 2025)
 
 % Copyright 2022, James R. Cordy and others
 
@@ -219,6 +219,9 @@ end define
 
 define TXL_skippingBracketedDescription_
         'skipping [TXL_bracketedDescription_]
+            [TXL_optBracketedDescription_]
+            [TXL_optBracketedDescription_]
+            [TXL_optBracketedDescription_]
             [TXL_optBracketedDescription_]
             [TXL_optBracketedDescription_]
 end define

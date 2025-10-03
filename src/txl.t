@@ -53,12 +53,13 @@
 %       Fixed handling of escape chars in predefined functions
 %       Added nolimit parse time option -t
 %       Add scripts, makefiles and build support for Windows command line
+%       Extend and optimize skipping clauses
 
 % Global symbols granted to child modules
 include "globals.i"
 
 % TXL version
-const * version := "OpenTxl v11.3.6 (20.12.24) (c) 2024 James R. Cordy and others"
+const * version := "OpenTxl v11.3.7 (2.10.25) (c) 2025 James R. Cordy and others"
 
 % Phase
 const * INITIALIZE := 0
