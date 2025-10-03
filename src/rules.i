@@ -38,6 +38,7 @@
 
 % The TXL Rule Table
 
+const * maxSkipNames := 6
 const * maxTotalParameters := maxRules * avgParameters
 const * maxTotalLocals := maxTotalParameters + maxRules * avgLocalVars
 
@@ -73,9 +74,7 @@ record
     nameRef : nat2      % 0 .. maxLocalVars
     globalRef : nat2    % 0 .. maxLocalVars
     target : tokenT
-    skipName : tokenT
-    skipName2 : tokenT
-    skipName3 : tokenT
+    skipName : array 1 .. maxSkipNames of tokenT
     replacementTP : treePT
     patternTP : treePT
     starred, negated, anded, skipRepeat : boolean
@@ -113,9 +112,7 @@ type * ruleT :
         localVars : localsListT
         calledRules : callsListT
         target : tokenT
-        skipName : tokenT
-        skipName2 : tokenT
-        skipName3 : tokenT
+        skipName : array 1 .. maxSkipNames of tokenT
         prePattern : partsListT
         patternTP : treePT
         postPattern : partsListT
@@ -316,9 +313,9 @@ module rule
         r.calledRules.ncalls := 0
         r.calledRules.callBase := ruleCallCount
         r.target := NOT_FOUND 
-        r.skipName := NOT_FOUND 
-        r.skipName2 := NOT_FOUND 
-        r.skipName3 := NOT_FOUND 
+        for s : 1 .. maxSkipNames
+            r.skipName (s) := NOT_FOUND 
+        end for
         r.prePattern.nparts := 0
         r.prePattern.partsBase := rulePartCount
         r.postPattern.nparts := 0
@@ -520,12 +517,18 @@ module rule
     end setPostPatternNParts
 
     procedure setSkipName (ruleIndex : int, name : tokenT)
-        if rules (ruleIndex).skipName = NOT_FOUND then
-            rules (ruleIndex).skipName := name
-        elsif rules (ruleIndex).skipName2 = NOT_FOUND then
-            rules (ruleIndex).skipName2 := name
+        if rules (ruleIndex).skipName (1) = NOT_FOUND then
+            rules (ruleIndex).skipName (1) := name
+        elsif rules (ruleIndex).skipName (2) = NOT_FOUND then
+            rules (ruleIndex).skipName (2) := name
+        elsif rules (ruleIndex).skipName (3) = NOT_FOUND then
+            rules (ruleIndex).skipName (3) := name
+        elsif rules (ruleIndex).skipName (4) = NOT_FOUND then
+            rules (ruleIndex).skipName (4) := name
+        elsif rules (ruleIndex).skipName (5) = NOT_FOUND then
+            rules (ruleIndex).skipName (5) := name
         else
-            rules (ruleIndex).skipName3 := name
+            rules (ruleIndex).skipName (6) := name
         end if
     end setSkipName
 
@@ -614,12 +617,18 @@ module rule
     end setPartStarred
 
     procedure setPartSkipName (partIndex : partsBaseT, name : tokenT)
-        if ruleParts (partIndex).skipName = NOT_FOUND then
-            ruleParts (partIndex).skipName := name
-        elsif ruleParts (partIndex).skipName2 = NOT_FOUND then
-            ruleParts (partIndex).skipName2 := name
+        if ruleParts (partIndex).skipName (1) = NOT_FOUND then
+            ruleParts (partIndex).skipName (1) := name
+        elsif ruleParts (partIndex).skipName (2) = NOT_FOUND then
+            ruleParts (partIndex).skipName (2) := name
+        elsif ruleParts (partIndex).skipName (3) = NOT_FOUND then
+            ruleParts (partIndex).skipName (3) := name
+        elsif ruleParts (partIndex).skipName (4) = NOT_FOUND then
+            ruleParts (partIndex).skipName (4) := name
+        elsif ruleParts (partIndex).skipName (5) = NOT_FOUND then
+            ruleParts (partIndex).skipName (5) := name
         else
-            ruleParts (partIndex).skipName3 := name
+            ruleParts (partIndex).skipName (6) := name
         end if
     end setPartSkipName
 
@@ -1241,9 +1250,9 @@ module rule
             pr.localVars.nlocals := 0
             pr.localVars.localBase := ruleLocalCount
             pr.target := NOT_FOUND
-            pr.skipName := NOT_FOUND
-            pr.skipName2 := NOT_FOUND
-            pr.skipName3 := NOT_FOUND
+            for s : 1 .. maxSkipNames
+                pr.skipName (s) := NOT_FOUND 
+            end for
             pr.prePattern.nparts := 0
             pr.patternTP := nilTree
             pr.postPattern.nparts := 0

@@ -425,7 +425,7 @@ body module transformer
 
     function searchTreeForDeconstructPatternSkipping (argPatternTP : treePT, 
             argTreeTP : treePT, var ruleEnvironment : ruleEnvironmentT,
-            skipName, skipName2, skipName3 : tokenT) : boolean
+            skipName : array 1 .. maxSkipNames of tokenT) : boolean
 
         % Rationale for the order of the following logic is the typical frequency
         % profile of the cases in production use at Legasys.  Here is a sample:
@@ -469,9 +469,21 @@ body module transformer
                 result true
             end if
         
-            if tree.trees (treeTP).kind >= firstLeafKind or tree.trees (treeTP).name = skipName 
-                    or tree.trees (treeTP).name = skipName2 or tree.trees (treeTP).name = skipName3 then
-                % A terminal -
+            const treeName := tree.trees (treeTP).name
+
+            if tree.trees (treeTP).kind >= firstLeafKind 
+                or treeName = skipName (1) 
+                or ( skipName (2) not= NOT_FOUND and ( treeName = skipName (2) 
+                    or ( skipName (3) not= NOT_FOUND and ( treeName = skipName (3) 
+                        or ( skipName (4) not= NOT_FOUND and ( treeName = skipName (4) 
+                            or ( skipName (5) not= NOT_FOUND and ( treeName = skipName (5) 
+                                or ( skipName (6) not= NOT_FOUND and treeName = skipName (6) )
+                            ))
+                        ))
+                    ))
+                )) then
+
+                % A terminal or skipped subtree
                 % Pop any completed sequences ...
                 loop
                     if st = searchBase then
@@ -1085,14 +1097,14 @@ body module transformer
                     const decValueTP := valueTP (ruleEnvironment.valuesBase + part.nameRef)
 
                     if part.starred then
-                        if part.skipName = NOT_FOUND then
+                        if part.skipName (1) = NOT_FOUND then
                             success := searchTreeForDeconstructPattern (part.patternTP, decValueTP, ruleEnvironment)
                         else
                             if part.skipRepeat then
                                 success := searchTreeForDeconstructPatternSkippingRepeat (part.patternTP, decValueTP, ruleEnvironment)
                             else
                                 success := searchTreeForDeconstructPatternSkipping (part.patternTP, decValueTP, ruleEnvironment, 
-                                    part.skipName, part.skipName2, part.skipName3)
+                                    part.skipName)
                             end if
                         end if
                     else
@@ -1333,7 +1345,7 @@ body module transformer
 
     function searchTreeForPatternSkipping (rule : ruleT, argTreeTP : treePT,
             var parentKP : kidPT, var ruleEnvironment : ruleEnvironmentT, 
-            skipName, skipName2, skipName3 : tokenT) : boolean
+            skipName : array 1 .. maxSkipNames of tokenT) : boolean
 
         var treeTP := argTreeTP
         var patternTP := rule.patternTP
@@ -1394,10 +1406,22 @@ body module transformer
                     end for
                 #end if
             end if
-        
-            if tree.trees (treeTP).kind >= firstLeafKind or tree.trees (treeTP).name = skipName 
-                    or tree.trees (treeTP).name = skipName2 or tree.trees (treeTP).name = skipName3 then
-                % A terminal -
+
+            const treeName := tree.trees (treeTP).name
+
+            if tree.trees (treeTP).kind >= firstLeafKind 
+                or treeName = skipName (1) 
+                or ( skipName (2) not= NOT_FOUND and ( treeName = skipName (2) 
+                    or ( skipName (3) not= NOT_FOUND and ( treeName = skipName (3) 
+                        or ( skipName (4) not= NOT_FOUND and ( treeName = skipName (4) 
+                            or ( skipName (5) not= NOT_FOUND and ( treeName = skipName (5) 
+                                or ( skipName (6) not= NOT_FOUND and treeName = skipName (6) )
+                            ))
+                        ))
+                    ))
+                )) then
+
+                % A terminal or skipped subtree
                 % Pop any completed sequences ...
                 loop
                     if st = searchBase then
@@ -1539,14 +1563,14 @@ body module transformer
         loop
             var parentKP := nilKid
 
-            if rule.skipName = NOT_FOUND then
+            if rule.skipName (1) = NOT_FOUND then
                 matched := searchTreeForPattern (rule, resultTP, parentKP, ruleEnvironment)
             else
                 if rule.skipRepeat then
                     matched := searchTreeForPatternSkippingRepeat (rule, resultTP, parentKP, ruleEnvironment)
                 else
                     matched := searchTreeForPatternSkipping (rule, resultTP, parentKP, ruleEnvironment, 
-                        rule.skipName, rule.skipName2, rule.skipName3)
+                        rule.skipName)
                 end if
             end if
 
@@ -1649,14 +1673,14 @@ body module transformer
                 processParts (rule.name, rule.postPattern, ruleEnvironment, matched)
             end if
 
-        elsif rule.skipName = NOT_FOUND then
+        elsif rule.skipName (1) = NOT_FOUND then
             matched := searchTreeForPattern (rule, resultTP, parentKP, ruleEnvironment)
         else
             if rule.skipRepeat then
                 matched := searchTreeForPatternSkippingRepeat (rule, resultTP, parentKP, ruleEnvironment)
             else
                 matched := searchTreeForPatternSkipping (rule, resultTP, parentKP, ruleEnvironment, 
-                    rule.skipName, rule.skipName2, rule.skipName3)
+                    rule.skipName)
             end if
         end if
 
@@ -1835,9 +1859,21 @@ body module transformer
                 end if
             end if          
 
-            if tree.trees (treeTP).kind >= firstLeafKind or tree.trees (treeTP).name = rule.skipName
-                    or tree.trees (treeTP).name = rule.skipName2 or tree.trees (treeTP).name = rule.skipName3 then
-                % A terminal -
+            const treeName := tree.trees (treeTP).name
+
+            if tree.trees (treeTP).kind >= firstLeafKind 
+                or treeName = rule.skipName (1) 
+                or ( rule.skipName (2) not= NOT_FOUND and ( treeName = rule.skipName (2) 
+                    or ( rule.skipName (3) not= NOT_FOUND and ( treeName = rule.skipName (3) 
+                        or ( rule.skipName (4) not= NOT_FOUND and ( treeName = rule.skipName (4) 
+                            or ( rule.skipName (5) not= NOT_FOUND and ( treeName = rule.skipName (5) 
+                                or ( rule.skipName (6) not= NOT_FOUND and treeName = rule.skipName (6) )
+                            ))
+                        ))
+                    ))
+                )) then
+
+                % A terminal or skipped subtree
                 % Pop any completed sequences ...
                 loop
                     if st = searchBase then
