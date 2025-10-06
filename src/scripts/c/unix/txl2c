@@ -20,7 +20,7 @@ then
 fi
 
 # Localization
-CC="gcc -m64"
+CC="gcc"
 
 case `uname -s` in
     CYGWIN*|MSYS*|MINGW64*)

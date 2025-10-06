@@ -14,9 +14,9 @@
 # the very least to slow it down severely, at higher levels of optimization.
 
 CC = gcc -w -Wno-error=int-conversion 
-CFLAGS = -m64 -c -O -fno-inline -I .
+CFLAGS = -c -O -fno-inline -I .
 LD = gcc
-LDFLAGS = -m64 
+LDFLAGS =
 LDLIBS = -lm
 RLFLAGS = -r 
 EXE =
